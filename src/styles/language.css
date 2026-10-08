@@ -19,7 +19,7 @@
   min-height: 37px;
   padding: 6px 22px 6px 9px;
   color: var(--blue);
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 5px;
   font-weight: 600;

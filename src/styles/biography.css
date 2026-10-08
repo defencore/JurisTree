@@ -22,8 +22,8 @@
 }
 .graph-biography:hover rect:not(.biography-hit),
 .graph-biography:focus-visible rect:not(.biography-hit) {
-  fill: #dcebf6;
-  stroke: #245d85;
+  fill: var(--blue-soft);
+  stroke: var(--muted);
   stroke-width: 2;
 }
 .biography {
@@ -42,7 +42,7 @@
 }
 .biography-header h2 {
   margin: 0;
-  color: #254c69;
+  color: var(--ink);
   font-size: 1.5rem;
 }
 .biography-header p {
@@ -59,7 +59,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #315670;
+  color: var(--muted);
   font-size: 1rem;
   margin: 0 0 14px;
 }
@@ -76,17 +76,17 @@
 }
 .biography-fields dt {
   font-size: 0.8125rem;
-  color: #617789;
+  color: var(--muted);
   margin-bottom: 3px;
 }
 .biography-fields dd {
   margin: 0;
   white-space: pre-wrap;
-  color: #28475d;
+  color: var(--ink);
 }
 .biography-prose {
   white-space: pre-wrap;
-  color: #435f73;
+  color: var(--muted);
   line-height: 1.8;
   margin: 0;
 }
@@ -95,14 +95,14 @@
   border: 1px solid var(--line);
   border-radius: 6px;
   margin-bottom: 12px;
-  background: #fafcfd;
+  background: var(--bg);
 }
 .biography-record:last-child {
   margin-bottom: 0;
 }
 .biography-record h4 {
   margin: 0 0 12px;
-  color: #28475d;
+  color: var(--ink);
 }
 .biography-record > .btn,
 .biography-record > .text-source {

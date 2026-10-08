@@ -1567,4 +1567,24 @@ export default {
   "ui.searchGroup": "Семейная группа",
   "ui.searchCombinationHint":
     "Комбинируйте слова; заключайте фразы в кавычки; используйте name:, gender:, document:, country:, type:. Разделяйте варианты знаком |, исключайте слово знаком -.",
+  "ui.lifeStatusUnknown": "Статус жизни неизвестен",
+  "ui.under18": "До 18 лет",
+  "ui.ageNeedsClarification": "Возраст требует уточнения",
+  "ui.birthDateLabel": "Дата рождения",
+  "ui.deathDateLabel": "Дата смерти",
+  "ui.personCardStatusHint":
+    "Сердце: живой человек · Свеча: умерший · До 18 лет: отметка возраста. Неизвестный статус указан отдельно.",
+  "ui.residenceHistory": "История проживания по странам",
+  "ui.city": "Город / населённый пункт",
+  "ui.region": "Область / регион",
+  "ui.postalCode": "Почтовый индекс",
+  "ui.residenceDetails": "Сведения о проживании",
+  "ui.residenceType": "Тип проживания",
+  "ui.homeResidence": "Основное жильё",
+  "ui.currentResidence": "Текущее проживание",
+  "ui.formerResidence": "Прежнее проживание",
+  "ui.biologicalParentsHint":
+    "Родных родителей и усыновителей добавляйте отдельными связями. Оба типа могут оставаться в одном профиле.",
+  "ui.biologicalParenthood": "Биологическое родительство",
+  "ui.statusUnknownShort": "Неизвестно",
 };

@@ -12,7 +12,8 @@ import { clone } from "../core/utils.js";
 import { toggleGraphSelection } from "./analysis.js";
 import { applyCamera, zoom } from "./camera.js";
 import { renderGraphControls } from "./controls.js";
-import { filteredGraphNodes, renderGraph } from "./render.js";
+import { filteredGraphNodes } from "./nodes.js";
+import { renderGraph } from "./render.js";
 import { nodeItem, person } from "../model/project.js";
 import { bindTouchInteractions } from "./touch.js";
 export function bindGraphInteractions() {

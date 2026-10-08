@@ -17,7 +17,7 @@ test.afterEach(() => expect(errors).toEqual([]));
 async function demo(page) {
   await page.locator("#startDemo").click();
   await expect(page.locator("#appShell")).toBeVisible();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(12);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(13);
 }
 
 test("opens a complete autobiography from every person entry point and language", async ({
@@ -30,8 +30,8 @@ test("opens a complete autobiography from every person entry point and language"
     buffer: Buffer.from(JSON.stringify(biographyProject())),
   });
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator("#personList [data-biography]")).toHaveCount(12);
-  await expect(page.locator("#graph [data-biography]")).toHaveCount(12);
+  await expect(page.locator("#personList [data-biography]")).toHaveCount(13);
+  await expect(page.locator("#graph [data-biography]")).toHaveCount(13);
   const node = page.locator('.node[data-node="p5"]');
   const position = await node.getAttribute("transform");
   await page.locator('#graph [data-biography="p5"]').click();
@@ -192,7 +192,7 @@ test("exports a full ZIP, reimports it and exports SVG and PNG", async ({
   });
   await expect(page.locator("#modalTitle")).toHaveText("Import tree?");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator("#personList .person-row")).toHaveCount(12);
+  await expect(page.locator("#personList .person-row")).toHaveCount(13);
   await page.locator('[data-view="documents"]').click();
   await page
     .locator(".doc-card")
@@ -268,7 +268,7 @@ test("adds groups, relationships, property shares and personal events", async ({
   await page.locator('#modal select[name="to"]').selectOption("p7");
   await page.locator('#modal select[name="type"]').selectOption("sibling");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator(".graph-view-summary")).toContainText("19/19");
+  await expect(page.locator(".graph-view-summary")).toContainText("21/21");
   await page.locator('[data-view="property"]').click();
   await page.locator('#viewActions [data-action="add-property"]').click();
   await page.locator('#modal input[name="title"]').fill("Family house");
@@ -309,5 +309,5 @@ test("works without IndexedDB and explains the backup option", async ({
     "Autosave is unavailable",
   );
   await demo(page);
-  await expect(page.locator("#personList .person-row")).toHaveCount(12);
+  await expect(page.locator("#personList .person-row")).toHaveCount(13);
 });

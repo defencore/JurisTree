@@ -107,7 +107,6 @@ export function collectProjectEvents(
           "timeline",
         );
     for (const [section, key, type, label] of [
-      ["residences", "residences", "residence", (r) => r.address],
       [
         "occupations",
         "occupations",
@@ -195,7 +194,10 @@ export function collectProjectEvents(
             r.id + "-" + field,
             [
               message ? translate(message) : "",
-              r.title || r.name || r.country || cfg.label,
+              r.title ||
+                r.name ||
+                [r.country, r.city, r.address].filter(Boolean).join(", ") ||
+                cfg.label,
             ]
               .filter(Boolean)
               .join(" · "),

@@ -1,6 +1,6 @@
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { filteredGraphNodes } from "./render.js";
+import { filteredGraphNodes } from "./nodes.js";
 export function focusPerson(
   id = appState.selected?.kind === "person" ? appState.selected.id : "",
 ) {

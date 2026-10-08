@@ -1,5 +1,7 @@
 import { $$ } from "../core/dom.js";
 export const shapes = Object.freeze({
+  candle:
+    '<path d="M9 9h6v12H9zM6 21h12M12 9V7"/><path d="M12 2c-3 3-3 5 0 5s3-2 0-5Z"/>',
   printer:
     '<path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6zM18 12h.01"/>',
   chevronLeft: '<path d="m15 18-6-6 6-6"/>',

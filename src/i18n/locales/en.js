@@ -1559,4 +1559,24 @@ export default {
   "ui.searchGroup": "Family group",
   "ui.searchCombinationHint":
     "Combine words; quote phrases; use name:, gender:, document:, country:, type:. Separate alternatives with | and exclude a word with -.",
+  "ui.lifeStatusUnknown": "Life status unknown",
+  "ui.under18": "Under 18",
+  "ui.ageNeedsClarification": "Age needs clarification",
+  "ui.birthDateLabel": "Birth date",
+  "ui.deathDateLabel": "Death date",
+  "ui.personCardStatusHint":
+    "Heart: living · Candle: deceased · Under 18: age marker. Unknown status stays explicit.",
+  "ui.residenceHistory": "Residence history by country",
+  "ui.city": "City / locality",
+  "ui.region": "Region / state",
+  "ui.postalCode": "Postal code",
+  "ui.residenceDetails": "Residence details",
+  "ui.residenceType": "Type of residence",
+  "ui.homeResidence": "Main home",
+  "ui.currentResidence": "Current residence",
+  "ui.formerResidence": "Former residence",
+  "ui.biologicalParentsHint":
+    "Record biological parents and adoptive parents as separate links. Both can remain in the same profile.",
+  "ui.biologicalParenthood": "Biological parenthood",
+  "ui.statusUnknownShort": "Unknown",
 };

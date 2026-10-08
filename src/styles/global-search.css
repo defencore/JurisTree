@@ -5,8 +5,8 @@
   position: relative;
   height: 52px;
   padding: 4px 20px;
-  background: #f1f6fa;
-  border-bottom: 1px solid #c8d9e6;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
   z-index: 60;
   flex-shrink: 0;
 }
@@ -16,15 +16,15 @@
   gap: 8px;
   max-width: 960px;
   margin: 0 auto;
-  border: 1px solid #aec4d5;
+  border: 1px solid var(--line);
   border-radius: 5px;
-  background: #fff;
+  background: var(--paper);
   padding: 0 8px;
   height: 44px;
 }
 .global-search-input > .icon {
   flex-shrink: 0;
-  color: #426983;
+  color: var(--muted);
 }
 .global-search-input input {
   flex: 1;
@@ -39,7 +39,7 @@
   outline: none;
 }
 .global-search-input:focus-within {
-  outline: 2px solid #337cb0;
+  outline: 2px solid var(--muted);
   outline-offset: -1px;
 }
 .global-search-results {
@@ -49,10 +49,10 @@
   right: max(8px, calc((100% - 960px) / 2));
   max-height: min(560px, calc(100dvh - var(--workspace-header-height) - 12px));
   overflow: auto;
-  background: #fff;
-  border: 1px solid #aec4d5;
+  background: var(--paper);
+  border: 1px solid var(--line);
   border-radius: 0 0 6px 6px;
-  box-shadow: 0 8px 24px #203b5233;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 20%, transparent);
   padding: 12px;
 }
 .search-result-head {
@@ -72,8 +72,8 @@
   gap: 12px;
   width: 100%;
   border: 0;
-  border-bottom: 1px solid #e0e8ee;
-  background: #fff;
+  border-bottom: 1px solid var(--blue-soft);
+  background: var(--paper);
   text-align: left;
   padding: 12px 8px;
   min-height: 54px;
@@ -81,11 +81,11 @@
 }
 .global-search-result:hover,
 .global-search-result:focus-visible {
-  background: #eaf4fc;
+  background: var(--blue-soft);
 }
 .global-search-result > .icon {
   flex-shrink: 0;
-  color: #337194;
+  color: var(--muted);
 }
 .global-search-result span {
   min-width: 0;
@@ -96,7 +96,7 @@
   display: block;
 }
 .global-search-result small {
-  color: #617789;
+  color: var(--muted);
   margin-top: 3px;
 }
 .global-search-results > .btn {
@@ -104,11 +104,7 @@
 }
 .empty-search {
   padding: 20px;
-  color: #617789;
-}
-.workspace,
-.view-full .workspace {
-  height: calc(100dvh - var(--workspace-header-height));
+  color: var(--muted);
 }
 @media (max-width: 760px) {
   :root {

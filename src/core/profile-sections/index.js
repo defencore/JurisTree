@@ -1,3 +1,4 @@
+import { residencesSection } from "./residences.js";
 import { appearanceSection } from "./appearance.js";
 import { medicalSection } from "./medical.js";
 import { skillsSection } from "./skills.js";
@@ -18,6 +19,7 @@ import { claimsSection } from "./claims.js";
 
 export function extendedProfileSections() {
   return {
+    residences: residencesSection(),
     appearance: appearanceSection(),
     medical: medicalSection(),
     skills: skillsSection(),

@@ -17,12 +17,9 @@ import {
 import { graphView, relationShown, visiblePeople } from "../graph/analysis.js";
 import { bounds } from "../graph/camera.js";
 import { exportLineLegend } from "../graph/legend.js";
-import {
-  filteredGraphNodes,
-  graphDefs,
-  renderFilteredGraph,
-  svgText,
-} from "../graph/render.js";
+import { graphDefs, renderFilteredGraph } from "../graph/render.js";
+import { filteredGraphNodes } from "../graph/nodes.js";
+import { svgText } from "../graph/text.js";
 import { translate } from "../i18n/index.js";
 import { withProjectIndex } from "../model/project.js";
 import { validateImport } from "../model/validation.js";
@@ -126,7 +123,7 @@ export async function exportImage(vector = false) {
     c.width = Math.ceil(width * scale);
     c.height = Math.ceil(height * scale);
     const ctx = c.getContext("2d");
-    ctx.fillStyle = "#f8fbff";
+    ctx.fillStyle = "#f4f7fb";
     ctx.fillRect(0, 0, c.width, c.height);
     ctx.drawImage(image, 0, 0, c.width, c.height);
     URL.revokeObjectURL(url);
@@ -324,7 +321,7 @@ export async function fullSVG(scope = "full") {
       return {
         width,
         height,
-        svg: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs>${graphDefs()}</defs><rect width="100%" height="100%" fill="#fff"/>${svgText(appState.project.title, 38, 42, 90, 1, 26, "#293f50", 600)}${svgText(subtitle, 38, 69, 120, 1, 13, "#637787", 400)}<g transform="translate(${-b.x + 6} ${105 - b.y})">${renderFilteredGraph(images, true)}</g>${legend.markup}</svg>`,
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs>${graphDefs()}</defs><rect width="100%" height="100%" fill="#fff"/>${svgText(appState.project.title, 38, 42, 90, 1, 26, "#081f3c", 600)}${svgText(subtitle, 38, 69, 120, 1, 13, "#3e516c", 400)}<g transform="translate(${-b.x + 6} ${105 - b.y})">${renderFilteredGraph(images, true)}</g>${legend.markup}</svg>`,
       };
     });
   } finally {

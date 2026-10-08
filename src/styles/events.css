@@ -5,7 +5,7 @@
   margin-bottom: 22px;
 }
 .events-overview > div {
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 14px;
   display: flex;
@@ -29,7 +29,7 @@
   margin-bottom: 18px;
 }
 .event-tabs {
-  background: #eceef7;
+  background: var(--blue-soft);
   border-radius: 12px;
   display: flex;
   gap: 4px;
@@ -50,9 +50,9 @@
   font-weight: 400;
 }
 .event-tabs button.active {
-  background: #fff;
+  background: var(--paper);
   box-shadow: none;
-  color: #245e88;
+  color: var(--muted);
   font-weight: 700;
 }
 .events-filters {
@@ -66,7 +66,7 @@
   min-width: 210px;
 }
 .events-filters select {
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 10px;
   color: var(--ink);
@@ -78,9 +78,9 @@
 .event-scope-note {
   align-items: center;
   background: var(--blue-soft);
-  border: 1px solid #dbddf5;
+  border: 1px solid var(--blue-soft);
   border-radius: 12px;
-  color: #56527a;
+  color: var(--muted);
   display: flex;
   font-size: 0.875rem;
   gap: 10px;
@@ -97,18 +97,18 @@
 }
 .family-event {
   align-items: flex-start;
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 15px;
-  box-shadow: 0 2px 5px #25244a03;
+  box-shadow: 0 2px 5px color-mix(in srgb, var(--ink) 1%, transparent);
   display: flex;
   gap: 18px;
   padding: 18px;
 }
 .event-date {
   align-items: center;
-  background: #f3f4fa;
-  border: 1px solid #e8eaf3;
+  background: var(--bg);
+  border: 1px solid var(--blue-soft);
   border-radius: 12px;
   display: flex;
   flex: 0 0 66px;
@@ -138,7 +138,7 @@
 }
 .event-date.today {
   background: var(--green-soft);
-  border-color: #c9e7da;
+  border-color: var(--green-soft);
   color: var(--teal);
 }
 .event-content {
@@ -173,7 +173,7 @@
 .event-content h3 {
   margin: 0 0 10px;
   overflow-wrap: anywhere;
-  color: #2f526d;
+  color: var(--muted);
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.55;
@@ -193,7 +193,7 @@
   margin: 12px 0 0;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
-  color: #4d6c81;
+  color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.7;
 }
@@ -217,7 +217,7 @@
   flex: 0 0 auto;
 }
 .event-year-heading {
-  color: #555b77;
+  color: var(--muted);
   font-size: 1.25rem;
   font-variant-numeric: tabular-nums;
   margin: 18px 0 2px;
@@ -257,7 +257,7 @@
 }
 .event-anniversary,
 .event-type {
-  color: #4a6880;
+  color: var(--muted);
   font-size: 0.875rem;
 }
 .event-date b,

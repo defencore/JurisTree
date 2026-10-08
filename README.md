@@ -8,7 +8,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 
 - Family, inheritance, property, research and blank project templates.
 - People, family groups and eight relationship types, including biological parenthood, adoption, step-parenthood and acquaintance.
-- Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts.
+- Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts. Person cards show full birth/death dates on separate rows and icon-and-text life/age badges.
 - Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Mobile controls are collapsible and the person panel opens as a bottom sheet.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
 - Kinship descriptions based on recorded relationships, including half-siblings when both biological parent sets are recorded.
@@ -26,7 +26,9 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.
 - English, Ukrainian and Russian interfaces, displayed as **EN / UA / RU**.
 
-The expanded demo contains 12 people, 18 relationships and nine source references using explicit Doe/Roe placeholders. Surname changes have name-history records. Biological, adoptive and step-parent relationships are separate, including children from previous partnerships and half-siblings. Employment, public office, court cases, imprisonment, gifts, loans, deposits, investments and self-described identity history illustrate the optional modules.
+The expanded demo contains 13 people, 20 relationships and nine source references using explicit Doe/Roe placeholders. Surname changes have name-history records. Biological, adoptive and step-parent relationships are separate, including children from previous partnerships and half-siblings. Employment, public office, court cases, imprisonment, gifts, loans, deposits, investments and self-described identity history illustrate the optional modules.
+
+The demo also includes a child under 18, deceased relatives, a child with both adoptive and biological parents, and dated residence records in two fictional countries.
 
 Demo people use explicit Doe/Roe placeholders. Their relationships, identity document numbers and personal details are invented. The launch screen opens before any demo is loaded or existing draft is replaced. Loading the updated demo does not rewrite existing saved projects.
 
@@ -36,6 +38,7 @@ Open a person's editor and expand **Add more information** to use sections outsi
 
 | Module                         | Available information                                                                                                                                                                                                                                                                                  |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Residence history              | Country, city, region, postal code, address, start/end dates or years, residence type/status, permit reference, attribution and linked sources                                                                                                                                                         |
 | Name history                   | Maiden and birth surnames, legal and previous names, aliases, validity periods, reasons for changes and sources                                                                                                                                                                                        |
 | Education                      | Institutions, degrees, fields of study, level, faculty, study periods/status, graduation dates, diploma references and sources                                                                                                                                                                         |
 | Reports and claims             | Attributed reports, rumors, testimony or recording-based statements, context, first-hand/hearsay basis, verification status, reviewer, findings and sources                                                                                                                                            |
@@ -97,6 +100,16 @@ name:Doe -document:expired
 Press **Ctrl/Cmd + K** to focus search, use arrow keys and Enter to open a result, or Escape to close results. Workspace visibility and family-group filters do not restrict global search.
 
 Open a person's **Autobiography**, then choose **Print / Save as PDF**. In the browser print dialog select a printer or **Save as PDF**. The A4 report includes all populated sections, relationship details, property and linked source metadata, with no workspace controls. It uses the selected interface language. File attachments remain in the editable ZIP backup; the report includes their references rather than embedding their contents. Cancelling or finishing print returns to the unchanged on-screen profile.
+
+## Person status and residence periods
+
+A heart and **Living** label indicate an explicitly recorded living status. A candle and **Deceased** label indicate a recorded death or deceased status. An empty death date does not imply the person is alive: unspecified life status displays **Unknown**. A separate **Under 18** badge uses the recorded birth date and today's local date. Birth years that span the 18-year boundary display **18?**, with an explanatory tooltip, rather than assuming an age. Deceased people retain their life badge without a present-day minor marker. For leap-day births the display uses February 28 as the birthday in non-leap years; this is a display convention, not a jurisdiction-specific legal rule.
+
+Biological parenthood, adoption and step-parenthood are independent relationship types. Adding an adoptive parent does not replace biological parents. Both sets remain in the profile, autobiography and diagram. Unverified relationships retain their evidence state.
+
+To record where someone lived, open **Add more information → Residence history by country**. Add a separate record for each country or residence period. Start/end fields accept full dates or years; an open end is supported. Expand residence details for type, current/former/planned status and permit references. Residence data is included in search, autobiography, print/PDF, dated events and ZIP backups. Earlier address-only residence records still use the same persisted array and retain their fields.
+
+The navy, pale blue and gold palette follows the [Franciscans reference website](https://l2.franciscans.dev/uk). `src/core/theme.js` owns the shared color tokens, applied as CSS custom properties and used directly in person-card SVG exports. Typography retains the existing Tahoma/Verdana/DejaVu Sans stacks. Workspace height is calculated by the shell's flex layout; tablet panels and mobile navigation use the shared header offset to avoid covering search.
 
 ## Using the map on a phone
 
@@ -163,16 +176,35 @@ src/
     state.js               Shared runtime state and history collections
     config.js              Record types, profile sections and display settings
     profile-sections/      Independent extended profile definitions and field groups
+    theme.js               Shared interface and SVG color tokens
     viewport.js            Shared mobile layout breakpoint
     dom.js                 DOM queries and HTML escaping
     utils.js               IDs, cloning, formatting, URLs and downloads
-  model/                   Project selectors, validation, dates, evidence and kinship
+  model/                   Project selectors, validation, dates, person status, relationship labels, evidence and kinship
   features/                People, favorites, calendar, search, printing, documents, groups, events, property and launcher flows
-  graph/                   Rendering, camera, mouse/touch interaction, layouts and analysis
+  graph/
+    render.js              Graph composition and SVG definitions
+    nodes.js               Visible node selection and non-person cards
+    cards/person.js        Person-card content, status badges, dates and actions
+    edges.js               Relationship, source and property lines
+    geometry.js            Connection paths
+    text.js                Measured SVG text wrapping and pills
+    roles.js               Selection-relative family badges
+    layouts/               Pure family, circle and network algorithms
+    layout.js              Layout actions, history and camera orchestration
+    camera.js              Zoom and positioning
+    interaction.js         Mouse interaction
+    touch.js               Touch gestures
+    analysis.js            Map filters and connection analysis
   services/                IndexedDB saving, history, files, archives and browser tools
   ui/
     shell.js               Shell mounting and static translation bindings
     templates/             Readable launch, workspace and dialog markup
+    render.js              Workspace render orchestration and selection
+    people.js              People list
+    inspector.js           Person and relationship panel
+    status-board.js        Workspace document counters
+    person-status.js       Shared translated life and age badges
     components.js          Shared HTML components
     forms/                 Individual dialog and form components
     profile-fields.js      Shared structured field display for profiles and biographies

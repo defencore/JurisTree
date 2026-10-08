@@ -210,6 +210,9 @@ export const workspaceTemplate = `
               ><i data-icon="tree"></i>@@ui.children@@</span
             >
           </div>
+          <div class="canvas-hint">
+            <i data-icon="route"></i>@@ui.arrowsPointFromParentsToChildren@@
+          </div>
         </div>
         <svg
           class="graph"
@@ -227,9 +230,6 @@ export const workspaceTemplate = `
             aria-hidden="true"
           ></rect>
         </svg>
-        <div class="canvas-hint">
-          <i data-icon="route"></i>@@ui.arrowsPointFromParentsToChildren@@
-        </div>
         <div class="graph-tools">
           <div class="tool-cluster">
             <button

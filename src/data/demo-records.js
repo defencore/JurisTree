@@ -356,7 +356,7 @@ export function populateDemoRecords(project) {
       ],
       notes: "Invented property and user-entered allocation plan.",
       x: 1060,
-      y: 780,
+      y: 1800,
     },
   ];
 }

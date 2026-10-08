@@ -128,14 +128,21 @@ test("touch rearranging commits one undoable movement", async ({ page }) => {
 test("mobile history controls respond to native touch taps", async ({
   page,
 }) => {
+  const originalCount = await page.locator('.node[data-kind="person"]').count();
   await page.locator('#viewActions [data-action="add-person"]').tap();
   await page.locator('#modal [name="name"]').fill("Fictional Touch Doe");
   await page.locator('#modal button[type="submit"]').tap();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(13);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(
+    originalCount + 1,
+  );
   await page.locator('[data-action="undo"]').tap();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(12);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(
+    originalCount,
+  );
   await page.locator('[data-action="redo"]').tap();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(13);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(
+    originalCount + 1,
+  );
 });
 
 test("phone users can open the autobiography and edit optional document details", async ({

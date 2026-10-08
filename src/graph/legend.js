@@ -5,7 +5,7 @@ import {
 } from "../core/config.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { svgText } from "./render.js";
+import { svgText } from "./text.js";
 import { translate } from "../i18n/index.js";
 export function graphLineStyle(key) {
   if (Object.hasOwn(auxiliaryLineStyles(), key))
@@ -26,7 +26,7 @@ export function lineSamplePaths(key = "neutral", directed = false) {
   const style =
     key === "neutral"
       ? {
-          color: "#536f83",
+          color: "#3e516c",
           width: 1.7,
           dash: "",
         }
@@ -91,11 +91,11 @@ export function exportLineLegend(width, y) {
     .map((item, i) => {
       const x = 38 + (i % cols) * cell,
         top = y + 36 + Math.floor(i / cols) * 26;
-      return `<g data-legend-line="${item.key}" transform="translate(${x} ${top - 12})">${lineSamplePaths(item.key, item.directed)}${svgText(item.label, 50, 12, 50, 1, 12.5, "#496a80", 400, cell - 55)}</g>`;
+      return `<g data-legend-line="${item.key}" transform="translate(${x} ${top - 12})">${lineSamplePaths(item.key, item.directed)}${svgText(item.label, 50, 12, 50, 1, 12.5, "#3e516c", 400, cell - 55)}</g>`;
     })
     .join("");
   return {
     height,
-    markup: `<g class="export-legend"><path d="M38 ${y - 4}H${width - 38}" stroke="#d7e0e6"/>${svgText(translate("ui.lineKeyColorIndicatesSourcesArrowsPointTo"), 38, y + 17, 120, 1, 13, "#36576f", 700)}${cells}${svgText(translate("ui.juristreeSourceStatesAreUserAssessmentsNotLegal"), 38, y + height - 12, 150, 1, 12, "#617584", 400)}</g>`,
+    markup: `<g class="export-legend"><path d="M38 ${y - 4}H${width - 38}" stroke="#d5deea"/>${svgText(translate("ui.lineKeyColorIndicatesSourcesArrowsPointTo"), 38, y + 17, 120, 1, 13, "#3e516c", 700)}${cells}${svgText(translate("ui.juristreeSourceStatesAreUserAssessmentsNotLegal"), 38, y + height - 12, 150, 1, 12, "#3e516c", 400)}</g>`,
   };
 }

@@ -1,6 +1,6 @@
 import { renderSearch } from "../../features/search.js";
 import { renderCalendar } from "../../features/calendar.js";
-import { renderPeople } from "../../ui/render.js";
+import { renderPeople } from "../../ui/people.js";
 import { renderEvents } from "../../features/events.js";
 import { renderDocuments } from "../../features/documents.js";
 import { state as appState } from "../../core/state.js";

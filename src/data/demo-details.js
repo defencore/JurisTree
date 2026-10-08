@@ -1,6 +1,33 @@
 /** Fictional records illustrate optional details without inferring facts about real people. */
 export function populateDemoDetails(project) {
   const person = (id) => project.people.find((p) => p.id === id);
+  person("p6").residences = [
+    {
+      id: "demo-residence-abroad",
+      country: "Sample Republic",
+      city: "Sample City",
+      address: "DEMO, Example Street 12",
+      from: "2012-09-01",
+      to: "2014-06-30",
+      kind: "study",
+      status: "former",
+      basis: "self",
+      reportedBy: "Robin Roe",
+      verification: "pending",
+      notes: "Fictional residence period while studying abroad.",
+    },
+    {
+      id: "demo-residence-home",
+      country: "Exampleland",
+      city: "Example City",
+      from: "2014-07-01",
+      kind: "home",
+      status: "current",
+      basis: "self",
+      reportedBy: "Robin Roe",
+      verification: "pending",
+    },
+  ];
   person("p5").appearanceRecords = [
     {
       id: "demo-appearance",

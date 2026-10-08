@@ -2,6 +2,9 @@
   border-bottom: 1px solid var(--line);
   padding: 10px 0 19px;
 }
+.profile-top > div {
+  min-width: 0;
+}
 .profile-top {
   align-items: center;
   display: flex;
@@ -21,7 +24,7 @@
   margin: 0;
   font-family: var(--ui-font);
   letter-spacing: 0;
-  color: #253f53;
+  color: var(--ink);
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.5;
@@ -29,7 +32,7 @@
 }
 .profile p {
   margin: 4px 0;
-  color: #617280;
+  color: var(--muted);
   font-size: 0.875rem;
   line-height: 1.65;
 }
@@ -58,7 +61,7 @@
   margin: 0 0 10px;
 }
 .kin-head .icon {
-  color: #8b82be;
+  color: var(--muted);
   height: 18px;
   width: 18px;
 }
@@ -66,15 +69,15 @@
   color: var(--teal);
 }
 .kin-head > span {
-  background: #f3f2f8;
+  background: var(--bg);
   border-radius: 5px;
-  color: #85829c;
+  color: var(--muted);
   font-size: 0.75rem;
   margin-left: auto;
   padding: 2px 6px;
 }
 .kin-row {
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 9px;
   margin-bottom: 7px;
@@ -118,13 +121,13 @@
   width: 33px;
 }
 .kin-row .iconbtn {
-  background: #faf9fe;
-  color: #8d87ae;
+  background: var(--bg);
+  color: var(--muted);
 }
 .kin-empty {
   border: 1px dashed var(--line);
   border-radius: 9px;
-  color: #9aa0b0;
+  color: var(--muted);
   font-size: 0.75rem;
   line-height: 1.4;
   margin: 0;
@@ -133,9 +136,9 @@
 .compare-profile {
   margin-top: 9px;
   width: 100%;
-  background: #f0f6fb;
-  border-color: #b8cfdf;
-  color: #245d85;
+  background: var(--bg);
+  border-color: var(--line);
+  color: var(--muted);
   font-size: 0.875rem;
   font-weight: 700;
 }
@@ -144,7 +147,7 @@
   width: 17px;
 }
 .profile-editor-section {
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 11px;
   margin-bottom: 12px;
@@ -152,7 +155,7 @@
 }
 .profile-additional-sections {
   margin: 20px 0;
-  border: 1px dashed #9eb6ca;
+  border: 1px dashed var(--line);
   border-radius: 6px;
 }
 .profile-additional-sections > summary,
@@ -163,7 +166,7 @@
   cursor: pointer;
   padding: 14px;
   list-style: none;
-  color: #315670;
+  color: var(--muted);
   font-weight: 700;
 }
 .profile-additional-sections > summary > .icon:last-child,
@@ -201,8 +204,8 @@
   gap: 9px;
   list-style: none;
   padding: 15px;
-  background: #fafbfc;
-  color: #315670;
+  background: var(--bg);
+  color: var(--muted);
   font-size: 0.9375rem;
   font-weight: 700;
 }
@@ -214,16 +217,16 @@
 .profile-editor-section > summary > .icon:first-child {
   height: 19px;
   width: 19px;
-  color: #45718f;
+  color: var(--muted);
 }
 .profile-editor-section > summary > span {
-  color: #a398b6;
+  color: var(--violet);
   font-size: 0.75rem;
   margin-left: auto;
 }
 .profile-details > summary > .icon:last-child,
 .profile-editor-section > summary > .icon:last-child {
-  color: #aca2bd;
+  color: var(--violet);
   height: 16px;
   margin-left: auto;
   transition: transform 0.2s;
@@ -234,23 +237,23 @@
   transform: rotate(180deg);
 }
 .profile-editor-section[open] > summary {
-  background: #faf9ff;
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 .profile-editor-section > div {
   padding: 18px;
 }
 .profile-record {
-  border: 1px solid #e8e4f2;
+  border: 1px solid var(--blue-soft);
   border-radius: 10px;
   margin-bottom: 12px;
   padding: 14px;
-  background: #f8fafb;
-  border-color: #dce4e9;
+  background: var(--bg);
+  border-color: var(--line);
 }
 .record-row-head {
   align-items: center;
-  color: #a296b1;
+  color: var(--violet);
   display: flex;
   font-size: 0.75rem;
   justify-content: space-between;
@@ -294,16 +297,16 @@
   height: 32px;
   place-items: center;
   width: 30px;
-  background: #edf3f7;
-  color: #4a718d;
+  background: var(--blue-soft);
+  color: var(--muted);
 }
 .detail-record-icon .icon {
   height: 17px;
   width: 17px;
 }
 .kin-result {
-  background: #f8f6ff;
-  border: 1px solid #e3ddf6;
+  background: var(--bg);
+  border: 1px solid var(--blue-soft);
   border-radius: 13px;
   margin-bottom: 20px;
   padding: 25px;
@@ -321,7 +324,7 @@
   margin: 7px 0 12px;
 }
 .kin-result p:not(.eyebrow) {
-  color: #8d81a1;
+  color: var(--violet);
   font-size: 0.875rem;
   line-height: 1.7;
   margin: 12px auto;
@@ -354,7 +357,7 @@
   position: relative;
 }
 .kin-path-item:not(:last-child):after {
-  background: #ded9ec;
+  background: var(--line);
   content: "";
   height: 15px;
   left: 18px;
@@ -370,7 +373,7 @@
   font-weight: 550;
 }
 .kin-path-item small {
-  color: #aaa0b7;
+  color: var(--violet);
   display: block;
   font-size: 0.75rem;
   margin-top: 3px;
@@ -390,8 +393,8 @@
 }
 .doc-mini:hover,
 .kin-row:hover {
-  background: #f1f5f8;
-  border-color: #c5d2dc;
+  background: var(--bg);
+  border-color: var(--line);
 }
 .doc-mini b,
 .kin-row b {
@@ -400,25 +403,25 @@
 }
 .doc-mini small,
 .kin-row small {
-  color: #6a7d8b;
+  color: var(--muted);
   font-size: 0.75rem;
 }
 .hint,
 .kin-empty {
-  color: #6b7a85;
+  color: var(--muted);
   font-size: 0.875rem;
   line-height: 1.65;
 }
 .profile-details,
 .profile-editor-section {
-  border-color: #dce4ea;
+  border-color: var(--blue-soft);
 }
 .detail-label,
 .detail-record small,
 .kin-path-item small,
 .profile-editor-section > summary > span,
 .record-row-head {
-  color: #657d8e;
+  color: var(--muted);
 }
 .brand b,
 .modal-head h2,
@@ -434,7 +437,7 @@ h4 {
 .detail-record p,
 .note-box,
 .profile p {
-  color: #435f73;
+  color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.7;
 }
@@ -442,7 +445,7 @@ h4 {
 .doc-mini b,
 .kin-row b,
 .requirement b {
-  color: #28475d;
+  color: var(--ink);
   font-size: 0.875rem;
   font-weight: 700;
   line-height: 1.5;
@@ -452,7 +455,7 @@ h4 {
 .kin-row small,
 .requirement small,
 .source-meta {
-  color: #4c697d;
+  color: var(--muted);
   font-size: 0.8125rem;
   line-height: 1.6;
 }

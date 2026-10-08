@@ -1561,4 +1561,24 @@ export default {
   "ui.searchGroup": "Родинна група",
   "ui.searchCombinationHint":
     "Комбінуйте слова; беріть фрази в лапки; використовуйте name:, gender:, document:, country:, type:. Розділяйте варіанти знаком |, виключайте слово знаком -.",
+  "ui.lifeStatusUnknown": "Статус життя невідомий",
+  "ui.under18": "До 18 років",
+  "ui.ageNeedsClarification": "Вік потребує уточнення",
+  "ui.birthDateLabel": "Дата народження",
+  "ui.deathDateLabel": "Дата смерті",
+  "ui.personCardStatusHint":
+    "Серце: жива особа · Свічка: померла · До 18 років: позначка віку. Невідомий статус вказано окремо.",
+  "ui.residenceHistory": "Історія проживання за країнами",
+  "ui.city": "Місто / населений пункт",
+  "ui.region": "Область / регіон",
+  "ui.postalCode": "Поштовий індекс",
+  "ui.residenceDetails": "Відомості про проживання",
+  "ui.residenceType": "Тип проживання",
+  "ui.homeResidence": "Основне житло",
+  "ui.currentResidence": "Поточне проживання",
+  "ui.formerResidence": "Попереднє проживання",
+  "ui.biologicalParentsHint":
+    "Рідних батьків та усиновлювачів додавайте окремими зв’язками. Обидва типи можуть залишатися в одному профілі.",
+  "ui.biologicalParenthood": "Біологічне батьківство",
+  "ui.statusUnknownShort": "Невідомо",
 };

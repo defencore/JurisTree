@@ -1,3 +1,4 @@
+import { theme } from "./theme.js";
 import { translate } from "../i18n/index.js";
 import { extendedProfileSections } from "./profile-sections/index.js";
 export const GRAPH_FONT = "DejaVu Sans,Tahoma,Verdana,Arial,sans-serif";
@@ -22,7 +23,7 @@ export function types() {
 }
 export function relTypes() {
   return {
-    parent: translate("ui.parenthood"),
+    parent: translate("ui.biologicalParenthood"),
     spouse: translate("ui.registeredMarriage"),
     partner: translate("ui.personalPartnership"),
     sibling: translate("ui.sibling"),
@@ -47,8 +48,8 @@ export function evidenceTypes() {
     unverified: translate("ui.unverifiedSource"),
   };
 }
-export const PERSON_CARD_WIDTH = 250;
-export const PERSON_CARD_HEIGHT = 158;
+export const PERSON_CARD_WIDTH = 280;
+export const PERSON_CARD_HEIGHT = 212;
 export const MAX_ATTACHMENT_BYTES = 100 * 1024 * 1024;
 export function docStates() {
   return {
@@ -75,18 +76,17 @@ export function docStates() {
   };
 }
 export const groupColors = [
-  "#6e5cce",
-  "#248972",
-  "#4c7ab7",
-  "#b48039",
-  "#ad6080",
-  "#5a8c9b",
+  theme.blue,
+  theme.teal,
+  theme["blue-dark"],
+  theme.gold,
+  theme.red,
+  theme.violet,
 ];
 export function sectionInfo() {
   return {
     timeline: [translate("ui.eventsAndAnniversaries"), "calendarClock"],
     contacts: [translate("ui.contactsAndSocialProfiles"), "phone"],
-    residences: [translate("ui.addressHistory"), "mapPin"],
     biography: [translate("ui.biographyAndHistory"), "book"],
     interests: [translate("ui.hobbiesAndInterests"), "sparkles"],
     health: [translate("ui.healthInformation"), "heartPulse"],
@@ -163,17 +163,6 @@ export function recordConfigs() {
         ["notes", translate("ui.note"), "text"],
       ],
     },
-    residences: {
-      key: "residences",
-      label: translate("ui.address"),
-      fields: [
-        ["address", translate("ui.residentialAddress"), "text"],
-        ["from", translate("ui.from"), "period"],
-        ["to", translate("ui.to"), "period"],
-        ["notes", translate("ui.note"), "textarea"],
-        ["sourceId", translate("ui.source"), "source"],
-      ],
-    },
     pets: {
       key: "pets",
       label: translate("ui.pet"),
@@ -230,12 +219,12 @@ export function eventCategories() {
 }
 export function graphStateInfo() {
   return {
-    official: [translate("ui.officialSourceAvailable"), "#287454"],
-    missing: [translate("ui.evidenceMissing"), "#a6751e"],
-    review: [translate("ui.review2"), "#765ca3"],
-    requested: [translate("ui.requested"), "#3f6f97"],
-    indirect: [translate("ui.indirectEvidence"), "#758394"],
-    conflict: [translate("ui.disputed"), "#a24b56"],
+    official: [translate("ui.officialSourceAvailable"), theme.teal],
+    missing: [translate("ui.evidenceMissing"), theme.amber],
+    review: [translate("ui.review2"), theme.violet],
+    requested: [translate("ui.requested"), theme.blue],
+    indirect: [translate("ui.indirectEvidence"), theme.muted],
+    conflict: [translate("ui.disputed"), theme.red],
   };
 }
 export function startTemplates() {
@@ -302,13 +291,13 @@ export function auxiliaryLineStyles() {
   return {
     source: {
       label: translate("ui.sourceMentionedPerson"),
-      color: "#758897",
+      color: theme.muted,
       dash: "3 6",
       width: 1.2,
     },
     property: {
       label: translate("ui.propertyPersonSShare"),
-      color: "#648575",
+      color: theme.teal,
       dash: "4 5",
       width: 1.5,
     },

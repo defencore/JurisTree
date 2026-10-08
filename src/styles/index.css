@@ -16,4 +16,5 @@
 @import "./calendar.css";
 
 @import url("./global-search.css");
+@import "./person-status.css";
 @import url("./print.css");

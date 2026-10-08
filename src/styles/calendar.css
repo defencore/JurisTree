@@ -23,9 +23,9 @@
 .calendar-toolbar input,
 .calendar-filters select {
   padding: 10px;
-  border: 1px solid #b9cddd;
+  border: 1px solid var(--line);
   border-radius: 4px;
-  background: #fff;
+  background: var(--paper);
   min-width: 0;
 }
 .calendar-filters .search {
@@ -35,30 +35,30 @@
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  border-left: 1px solid #d6e0e7;
-  border-top: 1px solid #d6e0e7;
-  background: #fff;
+  border-left: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  background: var(--paper);
 }
 .calendar-weekday {
   text-align: center;
   padding: 10px 4px;
-  background: #eaf0f5;
-  color: #37566d;
-  border-right: 1px solid #d6e0e7;
+  background: var(--blue-soft);
+  color: var(--muted);
+  border-right: 1px solid var(--line);
 }
 .calendar-day,
 .calendar-blank {
   min-height: 120px;
   border: 0;
-  border-right: 1px solid #d6e0e7;
-  border-bottom: 1px solid #d6e0e7;
-  background: #fff;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
   text-align: left;
   padding: 7px;
   min-width: 0;
 }
 .calendar-blank {
-  background: #f7f9fb;
+  background: var(--bg);
 }
 .calendar-day {
   display: flex;
@@ -66,15 +66,15 @@
   gap: 5px;
 }
 .calendar-day:hover {
-  background: #f1f7fc;
+  background: var(--bg);
 }
 .calendar-day.today .calendar-day-number {
-  color: #23679d;
+  color: var(--muted);
   font-weight: 800;
 }
 .calendar-day.selected {
-  box-shadow: inset 0 0 0 2px #337cb0;
-  background: #eff7ff;
+  box-shadow: inset 0 0 0 2px var(--muted);
+  background: var(--bg);
 }
 .calendar-day-number {
   display: flex;
@@ -84,7 +84,7 @@
 }
 .calendar-day-number small {
   font-size: 10px;
-  background: #e4edf4;
+  background: var(--blue-soft);
   border-radius: 10px;
   padding: 1px 5px;
 }
@@ -100,7 +100,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 4px;
-  color: #355b77;
+  color: var(--muted);
   max-height: 32px;
 }
 .calendar-entry .icon {
@@ -109,7 +109,7 @@
   flex-shrink: 0;
 }
 .calendar-entry.jubilee {
-  color: #8d6417;
+  color: var(--amber);
 }
 .calendar-dots {
   display: none;
@@ -121,7 +121,7 @@
   margin-bottom: 10px;
 }
 .calendar-undated {
-  border-top: 1px solid #d6e0e7;
+  border-top: 1px solid var(--line);
   padding: 15px 0;
 }
 @media (max-width: 760px) {
@@ -166,10 +166,10 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: #337cb0;
+    background: var(--muted);
   }
   .calendar-dots i.jubilee {
-    background: #b3831b;
+    background: var(--amber);
   }
   .calendar-weekday {
     font-size: 12px;
@@ -181,9 +181,9 @@
   gap: 4px;
 }
 .calendar-mode .active {
-  background: #e1eef9;
-  border-color: #337cb0;
-  color: #245d85;
+  background: var(--blue-soft);
+  border-color: var(--muted);
+  color: var(--muted);
 }
 #calendarYear {
   width: 110px;
@@ -195,17 +195,17 @@
 }
 .calendar-month {
   min-width: 0;
-  border: 1px solid #bdcedb;
+  border: 1px solid var(--line);
   border-radius: 6px;
   padding: 12px;
-  background: #fff;
+  background: var(--paper);
   color: var(--ink);
   text-align: left;
 }
 .calendar-month:hover,
 .calendar-month:focus-visible {
-  background: #edf6fd;
-  border-color: #337cb0;
+  background: var(--bg);
+  border-color: var(--muted);
 }
 .calendar-month-title {
   display: flex;
@@ -241,17 +241,17 @@
   position: relative;
 }
 .mini-calendar-day.has-events {
-  color: #236597;
+  color: var(--muted);
   font-weight: 700;
-  background: #e3eff9;
+  background: var(--blue-soft);
   border-radius: 3px;
 }
 .mini-calendar-day.jubilee {
-  background: #fff1cb;
-  color: #806016;
+  background: var(--amber-soft);
+  color: var(--amber);
 }
 .mini-calendar-day.today {
-  box-shadow: inset 0 0 0 1px #337cb0;
+  box-shadow: inset 0 0 0 1px var(--muted);
   border-radius: 3px;
 }
 @media (min-width: 1500px) {

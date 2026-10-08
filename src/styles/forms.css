@@ -3,34 +3,34 @@
   max-height: 92dvh;
   padding: 0;
   width: min(620px, calc(100vw - 28px));
-  background: #fff;
-  border: 1px solid #becbd4;
-  border-color: #9eb6ca;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-color: var(--line);
   border-radius: 5px;
-  box-shadow: 0 10px 38px #203b522d;
+  box-shadow: 0 10px 38px color-mix(in srgb, var(--ink) 18%, transparent);
 }
 .dialog.wide {
   width: min(960px, calc(100vw - 28px));
 }
 .dialog::backdrop {
   backdrop-filter: none;
-  background: #20334066;
+  background: color-mix(in srgb, var(--ink) 40%, transparent);
 }
 .modal-head {
   align-items: center;
   display: flex;
   gap: 15px;
   justify-content: space-between;
-  border-bottom: 1px solid #d7e0e6;
-  background: #f2f6fa;
-  border-color: #c8d9e6;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  border-color: var(--line);
   padding: 18px 20px;
 }
 .modal-head h2 {
   margin: 0;
   font-family: var(--ui-font);
   letter-spacing: 0;
-  color: #254c69;
+  color: var(--ink);
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.5;
@@ -45,10 +45,10 @@
   display: flex;
   gap: 8px;
   justify-content: flex-end;
-  border-top: 1px solid #dce3e8;
+  border-top: 1px solid var(--line);
   padding: 14px 22px;
-  background: #f4f7fa;
-  border-color: #cbdbe7;
+  background: var(--bg);
+  border-color: var(--line);
 }
 .modal-error {
   color: var(--red);
@@ -58,7 +58,7 @@
   margin: 0 0 15px;
 }
 .modal-error:not(:empty) {
-  background: #fff3f5;
+  background: var(--red-soft);
   border-radius: 8px;
   display: block;
   padding: 11px;
@@ -66,7 +66,7 @@
 .field {
   display: block;
   margin-bottom: 18px;
-  color: #34566f;
+  color: var(--muted);
   font-size: 0.9375rem;
   font-weight: 400;
   line-height: 1.5;
@@ -74,16 +74,16 @@
 .field input,
 .field select,
 .field textarea {
-  border: 1px solid #dfe1ec;
+  border: 1px solid var(--blue-soft);
   color: var(--ink);
   display: block;
   margin-top: 8px;
   padding: 11px 12px;
   width: 100%;
-  background: #fff;
+  background: var(--paper);
   border-radius: 4px;
   font-weight: 400;
-  border-color: #b9cddd;
+  border-color: var(--line);
   font-size: 1rem;
   line-height: 1.5;
   min-height: 39px;
@@ -127,7 +127,7 @@
   line-height: 1.5;
 }
 .check-grid label {
-  background: #f8f8fc;
+  background: var(--bg);
   border-radius: 7px;
   padding: 8px;
 }
@@ -143,17 +143,17 @@
   display: flex;
   gap: 8px;
   margin: 23px 0 13px;
-  color: #4e687b;
+  color: var(--muted);
   letter-spacing: 0;
   font-weight: 700;
 }
 .field-caption .icon {
-  color: #8980b5;
+  color: var(--muted);
   height: 18px;
   width: 18px;
 }
 .form-section {
-  background: #fdfdff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 11px;
   margin-bottom: 18px;
@@ -167,17 +167,17 @@
   margin-bottom: 0;
 }
 .upload-info {
-  background: #f0effb;
-  border: 1px solid #e2ddf5;
+  background: var(--bg);
+  border: 1px solid var(--blue-soft);
   border-radius: 9px;
-  color: #74679c;
+  color: var(--muted);
   font-size: 0.8125rem;
   line-height: 1.65;
   margin-bottom: 18px;
   padding: 13px;
 }
 .export-option {
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   display: flex;
   gap: 14px;
@@ -185,13 +185,13 @@
   padding: 18px;
   text-align: left;
   width: 100%;
-  border-color: #d6e1e8;
+  border-color: var(--line);
   border-radius: 5px;
   box-shadow: none;
 }
 .export-option:hover {
-  background: #f2f7fa;
-  border-color: #9bb3c5;
+  background: var(--bg);
+  border-color: var(--line);
 }
 .export-option > .icon {
   color: var(--blue);
@@ -210,7 +210,7 @@
   margin-top: 5px;
 }
 .crop-stage {
-  background: #eae9f4;
+  background: var(--blue-soft);
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -226,7 +226,7 @@
   gap: 10px;
 }
 .crop-controls select {
-  background: #fff;
+  background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 7px;
   padding: 8px;
@@ -238,7 +238,7 @@
 }
 .toast {
   bottom: 25px;
-  color: #fff;
+  color: var(--paper);
   left: 50%;
   line-height: 1.5;
   max-width: calc(100vw - 30px);
@@ -249,16 +249,16 @@
   transform: translateX(-50%);
   transition: opacity 0.2s;
   z-index: 100;
-  background: #294e69;
+  background: var(--ink);
   border-radius: 5px;
-  box-shadow: 0 4px 20px #294e6930;
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--ink) 19%, transparent);
   font-size: 0.875rem;
 }
 .toast.visible {
   opacity: 1;
 }
 .toast.error {
-  background: #a24155;
+  background: var(--red);
 }
 .menu-toggle,
 .mobile-only,

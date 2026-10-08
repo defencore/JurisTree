@@ -1,3 +1,4 @@
+import { applyTheme } from "./core/theme.js";
 import { bindFloatingWindows } from "./ui/floating-windows.js";
 import { startTemplates } from "./core/config.js";
 import { init } from "./app/bootstrap.js";
@@ -9,6 +10,7 @@ import { render } from "./ui/render.js";
 import { renderStart } from "./features/launcher.js";
 import { saveNow } from "./services/storage.js";
 import { state as appState } from "./core/state.js";
+applyTheme();
 mountShell();
 setLanguage(getLanguage());
 localizeShell();

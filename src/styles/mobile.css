@@ -34,12 +34,8 @@
     padding-right: 15px;
     min-width: 55px;
   }
-  .workspace,
-  .view-full .workspace {
-    height: calc(100dvh - 60px);
-  }
   .sidebar {
-    top: 60px;
+    top: var(--workspace-header-height);
     width: min(320px, calc(100vw - 40px));
   }
   .viewbar {
@@ -68,7 +64,7 @@
     gap: 6px;
     flex-wrap: wrap;
     padding: 6px 12px 8px;
-    background: #f4f7fa;
+    background: var(--bg);
     border-bottom: 1px solid var(--line);
   }
   .mobile-map-bar > .btn {
@@ -89,13 +85,13 @@
     min-width: 44px;
   }
   .mobile-map-bar .active {
-    background: #dcebf6;
-    border-color: #245d85;
+    background: var(--blue-soft);
+    border-color: var(--muted);
   }
   .mobile-map-bar p {
     flex: 0 0 100%;
     margin: 0;
-    color: #526b7c;
+    color: var(--muted);
     font-size: 0.6875rem;
     line-height: 1.5;
   }
@@ -151,9 +147,9 @@
     right: 0;
     width: 100%;
     max-height: 60dvh;
-    border: 1px solid #9eb6ca;
+    border: 1px solid var(--line);
     border-radius: 14px 14px 0 0;
-    box-shadow: 0 -6px 28px #203b5230;
+    box-shadow: 0 -6px 28px color-mix(in srgb, var(--ink) 19%, transparent);
     padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px));
   }
   .inspector-header {
@@ -161,7 +157,7 @@
     top: 0;
     z-index: 1;
     min-height: 55px;
-    background: #fff;
+    background: var(--paper);
     padding: 8px 0;
   }
   .inspector-header .iconbtn {
@@ -171,9 +167,9 @@
   .workspace:has(.sidebar.open) .mobile-shade {
     display: block;
     position: fixed;
-    inset: 60px 0 0;
+    inset: var(--workspace-header-height) 0 0;
     border: 0;
-    background: #20334066;
+    background: color-mix(in srgb, var(--ink) 40%, transparent);
     z-index: 26;
   }
   .person-biography {

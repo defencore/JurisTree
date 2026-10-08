@@ -4,7 +4,7 @@ import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { fit } from "../graph/camera.js";
-import { roleGroup, roleLabel } from "../graph/render.js";
+import { roleGroup, roleLabel } from "../model/relationship-labels.js";
 import { translate } from "../i18n/index.js";
 import { years } from "../model/dates.js";
 import { edgeState } from "../model/evidence.js";

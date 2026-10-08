@@ -111,11 +111,11 @@
   }
   .inspector {
     bottom: 0;
-    box-shadow: -10px 0 40px #21194820;
+    box-shadow: -10px 0 40px color-mix(in srgb, var(--ink) 13%, transparent);
     display: none;
     position: fixed;
     right: 0;
-    top: 78px;
+    top: var(--workspace-header-height);
     width: 350px;
     z-index: 25;
   }
@@ -189,7 +189,6 @@
   .view-full .workspace,
   .workspace {
     display: flex;
-    height: calc(100dvh - 68px);
     min-height: 0;
   }
   .main {
@@ -197,11 +196,11 @@
   }
   .sidebar {
     bottom: 0;
-    box-shadow: 10px 0 40px #21194825;
+    box-shadow: 10px 0 40px color-mix(in srgb, var(--ink) 15%, transparent);
     display: none;
     left: 0;
     position: fixed;
-    top: 68px;
+    top: var(--workspace-header-height);
     width: 250px;
     z-index: 30;
   }
@@ -212,7 +211,7 @@
     display: inline-flex;
   }
   .inspector {
-    top: 68px;
+    top: var(--workspace-header-height);
     width: min(350px, 100vw);
   }
   .viewbar {
@@ -331,8 +330,12 @@
     font-size: 0.75rem;
     padding: 7px 9px;
   }
+  .filterbar .search {
+    flex: 1 1 100%;
+  }
   .filterbar select {
-    flex: 1;
+    flex: 1 1 200px;
+    width: 100%;
   }
   .gaps-summary {
     gap: 7px;
@@ -582,8 +585,8 @@
     grid-template-columns: 210px minmax(300px, 1fr);
   }
   .inspector {
-    box-shadow: -4px 0 25px #213d5426;
-    top: 66px;
+    box-shadow: -4px 0 25px color-mix(in srgb, var(--ink) 15%, transparent);
+    top: var(--workspace-header-height);
   }
   .graph-context {
     flex-wrap: wrap;
@@ -627,14 +630,13 @@
   .view-full .workspace,
   .workspace {
     display: flex;
-    height: calc(100dvh - 60px);
   }
   .inspector,
   .sidebar {
-    top: 60px;
+    top: var(--workspace-header-height);
   }
   .sidebar {
-    box-shadow: 3px 0 25px #213d542b;
+    box-shadow: 3px 0 25px color-mix(in srgb, var(--ink) 17%, transparent);
     padding: 17px 14px;
     width: 258px;
   }
@@ -909,11 +911,11 @@
   }
   .inspector {
     bottom: 0;
-    box-shadow: -5px 0 24px #203f5630;
+    box-shadow: -5px 0 24px color-mix(in srgb, var(--ink) 19%, transparent);
     display: none;
     position: fixed;
     right: 0;
-    top: 66px;
+    top: var(--workspace-header-height);
     width: 360px;
     z-index: 25;
   }
@@ -977,17 +979,16 @@
   .view-full .workspace,
   .workspace {
     display: flex;
-    height: calc(100dvh - 60px);
   }
   .sidebar {
-    background: #f4f6f8;
+    background: var(--bg);
     bottom: 0;
-    box-shadow: 3px 0 24px #203f562b;
+    box-shadow: 3px 0 24px color-mix(in srgb, var(--ink) 17%, transparent);
     display: none;
     left: 0;
     padding: 16px 12px;
     position: fixed;
-    top: 60px;
+    top: var(--workspace-header-height);
     width: 280px;
     z-index: 30;
   }
@@ -1012,7 +1013,7 @@
   }
   .inspector {
     padding: 18px;
-    top: 60px;
+    top: var(--workspace-header-height);
     width: min(365px, 100vw);
   }
   .profile h2 {

@@ -24,9 +24,9 @@
 }
 .inspector[data-floating] {
   z-index: 45;
-  border: 1px solid #9eb6ca;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  box-shadow: 0 8px 32px #203b5233;
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--ink) 20%, transparent);
 }
 @media (min-width: 1081px) {
   .workspace:has(.inspector[data-floating]) {

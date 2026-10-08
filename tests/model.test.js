@@ -7,7 +7,7 @@ import { validateImport } from "../src/model/validation.js";
 import { dateExact, partialDate, nextAnniversary } from "../src/model/dates.js";
 import { kinshipBetween, cousinName } from "../src/model/kinship.js";
 import { edgeState } from "../src/model/evidence.js";
-import { familyLayout } from "../src/graph/layout.js";
+import { familyLayout } from "../src/graph/layouts/family.js";
 import {
   findGraphPaths,
   findConnectingNetwork,
@@ -43,8 +43,8 @@ test("all language catalogs have the same complete keys", () => {
 
 test("demo data round-trips through the validated archive model", () => {
   const model = validateImport(JSON.parse(JSON.stringify(project())));
-  assert.equal(model.people.length, 12);
-  assert.equal(model.relations.length, 18);
+  assert.equal(model.people.length, 13);
+  assert.equal(model.relations.length, 20);
   assert.equal(model.documents.length, 9);
 });
 
