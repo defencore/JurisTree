@@ -10,7 +10,8 @@ import { doc, person } from "../../model/project.js";
 import { linkedDocs } from "../../model/evidence.js";
 import { translate } from "../../i18n/index.js";
 import { graphAnalysisDialog } from "../../graph/controls.js";
-import { applyCamera, fit } from "../../graph/camera.js";
+import { applyCamera, fit, focusPerson } from "../../graph/camera.js";
+import { isMobileLayout } from "../../core/viewport.js";
 import {
   applyGraphPreset,
   hideGraphRelation,
@@ -19,7 +20,8 @@ import {
 } from "../../graph/analysis.js";
 import { editRelation } from "../../features/relationships.js";
 import { allocationRow, editProperty } from "../../features/property.js";
-import { editPerson, recordRow } from "../../features/profiles.js";
+import { editPerson } from "../../features/profiles.js";
+import { renderProfileRecord } from "../../ui/forms/profile-record.js";
 import { viewBiography } from "../../features/biography.js";
 import { selectStartTemplate } from "../../features/launcher.js";
 import { deleteGroup, editGroup, toggleGroup } from "../../features/groups.js";
@@ -131,7 +133,7 @@ export function bindClickEvents() {
       }
       if (b.dataset.eventPerson) {
         select("person", b.dataset.eventPerson);
-        fit();
+        isMobileLayout() ? focusPerson() : fit();
         return;
       }
       if (b.dataset.editGroup) {
@@ -175,7 +177,7 @@ export function bindClickEvents() {
         const section = b.dataset.addRecord;
         $("#records-" + section).insertAdjacentHTML(
           "beforeend",
-          recordRow(section),
+          renderProfileRecord(section),
         );
         icons();
         return;
@@ -199,7 +201,7 @@ export function bindClickEvents() {
         closeModal();
         appState.groupFilter = "";
         select("person", b.dataset.sourcePerson);
-        fit();
+        isMobileLayout() ? focusPerson() : fit();
         return;
       }
       if (b.dataset.sourceRelation) {
@@ -244,12 +246,16 @@ export function bindClickEvents() {
       if (b.dataset.view) {
         appState.view = b.dataset.view;
         render();
-        if (appState.view === "tree") fit();
-        if (innerWidth < 670) $("#sidebar").classList.remove("open");
+        if (appState.view === "tree") isMobileLayout() ? focusPerson() : fit();
+        if (isMobileLayout()) $("#sidebar").classList.remove("open");
         return;
       }
       if (b.dataset.person) {
         select("person", b.dataset.person);
+        if (isMobileLayout()) {
+          focusPerson();
+          return;
+        }
         const p = person(b.dataset.person),
           r = $("#graph").getBoundingClientRect();
         appState.camera.x =

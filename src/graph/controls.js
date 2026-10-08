@@ -38,6 +38,19 @@ export function renderGraphControls() {
   const toolbar = $("#graphToolbar"),
     context = $("#graphContext");
   if (!toolbar || !context) return;
+  const toolsButton = $('[data-action="mobile-tools"]');
+  toolsButton?.setAttribute(
+    "aria-expanded",
+    String(document.body.classList.contains("mobile-tools-open")),
+  );
+  const moveButton = $('[data-action="touch-move"]');
+  moveButton?.setAttribute("aria-pressed", String(appState.touchMove));
+  moveButton?.classList.toggle("active", appState.touchMove);
+  if ($("#mobileMapHint"))
+    $("#mobileMapHint").textContent = translate(
+      appState.touchMove ? "ui.mobileMoveHint" : "ui.mobileMapHint",
+    );
+
   toolbar.hidden = appState.view !== "tree";
   context.hidden = appState.view !== "tree";
   if (appState.view !== "tree") return;

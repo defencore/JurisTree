@@ -171,6 +171,13 @@ export const workspaceTemplate = `
         </div>
         <div class="view-actions" id="viewActions"></div>
       </div>
+      <div class="mobile-map-bar">
+        <button class="btn" data-action="mobile-tools" aria-expanded="false" aria-controls="mapSettings"><i data-icon="sliders"></i><span>@@ui.mapOptions@@</span></button>
+        <button class="iconbtn" data-action="focus-person" aria-label="@@ui.focusPerson@@" title="@@ui.focusPerson@@"><i data-icon="user"></i></button>
+        <button class="btn" data-action="touch-move" aria-pressed="false"><i data-icon="move"></i><span>@@ui.moveCards@@</span></button>
+        <p id="mobileMapHint">@@ui.mobileMapHint@@</p>
+      </div>
+      <div class="map-settings" id="mapSettings">
       <div class="status-board" id="statusBoard"></div>
       <div id="pathPanel"></div>
       <section
@@ -178,6 +185,7 @@ export const workspaceTemplate = `
         id="graphToolbar"
         aria-label="@@ui.analysisTools@@"
       ></section>
+      </div>
       <section
         class="graph-context"
         id="graphContext"
@@ -273,6 +281,7 @@ export const workspaceTemplate = `
       </div>
       <div class="scroll-view" id="otherView" hidden></div>
     </main>
+    <button type="button" class="mobile-shade" data-action="close-mobile-panels" aria-label="@@ui.closeNavigation@@"></button>
     <aside class="inspector" id="inspector"></aside>
   </div>
 </div>

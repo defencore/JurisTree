@@ -46,6 +46,7 @@ export const state = {
   analysisReturnGroup: null,
   multiSelection: new Set(),
   selectionMode: false,
+  touchMove: false,
   analysisResult: null,
   analysisMode: "path",
   analysisBusy: false,

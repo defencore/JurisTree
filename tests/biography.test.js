@@ -44,7 +44,7 @@ test("biography renders every structured field, zero values and escaped user tex
     setLanguage(language);
     const html = renderBiography(personBiography(state.project, "p5"));
     for (const value of [
-      "Alex Morgan",
+      "Alex Doe",
       "Recorded health details",
       "Watercolor painting",
       "Local history",

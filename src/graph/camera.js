@@ -1,6 +1,25 @@
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { filteredGraphNodes } from "./render.js";
+export function focusPerson(
+  id = appState.selected?.kind === "person" ? appState.selected.id : "",
+) {
+  const nodes = filteredGraphNodes();
+  const node =
+    nodes.find((n) => n.id === id) ||
+    nodes.find((n) => n.kind === "person") ||
+    nodes[0];
+  if (!node) return fit();
+  const rect = $("#graph").getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  const z = Math.min(1.1, Math.max(0.65, (rect.width - 48) / node.w));
+  appState.camera = {
+    z,
+    x: rect.width / 2 - (node.x + node.w / 2) * z,
+    y: rect.height / 2 - (node.y + node.h / 2) * z,
+  };
+  applyCamera();
+}
 export function applyCamera() {
   $("#scene").setAttribute(
     "transform",

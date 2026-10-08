@@ -20,8 +20,8 @@
 .graph-biography {
   cursor: pointer;
 }
-.graph-biography:hover rect,
-.graph-biography:focus-visible rect {
+.graph-biography:hover rect:not(.biography-hit),
+.graph-biography:focus-visible rect:not(.biography-hit) {
   fill: #dcebf6;
   stroke: #245d85;
   stroke-width: 2;

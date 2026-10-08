@@ -1,7 +1,8 @@
 import { render, select } from "../ui/render.js";
 import { scheduleSave } from "../services/storage.js";
 import { repairSelection } from "../services/history.js";
-import { fit } from "./camera.js";
+import { fit, focusPerson } from "./camera.js";
+import { isMobileLayout } from "../core/viewport.js";
 import { editProperty } from "../features/property.js";
 import { toggleGroup } from "../features/groups.js";
 import { viewDocument } from "../features/documents.js";
@@ -13,11 +14,14 @@ import { applyCamera, zoom } from "./camera.js";
 import { renderGraphControls } from "./controls.js";
 import { filteredGraphNodes, renderGraph } from "./render.js";
 import { nodeItem, person } from "../model/project.js";
+import { bindTouchInteractions } from "./touch.js";
 export function bindGraphInteractions() {
   const graph = $("#graph");
+  bindTouchInteractions(graph);
   graph.addEventListener("pointerdown", (e) => {
     if (
       e.button !== 0 ||
+      e.pointerType === "touch" ||
       appState.analysisBusy ||
       e.target.closest("[data-biography]")
     )
@@ -217,13 +221,16 @@ export function finishGraphDrag(e) {
   }
 }
 export function bindResizeEvents() {
+  let lastWidth = innerWidth;
   window.addEventListener("resize", () => {
+    if (lastWidth === innerWidth) return;
+    lastWidth = innerWidth;
     if (
       appState.initialized &&
       appState.editorActive &&
       $("#startScreen").hidden &&
       appState.view === "tree"
     )
-      fit();
+      isMobileLayout() ? focusPerson() : fit();
   });
 }

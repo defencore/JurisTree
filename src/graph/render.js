@@ -195,7 +195,7 @@ export function nodeSVG(n, images = null, exporting = false) {
   }
   const biography =
     n.kind === "person" && !exporting
-      ? `<g class="graph-biography" data-biography="${n.id}" transform="translate(${n.x + PERSON_CARD_WIDTH - 42} ${n.y + 70})" role="button" tabindex="0" aria-label="${esc(translate("ui.viewAutobiographyOf", { name: n.name }))}" opacity="${dim ? 0.3 : 1}"><title>${esc(translate("ui.autobiography"))}</title><rect width="28" height="24" rx="4" fill="#edf3f8" stroke="#b9cddd"/>${svgIcon("book", 6, 4, "#315d7c", 0.65)}</g>`
+      ? `<g class="graph-biography" data-biography="${n.id}" transform="translate(${n.x + PERSON_CARD_WIDTH - 42} ${n.y + 70})" role="button" tabindex="0" aria-label="${esc(translate("ui.viewAutobiographyOf", { name: n.name }))}" opacity="${dim ? 0.3 : 1}"><title>${esc(translate("ui.autobiography"))}</title><rect class="biography-hit" x="-8" y="-10" width="44" height="44" fill="transparent"/><rect width="28" height="24" rx="4" fill="#edf3f8" stroke="#b9cddd"/>${svgIcon("book", 6, 4, "#315d7c", 0.65)}</g>`
       : "";
   return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(n.name || n.title)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="#fff" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${biography}`;
 }

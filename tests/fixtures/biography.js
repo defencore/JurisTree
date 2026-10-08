@@ -5,7 +5,7 @@ export function biographyProject() {
   const p = project.people.find((person) => person.id === "p5");
   Object.assign(p, {
     name: "Alex Example",
-    aliases: "Alex Morgan",
+    aliases: "Alex Doe",
     lifeStatus: "living",
     place: "Kyiv, Ukraine",
     biography: "My life story.\nLiteral <b>text</b>, without HTML formatting.",

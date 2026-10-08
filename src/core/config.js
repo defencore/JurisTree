@@ -1,4 +1,5 @@
 import { translate } from "../i18n/index.js";
+import { extendedProfileSections } from "./profile-sections/index.js";
 export const GRAPH_FONT = "DejaVu Sans,Tahoma,Verdana,Arial,sans-serif";
 export function types() {
   return {
@@ -86,16 +87,37 @@ export function sectionInfo() {
     interests: [translate("ui.hobbiesAndInterests"), "sparkles"],
     health: [translate("ui.healthInformation"), "heartPulse"],
     pets: [translate("ui.pets"), "paw"],
+    ...Object.fromEntries(
+      Object.entries(extendedProfileSections()).map(([key, section]) => [
+        key,
+        section.info,
+      ]),
+    ),
   };
 }
 export const defaultScopes = {
-  family: Object.keys(sectionInfo()),
+  family: [
+    "timeline",
+    "contacts",
+    "residences",
+    "biography",
+    "occupations",
+    "interests",
+    "health",
+    "pets",
+  ],
   inheritance: [],
   property: ["contacts"],
   research: ["timeline", "residences", "biography", "occupations"],
 };
 export function recordConfigs() {
   return {
+    ...Object.fromEntries(
+      Object.entries(extendedProfileSections()).map(([key, section]) => [
+        key,
+        section.config,
+      ]),
+    ),
     timeline: {
       key: "events",
       label: translate("ui.event"),

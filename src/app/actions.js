@@ -21,7 +21,7 @@ import {
   relationShown,
   resetAnalysis,
 } from "../graph/analysis.js";
-import { fit, zoom } from "../graph/camera.js";
+import { fit, focusPerson, zoom } from "../graph/camera.js";
 import {
   editGraphFilters,
   graphAnalysisDialog,
@@ -83,6 +83,18 @@ export async function handleAction(action) {
     undo,
     redo,
     fit,
+    "focus-person": () => focusPerson(),
+    "mobile-tools": () => {
+      const open = document.body.classList.toggle("mobile-tools-open");
+      $('[data-action="mobile-tools"]').setAttribute(
+        "aria-expanded",
+        String(open),
+      );
+    },
+    "touch-move": () => {
+      appState.touchMove = !appState.touchMove;
+      renderGraphControls();
+    },
     layout: () => arrangeGraph(),
     "graph-search": () => graphAnalysisDialog(),
     "graph-help": graphHelp,
@@ -124,7 +136,14 @@ export async function handleAction(action) {
     new: newTree,
     project: editProject,
     "add-property": () => editProperty(),
-    menu: () => $("#sidebar").classList.toggle("open"),
+    menu: () => {
+      $("#inspector").classList.remove("open");
+      $("#sidebar").classList.toggle("open");
+    },
+    "close-mobile-panels": () => {
+      $("#sidebar").classList.remove("open");
+      $("#inspector").classList.remove("open");
+    },
     "close-panel": () => $("#inspector").classList.remove("open"),
   };
   if (handlers[action]) await handlers[action]();

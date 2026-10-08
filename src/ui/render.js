@@ -228,7 +228,7 @@ export function select(kind, id) {
     icons();
   }
   $("#inspector").classList.add("open");
-  if (innerWidth < 670) $("#sidebar").classList.remove("open");
+  if (innerWidth <= 760) $("#sidebar").classList.remove("open");
 }
 export function renderStatusBoard() {
   const ds = appState.project.documents.filter(sourceInScope),

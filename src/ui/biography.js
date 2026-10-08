@@ -15,13 +15,7 @@ import { hasFile } from "../model/evidence.js";
 import { person } from "../model/project.js";
 import { avatar, sourceChips, sourceLink } from "./components.js";
 import { icon } from "./icons.js";
-
-function fields(entries) {
-  const rows = entries.filter(([, value]) => value !== "" && value != null);
-  return rows.length
-    ? `<dl class="biography-fields">${rows.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`
-    : "";
-}
+import { fields, recordValues } from "./profile-fields.js";
 
 function section(label, symbol, body, key) {
   if (!body) return "";
@@ -30,18 +24,7 @@ function section(label, symbol, body, key) {
 
 function record(sectionKey, item) {
   const cfg = recordConfigs()[sectionKey];
-  const values = cfg.fields
-    .filter(([, , type]) => type !== "source")
-    .map(([key, label, type, options]) => [
-      label,
-      item[key]
-        ? type === "select"
-          ? options[item[key]] || item[key]
-          : ["date", "period"].includes(type)
-            ? displayDate(item[key])
-            : item[key]
-        : "",
-    ]);
+  const values = recordValues(cfg, item);
   return `<article class="biography-record">${fields(values)}${sourceChips(item.sourceId ? [item.sourceId] : [])}</article>`;
 }
 

@@ -85,7 +85,7 @@ test("opens a complete autobiography from every person entry point and language"
   await page.locator('#personList [data-person="p5"]').click();
   await page.locator('#inspector [data-biography="p5"]').click();
   await page.locator('.biography [data-biography="p3"]').click();
-  await expect(page.locator(".biography-header h2")).toHaveText("Олена Коваль");
+  await expect(page.locator(".biography-header h2")).toHaveText("Jamie Doe");
   await page.locator("[data-close]").first().click();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#graph [data-biography="p5"]').focus();
@@ -119,7 +119,9 @@ test("switches every language in the launch screen and editor", async ({
   await demo(page);
   await page.locator("#appShell [data-language]").selectOption("uk");
   await expect(page.locator("#viewTitle")).toHaveText("Схема зв’язків");
-  await expect(page.locator("#projectTitle")).toHaveText("Родина Ковалів");
+  await expect(page.locator("#projectTitle")).toHaveText(
+    "Doe family — fictional demo",
+  );
   await page.locator("#appShell [data-language]").selectOption("ru");
   await expect(page.locator("#viewTitle")).toHaveText("Схема связей");
   await expect(page.locator("#saveState")).toContainText("Черновик сохранён");

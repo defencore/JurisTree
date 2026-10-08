@@ -7,7 +7,8 @@ import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { sample } from "../data/demo.js";
 import { resetAnalysis } from "../graph/analysis.js";
-import { fit } from "../graph/camera.js";
+import { fit, focusPerson } from "../graph/camera.js";
+import { isMobileLayout } from "../core/viewport.js";
 import { translate } from "../i18n/index.js";
 import { fresh } from "../model/project.js";
 import { exportArchive } from "../services/archive.js";
@@ -102,6 +103,8 @@ export function activateTree(
   resetAnalysis(false);
   appState.multiSelection.clear();
   appState.selectionMode = false;
+  appState.touchMove = false;
+  document.body.classList.remove("mobile-tools-open");
   appState.project = model;
   for (const [id, b] of files) appState.blobs.set(id, b);
   appState.editorActive = true;
@@ -125,6 +128,8 @@ export function activateTree(
     z: 1,
   };
   $("#peopleSearch").value = "";
+  $("#sidebar").classList.remove("open");
+  $("#inspector").classList.remove("open");
   appState.selected = appState.project.people.length
     ? {
         kind: "person",
@@ -135,7 +140,7 @@ export function activateTree(
   $("#appShell").hidden = false;
   $("#startError").textContent = "";
   render();
-  requestAnimationFrame(fit);
+  requestAnimationFrame(() => (isMobileLayout() ? focusPerson() : fit()));
   if (persist) scheduleSave();
   else
     $("#saveState").innerHTML = icon("check") + translate("ui.draftOnDevice");

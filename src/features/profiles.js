@@ -1,16 +1,19 @@
 import { renderPersonForm } from "../ui/forms/person.js";
+import { renderProfileRecord } from "../ui/forms/profile-record.js";
+import { fields, recordValues } from "../ui/profile-fields.js";
 import { defaultScopes, recordConfigs, sectionInfo } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { safeUrl, uid } from "../core/utils.js";
-import { bounds, fit } from "../graph/camera.js";
+import { bounds, fit, focusPerson } from "../graph/camera.js";
+import { isMobileLayout } from "../core/viewport.js";
 import { translate } from "../i18n/index.js";
 import { dateExact, displayDate } from "../model/dates.js";
 import { requirements } from "../model/evidence.js";
 import { group, person } from "../model/project.js";
 import { profileFormError } from "../model/validation.js";
 import { commit } from "../services/history.js";
-import { checks, sourceChips, typeOptions } from "../ui/components.js";
+import { checks, sourceChips } from "../ui/components.js";
 import { openDialog } from "../ui/dialog.js";
 import { icon } from "../ui/icons.js";
 export async function editPerson(id = null) {
@@ -97,7 +100,7 @@ export async function editPerson(id = null) {
       };
     }
   });
-  if (!id) fit();
+  if (!id) isMobileLayout() ? focusPerson() : fit();
 }
 export async function editProject() {
   const f = await openDialog(
@@ -144,45 +147,35 @@ export async function editScope() {
         f.getAll("sections");
     });
 }
-export function recordRow(section, record = {}) {
-  const cfg = recordConfigs()[section];
-  return `<div class="profile-record" data-record-section="${section}"><div class="record-row-head"><b>${cfg.label}</b><button type="button" class="iconbtn small ghost" data-remove-record aria-label="${translate("ui.deleteRecord")}">${icon("trash")}</button></div><input type="hidden" name="${section}-id" value="${record.id || uid()}"><div class="form-grid">${cfg.fields
-    .map(([key, label, type, options]) => {
-      const name = section + "-" + key,
-        value = record[key] || "";
-      const input =
-        type === "select"
-          ? `<select name="${name}">${typeOptions(options, value || Object.keys(options)[0])}</select>`
-          : type === "source"
-            ? `<select name="${name}"><option value="">${translate("ui.noSource")}</option>${appState.project.documents.map((d) => `<option value="${d.id}" ${d.id === value ? "selected" : ""}>${esc(d.title)}</option>`).join("")}</select>`
-            : type === "textarea"
-              ? `<textarea name="${name}" rows="2" maxlength="5000">${esc(value)}</textarea>`
-              : `<input name="${name}" type="${type === "date" ? "date" : "text"}" value="${esc(type === "date" ? dateExact(value) : value)}" maxlength="1000" ${type === "period" ? `placeholder="${translate("ui.yearOrYyyyMmDd")}"` : ""}>`;
-      return `<label class="field ${["textarea", "source"].includes(type) ? "full" : ""}">${label}${input}</label>`;
-    })
-    .join("")}</div></div>`;
-}
 export function profileEditors(p) {
-  return profileScope()
-    .map((section) => {
-      const [label, ic] = sectionInfo()[section];
-      let body = "";
-      if (recordConfigs()[section]) {
-        const cfg = recordConfigs()[section];
-        body = `<div id="records-${section}">${(p[cfg.key] || []).map((r) => recordRow(section, r)).join("")}</div><button type="button" class="btn small" data-add-record="${section}">${icon("plus")}${translate("ui.addRecord")}</button>`;
-      } else if (section === "biography") {
-        body = `<label class="field">${translate("ui.lifeStoryAndHistoricalInformation")}<textarea name="biography" rows="6" maxlength="30000">${esc(p.biography)}</textarea></label><p class="field-caption">${translate("ui.supportingSources")}</p>${checks(appState.project.documents, "bioSourceIds", p.bioSourceIds || [], (d) => d.title)}`;
-      } else if (section === "interests") {
-        body = `<label class="field">${translate("ui.hobbies")}<textarea name="hobbies" maxlength="5000">${esc(p.hobbies)}</textarea></label><label class="field">${translate("ui.interests")}<textarea name="interests" maxlength="5000">${esc(p.interests)}</textarea></label>`;
-      } else
-        body = `<label class="field">${translate("ui.healthDetails")}<textarea name="health" rows="4" maxlength="10000">${esc(p.health)}</textarea></label><p class="field-caption">${translate("ui.relatedSources")}</p>${checks(appState.project.documents, "healthSourceIds", p.healthSourceIds || [], (d) => d.title)}`;
-      return `<details class="profile-editor-section"><summary>${icon(ic)}${label}<span>${recordConfigs()[section] ? (p[recordConfigs()[section].key] || []).length : ""}</span>${icon("chevron")}</summary><div>${body}</div></details>`;
-    })
-    .join("");
+  const visible = profileScope();
+  const renderSection = (section) => {
+    const [label, ic] = sectionInfo()[section];
+    let body = "";
+    if (recordConfigs()[section]) {
+      const cfg = recordConfigs()[section];
+      body = `<div id="records-${section}">${(p[cfg.key] || []).map((r) => renderProfileRecord(section, r)).join("")}</div><button type="button" class="btn small" data-add-record="${section}">${icon("plus")}${translate("ui.addRecord")}</button>`;
+    } else if (section === "biography") {
+      body = `<label class="field">${translate("ui.lifeStoryAndHistoricalInformation")}<textarea name="biography" rows="6" maxlength="30000">${esc(p.biography)}</textarea></label><p class="field-caption">${translate("ui.supportingSources")}</p>${checks(appState.project.documents, "bioSourceIds", p.bioSourceIds || [], (d) => d.title)}`;
+    } else if (section === "interests") {
+      body = `<label class="field">${translate("ui.hobbies")}<textarea name="hobbies" maxlength="5000">${esc(p.hobbies)}</textarea></label><label class="field">${translate("ui.interests")}<textarea name="interests" maxlength="5000">${esc(p.interests)}</textarea></label>`;
+    } else
+      body = `<label class="field">${translate("ui.healthDetails")}<textarea name="health" rows="4" maxlength="10000">${esc(p.health)}</textarea></label><p class="field-caption">${translate("ui.relatedSources")}</p>${checks(appState.project.documents, "healthSourceIds", p.healthSourceIds || [], (d) => d.title)}`;
+    return `<details class="profile-editor-section"><summary>${icon(ic)}${label}<span>${recordConfigs()[section] ? (p[recordConfigs()[section].key] || []).length : ""}</span>${icon("chevron")}</summary><div>${body}</div></details>`;
+  };
+  const additional = Object.keys(sectionInfo()).filter(
+    (key) => !visible.includes(key),
+  );
+  return (
+    visible.map(renderSection).join("") +
+    (additional.length
+      ? `<details class="profile-additional-sections"><summary>${icon("plus")}${translate("ui.moreProfileSections")}${icon("chevron")}</summary><div><p class="hint">${translate("ui.moreProfileSectionsHint")}</p>${additional.map(renderSection).join("")}</div></details>`
+      : "")
+  );
 }
 export function collectProfile(form) {
   const data = {};
-  for (const section of profileScope()) {
+  for (const section of Object.keys(sectionInfo())) {
     if (recordConfigs()[section]) {
       const cfg = recordConfigs()[section],
         ids = form.getAll(section + "-id");
@@ -215,6 +208,9 @@ export function collectProfile(form) {
   return data;
 }
 export function recordDetails(section, r) {
+  const cfg = recordConfigs()[section];
+  if (cfg.extended)
+    return `<div class="biography-record">${fields(recordValues(cfg, r))}${r.sourceId ? sourceChips([r.sourceId]) : ""}</div>`;
   const ic =
     section === "pets"
       ? {

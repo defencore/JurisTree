@@ -9,17 +9,40 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Family, inheritance, property, research and blank project templates.
 - People, family groups and six relationship types, including adoption and acquaintance.
 - Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts.
+- Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Mobile controls are collapsible and the person panel opens as a bottom sheet.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
 - Kinship descriptions based on recorded relationships.
 - Document references, digital attachments, evidence states and configurable checklists.
 - Profiles with contacts, residence history, biographies, work, education, interests, health information and pets.
+- Optional identity documents, citizenship and immigration records, tax declarations, personal portrait entries and custom facts. Each section supports multiple records, dates, notes and linked sources.
 - A complete autobiography view for every person, available from the map, people list and profile panel. It includes populated profile sections regardless of workspace visibility, family relationships, property, notes and linked sources with attachments.
 - Upcoming anniversaries and a historical timeline, including partial dates and leap-day handling.
 - Property records with manually entered allocation shares.
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.
 - English, Ukrainian and Russian interfaces, displayed as **EN / UA / RU**.
 
-Demo records are fictional. The launch screen opens before any demo is loaded or existing draft is replaced.
+Demo people use explicit Doe/Roe placeholders. Their relationships, identity document numbers and personal details are invented. The launch screen opens before any demo is loaded or existing draft is replaced. Loading the updated demo does not rewrite existing saved projects.
+
+## Detailed profiles
+
+Open a person's editor and expand **Add more information** to use sections outside the current workspace's visible scope. Select a section, add a record, then expand only the field groups you need. All sections remain editable regardless of workspace visibility. **Choose visible data** controls the sections in the person panel; the complete autobiography includes every populated section.
+
+| Module                      | Available information                                                                                                                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Identity documents          | Document and passport type, country, series, number, issuing authority and code, issue/expiry dates, status, holder details, citizenship, personal number, registered address, machine-readable lines and a linked scan/source |
+| Citizenship and immigration | Country, status, visa/permit category and number, validity, application and decision, case/authority, citizenship basis, purpose, sponsor, travel dates, address and conditions                                                |
+| Tax information             | Country and year, tax ID and residence, currency, declaration metadata, income, deductions, credits, tax due/paid/refund, assets, liabilities and foreign accounts                                                             |
+| Personal portrait           | Character, habits, routine, values, religious or political views and preferences, with description, attribution, reporting date, context, period and source                                                                    |
+| Custom facts                | A category, label, value, period, notes and source for details beyond the predefined fields                                                                                                                                    |
+
+Dates and numeric amounts are validated during editing and import. Monetary values retain the entered precision, including zero, and are not calculated automatically. A personal portrait stores entered descriptions and their attribution; it does not infer beliefs or make psychological assessments. These modules capture information and sources, rather than generate country-specific migration or tax forms.
+
+## Using the map on a phone
+
+- Drag anywhere on the map, including a card, to pan. Pinch with two fingers to zoom; tap a person to open the bottom sheet.
+- Use the person focus button to center the selected person at a readable scale. The fit button shows the entire map.
+- Enable **Move cards** to rearrange person cards with one finger. Turn it off to resume panning over cards. Movement supports undo/redo; cancelled gestures restore the card position.
+- Expand **Map tools** for layouts, filters, connection search and other map settings. Open the navigation menu for people, sources and other workspace views.
 
 ## Local development
 
@@ -78,17 +101,20 @@ src/
   core/
     state.js               Shared runtime state and history collections
     config.js              Record types, profile sections and display settings
+    profile-sections/      Independent extended profile definitions and field groups
+    viewport.js            Shared mobile layout breakpoint
     dom.js                 DOM queries and HTML escaping
     utils.js               IDs, cloning, formatting, URLs and downloads
   model/                   Project selectors, validation, dates, evidence and kinship
   features/                People, documents, groups, events, property and launcher flows
-  graph/                   Rendering, camera, interaction, layouts, analysis and legends
+  graph/                   Rendering, camera, mouse/touch interaction, layouts and analysis
   services/                IndexedDB saving, history, files, archives and browser tools
   ui/
     shell.js               Shell mounting and static translation bindings
     templates/             Readable launch, workspace and dialog markup
     components.js          Shared HTML components
     forms/                 Individual dialog and form components
+    profile-fields.js      Shared structured field display for profiles and biographies
     dialog.js              Dialog lifecycle and notifications
     cropper.js             Client-side image preparation
     icons.js               One immutable collection of SVG icon paths
@@ -121,7 +147,9 @@ The optional browser `document.modelContext` integration is isolated in `service
 
 ### A new profile section
 
-Add the section metadata and field configuration to `sectionInfo()` and `recordConfigs()` in `core/config.js`, then choose the purposes that show it in `defaultScopes`. Existing profile editors and imported record validation use these definitions. Add custom presentation or validation if the section needs behavior beyond configured fields.
+Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Field types include text, textarea, select, source, exact date, partial period, year and number. Unlabelled groups show immediately; labelled groups become expandable details.
+
+The registry feeds the editor, collection, import validation, source cleanup, workspace scope picker and complete autobiography. Add translations in all three catalogs and tests for meaningful validation or persistence behavior. Choose initial visibility in `defaultScopes` only when the section should appear in that workspace by default; otherwise it is accessible through **Add more information**. Core profile sections remain defined in `core/config.js`.
 
 ### Translations
 

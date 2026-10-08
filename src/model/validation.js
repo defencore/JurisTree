@@ -10,11 +10,12 @@ import {
 } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { safeUrl, uid } from "../core/utils.js";
-import { collectProfile, profileScope } from "../features/profiles.js";
+import { collectProfile } from "../features/profiles.js";
 import { normalizeGraphView } from "../graph/analysis.js";
 import { translate } from "../i18n/index.js";
 import { dateExact, partialDate } from "./dates.js";
 import { fresh } from "./project.js";
+import { profileRecordError } from "./profile-records.js";
 export function isParentCycle(from, to, except) {
   const stack = [to],
     seen = new Set();
@@ -137,6 +138,8 @@ export function validateImport(raw) {
             throw Error(translate("ui.invalidProfileDate"));
           out[key] = value;
         }
+        const recordError = profileRecordError(cfg, out);
+        if (recordError) throw Error(recordError);
         return out;
       });
     }
@@ -317,20 +320,15 @@ export function chronologyError(p) {
   return "";
 }
 export function profileFormError(form, p) {
-  for (const [section, cfg] of Object.entries(recordConfigs()))
-    if (profileScope().includes(section)) {
-      if (form.getAll(section + "-id").length > 200)
-        return translate("ui.eachSectionSupportsUpTo200Records");
-      for (const [key, , type] of cfg.fields)
-        if (type === "date")
-          for (const value of form.getAll(section + "-" + key))
-            if (value && !dateExact(value))
-              return (
-                translate("ui.enterAValidDateInSection") +
-                sectionInfo()[section][0] +
-                "»."
-              );
+  const data = collectProfile(form, p);
+  for (const [section, cfg] of Object.entries(recordConfigs())) {
+    if (form.getAll(section + "-id").length > 200)
+      return translate("ui.eachSectionSupportsUpTo200Records");
+    for (const record of data[cfg.key] || []) {
+      const error = profileRecordError(cfg, record);
+      if (error) return sectionInfo()[section][0] + ": " + error;
     }
+  }
   for (const key of ["birthDate", "deathDate"])
     if (form.get(key) && !dateExact(form.get(key)))
       return translate("ui.enterAValidBirthOrDeathDate");
