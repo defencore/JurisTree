@@ -101,6 +101,15 @@ test("touch rearranging is explicit, cancellable and undoable", async ({
   card = await node.locator(".card").boundingBox();
   await drag(session, [card.x + 40, card.y + 35], [card.x + 90, card.y + 85]);
   await expect(node).not.toHaveAttribute("transform", original);
+  await expect
+    .poll(() =>
+      page.evaluate(async () => {
+        const { state } = await import("./src/core/state.js");
+        return state.history.length;
+      }),
+    )
+    .toBe(1);
+  await expect(page.locator("#saveState")).toContainText("Draft saved");
   await page.locator('[data-action="undo"]').tap();
   await expect(node).toHaveAttribute("transform", original);
 });
