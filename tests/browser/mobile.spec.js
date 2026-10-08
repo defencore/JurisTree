@@ -82,6 +82,26 @@ test("mobile map gives space to the graph and supports real pan, pinch and tap g
 test("touch rearranging is explicit, cancellable and undoable", async ({
   page,
 }) => {
+  const clicks = [];
+  page.on("console", (message) => {
+    if (message.text().startsWith("TOUCH_DEBUG:")) clicks.push(message.text());
+  });
+  await page.evaluate(() => {
+    for (const type of ["pointerdown", "pointerup", "click"])
+      document.addEventListener(
+        type,
+        (event) =>
+          console.log(
+            "TOUCH_DEBUG:" +
+              JSON.stringify({
+                type,
+                target: event.target.tagName,
+                action: event.target.closest("[data-action]")?.dataset.action,
+              }),
+          ),
+        true,
+      );
+  });
   const node = page.locator('.node[data-node="p5"]');
   const original = await node.getAttribute("transform");
   const session = await page.context().newCDPSession(page);
@@ -110,8 +130,27 @@ test("touch rearranging is explicit, cancellable and undoable", async ({
     )
     .toBe(1);
   await expect(page.locator("#saveState")).toContainText("Draft saved");
+  const beforeUndo = await page.evaluate(async () => {
+    const { state } = await import("./src/core/state.js");
+    return state.history
+      .map((p) => p.people.find((p) => p.id === "p5"))
+      .map((p) => ({ x: p.x, y: p.y }));
+  });
   await page.locator('[data-action="undo"]').tap();
-  await expect(node).toHaveAttribute("transform", original);
+  const afterUndo = await page.evaluate(async () => {
+    const { state } = await import("./src/core/state.js");
+    return {
+      history: state.history.length,
+      future: state.future.length,
+      person: state.project.people
+        .filter((p) => p.id === "p5")
+        .map((p) => ({ x: p.x, y: p.y })),
+    };
+  });
+  await expect(
+    node,
+    JSON.stringify({ beforeUndo, afterUndo, clicks }),
+  ).toHaveAttribute("transform", original);
 });
 
 test("phone users can open the autobiography and edit optional document details", async ({
