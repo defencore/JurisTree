@@ -59,6 +59,8 @@ Use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to select an existing Chromium executable. 
 
 The build copies browser assets and adds `.nojekyll`; it does not bundle or transpile the application. Asset URLs and module imports are relative, so both a domain root and a URL such as `https://example.github.io/JurisTree/` work without a base-path configuration.
 
+The repository's `CNAME` file configures `juristree.global.agency` and is included in the deployment artifact. Set the same custom domain in **Settings → Pages** and enable HTTPS when its certificate is ready. To use the default GitHub Pages address, remove `CNAME` and clear the custom domain in those settings.
+
 To use another static host, upload the contents of `dist/` while preserving its directory structure. No server rewrite rules or environment secrets are required.
 
 ## Architecture
