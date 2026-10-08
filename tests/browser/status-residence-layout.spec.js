@@ -64,7 +64,7 @@ test("residence editor validates periods, saves country details and retains biol
 }) => {
   await page.locator('#personList [data-person="p6"]').click();
   const parents = page.locator("#inspector .kin-group").first();
-  for (const name of ["Jamie Roe", "Jordan Roe", "Quinn Roe"])
+  for (const name of ["Jamie Roe", "Jordan Roe", "Quinn Vale"])
     await expect(parents).toContainText(name);
   await expect(parents).toContainText("Adoptive parent");
   await expect(parents).toContainText("Mother");
@@ -93,7 +93,7 @@ test("residence editor validates periods, saves country details and retains biol
   await page.locator('#personList [data-biography="p6"]').click();
   await expect(page.locator(".biography")).toContainText("Testland");
   await expect(page.locator(".biography")).toContainText("Test City");
-  await expect(page.locator(".biography")).toContainText("Quinn Roe");
+  await expect(page.locator(".biography")).toContainText("Quinn Vale");
 });
 
 test("desktop, tablet and narrow phone layouts keep navigation, search, graph and dialogs within the viewport", async ({

@@ -1,0 +1,72 @@
+export const connectedHouseholds = [
+  [
+    "roe-branch",
+    "1957-06-22",
+    ["walter-roe", "Walter Roe", "1930-08-15", "2006-12-04", "m"],
+    ["diana", "Diana Roe", "1934-02-07", "2019-07-21", "f", "Sutton"],
+    ["p4", "claire"],
+  ],
+  [
+    "roe-branch",
+    "1987-07-18",
+    ["ethan", "Ethan Foster", "1962-04-13", "", "m"],
+    ["claire", "Claire Foster", "1964-09-06", "", "f", "Roe"],
+    ["liam"],
+  ],
+  [
+    "roe-branch",
+    "2016-05-28",
+    ["liam", "Liam Foster", "1990-12-02", "", "m"],
+    ["hazel", "Hazel Foster", "1992-03-17", "", "f", "Hayes"],
+    [["amelia-foster", "Amelia Foster", "2019-08-23", "", "f"]],
+  ],
+  [
+    "ward-branch",
+    "1960-08-13",
+    ["eric", "Eric Ward", "1937-06-19", "2017-01-30", "m"],
+    ["vera", "Vera Ward", "1940-10-14", "2022-05-08", "f", "Bishop"],
+    ["p7", "owen"],
+  ],
+  [
+    "ward-branch",
+    "1993-07-24",
+    ["owen", "Owen Ward", "1967-05-22", "", "m"],
+    ["natalie", "Natalie Ward", "1970-11-08", "", "f", "Cole"],
+    [
+      ["evan", "Evan Ward", "1996-01-11", "", "m"],
+      ["leah", "Leah Ward", "2000-09-07", "", "f"],
+    ],
+  ],
+  [
+    "g2",
+    "1961-09-16",
+    ["hugh", "Hugh Blake", "1936-03-29", "2009-04-18", "m"],
+    ["sylvia", "Sylvia Blake", "1939-07-25", "2020-11-02", "f", "Grant"],
+    ["p9"],
+  ],
+  [
+    "g2",
+    "1968-05-11",
+    ["peter-vale", "Peter Vale", "1941-01-09", "2019-06-14", "m"],
+    ["judith", "Judith Vale", "1945-08-21", "", "f", "Fletcher"],
+    ["p12"],
+  ],
+  [
+    "g2",
+    "1983-06-25",
+    ["arthur-hale", "Arthur Hale", "1955-11-12", "", "m"],
+    ["beth", "Beth Hale", "1958-04-09", "", "f", "Porter"],
+    [
+      "p10",
+      ["megan", "Megan Hale", "1990-08-18", "", "f"],
+      ["nora-hale", "Nora Hale", "1993-02-26", "", "f"],
+    ],
+  ],
+  [
+    "g2",
+    "1973-08-04",
+    ["dennis", "Dennis Cross", "1950-06-16", "", "m"],
+    ["pauline", "Pauline Cross", "1953-09-04", "", "f", "Page"],
+    ["p11"],
+  ],
+];

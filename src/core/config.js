@@ -2,6 +2,8 @@ import { theme } from "./theme.js";
 import { translate } from "../i18n/index.js";
 import { extendedProfileSections } from "./profile-sections/index.js";
 export const GRAPH_FONT = "DejaVu Sans,Tahoma,Verdana,Arial,sans-serif";
+export const CAMERA_MIN_ZOOM = 0.025;
+export const CAMERA_MAX_ZOOM = 2.5;
 export function types() {
   return {
     birth: translate("ui.birthCertificate"),

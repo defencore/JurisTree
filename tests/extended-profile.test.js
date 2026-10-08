@@ -145,13 +145,3 @@ test("pinch camera preserves the focal point and clamps zoom", () => {
     2.5,
   );
 });
-
-test("demo identities and relationships are explicit fictional placeholders", () => {
-  const model = sample();
-  assert.ok(model.title.includes("fictional"));
-  assert.ok(
-    model.people.every(
-      (p) => /\b(Doe|Roe)\b/.test(p.name) && p.notes.includes("Fictional"),
-    ),
-  );
-});

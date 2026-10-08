@@ -1,6 +1,7 @@
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { filteredGraphNodes } from "./nodes.js";
+import { CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM } from "../core/config.js";
 export function focusPerson(
   id = appState.selected?.kind === "person" ? appState.selected.id : "",
 ) {
@@ -52,7 +53,10 @@ export function fit() {
   const b = bounds();
   appState.camera.z = Math.min(
     1.1,
-    Math.max(0.15, Math.min((rect.width - 40) / b.w, (rect.height - 75) / b.h)),
+    Math.max(
+      CAMERA_MIN_ZOOM,
+      Math.min((rect.width - 40) / b.w, (rect.height - 75) / b.h),
+    ),
   );
   appState.camera.x =
     (rect.width - b.w * appState.camera.z) / 2 - b.x * appState.camera.z;
@@ -64,7 +68,10 @@ export function zoom(factor, x, y) {
   const r = $("#graph").getBoundingClientRect();
   x = x ?? r.width / 2;
   y = y ?? r.height / 2;
-  const z = Math.min(2.5, Math.max(0.12, appState.camera.z * factor));
+  const z = Math.min(
+    CAMERA_MAX_ZOOM,
+    Math.max(CAMERA_MIN_ZOOM, appState.camera.z * factor),
+  );
   appState.camera.x = x - ((x - appState.camera.x) * z) / appState.camera.z;
   appState.camera.y = y - ((y - appState.camera.y) * z) / appState.camera.z;
   appState.camera.z = z;

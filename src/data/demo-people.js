@@ -1,35 +1,56 @@
+import { personRecord, formerName } from "./records.js";
+
 export function demoPeople() {
-  return [
-    ["p1", "John Doe", "1932-03-04", "2011-11-03", 55, 70, "m", "g1"],
-    ["p2", "Jane Doe", "1936-07-18", "2018-02-14", 365, 70, "f", "g1"],
-    ["p3", "Jamie Roe", "1962-06-09", "", 55, 300, "f", "g1"],
-    ["p4", "Jordan Roe", "1960-05-21", "", 365, 300, "m", "g1"],
-    ["p5", "Jesse Roe", "1988-12-12", "", 55, 530, "f", "g1"],
-    ["p6", "Robin Roe", "1992-10-16", "", 365, 530, "m", "g1"],
-    ["p7", "Taylor Doe", "1963-04-07", "", 690, 300, "m", "g2"],
-    ["p8", "Casey Roe", "1991-11-20", "", 690, 530, "f", "g2"],
-    ["p9", "Morgan Roe", "1964-09-12", "", 1010, 300, "f", "g2"],
-    ["p10", "Avery Doe", "1987-02-28", "", 1010, 530, "x", "g2"],
-    ["p11", "Riley Doe", "1975-08-10", "", 1330, 300, "m", "g2"],
-    ["p13", "Drew Roe", "2018-05-14", "", 690, 760, "x", "g1"],
-    ["p12", "Quinn Roe", "1970-01-25", "", 1330, 70, "f", "g2"],
-  ].map(([id, name, birth, death, x, y, gender, group]) => ({
-    id,
-    name,
-    birth,
-    death,
-    x: 55 + Math.round((x - 55) / 320) * 345,
-    y: 70 + Math.round((y - 70) / 230) * 280,
-    gender,
-    lifeStatus: death ? "deceased" : "living",
-    groupIds: [group],
-    aliases: "",
-    place: "Exampleland (DEMO)",
-    notes: "Fictional demonstration record. All relationships are invented.",
-    requirements: null,
-    avatarId: "",
-    favorite: ["p4", "p5"].includes(id),
-  }));
+  const rows = [
+    ["p1", "John Doe", "1932-03-04", "2011-11-03", "m", "g1"],
+    ["p2", "Jane Doe", "1936-07-18", "2018-02-14", "f", "g1"],
+    ["p3", "Jamie Roe", "1962-06-09", "", "f", "g1"],
+    ["p4", "Jordan Roe", "1960-05-21", "", "m", "g1"],
+    ["p5", "Jesse Ward", "1988-12-12", "", "f", "g1"],
+    ["p6", "Robin Roe", "1992-10-16", "", "m", "g1"],
+    ["p7", "Taylor Ward", "1963-04-07", "", "m", "g2"],
+    ["p8", "Casey Roe", "1991-11-20", "", "f", "g2"],
+    ["p9", "Morgan Blake", "1964-09-12", "", "f", "g2"],
+    ["p10", "Avery Hale", "1987-02-28", "", "x", "g2"],
+    ["p11", "Riley Cross", "1975-08-10", "", "m", "g2"],
+    ["p13", "Drew Roe", "2018-05-14", "", "x", "g1"],
+    ["p12", "Quinn Vale", "1970-01-25", "", "f", "g2"],
+  ].map((row) => personRecord(row, row[5]));
+  const names = [
+    [
+      "p2",
+      "Hart",
+      "1959-06-15",
+      "maiden",
+      "Took John Doe's surname on marriage.",
+    ],
+    [
+      "p3",
+      "Doe",
+      "1995-08-19",
+      "maiden",
+      "Took Jordan Roe's surname on marriage; Jesse retained the birth surname Ward.",
+    ],
+    [
+      "p6",
+      "Vale",
+      "1996-02-12",
+      "birth",
+      "Surname changed from Vale to Roe on adoption by Jamie and Jordan Roe.",
+    ],
+    [
+      "p8",
+      "Ward",
+      "2017-07-08",
+      "maiden",
+      "Took Robin Roe's surname on marriage.",
+    ],
+  ];
+  for (const [id, surname, until, kind, reason] of names) {
+    const person = rows.find((p) => p.id === id);
+    person.nameHistory = [formerName(person, surname, until, kind, reason)];
+  }
+  return rows;
 }
 export function demoRelations() {
   const rows = [
@@ -58,7 +79,7 @@ export function demoRelations() {
     from,
     to,
     type,
-    notes: "Fictional demonstration relationship.",
+    notes: "",
     disputed: false,
   }));
   const set = (id, details) =>
@@ -106,16 +127,15 @@ export function demoRelations() {
     status: "ended",
     duration: "temporary",
     verification: "unverified",
-    reportedBy: "Fictional witness",
-    notes:
-      "Unverified example; the partners' identities and orientations are recorded independently.",
+    reportedBy: "Martin Keene",
+    notes: "Reported by Martin Keene; neither partner has confirmed the dates.",
   });
   for (const id of ["r7", "r8"])
     set(id, {
       fromDate: "1996-02-12",
       verification: "confirmed",
       notes:
-        "Adoption of Robin Roe by Jamie and Jordan Roe. Quinn Roe is the recorded biological mother.",
+        "Adoption of Robin Roe by Jamie and Jordan Roe. Quinn Vale is the recorded biological mother.",
     });
   return rows;
 }

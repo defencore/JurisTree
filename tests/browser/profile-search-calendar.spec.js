@@ -24,7 +24,7 @@ test("global search combines hidden profile data, opens all result kinds and ref
   await expect(page.locator('.node[data-node="p6"]')).toBeVisible();
   await page.keyboard.press("Control+k");
   await expect(input).toBeFocused();
-  await input.fill("name:Jesse gender:female document:DEMO 62,5");
+  await input.fill("name:Jesse gender:female document:PA7314062 62,5");
   await expect(page.locator('[data-search-kind="person"]')).toHaveCount(1);
   await page.keyboard.press("Enter");
   await page.locator('#inspector [data-edit-person="p5"]').first().click();
@@ -65,7 +65,7 @@ test("global search combines hidden profile data, opens all result kinds and ref
   ).toHaveCount(1);
   for (const language of ["uk", "ru", "en"]) {
     await page.locator("#appShell [data-language]").selectOption(language);
-    await input.fill('ім’я:Avery країна:"Sample Republic" стать:небінарна');
+    await input.fill('ім’я:Avery країна:"United Kingdom" стать:небінарна');
     await expect(page.locator('[data-search-kind="person"]')).toHaveCount(1);
   }
 });
@@ -88,12 +88,12 @@ test("year calendar jumps directly across years and opens months with travel and
   await page.locator("#calendarType").selectOption("travel");
   await page.locator('[data-calendar-day="2026-10-11"]').click();
   await expect(page.locator(".calendar-agenda")).toContainText(
-    "Fictional trip to Sample Republic",
+    "Autumn trip to Portugal",
   );
   await page.locator("#calendarType").selectOption("medical");
   await page.locator('[data-calendar-day="2026-10-22"]').click();
   await expect(page.locator(".calendar-agenda")).toContainText(
-    "Fictional peanut allergy",
+    "Peanut allergy",
   );
   await page.setViewportSize({ width: 320, height: 740 });
   await page.locator('[data-calendar-mode="year"]').click();
@@ -228,19 +228,19 @@ test("prints a complete biography with hidden sections, preserves sources and ge
   await expect.poll(() => page.evaluate(() => window.printCalls)).toBe(1);
   const report = page.locator("#biographyPrint");
   for (const value of [
-    "Jesse Roe",
+    "Jesse Ward",
     "168",
     "62.5",
     "Peanuts",
-    "Fictional trip to Sample Republic",
-    "DEMO-NOT-A-REAL-PASSPORT",
-    "Fictional household spending",
+    "Autumn trip to Portugal",
+    "PA7314062",
+    "Household spending",
   ])
     await expect(report).toContainText(value);
   await expect(report.locator("button")).toHaveCount(0);
   await expect(
     report.locator('[data-biography-section="documents"]'),
-  ).toContainText("Fictional");
+  ).toContainText("Birth record for Jesse Ward");
   await page.emulateMedia({ media: "print" });
   await expect(report).toBeVisible();
   await expect(page.locator("#appShell")).toBeHidden();

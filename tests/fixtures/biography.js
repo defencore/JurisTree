@@ -1,7 +1,10 @@
+import { familyLayout } from "../../src/graph/layouts/family.js";
 import { sample } from "../../src/data/demo.js";
 
 export function biographyProject() {
   const project = sample();
+  project.people = project.people.filter((p) => /^p\d+$/.test(p.id));
+  project.groups = project.groups.filter((g) => ["g1", "g2"].includes(g.id));
   project.relations = project.relations.filter(
     (r) => Number(r.id.slice(1)) <= 11,
   );
@@ -146,5 +149,9 @@ export function biographyProject() {
       transcription: "Recorded source text",
       ...bindings,
     });
+  const layout = familyLayout(project);
+  for (const kind of ["people", "documents", "property"])
+    for (const record of project[kind])
+      Object.assign(record, layout[kind].get(record.id));
   return project;
 }

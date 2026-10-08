@@ -62,17 +62,17 @@ test("country residence periods survive collection, validation, all biographies,
     setLanguage(language);
     const html = renderBiography(personBiography(state.project, "p6"));
     for (const value of [
-      "Sample Republic",
-      "Sample City",
+      "United Kingdom",
+      "Cambridge",
       "2012",
       "2014",
-      "Example Street 12",
+      "12 Willow Lane",
     ])
       assert.ok(html.includes(value), value);
     assert.ok(
       searchIndex(
         buildSearchIndex(state.project),
-        'name:Robin country:"Sample Republic" 2012',
+        'name:Robin country:"United Kingdom" 2012',
       ).some((e) => e.id === "p6"),
     );
     const events = collectProjectEvents(state.project).filter(

@@ -72,9 +72,9 @@ test("calendar includes hidden profile dates and distinguishes current and ended
   const birthdays = monthOccurrences(all, "2027-10").filter(
     (e) => e.type === "birth",
   );
-  assert.equal(birthdays[0].personId, "p6");
-  assert.equal(birthdays[0].next.years, 35);
-  assert.equal(birthdays[0].jubilee, true);
+  const robin = birthdays.find((event) => event.personId === "p6");
+  assert.equal(robin.next.years, 35);
+  assert.equal(robin.jubilee, true);
   assert.ok(
     !collectProjectEvents(project, { groupId: "g1" }).some(
       (e) => e.personId === "p11",
@@ -108,12 +108,12 @@ test("legal, financial, employment and identity history records survive forms, i
   for (const language of ["en", "uk", "ru"]) {
     setLanguage(language);
     const html = renderBiography(personBiography(state.project, "p5"));
-    assert.ok(html.includes("Riley Doe"));
-    assert.ok(html.includes("Example Bank"));
+    assert.ok(html.includes("Riley Cross"));
+    assert.ok(html.includes("Northbank Credit Union"));
     assert.ok(html.includes(">0<"));
     const identity = renderBiography(personBiography(state.project, "p10"));
     assert.ok(identity.includes("Pansexual"));
-    assert.ok(identity.includes("Example Clinic"));
+    assert.ok(identity.includes("Northbridge Health Centre"));
   }
   setLanguage("en");
   const configs = recordConfigs();
@@ -150,7 +150,7 @@ test("demo separates biological, adoptive and step relationships and records cha
   assert.ok(
     state.project.people
       .find((p) => p.id === "p8")
-      .nameHistory.some((r) => r.fullName === "Casey Doe"),
+      .nameHistory.some((r) => r.fullName === "Casey Ward"),
   );
   for (const p of state.project.people)
     for (const cfg of Object.values(recordConfigs()))

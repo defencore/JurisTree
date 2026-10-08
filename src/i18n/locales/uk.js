@@ -184,7 +184,6 @@ export default {
   "ui.nextSteps": "НАСТУПНІ КРОКИ",
   "ui.ownershipAndAllocationPlan": "ВЛАСНІСТЬ І ПЛАН РОЗПОДІЛУ",
   "ui.familyTimeline": "ХРОНОЛОГІЯ РОДИНИ",
-  "ui.demoTreeFictionalData": "Демонстраційне дерево · вигадані дані",
   "ui.howAreWeRelated": "Хто ця людина мені?",
   "ui.kinship": "Спорідненість",
   "ui.addRelationship": "Додати зв’язок",
@@ -1145,8 +1144,8 @@ export default {
     "Файли інших редакторів, зокрема draw.io та GEDCOM, наразі не імпортуються.",
   "ui.explore": "ОЗНАЙОМЛЕННЯ",
   "ui.demonstrationMap": "Демонстраційна схема",
-  "ui.8People2FamilyGroupsAndSampleSources":
-    "8 осіб, 2 сімейні групи та приклади джерел. Усі дані вигадані.",
+  "ui.largeFamilyDemoDescription":
+    "Кілька поколінь, далекі родичі, історія прізвищ і докладні записи.",
   "ui.openDemo": "Відкрити демо",
   "ui.whichDataIsSupported": "Які дані підтримуються?",
   "ui.openNavigation": "Відкрити навігацію",

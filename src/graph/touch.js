@@ -7,6 +7,7 @@ import { toggleGroup } from "../features/groups.js";
 import { editProperty } from "../features/property.js";
 import { applyCamera } from "./camera.js";
 import { renderGraph } from "./render.js";
+import { CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM } from "../core/config.js";
 
 const midpoint = ([a, b]) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 const distance = ([a, b]) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -16,9 +17,9 @@ export function pinchCamera(camera, start, current) {
   const origin = midpoint(start),
     center = midpoint(current);
   const z = Math.min(
-    2.5,
+    CAMERA_MAX_ZOOM,
     Math.max(
-      0.12,
+      CAMERA_MIN_ZOOM,
       (camera.z * distance(current)) / Math.max(1, distance(start)),
     ),
   );

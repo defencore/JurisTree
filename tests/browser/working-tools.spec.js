@@ -62,12 +62,13 @@ test("moves dialogs and the profile window, resets position and preserves unfini
   await modal.locator("[data-reset-window]").click();
   await modal.locator("[data-close]").first().click();
   await page.locator('#inspector [data-biography="p5"]').click();
-  await expect(page.locator(".biography-header h2")).toHaveText("Jesse Roe");
+  await expect(page.locator(".biography-header h2")).toHaveText("Jesse Ward");
 });
 
 test("favorites remain accessible across filters, center the card and survive ZIP and reload", async ({
   page,
 }) => {
+  await page.locator('#personList [data-person="p8"]').click();
   await page.locator('#graph [data-favorite="p8"]').click();
   await expect(
     page.locator('#favoriteList [data-fast-person="p8"]'),
@@ -95,6 +96,7 @@ test("favorites remain accessible across filters, center the card and survive ZI
   ]);
   const buffer = await readFile(await download.path());
   await page.locator("[data-close]").first().click();
+  await page.locator('#personList [data-person="p8"]').click();
   await page.locator('#graph [data-favorite="p8"]').click();
   await expect(
     page.locator('#favoriteList [data-fast-person="p8"]'),
@@ -121,7 +123,7 @@ test("calendar shows hidden profile dates, jubilee birthdays and saved memorial 
   await expect(page.locator(".calendar-agenda")).toContainText("34 years");
   await page.locator('[data-calendar-day="2026-10-20"]').click();
   await expect(page.locator(".calendar-agenda")).toContainText(
-    "Annual fictional family gathering",
+    "Annual family gathering",
   );
   await page.locator('[data-action="add-calendar-event"]').click();
   await expect(page.locator('#modal [name="date"]')).toHaveValue("2026-10-20");
@@ -148,9 +150,7 @@ test("calendar shows hidden profile dates, jubilee birthdays and saved memorial 
   await page.locator("#calendarType").selectOption("finance");
   await page.locator("#calendarMonth").fill("2026-11");
   await page.locator('[data-calendar-day="2026-11-01"]').click();
-  await expect(page.locator(".calendar-agenda")).toContainText(
-    "Fictional family loan",
-  );
+  await expect(page.locator(".calendar-agenda")).toContainText("Family loan");
   await expect(page.locator("#saveState")).toContainText("Draft saved");
   await page.reload();
   await page.locator("#startContinue").click();
@@ -235,12 +235,12 @@ test("edits court, financial, public office and self-described identity records 
     "DEMO-CASE-ONLY",
     "Jordan Roe",
     "Fictional loan agreement",
-    "Jesse Roe",
+    "Jesse Ward",
     "Example Council",
     "1250.50",
     "Pansexual",
     "Example self-description",
-    "Example Clinic",
+    "Northbridge Health Centre",
     "Self-reported",
     "Unverified — needs checking",
   ])

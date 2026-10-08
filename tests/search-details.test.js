@@ -33,7 +33,7 @@ test("global search combines hidden values, exact gender filters, multilingual a
     assert.deepEqual(
       personIds(
         index,
-        'прізвище:Avery країна:"Sample Republic" стать:небінарна',
+        'прізвище:Avery країна:"United Kingdom" стать:небінарна',
       ),
       ["p10"],
     );
@@ -46,7 +46,9 @@ test("global search combines hidden values, exact gender filters, multilingual a
     );
     assert.ok(!personIds(index, "gender:male").includes("p5"));
     assert.ok(!personIds(index, "male").includes("p5"));
-    assert.ok(personIds(index, "gender:female document:DEMO").includes("p5"));
+    assert.ok(
+      personIds(index, "gender:female document:PA7314062").includes("p5"),
+    );
     assert.ok(personIds(index, "name:Robin єдиноборств").includes("p6"));
     assert.deepEqual(searchIndex(index, " "), []);
     assert.ok(
@@ -92,15 +94,10 @@ test("extended appearance, health, skills, weapons, travel and citizenship retai
   for (const language of ["en", "uk", "ru"]) {
     setLanguage(language);
     const jesse = renderBiography(personBiography(state.project, "p5"));
-    for (const value of ["62.5", "168", "Peanut", "Sample Republic", "600"])
+    for (const value of ["62.5", "168", "Peanut", "Portugal", "600"])
       assert.ok(jesse.includes(value), value);
     const robin = renderBiography(personBiography(state.project, "p6"));
-    for (const value of [
-      "Guitar",
-      "Judo",
-      "DEMO-MODEL",
-      "DEMO-NOT-A-REAL-SERIAL",
-    ])
+    for (const value of ["Guitar", "Judo", "Aster AR-12", "AG28471"])
       assert.ok(robin.includes(value), value);
   }
   setLanguage("en");

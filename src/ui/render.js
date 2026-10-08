@@ -73,9 +73,7 @@ export function renderMain() {
     };
   $("#viewTitle").textContent = titles[appState.view];
   $("#viewEyebrow").textContent = eyebrows[appState.view];
-  $("#viewSubtitle").textContent = appState.project.demo
-    ? translate("ui.demoTreeFictionalData")
-    : appState.project.title;
+  $("#viewSubtitle").textContent = appState.project.title;
   $("#canvasWrap").hidden = appState.view !== "tree";
   $("#statusBoard").hidden = ["events", "calendar"].includes(appState.view);
   $("#otherView").hidden = appState.view === "tree";

@@ -183,7 +183,6 @@ export default {
   "ui.nextSteps": "NEXT STEPS",
   "ui.ownershipAndAllocationPlan": "OWNERSHIP AND ALLOCATION PLAN",
   "ui.familyTimeline": "FAMILY TIMELINE",
-  "ui.demoTreeFictionalData": "Demo tree · fictional data",
   "ui.howAreWeRelated": "How are we related?",
   "ui.kinship": "Kinship",
   "ui.addRelationship": "Add relationship",
@@ -1143,8 +1142,8 @@ export default {
     "Files from other editors, including draw.io and GEDCOM, are not currently imported.",
   "ui.explore": "EXPLORE",
   "ui.demonstrationMap": "Demonstration map",
-  "ui.8People2FamilyGroupsAndSampleSources":
-    "8 people, 2 family groups and sample sources. All data is fictional.",
+  "ui.largeFamilyDemoDescription":
+    "Several generations, distant cousins, surname histories and detailed records.",
   "ui.openDemo": "Open demo",
   "ui.whichDataIsSupported": "Which data is supported?",
   "ui.openNavigation": "Open navigation",

@@ -50,7 +50,7 @@ test("records separate partnership episodes, validates dates and displays their 
   await expect(page.locator("#modal")).not.toBeVisible();
   const paths = await page
     .locator(
-      '.edge[aria-label*="Jamie Roe"][aria-label*="Taylor Doe"][aria-label*="Dating"] > path:nth-child(2)',
+      '.edge[aria-label*="Jamie Roe"][aria-label*="Taylor Ward"][aria-label*="Dating"] > path:nth-child(2)',
     )
     .evaluateAll((elements) => elements.map((el) => el.getAttribute("d")));
   expect(new Set(paths).size).toBe(2);

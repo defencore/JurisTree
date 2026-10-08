@@ -9,7 +9,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Family, inheritance, property, research and blank project templates.
 - People, family groups and eight relationship types, including biological parenthood, adoption, step-parenthood and acquaintance.
 - Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts. Person cards show full birth/death dates on separate rows and icon-and-text life/age badges.
-- Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Mobile controls are collapsible and the person panel opens as a bottom sheet.
+- Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Selecting a person from the list centers their card at a readable scale on desktop and mobile. Mobile controls are collapsible and the person panel opens as a bottom sheet.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
 - Kinship descriptions based on recorded relationships, including half-siblings when both biological parent sets are recorded.
 - Favorite people in a sidebar list and a quick-access strip; selecting a favorite centers their card at a readable scale across map filters.
@@ -26,11 +26,23 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.
 - English, Ukrainian and Russian interfaces, displayed as **EN / UA / RU**.
 
-The expanded demo contains 13 people, 20 relationships and nine source references using explicit Doe/Roe placeholders. Surname changes have name-history records. Biological, adoptive and step-parent relationships are separate, including children from previous partnerships and half-siblings. Employment, public office, court cases, imprisonment, gifts, loans, deposits, investments and self-described identity history illustrate the optional modules.
+The demo contains 99 people, 159 relationships, 95 source references and 10 family groups, spanning eight generations from 1824 to 2025. All identities, relationships, institutions, identifiers and personal details are invented. The project title carries the fictional-data notice; individual records use natural names and descriptions.
 
-The demo also includes a child under 18, deceased relatives, a child with both adoptive and biological parents, and dated residence records in two fictional countries.
+Surname histories match the recorded events: Jane Hart became Jane Doe, Jamie Doe became Jamie Roe, Robin Vale became Robin Roe on adoption, and Casey Ward became Casey Roe on marriage. Jesse Ward retains her biological father's surname. Morgan Blake retains her birth surname throughout her marriage and divorce. Biological, adoptive and step-parent relationships remain separate.
 
-Demo people use explicit Doe/Roe placeholders. Their relationships, identity document numbers and personal details are invented. The launch screen opens before any demo is loaded or existing draft is replaced. Loading the updated demo does not rewrite existing saved projects.
+Compare Jesse Ward with these relatives to explore successively older common ancestors:
+
+| Relative                 | English cousin degree | Generations to the common ancestors | Common ancestor couple                  |
+| ------------------------ | --------------------- | ----------------------------------- | --------------------------------------- |
+| Grace Bennett (born Doe) | First cousin          | 2 on each side                      | John Doe and Jane Doe (born Hart)       |
+| Lucy Reed (born Ellis)   | Second cousin         | 3 on each side                      | Arthur Doe and Nora Doe (born Hayes)    |
+| Olivia Mason (born Doe)  | Third cousin          | 4 on each side                      | Edward Doe and Evelyn Doe (born Brooks) |
+| Emily Brooks (born Hart) | Fourth cousin         | 5 on each side                      | Henry Doe and Alice Doe (born Mason)    |
+| Nathan Doe               | Fifth cousin          | 6 on each side                      | William Doe and Clara Doe (born Reed)   |
+
+These descriptions are derived from parent links and common ancestors, rather than explicit cousin edges or shared surnames. Record content remains user data when the interface language changes. Employment, education, court cases, gifts, loans, investments, travel, dated residences, citizenship changes and self-described identity history illustrate the optional profile modules. The demo includes deceased relatives, children under 18 and both biological and adoptive parents for Robin Roe.
+
+The launch screen opens before loading a demo or replacing a draft. To explore this version, open the demonstration map from the home screen. Loading the updated demo does not rewrite existing saved projects.
 
 ## Detailed profiles
 
@@ -91,8 +103,8 @@ Examples:
 
 ```text
 name:Robin gender:male Guitar
-name:Jesse document:DEMO 62.5
-country:"Sample Republic" | country:Exampleland
+name:Jesse document:PA7314062 62.5
+country:"United Kingdom" | country:Canada
 прізвище:Avery стать:небінарна
 name:Doe -document:expired
 ```
@@ -216,6 +228,14 @@ src/
   i18n/
     index.js               Language preference and message lookup
     locales/               Matching English, Ukrainian and Russian message catalogs
+  data/
+    demo.js                Fresh demo composition and initial generation layout
+    demo-people.js         Core people, surname timelines and relationship episodes
+    families/              Curated ancestor, cousin and partner households; builder and profiles
+    records.js             Person, source and former-name record factories
+    demo-records.js         Detailed core profile and property records
+    demo-details.js         Residence, appearance, health, skills, travel and citizenship
+    demo-sources.js         Core evidence references and review states
   styles/                  Base, workspace, graph, forms and feature stylesheets
   vendor/                  Local JSZip distribution and its module entry point
 scripts/                   Development preview, syntax validation and static build

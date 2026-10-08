@@ -13,11 +13,11 @@ import { copyCitation } from "../../ui/components.js";
 import { commit } from "../../services/history.js";
 import { openFiles } from "../../services/files.js";
 import { exportArchive, exportImage } from "../../services/archive.js";
-import { doc, person } from "../../model/project.js";
+import { doc } from "../../model/project.js";
 import { linkedDocs, isOfficial } from "../../model/evidence.js";
 import { translate } from "../../i18n/index.js";
 import { graphAnalysisDialog } from "../../graph/controls.js";
-import { applyCamera, fit, focusPerson } from "../../graph/camera.js";
+import { fit, focusPerson } from "../../graph/camera.js";
 import { isMobileLayout } from "../../core/viewport.js";
 import {
   applyGraphPreset,
@@ -45,7 +45,6 @@ import {
 import { download, uid } from "../../core/utils.js";
 import { state as appState } from "../../core/state.js";
 import { $ } from "../../core/dom.js";
-import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../../core/config.js";
 import { handleAction } from "../actions.js";
 export function bindClickEvents() {
   document.addEventListener("click", async (e) => {
@@ -291,17 +290,7 @@ export function bindClickEvents() {
       }
       if (b.dataset.person) {
         select("person", b.dataset.person);
-        if (isMobileLayout()) {
-          focusPerson();
-          return;
-        }
-        const p = person(b.dataset.person),
-          r = $("#graph").getBoundingClientRect();
-        appState.camera.x =
-          r.width / 2 - (p.x + PERSON_CARD_WIDTH / 2) * appState.camera.z;
-        appState.camera.y =
-          r.height / 2 - (p.y + PERSON_CARD_HEIGHT / 2) * appState.camera.z;
-        applyCamera();
+        focusPerson();
         return;
       }
       if (b.dataset.document) {

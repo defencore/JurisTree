@@ -1,106 +1,58 @@
 /** Every amount, institution, identifier and personal description below is fictional. */
 export function populateDemoRecords(project) {
   const p = (id) => project.people.find((p) => p.id === id);
-  const name = (id, kind, fullName, from, to, reason) => ({
-    id,
-    kind,
-    fullName,
-    from,
-    to,
-    reason,
-  });
-  p("p2").nameHistory = [
-    name(
-      "demo-jane-maiden",
-      "maiden",
-      "Jane Roe",
-      "1936",
-      "1959",
-      "Took John Doe's surname when they married.",
-    ),
-  ];
-  p("p3").nameHistory = [
-    name(
-      "demo-jamie-maiden",
-      "maiden",
-      "Jamie Doe",
-      "1962",
-      "1995",
-      "Took Jordan Roe's surname in 1995. Former partner Taylor Doe did not change surname.",
-    ),
-  ];
-  p("p5").nameHistory = [
-    name(
-      "demo-jesse-birth",
-      "birth",
-      "Jesse Doe",
-      "1988",
-      "1995",
-      "Born to Jamie Doe and Taylor Doe; later surname change recorded separately from parenthood.",
-    ),
-  ];
-  p("p8").nameHistory = [
-    name(
-      "demo-casey-maiden",
-      "maiden",
-      "Casey Doe",
-      "1991",
-      "2017",
-      "Took Robin Roe's surname after their marriage.",
-    ),
-  ];
   p("p9").notes +=
-    " Kept the surname Roe during and after marriage to Taylor Doe.";
+    " Kept the birth surname Blake during and after marriage to Taylor Ward.";
   p("p3").notes +=
     " Biological mother of Jesse; adoptive mother of Robin. Maiden surname Doe; current surname Roe after marrying Jordan.";
   p("p4").notes +=
-    " Born Jordan Roe. Adoptive father of Robin and stepfather of Jesse; Jesse's biological father is Taylor Doe.";
+    " Born Jordan Roe. Adoptive father of Robin and stepfather of Jesse; Jesse's biological father is Taylor Ward.";
   p("p5").notes +=
-    " Jesse and Casey share biological father Taylor Doe and have different biological mothers.";
+    " Jesse and Casey share biological father Taylor Ward and have different biological mothers.";
   p("p6").notes +=
-    " Biological mother Quinn Roe; adopted by Jamie and Jordan Roe in 1996.";
+    " Biological mother Quinn Vale; adopted by Jamie and Jordan Roe in 1996.";
   p("p5").biography =
-    "Fictional museum researcher. Born Jesse Doe, later recorded as Jesse Roe. This demo shows family, education, finances and independently attributed information.";
+    "Museum researcher specialising in local history and family archives. Born Jesse Ward to Jamie Doe and Taylor Ward. Retained the surname Ward after her mother married Jordan Roe. Works with historical collections and volunteers at a community history group.";
   p("p5").educationRecords = [
     {
       id: "demo-education",
-      institution: "Example University",
+      institution: "Riverside Arts College",
       qualification: "Master's degree",
       field: "History",
       from: "2006-09-01",
       to: "2011-06-30",
       graduatedAt: "2011-06-30",
       status: "completed",
-      diplomaNumber: "DEMO-DIPLOMA-ONLY",
+      diplomaNumber: "HC-2011-0482",
     },
   ];
   p("p5").occupations = [
     {
       id: "demo-work",
       kind: "work",
-      organization: "Example Museum",
+      organization: "Harbour City Museum",
       role: "Research curator",
       from: "2012-09-01",
       appointment: "employed",
       income: "3200",
-      currency: "USD",
+      currency: "CAD",
       payPeriod: "monthly",
-      notes: "Fictional workplace and income.",
+      notes: "Permanent appointment in the collections department.",
     },
   ];
   p("p4").occupations = [
     {
       id: "demo-office",
       kind: "office",
-      organization: "Example Town Council",
+      organization: "Brookfield Town Council",
       role: "Council member",
       from: "2018-10-01",
       appointment: "elected",
-      rank: "Demo office",
+      rank: "Ward councillor",
       income: "1500",
-      currency: "USD",
+      currency: "CAD",
       payPeriod: "monthly",
-      reference: "DEMO-APPOINTMENT",
+      reference: "TC/2018/047",
     },
   ];
   p("p5").identityDocuments = [
@@ -108,36 +60,36 @@ export function populateDemoRecords(project) {
       id: "demo-passport",
       kind: "passport",
       passportType: "ordinary",
-      issuingCountry: "Exampleland (DEMO)",
-      series: "DEMO",
-      number: "DEMO-NOT-A-REAL-PASSPORT",
-      issuedBy: "Fictional authority",
+      issuingCountry: "Canada",
+      series: "PA",
+      number: "PA7314062",
+      issuedBy: "Passport Office",
       issueDate: "2024-01-01",
       expiryDate: "2034-01-01",
-      notes: "Fictional specimen; not an identity document.",
+      notes: "Name on passport: Jesse Ward.",
     },
   ];
   p("p5").immigrationRecords = [
     {
       id: "demo-permit",
-      country: "Exampleland",
+      country: "United Kingdom",
       status: "temporary",
-      permitNumber: "DEMO-PERMIT-ONLY",
+      permitNumber: "RP-248163",
       from: "2024-01-01",
       to: "2027-01-01",
-      notes: "Fictional permit example.",
+      notes: "Temporary residence authorisation for research work.",
     },
   ];
   p("p5").taxRecords = [
     {
       id: "demo-tax",
-      country: "Exampleland",
+      country: "Canada",
       year: "2025",
-      taxId: "DEMO-NOT-A-TIN",
+      taxId: "721684309",
       income: "38400",
       taxPaid: "4000",
-      currency: "USD",
-      notes: "Fictional amounts; not a filed tax return.",
+      currency: "CAD",
+      notes: "Employment income declared for the calendar year.",
     },
   ];
   p("p5").personalRecords = [
@@ -145,9 +97,9 @@ export function populateDemoRecords(project) {
       id: "demo-habit",
       category: "habits",
       title: "Reading",
-      description: "Reads fictional stories in the evening.",
+      description: "Reads historical novels in the evening.",
       basis: "self",
-      reportedBy: "Fictional demo",
+      reportedBy: "Jesse Ward",
       recordedAt: "2026-01-01",
     },
   ];
@@ -155,33 +107,33 @@ export function populateDemoRecords(project) {
     {
       id: "demo-family-gathering",
       category: "anniversary",
-      title: "Annual fictional family gathering",
+      title: "Annual family gathering",
       date: "2020-10-20",
       repeat: "annual",
-      notes: "A user-entered annual event.",
+      notes: "Relatives meet for lunch and update the family archive.",
     },
     {
       id: "demo-jubilee",
       category: "jubilee",
-      title: "Fictional museum jubilee",
+      title: "Museum jubilee",
       date: "2026-10-25",
       repeat: "none",
-      notes: "An explicitly recorded jubilee.",
+      notes: "Fortieth anniversary of the museum opening.",
     },
   ];
   p("p4").legalRecords = [
     {
       id: "demo-property-case",
       kind: "propertyDivision",
-      title: "Fictional property division with Riley Doe",
+      title: "Property division with Riley Cross",
       date: "2022-10-12",
-      caseNumber: "DEMO-CASE-001",
-      authority: "Example District Court",
+      caseNumber: "CV-2022-1047",
+      authority: "Brookfield District Court",
       role: "claimant",
       counterpartyId: "p11",
       status: "completed",
       outcome:
-        "Fictional settlement describing the allocation of a jointly held property.",
+        "Settlement allocated the house to Jordan Roe and provided a balancing payment to Riley Cross.",
       verification: "corroborated",
       basis: "source",
       sourceId: "d6",
@@ -191,16 +143,16 @@ export function populateDemoRecords(project) {
     {
       id: "demo-custody",
       kind: "imprisonment",
-      title: "Fictional custody history requiring verification",
+      title: "Reported custody period",
       from: "2016-01-15",
       to: "2018-01-15",
-      authority: "Example authority",
+      authority: "Regional correctional administration",
       role: "convicted",
       status: "completed",
       verification: "pending",
-      reportedBy: "Fictional witness",
+      reportedBy: "Martin Keene",
       notes:
-        "Invented and deliberately marked unverified; not a claim about a real person.",
+        "Dates and legal disposition reported by Martin Keene; archive confirmation is outstanding.",
       sourceId: "d9",
     },
   ];
@@ -208,9 +160,9 @@ export function populateDemoRecords(project) {
     {
       id: "demo-gift",
       kind: "gift",
-      title: "Fictional gift from Riley Doe",
+      title: "Gift from Riley Cross",
       amount: "250",
-      currency: "USD",
+      currency: "CAD",
       date: "2025-12-15",
       direction: "received",
       counterpartyId: "p11",
@@ -221,9 +173,9 @@ export function populateDemoRecords(project) {
     {
       id: "demo-loan",
       kind: "loan",
-      title: "Fictional family loan",
+      title: "Family loan",
       amount: "5000",
-      currency: "USD",
+      currency: "CAD",
       date: "2024-11-01",
       dueDate: "2026-11-01",
       direction: "borrowed",
@@ -231,18 +183,18 @@ export function populateDemoRecords(project) {
       interestRate: "0",
       status: "active",
       verification: "corroborated",
-      reference: "DEMO-LOAN-ONLY",
+      reference: "LN-2024-018",
     },
     {
       id: "demo-deposit",
       kind: "deposit",
-      title: "Fictional term deposit",
+      title: "Term deposit",
       amount: "10000",
-      currency: "USD",
+      currency: "CAD",
       date: "2026-02-15",
       dueDate: "2027-02-15",
       direction: "held",
-      institution: "Example Bank",
+      institution: "Northbank Credit Union",
       interestRate: "3",
       status: "active",
       verification: "pending",
@@ -250,29 +202,29 @@ export function populateDemoRecords(project) {
     {
       id: "demo-investment",
       kind: "investment",
-      title: "Fictional investment",
+      title: "Balanced investment portfolio",
       amount: "2500",
-      currency: "USD",
+      currency: "CAD",
       date: "2025-04-01",
       direction: "held",
-      institution: "Example Fund",
+      institution: "Cedar Growth Fund",
       status: "active",
       verification: "pending",
-      notes: "No real account or investment product.",
+      notes: "Quarterly account statement requested.",
     },
   ];
   p("p8").financialRecords = [
     {
       id: "demo-debt",
       kind: "debt",
-      title: "Fictional obligation to Jesse Roe",
+      title: "Obligation to Jesse Ward",
       amount: "500",
-      currency: "USD",
+      currency: "CAD",
       direction: "payable",
       counterpartyId: "p5",
       dueDate: "2026-12-01",
       status: "active",
-      collateral: "No collateral in this fictional example.",
+      collateral: "Unsecured.",
       verification: "pending",
     },
   ];
@@ -311,21 +263,23 @@ export function populateDemoRecords(project) {
     {
       id: "demo-hormones",
       kind: "hormones",
-      title: "Fictional hormone treatment record",
+      title: "Hormone treatment history",
       from: "2021-03-01",
       to: "2022-03-01",
-      provider: "Example Clinic",
+      provider: "Northbridge Health Centre",
       basis: "self",
       verification: "pending",
-      notes: "Invented self-reported history; no clinical inference.",
+      notes:
+        "Self-reported treatment period; clinical records have not been supplied.",
     },
     {
       id: "demo-surgery",
       kind: "surgery",
-      title: "Fictional procedure record",
+      title: "Reported surgical procedure",
       date: "2023-05-10",
-      provider: "Example Clinic",
-      description: "Fictional example with unspecified clinical details.",
+      provider: "Northbridge Health Centre",
+      description:
+        "Procedure reported during an interview; clinical details were not provided.",
       basis: "self",
       verification: "pending",
     },
@@ -334,10 +288,10 @@ export function populateDemoRecords(project) {
     {
       id: "demo-rumor",
       kind: "rumor",
-      title: "Fictional reported relationship",
+      title: "Reported earlier relationship",
       statement:
-        "A fictional witness reported an earlier relationship with Avery Doe.",
-      reportedBy: "Fictional witness",
+        "Martin Keene reported an earlier relationship with Avery Hale; confirmation from the people concerned is outstanding.",
+      reportedBy: "Martin Keene",
       verification: "pending",
       basis: "hearsay",
       sourceId: "d9",
@@ -346,15 +300,16 @@ export function populateDemoRecords(project) {
   project.property = [
     {
       id: "demo-house",
-      title: "Fictional family house",
+      title: "Family house at 18 Willow Lane",
       ownerId: "p4",
       value: 200000,
-      currency: "USD",
+      currency: "CAD",
       allocations: [
         { personId: "p5", percent: 50 },
         { personId: "p6", percent: 50 },
       ],
-      notes: "Invented property and user-entered allocation plan.",
+      notes:
+        "Two-storey house; proposed allocation recorded for estate planning.",
       x: 1060,
       y: 1800,
     },

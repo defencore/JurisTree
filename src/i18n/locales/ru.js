@@ -185,7 +185,6 @@ export default {
   "ui.nextSteps": "СЛЕДУЮЩИЕ ШАГИ",
   "ui.ownershipAndAllocationPlan": "СОБСТВЕННОСТЬ И ПЛАН РАСПРЕДЕЛЕНИЯ",
   "ui.familyTimeline": "ХРОНОЛОГИЯ СЕМЬИ",
-  "ui.demoTreeFictionalData": "Демонстрационное дерево · вымышленные данные",
   "ui.howAreWeRelated": "Кем мне приходится этот человек?",
   "ui.kinship": "Родство",
   "ui.addRelationship": "Добавить связь",
@@ -1149,8 +1148,8 @@ export default {
     "Файлы других редакторов, включая draw.io и GEDCOM, пока не импортируются.",
   "ui.explore": "ЗНАКОМСТВО",
   "ui.demonstrationMap": "Демонстрационная схема",
-  "ui.8People2FamilyGroupsAndSampleSources":
-    "8 людей, 2 семейные группы и примеры источников. Все данные вымышлены.",
+  "ui.largeFamilyDemoDescription":
+    "Несколько поколений, дальние родственники, история фамилий и подробные записи.",
   "ui.openDemo": "Открыть демо",
   "ui.whichDataIsSupported": "Какие данные поддерживаются?",
   "ui.openNavigation": "Открыть навигацию",

@@ -1,26 +1,10 @@
+import { sourceRecord } from "./records.js";
+
 export function demoSources() {
-  const base = {
-    assetId: "",
-    filename: "",
-    mime: "",
-    size: 0,
-    sourceUrl: "",
-    accessedAt: "",
-    language: "English (DEMO)",
-    transcription: "",
-    propertyIds: [],
-    subjectIds: [],
-    source: "Fictional demonstration source",
-    repository: "Example archive",
-    reference: "DEMO ONLY",
-    notes: "Invented example; not a real document.",
-    verification: "unspecified",
-    purposes: ["family", "inheritance", "property", "research"],
-  };
   return [
     {
       id: "d1",
-      title: "Birth record for Jamie Doe (now Jamie Roe) — DEMO",
+      title: "Birth record for Jamie Doe (now Jamie Roe)",
       type: "birth",
       status: "needs_review",
       evidence: "official",
@@ -31,16 +15,19 @@ export function demoSources() {
     },
     {
       id: "d2",
-      title: "Jordan Roe and Taylor Doe — DEMO photograph",
+      title: "Jordan Roe and Taylor Ward — council project photograph",
       type: "photo",
       status: "available",
       evidence: "indirect",
       people: ["p4", "p7"],
       relations: ["r9"],
+      date: "2019-05-18",
+      source: "Council project photograph",
+      repository: "Jordan Roe's family archive",
     },
     {
       id: "d3",
-      title: "Birth record for Jesse Doe (now Jesse Roe) — DEMO",
+      title: "Birth record for Jesse Ward",
       type: "birth",
       status: "available",
       evidence: "official",
@@ -51,7 +38,7 @@ export function demoSources() {
     },
     {
       id: "d4",
-      title: "Death record for John Doe — DEMO",
+      title: "Death record for John Doe",
       type: "death",
       status: "requested",
       evidence: "official",
@@ -62,7 +49,7 @@ export function demoSources() {
     },
     {
       id: "d5",
-      title: "Adoption record for Robin Roe — DEMO",
+      title: "Adoption record for Robin Roe",
       type: "archive",
       status: "available",
       evidence: "official",
@@ -73,7 +60,7 @@ export function demoSources() {
     },
     {
       id: "d6",
-      title: "Fictional property settlement — DEMO",
+      title: "Property settlement",
       type: "archive",
       status: "available",
       evidence: "official",
@@ -82,10 +69,12 @@ export function demoSources() {
       propertyIds: ["demo-house"],
       date: "2022-10-12",
       verification: "corroborated",
+      source: "Property settlement order",
+      repository: "Brookfield District Court registry",
     },
     {
       id: "d7",
-      title: "Fictional self-description by Avery Doe — DEMO",
+      title: "Personal statement by Avery Hale",
       type: "letter",
       status: "available",
       evidence: "indirect",
@@ -93,33 +82,40 @@ export function demoSources() {
       relations: [],
       date: "2026-01-01",
       verification: "pending",
+      source: "Signed personal statement",
+      repository: "Avery Hale's personal papers",
     },
     {
       id: "d8",
-      title: "Fictional gift record — DEMO",
+      title: "Gift receipt",
       type: "other",
       status: "available",
       evidence: "indirect",
       people: ["p5", "p11"],
       relations: [],
       date: "2025-12-15",
+      source: "Transfer receipt",
+      repository: "Jesse Ward's personal papers",
     },
     {
       id: "d9",
-      title: "Unverified fictional recording reference — DEMO",
+      title: "Interview recording reference",
       type: "recording",
       status: "needs_review",
       evidence: "indirect",
       people: ["p5", "p10", "p11"],
       relations: ["r16"],
       verification: "pending",
+      source: "Interview summary",
+      repository: "Research correspondence",
       transcription:
-        "Fictional example. No actual recording is attached; each reported claim requires separate verification.",
+        "Interview summary attributed to Martin Keene. The recording has been requested; statements about relationships and legal history require independent verification.",
     },
-  ].map((d, i) => ({
-    ...base,
-    x: 55 + (i % 4) * 310,
-    y: 1240 + Math.floor(i / 4) * 165,
-    ...d,
-  }));
+  ].map((d, i) =>
+    sourceRecord({
+      reference: `BC/${d.date?.slice(0, 4) || "2026"}/${i + 101}`,
+      verification: "unspecified",
+      ...d,
+    }),
+  );
 }

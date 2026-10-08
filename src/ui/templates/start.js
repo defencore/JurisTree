@@ -122,7 +122,7 @@ export const startTemplate = `
           <div>
             <p class="section-label">@@ui.explore@@</p>
             <h2>@@ui.demonstrationMap@@</h2>
-            <p>@@ui.8People2FamilyGroupsAndSampleSources@@</p>
+            <p>@@ui.largeFamilyDemoDescription@@</p>
             <button
               class="btn"
               id="startDemo"
