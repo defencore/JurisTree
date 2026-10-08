@@ -55,6 +55,7 @@ export function residencesSection() {
     ],
     [["from", "to"]],
     {
+      coverage: { from: "from", to: "to", current: { status: ["current"] } },
       calendar: {
         type: "residence",
         dates: [

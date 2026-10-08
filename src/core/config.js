@@ -88,7 +88,6 @@ export const groupColors = [
 export function sectionInfo() {
   return {
     timeline: [translate("ui.eventsAndAnniversaries"), "calendarClock"],
-    contacts: [translate("ui.contactsAndSocialProfiles"), "phone"],
     biography: [translate("ui.biographyAndHistory"), "book"],
     interests: [translate("ui.hobbiesAndInterests"), "sparkles"],
     health: [translate("ui.healthInformation"), "heartPulse"],
@@ -144,27 +143,6 @@ export function recordConfigs() {
         ["sourceId", translate("ui.source"), "source"],
       ],
     },
-    contacts: {
-      key: "contacts",
-      label: translate("ui.contact"),
-      fields: [
-        [
-          "type",
-          translate("ui.type"),
-          "select",
-          {
-            phone: translate("ui.phone"),
-            email: "Email",
-            social: translate("ui.socialProfile"),
-            website: translate("ui.website"),
-            other: translate("ui.other"),
-          },
-        ],
-        ["label", translate("ui.label"), "text"],
-        ["value", translate("ui.numberAddressLink"), "text"],
-        ["notes", translate("ui.note"), "text"],
-      ],
-    },
     pets: {
       key: "pets",
       label: translate("ui.pet"),
@@ -203,6 +181,10 @@ export function familyEventTypes() {
     travel: [translate("ui.travelHistory"), "globe"],
     immigration: [translate("ui.citizenshipAndImmigration"), "landmark"],
     medical: [translate("ui.medicalHistory"), "heartPulse"],
+    pregnancy: [translate("ui.pregnancyHistory"), "baby"],
+    deathDetails: [translate("ui.deathCircumstances"), "heart"],
+    military: [translate("ui.militaryHistory"), "shield"],
+    testimony: [translate("ui.witnessesAndTestimony"), "users"],
     weapon: [translate("ui.weaponOwnership"), "shield"],
     skill: [translate("ui.skillsHobbies"), "sparkles"],
     education: [translate("ui.education"), "book"],

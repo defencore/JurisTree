@@ -19,6 +19,8 @@ export function claimsSection() {
               rumor: "ui.rumor",
               testimony: "ui.witnessTestimony",
               recording: "ui.recording",
+              infidelity: "ui.reportedInfidelity",
+              biographyGap: "ui.biographyClarification",
               other: "ui.other",
             },
           ],
@@ -40,6 +42,7 @@ export function claimsSection() {
       [
         "ui.contextAndAttribution",
         [
+          ["relatedPersonId", "ui.relatedPerson", "person"],
           ["reportedBy", "ui.reportedRecordedBy"],
           ["reportedAt", "ui.reportedOn", "date"],
           [

@@ -17,6 +17,8 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Document references, digital attachments, evidence states and configurable checklists.
 - Profiles with contacts, residence history, biographies, work, education, interests, health information and pets.
 - Optional identity documents, citizenship and immigration records, tax declarations, personal portrait entries and custom facts. Each section supports multiple records, dates, notes and linked sources.
+- Optional pregnancy outcomes, death circumstances, military service and awards, linked witnesses and dated contact or social profiles.
+- Biography review with configurable periods, minimum gap lengths, corroborated-only coverage and records awaiting verification.
 - A complete autobiography view for every person, available from the map, people list and profile panel. It includes populated profile sections regardless of workspace visibility, family relationships, property, notes and linked sources with attachments.
 - Month and year calendar views with direct year navigation, birthdays, wedding anniversaries, jubilees, memorial dates, travel, medical reviews, status changes and other dated records.
 - Global search across all stored values and linked context, with combined queries, field filters, keyboard navigation and multilingual terms.
@@ -26,7 +28,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.
 - English, Ukrainian and Russian interfaces, displayed as **EN / UA / RU**.
 
-The demo contains 99 people, 159 relationships, 95 source references and 10 family groups, spanning eight generations from 1824 to 2025. All identities, relationships, institutions, identifiers and personal details are invented. The project title carries the fictional-data notice; individual records use natural names and descriptions.
+The demo contains 99 people, 160 relationships, 96 source references and 10 family groups, spanning eight generations from 1824 to 2025. All identities, relationships, institutions, identifiers and personal details are invented. The project title carries the fictional-data notice; individual records use natural names and descriptions.
 
 Surname histories match the recorded events: Jane Hart became Jane Doe, Jamie Doe became Jamie Roe, Robin Vale became Robin Roe on adoption, and Casey Ward became Casey Roe on marriage. Jesse Ward retains her biological father's surname. Morgan Blake retains her birth surname throughout her marriage and divorce. Biological, adoptive and step-parent relationships remain separate.
 
@@ -53,7 +55,7 @@ Open a person's editor and expand **Add more information** to use sections outsi
 | Residence history              | Country, city, region, postal code, address, start/end dates or years, residence type/status, permit reference, attribution and linked sources                                                                                                                                                         |
 | Name history                   | Maiden and birth surnames, legal and previous names, aliases, validity periods, reasons for changes and sources                                                                                                                                                                                        |
 | Education                      | Institutions, degrees, fields of study, level, faculty, study periods/status, graduation dates, diploma references and sources                                                                                                                                                                         |
-| Reports and claims             | Attributed reports, rumors, testimony or recording-based statements, context, first-hand/hearsay basis, verification status, reviewer, findings and sources                                                                                                                                            |
+| Reports and claims             | Attributed reports, rumors, testimony, recording-based statements, reports of infidelity and biography clarifications; related person, context, first-hand/hearsay basis, verification status, reviewer, findings and sources                                                                          |
 | Identity documents             | Document and passport type, country, series, number, issuing authority and code, issue/expiry dates, status, holder details, citizenship, personal number, registered address, machine-readable lines and a linked scan/source                                                                         |
 | Citizenship and immigration    | Country, status, visa/permit category and number, validity, application and decision, case/authority, citizenship acquisition, renunciation, loss or restoration, prior citizenship, change date, residency type, citizenship basis, purpose, sponsor, travel dates, address and conditions            |
 | Appearance                     | Dated height and weight measurements, build, eye/hair color, glasses, distinguishing marks, tattoos, description and attribution                                                                                                                                                                       |
@@ -65,15 +67,20 @@ Open a person's editor and expand **Add more information** to use sections outsi
 | Personal portrait              | Character, habits, routine, lifestyle, food tastes, attraction, charitable activities, values, religious or political views and preferences, with description, attribution, reporting date, context, period and source                                                                                 |
 | Court and custody history      | Administrative/criminal offenses, investigations, charges, acquittals, cases, property division, claims, hearings, judgments, detention, imprisonment and release; legal provision, fines, dates, case number, court, role, counterparty, status, outcome, sentence conditions, attribution and source |
 | Financial history              | Income, expenses, gifts, debts, loans, deposits, investments, guarantees and obligations; spending category, amount, currency, direction, counterparty, institution, contract, deadline, interest, frequency, status, collateral and attribution                                                       |
-| Employment and public office   | Organization, role, appointment or election, rank, work period, location, income, currency, pay frequency, appointment reference, notes and source                                                                                                                                                     |
+| Employment and public office   | Organization, department, role, current/former status, appointment or election, rank, work period, country, address, contract, supervisor, income, currency, pay frequency, appointment reference, attribution and source                                                                              |
 | Gender and orientation history | Dated self-descriptions of gender identity, legal sex or orientation, and separately entered hormone treatment or procedure records; provider, country, attribution, verification and source                                                                                                           |
+| Pregnancy history              | Start, expected delivery and end dates, outcome (including miscarriage, stillbirth and termination), gestation, linked child, reported other parent, parentage verification, circumstances, provider, record number and attribution                                                                    |
+| Death circumstances            | Date, category, reported cause, location, circumstances, authority, investigation reference and conclusion, death certificate, burial details, attribution and source                                                                                                                                  |
+| Military service and records   | Service, registration, reserve, training, awards and discharge; country, branch, unit, role, rank, service periods/status, military ID and service numbers, registration office, specialty, fitness category, appointments, discharge and sources                                                      |
+| Witnesses and testimony        | Event, date, place, linked person or external witness, role, reported statement, contact, interview date, statement reference, availability, reviewer, verification and source                                                                                                                         |
+| Contacts and social profiles   | Phone, email, social profile, messenger, website or other contact; platform, username, HTTP/HTTPS URL, current/former status, periods, attribution and source                                                                                                                                          |
 | Custom facts                   | A category, label, value, period, notes and source for details beyond the predefined fields                                                                                                                                                                                                            |
 
 Dates and numeric amounts are validated during editing and import. Monetary values retain the entered precision, including zero, and are not calculated automatically. A personal portrait stores entered descriptions and their attribution; it does not infer beliefs or make psychological assessments. These modules capture information and sources, rather than generate country-specific migration or tax forms. Court and financial counterparties can be linked to an existing person or entered as an external party. Monetary records do not automatically create reciprocal entries or calculate account balances. Gender, orientation and treatment records retain their independent dates and attribution; they do not infer one another or automatically overwrite the basic gender field.
 
 ## Relationship history and source verification
 
-Choose **Registered marriage** for marriage or a registered civil partnership. Choose **Partnership / dating** for an unregistered union, cohabitation, dating, romantic relationships or another partnership. Add the subtype, status, duration pattern, start/end dates, place and registration reference as applicable. Use separate records for separate episodes between the same people. Relationship period fields use `fromDate` and `toDate`; `from` and `to` remain person IDs.
+Choose **Registered marriage** for marriage or a registered civil partnership. Choose **Partnership / dating** for an unregistered union, cohabitation, dating, romantic relationships, an affair / lovers or another partnership. An affair is an explicitly entered subtype; overlapping dates do not classify a relationship automatically. Add the subtype, status, duration pattern, start/end dates, place and registration reference as applicable. Use separate records for separate episodes between the same people. Relationship period fields use `fromDate` and `toDate`; `from` and `to` remain person IDs.
 
 Use **Parenthood** for biological parents, **Adoption** for adoptive parents and **Step-parent / step-child** for a parent's partner who is not recorded as a biological or adoptive parent. A child can have biological and adoptive records at the same time. Step-parent links remain visible but do not establish biological or adoptive ancestry. Half-sibling descriptions require both people to have at least two recorded biological parents and exactly one shared parent; unknown parents are not guessed.
 
@@ -92,6 +99,20 @@ Travel, immigration status changes, medical review dates, qualification expiry, 
 Use the star on a person card or in the profile panel to add or remove a favorite. Favorites are saved in the project, participate in undo/redo and travel in ZIP backups. They stay accessible when the people search or family-group filter changes.
 
 Drag a dialog or profile window by its header. Windows remain inside the viewport and can be reset with the layout button in the header. Focus a header and use **Alt + arrow keys** to move it, or **Alt + Home** to reset. Positions are temporary workspace state; a newly opened dialog starts in its default position.
+
+## Life history and biography review
+
+Pregnancy records retain separate outcomes, clinical references, a linked child, reported other parent and parentage verification. An ongoing pregnancy cannot have an end date. These references do not create parenthood edges or change basic gender. Death accounts retain circumstances, investigation and certificate details without overwriting the basic death date or life status. Use one military record per posting or service period, and separate records of type **Award** for multiple awards and decrees.
+
+Add a witness record to the person the event concerns. Select an existing person or enter an external witness. Store the reported statement, dates, interview, contact, availability, verification and source. A linked witness's autobiography also shows **Statements about other people**, with the subject and source. Witness availability does not establish corroboration.
+
+Contact values link safely using `tel:`, `mailto:` or HTTP/HTTPS. Unsupported schemes remain plain text; the separate URL field rejects them. Demo contacts use reserved `.invalid` domains and a reserved fictional phone number.
+
+Open **Biography review** from the person panel or autobiography. Choose exact start/end dates, a minimum gap in days (180 by default) and all dated records or only explicitly corroborated records. The default period starts on the eighteenth birthday; for a minor it starts at birth. A missing birth date requires an explicit start. The end is bounded by today and the recorded death date.
+
+Coverage comes from education, residence, work and military service periods declared by their section modules. Adjacent or overlapping periods merge. Only explicitly current or active records extend an open end to the review end; an absent end date alone does not establish continuity. Refuted and future periods are excluded. Year-only starts use December 31 and year-only ends use January 1, conservatively retaining uncertain boundaries for clarification. Missing dates and unverified records are listed separately. A residence can cover a period without employment, so coverage does not mean uninterrupted employment.
+
+A gap means that no eligible dated record covers that period. It is not proof of misconduct or a reputation assessment. Record follow-up questions, explanations and sources in **Reports and claims**. The review does not modify data. It can support biographical review, including a marriage agency's review of information supplied by a person, without inferring undisclosed conduct or personal characteristics.
 
 ## Global search and printable biographies
 
@@ -193,7 +214,9 @@ src/
     dom.js                 DOM queries and HTML escaping
     utils.js               IDs, cloning, formatting, URLs and downloads
   model/                   Project selectors, validation, dates, person status, relationship labels, evidence and kinship
-  features/                People, favorites, calendar, search, printing, documents, groups, events, property and launcher flows
+    biography-review.js    Pure interval coverage, gap detection and clarification lists
+    contacts.js            Safe phone, email and social contact links
+  features/                People, favorites, calendar, search, printing, biography review, documents and launcher flows
   graph/
     render.js              Graph composition and SVG definitions
     nodes.js               Visible node selection and non-person cards
@@ -221,6 +244,7 @@ src/
     components.js          Shared HTML components
     forms/                 Individual dialog and form components
     profile-fields.js      Shared structured field display for profiles and biographies
+    biography-review.js    Review controls and translated report rendering
     dialog.js              Dialog lifecycle and notifications
     floating-windows.js    Shared mouse, touch and keyboard window positioning
     cropper.js             Client-side image preparation
@@ -235,6 +259,7 @@ src/
     records.js             Person, source and former-name record factories
     demo-records.js         Detailed core profile and property records
     demo-details.js         Residence, appearance, health, skills, travel and citizenship
+    demo-life-records.js    Attributed life events, service, testimony and contacts
     demo-sources.js         Core evidence references and review states
   styles/                  Base, workspace, graph, forms and feature stylesheets
   vendor/                  Local JSZip distribution and its module entry point
@@ -262,7 +287,7 @@ The optional browser `document.modelContext` integration is isolated in `service
 
 ### A new profile section
 
-Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Its optional `numericMinimums` validates lower bounds. Its optional `calendar: { type, dates: [[field, messageKey]] }` declares dates for the shared event collector; new modules can contribute dates without modifying the collector. Field types include text, textarea, select, person reference, source, exact date, partial period, year and number. Person references resolve to names and are cleared if the referenced person is removed. Unlabelled groups show immediately; labelled groups become expandable details.
+Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Its optional `numericMinimums` validates lower bounds. Its optional `calendar: { type, dates: [[field, messageKey]] }` declares dates for the shared event collector; new modules can contribute dates without modifying the collector. Its optional `coverage: { from, to, current: { field: [values] }, kinds }` declares continuous periods for biography review. Its optional `validate(record)` supplies section-specific validation. Field types include text, textarea, select, person reference, source, HTTP/HTTPS URL, exact date, partial period, year and number. Person references resolve to names and are cleared if the referenced person is removed. Unlabelled groups show immediately; labelled groups become expandable details.
 
 The registry feeds the editor, collection, import validation, source cleanup, workspace scope picker and complete autobiography. Add translations in all three catalogs and tests for meaningful validation or persistence behavior. Choose initial visibility in `defaultScopes` only when the section should appear in that workspace by default; otherwise it is accessible through **Add more information**. Core profile sections remain defined in `core/config.js`.
 

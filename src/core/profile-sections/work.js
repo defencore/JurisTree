@@ -1,4 +1,5 @@
 import { defineSection } from "./define.js";
+import { attributionGroup } from "./attribution.js";
 
 export function workSection() {
   return defineSection(
@@ -27,6 +28,17 @@ export function workSection() {
           ["from", "ui.from", "period"],
           ["to", "ui.to", "period"],
           ["location", "ui.place"],
+          [
+            "status",
+            "ui.employmentStatus",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              current: "ui.currentEmployment",
+              former: "ui.formerEmployment",
+              other: "ui.other",
+            },
+          ],
         ],
       ],
       [
@@ -45,6 +57,11 @@ export function workSection() {
               other: "ui.other",
             },
           ],
+          ["country", "ui.country"],
+          ["address", "ui.address"],
+          ["department", "ui.department"],
+          ["contract", "ui.contractDetails"],
+          ["supervisor", "ui.supervisor"],
           ["rank", "ui.rankGrade"],
           ["income", "ui.income", "number"],
           ["currency", "ui.currency"],
@@ -61,11 +78,11 @@ export function workSection() {
             },
           ],
           ["reference", "ui.appointmentReference"],
-          ["notes", "ui.notes", "textarea"],
-          ["sourceId", "ui.source", "source"],
         ],
       ],
+      attributionGroup,
     ],
     [["from", "to"]],
+    { coverage: { from: "from", to: "to", current: { status: ["current"] } } },
   );
 }

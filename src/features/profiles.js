@@ -4,7 +4,7 @@ import { fields, recordValues } from "../ui/profile-fields.js";
 import { defaultScopes, recordConfigs, sectionInfo } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { safeUrl, uid } from "../core/utils.js";
+import { uid } from "../core/utils.js";
 import { bounds, fit, focusPerson } from "../graph/camera.js";
 import { isMobileLayout } from "../core/viewport.js";
 import { translate } from "../i18n/index.js";
@@ -240,20 +240,7 @@ export function recordDetails(section, r) {
       displayDate(r.date) +
         (r.repeat === "annual" ? ` ${translate("ui.annualAnniversary")}` : ""),
     ];
-  else if (section === "contacts") {
-    const url = ["social", "website"].includes(r.type)
-      ? safeUrl(r.value)
-      : r.type === "email" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(r.value)
-        ? "mailto:" + r.value
-        : r.type === "phone" && /^[+\d\s().-]{3,50}$/.test(r.value)
-          ? "tel:" + r.value.replace(/[^+\d]/g, "")
-          : "";
-    lines = [
-      url
-        ? `<a href="${esc(url)}" ${url.startsWith("http") ? 'target="_blank" rel="noopener noreferrer"' : ""}>${esc(r.value)}</a>`
-        : esc(r.value),
-    ];
-  } else if (section === "pets")
+  else if (section === "pets")
     lines = [
       r.birth ? `${translate("ui.birth2")} ` + displayDate(r.birth) : "",
       r.death ? `${translate("ui.death")} ` + displayDate(r.death) : "",

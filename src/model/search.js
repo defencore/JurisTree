@@ -212,6 +212,10 @@ export function buildSearchIndex(project) {
       [
         ...flat(p),
         ...records,
+        ...bio.testimony.flatMap(({ personName, record }) => [
+          personName,
+          recordText(configs.witnesses, record),
+        ]),
         gender,
         displayDate(p.birth),
         displayDate(p.death),

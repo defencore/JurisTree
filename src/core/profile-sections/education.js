@@ -1,4 +1,5 @@
 import { defineSection } from "./define.js";
+import { attributionGroup } from "./attribution.js";
 
 export function educationSection() {
   return defineSection(
@@ -37,11 +38,11 @@ export function educationSection() {
           ],
           ["diplomaNumber", "ui.diplomaNumber"],
           ["graduatedAt", "ui.graduationDate", "date"],
-          ["notes", "ui.notes", "textarea"],
-          ["sourceId", "ui.source", "source"],
         ],
       ],
+      attributionGroup,
     ],
     [["from", "to"]],
+    { coverage: { from: "from", to: "to", current: { status: ["current"] } } },
   );
 }

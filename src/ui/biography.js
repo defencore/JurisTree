@@ -1,4 +1,5 @@
 import { personStatusMarkup } from "./person-status.js";
+import { reviewButton } from "./biography-review.js";
 import { relationshipConfig } from "../core/relationships.js";
 import { sourceVerificationConfig } from "../core/sources.js";
 import {
@@ -60,10 +61,11 @@ export function renderBiography({
   property,
   documents,
   groups,
+  testimony = [],
 }) {
   let html = `<article class="biography"><header class="biography-header">${avatar(p)}<div><h2>${esc(p.name)}</h2><p>${esc(years(p))}</p><p class="hint">${translate("ui.autobiographyDescription")}</p></div></header>`;
   html += personStatusMarkup(p);
-  html += `<div class="biography-toolbar"><button type="button" class="btn" data-print-biography="${p.id}">${icon("printer")}${translate("ui.printBiography")}</button><p class="hint">${translate("ui.printBiographyHint")}</p></div>`;
+  html += `<div class="biography-toolbar"><button type="button" class="btn" data-print-biography="${p.id}">${icon("printer")}${translate("ui.printBiography")}</button>${reviewButton(p.id)}<p class="hint">${translate("ui.printBiographyHint")}</p></div>`;
   html += section(
     translate("ui.basicInformation"),
     "user",
@@ -141,6 +143,17 @@ export function renderBiography({
         key,
       );
   }
+  html += section(
+    translate("ui.relatedTestimony"),
+    "users",
+    testimony
+      .map(
+        ({ personId, personName, record: item }) =>
+          `<div class="biography-record"><h4>${esc(personName)}</h4>${record("witnesses", item)}<button type="button" class="btn small" data-biography="${personId}">${icon("book")}${translate("ui.autobiography")}</button></div>`,
+      )
+      .join(""),
+    "testimony",
+  );
   html += section(
     translate("ui.familyGroups"),
     "users",

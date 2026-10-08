@@ -1,11 +1,13 @@
 import { person } from "../model/project.js";
 import { esc } from "../core/dom.js";
 import { displayDate } from "../model/dates.js";
+import { contactHref } from "../model/contacts.js";
+import { safeUrl } from "../core/utils.js";
 
 export function fields(entries) {
   const rows = entries.filter(([, value]) => value !== "" && value != null);
   return rows.length
-    ? `<dl class="biography-fields">${rows.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`
+    ? `<dl class="biography-fields">${rows.map(([label, value, href]) => `<div><dt>${esc(label)}</dt><dd>${href ? `<a href="${esc(href)}"${href.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : ""}>${esc(value)}</a>` : esc(value)}</dd></div>`).join("")}</dl>`
     : "";
 }
 
@@ -25,6 +27,11 @@ export function recordValues(cfg, record) {
               : ["date", "period"].includes(type)
                 ? displayDate(value)
                 : value,
+        type === "url"
+          ? safeUrl(value)
+          : cfg.key === "contacts" && key === "value"
+            ? contactHref(record)
+            : "",
       ];
     });
 }

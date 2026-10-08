@@ -1,3 +1,8 @@
+import { pregnancySection } from "./pregnancy.js";
+import { deathSection } from "./death.js";
+import { militarySection } from "./military.js";
+import { witnessesSection } from "./witnesses.js";
+import { contactsSection } from "./contacts.js";
 import { residencesSection } from "./residences.js";
 import { appearanceSection } from "./appearance.js";
 import { medicalSection } from "./medical.js";
@@ -19,6 +24,12 @@ import { claimsSection } from "./claims.js";
 
 export function extendedProfileSections() {
   return {
+    pregnancy: pregnancySection(),
+    death: deathSection(),
+    military: militarySection(),
+    witnesses: witnessesSection(),
+    contacts: contactsSection(),
+
     residences: residencesSection(),
     appearance: appearanceSection(),
     medical: medicalSection(),

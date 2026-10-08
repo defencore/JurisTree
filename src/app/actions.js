@@ -1,4 +1,5 @@
 import { closeSearch, renderSearch } from "../features/search.js";
+import { updateBiographyReview } from "../features/biography-review.js";
 import { moveCalendarPeriod, renderCalendar } from "../features/calendar.js";
 import { localDateString } from "../model/dates.js";
 import { $ } from "../core/dom.js";
@@ -43,6 +44,7 @@ export async function newTree() {
 }
 export async function handleAction(action) {
   const handlers = {
+    "update-biography-review": updateBiographyReview,
     "close-search": closeSearch,
     "clear-search": () => {
       $("#globalSearch").value = "";

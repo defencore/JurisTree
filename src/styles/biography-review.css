@@ -1,0 +1,30 @@
+.review-section {
+  margin: 22px 0;
+}
+.review-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+.review-section ul {
+  padding: 0;
+  list-style: none;
+}
+.review-section li {
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+.review-section small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+#inspector .biography-review-button {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+}

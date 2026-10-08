@@ -23,6 +23,7 @@ export function relationshipConfig() {
               cohabitation: "ui.cohabitation",
               dating: "ui.dating",
               romantic: "ui.romanticRelationship",
+              affair: "ui.affairLovers",
               other: "ui.other",
             },
           ],
@@ -139,6 +140,7 @@ export function relationshipFields(type) {
           "cohabitation",
           "dating",
           "romantic",
+          "affair",
           "other",
         ];
   return {

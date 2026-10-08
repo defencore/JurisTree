@@ -1,5 +1,6 @@
 import { translate } from "../i18n/index.js";
 import { dateExact, partialDate } from "./dates.js";
+import { safeUrl } from "../core/utils.js";
 
 export function profileRecordError(cfg, record) {
   for (const [key, , type] of cfg.fields) {
@@ -12,6 +13,8 @@ export function profileRecordError(cfg, record) {
       return translate("ui.invalidProfileDate");
     if (type === "number" && !Number.isFinite(Number(value)))
       return translate("ui.invalidProfileNumber");
+    if (type === "url" && !safeUrl(value))
+      return translate("ui.invalidProfileUrl");
     if (
       type === "number" &&
       cfg.numericMinimums?.[key] != null &&
@@ -27,5 +30,5 @@ export function profileRecordError(cfg, record) {
     if (from && to && to.max < from.min)
       return cfg.label + translate("ui.endCannotPrecedeStart");
   }
-  return "";
+  return cfg.validate?.(record) || "";
 }

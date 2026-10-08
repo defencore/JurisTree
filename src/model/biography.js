@@ -4,6 +4,15 @@ import { recordConfigs } from "../core/config.js";
 export function personBiography(project, id) {
   const profile = project.people.find((p) => p.id === id);
   if (!profile) return null;
+  const testimony = project.people.flatMap((owner) =>
+    (owner.witnessRecords || [])
+      .filter((r) => r.witnessId === id)
+      .map((record) => ({
+        personId: owner.id,
+        personName: owner.name,
+        record,
+      })),
+  );
   const relations = project.relations.filter(
     (r) => r.from === id || r.to === id,
   );
@@ -14,6 +23,7 @@ export function personBiography(project, id) {
   const sourceIds = new Set([
     ...(profile.bioSourceIds || []),
     ...(profile.healthSourceIds || []),
+    ...testimony.map(({ record }) => record.sourceId).filter(Boolean),
     ...Object.values(recordConfigs()).flatMap((cfg) =>
       (profile[cfg.key] || []).map((record) => record.sourceId).filter(Boolean),
     ),
@@ -33,6 +43,7 @@ export function personBiography(project, id) {
     relations,
     property,
     documents,
+    testimony,
     groups: project.groups.filter((g) =>
       (profile.groupIds || []).includes(g.id),
     ),

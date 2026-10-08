@@ -1,4 +1,5 @@
 import { printBiography } from "../../features/print-biography.js";
+import { openBiographyReview } from "../../features/biography-review.js";
 import { openSearchResult } from "../../features/search.js";
 import {
   renderCalendar,
@@ -82,6 +83,10 @@ export function bindClickEvents() {
       }
       if (b.dataset.favorite) {
         toggleFavorite(b.dataset.favorite);
+        return;
+      }
+      if (b.dataset.reviewPerson) {
+        await openBiographyReview(b.dataset.reviewPerson);
         return;
       }
       if (b.dataset.biography) {
