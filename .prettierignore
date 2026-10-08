@@ -1,0 +1,6 @@
+node_modules/
+dist/
+src/vendor/jszip.min.js
+package-lock.json
+test-results/
+playwright-report/
