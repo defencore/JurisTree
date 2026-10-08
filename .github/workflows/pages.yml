@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:browser
+      - run: npm run test:browser -- --reporter=github,line
         env:
           JURISTREE_BASE_URL: http://127.0.0.1:8080/dist/
       - uses: actions/configure-pages@v5
