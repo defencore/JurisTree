@@ -1,3 +1,4 @@
+import { mediaMime } from "../core/attachments.js";
 import { MAX_ATTACHMENT_BYTES } from "../core/config.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -80,10 +81,17 @@ export async function processFiles(files, context = {}) {
         mime = /\.txt$/i.test(file.name)
           ? "text/plain"
           : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      } else if (mediaMime(file)) {
+        mime = mediaMime(file);
+        if (file.size > 20 * 1024 * 1024) {
+          toast(translate("ui.recordingLimit"), true);
+          continue;
+        }
       } else {
-        toast(translate("ui.supportedJpgPngWebpPdfTxtAndDocx"), true);
+        toast(translate("ui.attachmentFormats"), true);
         continue;
       }
+      if (blob.type !== mime) blob = new Blob([blob], { type: mime });
       const current = context.documentId ? doc(context.documentId) : null;
       const reusable =
         current?.assetId &&

@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 
-test("edits optional identity, immigration, tax and personal modules and restores them from ZIP", async ({
+test("edits detailed optional profiles, reports and name history and restores them from ZIP", async ({
   page,
 }) => {
   const errors = [];
@@ -22,6 +22,27 @@ test("edits optional identity, immigration, tax and personal modules and restore
     await panel.locator(`[data-add-record="${section}"]`).click();
     return panel;
   }
+  const names = await add("names");
+  await names.locator('[name="names-surname"]').fill("Example Maiden Doe");
+  await names.locator('[name="names-from"]').fill("1990");
+  await names.locator('[name="names-to"]').fill("2010");
+  const education = await add("education");
+  await education
+    .locator('[name="education-institution"]')
+    .fill("Example University");
+  await education
+    .locator('[name="education-qualification"]')
+    .fill("Fictional diploma");
+  const claims = await add("claims");
+  await claims.locator('[name="claims-kind"]').selectOption("rumor");
+  await claims
+    .locator('[name="claims-statement"]')
+    .fill("An unverified fictional report");
+  await expect(claims.locator('[name="claims-verification"]')).toHaveValue(
+    "pending",
+  );
+  await claims.getByText("Context and attribution", { exact: true }).click();
+  await claims.locator('[name="claims-reportedBy"]').fill("Fictional witness");
   const identity = await add("identity");
   await identity.locator('[name="identity-series"]').fill("DEMO");
   await identity.locator('[name="identity-number"]').fill("DEMO-PASSPORT-ONLY");
@@ -68,6 +89,12 @@ test("edits optional identity, immigration, tax and personal modules and restore
   await page.locator("#startContinue").click();
   await page.locator("#personList [data-biography]").click();
   for (const value of [
+    "Example Maiden Doe",
+    "Example University",
+    "Fictional diploma",
+    "An unverified fictional report",
+    "Unverified — needs checking",
+    "Fictional witness",
     "DEMO-PASSPORT-ONLY",
     "Fictional authority",
     "JOHN DOE",
@@ -80,6 +107,9 @@ test("edits optional identity, immigration, tax and personal modules and restore
   ])
     await expect(page.locator(".biography")).toContainText(value);
   await page.locator("[data-close]").first().click();
+  await page.locator("#peopleSearch").fill("Example Maiden Doe");
+  await expect(page.locator("#personList [data-biography]")).toHaveCount(1);
+  await page.locator("#peopleSearch").fill("");
   await page.locator('[data-action="export"]').click();
   const [download] = await Promise.all([
     page.waitForEvent("download"),
@@ -94,6 +124,9 @@ test("edits optional identity, immigration, tax and personal modules and restore
     return JSON.parse(await zip.file("tree.json").async("string"));
   }, buffer.toString("base64"));
   const p = manifest.people[0];
+  expect(p.nameHistory[0].surname).toBe("Example Maiden Doe");
+  expect(p.educationRecords[0].institution).toBe("Example University");
+  expect(p.claims[0].verification).toBe("pending");
   expect(p.identityDocuments[0].number).toBe("DEMO-PASSPORT-ONLY");
   expect(p.immigrationRecords[0].to).toBe("2027");
   expect(p.taxRecords[0].income).toBe("0");

@@ -8,6 +8,11 @@ import {
   statusTypes,
   types,
 } from "../core/config.js";
+import {
+  relationshipConfig,
+  relationshipFields,
+} from "../core/relationships.js";
+import { sourceEvidence, sourceVerificationConfig } from "../core/sources.js";
 import { state as appState } from "../core/state.js";
 import { safeUrl, uid } from "../core/utils.js";
 import { collectProfile } from "../features/profiles.js";
@@ -159,6 +164,24 @@ export function validateImport(raw) {
       !relTypes()[r.type]
     )
       throw Error(translate("ui.invalidRelationship"));
+    const details = {};
+    const cfg = relationshipConfig();
+    for (const [key, , type, options] of cfg.fields) {
+      let value = str(r[key], type === "textarea" ? 5000 : 1500);
+      if (type === "select" && !Object.hasOwn(options, value))
+        value = Object.keys(options)[0];
+      details[key] = value;
+    }
+    const unionOptions = relationshipFields(r.type)
+      .groups.flatMap((g) => g.fields)
+      .find((f) => f[0] === "unionKind")?.[3];
+    if (
+      details.unionKind !== "unspecified" &&
+      !unionOptions?.[details.unionKind]
+    )
+      throw Error(translate("ui.invalidRelationship"));
+    const error = profileRecordError(cfg, details);
+    if (error) throw Error(error);
     return {
       id: r.id,
       from: r.from,
@@ -166,6 +189,7 @@ export function validateImport(raw) {
       type: r.type,
       notes: str(r.notes),
       disputed: !!r.disputed,
+      ...details,
     };
   });
   const relIds = new Set(p.relations.map((r) => r.id));
@@ -216,7 +240,7 @@ export function validateImport(raw) {
       id: d.id,
       type: d.type,
       status: d.status,
-      evidence: ["photo", "letter"].includes(d.type) ? "indirect" : d.evidence,
+      evidence: sourceEvidence(d),
       purposes:
         Array.isArray(d.purposes) &&
         d.purposes.some((k) => Object.hasOwn(defaultScopes, k))
@@ -250,6 +274,14 @@ export function validateImport(raw) {
       "transcription",
     ])
       x[k] = str(d[k], k === "transcription" ? 30000 : 16000);
+    for (const [key, , type, options] of sourceVerificationConfig().fields) {
+      let value = str(d[key], type === "textarea" ? 5000 : 1500);
+      if (type === "select" && !Object.hasOwn(options, value))
+        value = Object.keys(options)[0];
+      x[key] = value;
+    }
+    const sourceError = profileRecordError(sourceVerificationConfig(), x);
+    if (sourceError) throw Error(sourceError);
     if (x.sourceUrl && !safeUrl(x.sourceUrl))
       throw Error(translate("ui.unsupportedSourceLink"));
     return x;

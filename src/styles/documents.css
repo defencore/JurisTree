@@ -422,3 +422,10 @@
 .doc-grid.list .source-card {
   padding: 15px;
 }
+
+.media-view {
+  display: block;
+  width: 100%;
+  max-height: 60vh;
+  margin: 20px auto;
+}

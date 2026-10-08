@@ -62,7 +62,7 @@ export const dialogsTemplate = `
   type="file"
   id="fileInput"
   class="upload-hidden"
-  accept="image/jpeg,image/png,image/webp,application/pdf,.txt,.docx"
+  accept="image/jpeg,image/png,image/webp,application/pdf,.txt,.docx,.mp3,.m4a,.wav,.ogg,.webm,.mp4,.mov"
   multiple
 /><input
   type="file"

@@ -29,6 +29,9 @@ export function documentIcon(d) {
       census: "users",
       photo: "photo",
       letter: "mail",
+      testimony: "users",
+      rumor: "help",
+      recording: "file",
     }[d.type] || "file"
   );
 }

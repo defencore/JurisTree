@@ -7,7 +7,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 ## Features
 
 - Family, inheritance, property, research and blank project templates.
-- People, family groups and six relationship types, including adoption and acquaintance.
+- People, family groups and seven relationship types, including adoption and acquaintance.
 - Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts.
 - Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Mobile controls are collapsible and the person panel opens as a bottom sheet.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
@@ -29,6 +29,9 @@ Open a person's editor and expand **Add more information** to use sections outsi
 
 | Module                      | Available information                                                                                                                                                                                                          |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Name history                | Maiden and birth surnames, legal and previous names, aliases, validity periods, reasons for changes and sources                                                                                                                |
+| Education                   | Institutions, degrees, fields of study, level, faculty, study periods/status, graduation dates, diploma references and sources                                                                                                 |
+| Reports and claims          | Attributed reports, rumors, testimony or recording-based statements, context, first-hand/hearsay basis, verification status, reviewer, findings and sources                                                                    |
 | Identity documents          | Document and passport type, country, series, number, issuing authority and code, issue/expiry dates, status, holder details, citizenship, personal number, registered address, machine-readable lines and a linked scan/source |
 | Citizenship and immigration | Country, status, visa/permit category and number, validity, application and decision, case/authority, citizenship basis, purpose, sponsor, travel dates, address and conditions                                                |
 | Tax information             | Country and year, tax ID and residence, currency, declaration metadata, income, deductions, credits, tax due/paid/refund, assets, liabilities and foreign accounts                                                             |
@@ -36,6 +39,16 @@ Open a person's editor and expand **Add more information** to use sections outsi
 | Custom facts                | A category, label, value, period, notes and source for details beyond the predefined fields                                                                                                                                    |
 
 Dates and numeric amounts are validated during editing and import. Monetary values retain the entered precision, including zero, and are not calculated automatically. A personal portrait stores entered descriptions and their attribution; it does not infer beliefs or make psychological assessments. These modules capture information and sources, rather than generate country-specific migration or tax forms.
+
+## Relationship history and source verification
+
+Choose **Registered marriage** for marriage or a registered civil partnership. Choose **Partnership / dating** for an unregistered union, cohabitation, dating, romantic relationships or another partnership. Add the subtype, status, duration pattern, start/end dates, place and registration reference as applicable. Use separate records for separate episodes between the same people. Relationship period fields use `fromDate` and `toDate`; `from` and `to` remain person IDs.
+
+Each relationship can record verification, attribution and review notes. Explicitly unverified or refuted links remain visible on the graph but do not establish kinship or inheritance paths. Dating and cohabitation are social links. Ended or divorced marriages are retained as history and excluded from current kinship paths. Disputed family links remain marked as disputed.
+
+Reports in a person's profile are separate statements, each with its own verification state. A recording can support multiple reports without automatically confirming them. Sources also have a separate review status, reviewer, review date and findings. Photographs, letters, testimony and recordings are indirect evidence; rumors remain unverified. Marking a recording as reviewed cannot turn it into an official family certificate.
+
+Attach audio/video recordings up to 20 MB, or reference larger recordings with an external source link. Supported formats are MP3, M4A, WAV, OGG, WebM, MP4 and MOV. Local files have browser-native playback controls; codec support depends on the browser. Transcriptions can be entered alongside the source. Media and verification metadata are included in ZIP backups.
 
 ## Using the map on a phone
 
@@ -179,7 +192,7 @@ README.txt                 English archive instructions
 
 The canonical archive model is `format: "juristree", version: 1`. This implementation accepts JurisTree archives and JSON with that schema; it does not include a migration adapter for the original prototype's `rodovid` format. JSON describes the model but cannot restore binary files on its own. PNG and SVG are image exports, not editable backups.
 
-Images are cropped and compressed locally; their untouched originals remain outside the application. PDFs, TXT and DOCX attachments are retained as files. DOCX contents are not parsed. External source links support HTTP and HTTPS only.
+Images are cropped and compressed locally; their untouched originals remain outside the application. PDFs, TXT, DOCX, audio and video attachments retain their original bytes. DOCX contents are not parsed. External source links support HTTP and HTTPS only.
 
 Import validation checks IDs, collection limits, relationship endpoints, generation cycles, calendar dates, property shares and source URLs. ZIP validation also checks entry counts, declared sizes, paths, encryption and checksums before restoring the project.
 
@@ -194,6 +207,7 @@ Import validation checks IDs, collection limits, relationship endpoints, generat
 | Total attachments           | 100 MB |
 | PDF attachment              |  12 MB |
 | TXT or DOCX attachment      |   5 MB |
+| Audio or video attachment   |  20 MB |
 
 These are import and attachment limits. Large projects can still be constrained by browser memory, storage and canvas export dimensions. Use SVG for oversized diagrams.
 

@@ -1,3 +1,4 @@
+import { attachmentExtensions } from "../core/attachments.js";
 import { renderExportForm } from "../ui/forms/export.js";
 import JSZip from "../vendor/zip.js";
 import {
@@ -41,18 +42,7 @@ export async function exportArchive(
     manifest.attachments = {};
     for (const id of usedBlobs(model, files)) {
       const blob = files.get(id),
-        ext =
-          blob.type === "image/webp"
-            ? "webp"
-            : blob.type === "image/jpeg"
-              ? "jpg"
-              : blob.type === "image/png"
-                ? "png"
-                : blob.type === "application/pdf"
-                  ? "pdf"
-                  : blob.type === "text/plain"
-                    ? "txt"
-                    : "bin",
+        ext = attachmentExtensions[blob.type] || "bin",
         path = "attachments/" + id + "." + ext;
       manifest.attachments[id] = {
         path,
@@ -234,17 +224,7 @@ export async function importFile(file, { fromStart = false } = {}) {
         if (!z)
           throw Error(`${translate("ui.archiveIsMissingFile")} ` + a.path);
         const mime = String(a.mime || "application/octet-stream");
-        if (
-          ![
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "application/pdf",
-            "text/plain",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "application/octet-stream",
-          ].includes(mime)
-        )
+        if (!Object.hasOwn(attachmentExtensions, mime))
           throw Error(translate("ui.unsupportedAttachmentType"));
         const content = await z.async("uint8array");
         unpackedBytes += content.byteLength;

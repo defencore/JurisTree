@@ -24,13 +24,17 @@ function field(section, record, [key, label, type, options]) {
 
 export function renderProfileRecord(section, record = {}) {
   const cfg = recordConfigs()[section];
+  return `<div class="profile-record" data-record-section="${section}"><div class="record-row-head"><b>${esc(cfg.label)}</b><button type="button" class="iconbtn small ghost" data-remove-record aria-label="${translate("ui.deleteRecord")}">${icon("trash")}</button></div><input type="hidden" name="${section}-id" value="${record.id || uid()}">${renderRecordFields(section, cfg, record)}</div>`;
+}
+
+export function renderRecordFields(section, cfg, record = {}) {
   const groups = cfg.groups || [{ label: "", fields: cfg.fields }];
-  return `<div class="profile-record" data-record-section="${section}"><div class="record-row-head"><b>${esc(cfg.label)}</b><button type="button" class="iconbtn small ghost" data-remove-record aria-label="${translate("ui.deleteRecord")}">${icon("trash")}</button></div><input type="hidden" name="${section}-id" value="${record.id || uid()}">${groups
+  return groups
     .map((group) => {
       const inputs = `<div class="form-grid">${group.fields.map((entry) => field(section, record, entry)).join("")}</div>`;
       return group.label
         ? `<details class="record-field-group"><summary>${esc(group.label)}${icon("chevron")}</summary>${inputs}</details>`
         : inputs;
     })
-    .join("")}</div>`;
+    .join("");
 }

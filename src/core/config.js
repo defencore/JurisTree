@@ -14,13 +14,17 @@ export function types() {
     census: translate("ui.censusResidentRegister"),
     photo: translate("ui.photograph"),
     letter: translate("ui.letterCorrespondence"),
+    testimony: translate("ui.witnessTestimony"),
+    rumor: translate("ui.rumor"),
+    recording: translate("ui.recording"),
     other: translate("ui.otherDocument"),
   };
 }
 export function relTypes() {
   return {
     parent: translate("ui.parenthood"),
-    spouse: translate("ui.marriagePartnership"),
+    spouse: translate("ui.registeredMarriage"),
+    partner: translate("ui.personalPartnership"),
     sibling: translate("ui.sibling"),
     adopted: translate("ui.adoption"),
     acquaintance: translate("ui.acquaintance"),

@@ -1,3 +1,5 @@
+import { relationshipConfig } from "../core/relationships.js";
+import { fields, recordValues } from "./profile-fields.js";
 import { getLocale } from "../i18n/index.js";
 import { relTypes } from "../core/config.js";
 import { $, $$, esc } from "../core/dom.js";
@@ -75,7 +77,12 @@ export function renderPeopleAll() {
     (p) =>
       (!appState.groupFilter ||
         (p.groupIds || []).includes(appState.groupFilter)) &&
-      (p.name + " " + (p.aliases || ""))
+      [
+        p.name,
+        p.aliases,
+        ...(p.nameHistory || []).flatMap((r) => [r.fullName, r.surname]),
+      ]
+        .join(" ")
         .toLocaleLowerCase(getLocale())
         .includes(q),
   );
@@ -178,7 +185,7 @@ export function renderInspector() {
       requested: translate("ui.documentRequested"),
       conflict: translate("ui.disputedRelationship"),
     };
-    html = `<div class="inspector-header"><b>${translate("ui.relationshipDetails")}</b><button class="iconbtn mobile-only" data-action="close-panel" aria-label="${translate("ui.closeDetails")}">${icon("panelClose")}</button></div><div class="profile"><h2>${esc(relTypes()[r.type])}</h2><div class="rel-direction"><div><small>${["parent", "adopted"].includes(r.type) ? esc(roleLabel(r, r.to)) : translate("ui.firstPerson")}</small><br><b>${esc(a.name)}</b></div><div><small>${["parent", "adopted"].includes(r.type) ? esc(roleLabel(r, r.from)) : translate("ui.secondPerson")}</small><br><b>${esc(b.name)}</b></div></div><div class="pills"><span class="pill ${state === "official" ? "teal" : state === "conflict" ? "red" : state === "review" ? "review" : state === "requested" ? "blue" : "amber"}">${icon(state === "official" ? "fileCheck" : state === "missing" ? "fileMissing" : "book")}${labels[state]}</span></div></div><div class="profile-actions"><button class="btn small" data-edit-relation="${r.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small primary" data-add-relation-doc="${r.id}">${icon("plus")}${translate("ui.source")}</button><button class="btn small" ${relationShown(r, false, true) ? "data-hide-graph-relation" : "data-reveal-graph-relation"}="${r.id}">${icon("sliders")}${relationShown(r, false, true) ? translate("ui.hideOnMap") : translate("ui.showOnMap")}</button></div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.evidenceForThisRelationship")}</h3><small>${ds.length}</small></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.attachADocumentToThisSpecificRelationship")}</p>`}</div><p class="hint">${translate("ui.officialRecordsPhotosAndCorrespondenceHaveDifferentEvidential")}</p>${r.notes ? `<div class="note-box">${esc(r.notes)}</div>` : ""}`;
+    html = `<div class="inspector-header"><b>${translate("ui.relationshipDetails")}</b><button class="iconbtn mobile-only" data-action="close-panel" aria-label="${translate("ui.closeDetails")}">${icon("panelClose")}</button></div><div class="profile"><h2>${esc(relTypes()[r.type])}</h2><div class="rel-direction"><div><small>${["parent", "adopted"].includes(r.type) ? esc(roleLabel(r, r.to)) : translate("ui.firstPerson")}</small><br><b>${esc(a.name)}</b></div><div><small>${["parent", "adopted"].includes(r.type) ? esc(roleLabel(r, r.from)) : translate("ui.secondPerson")}</small><br><b>${esc(b.name)}</b></div></div><div class="pills"><span class="pill ${state === "official" ? "teal" : state === "conflict" ? "red" : state === "review" ? "review" : state === "requested" ? "blue" : "amber"}">${icon(state === "official" ? "fileCheck" : state === "missing" ? "fileMissing" : "book")}${labels[state]}</span></div></div><div class="profile-actions"><button class="btn small" data-edit-relation="${r.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small primary" data-add-relation-doc="${r.id}">${icon("plus")}${translate("ui.source")}</button><button class="btn small" ${relationShown(r, false, true) ? "data-hide-graph-relation" : "data-reveal-graph-relation"}="${r.id}">${icon("sliders")}${relationShown(r, false, true) ? translate("ui.hideOnMap") : translate("ui.showOnMap")}</button></div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.evidenceForThisRelationship")}</h3><small>${ds.length}</small></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.attachADocumentToThisSpecificRelationship")}</p>`}</div><p class="hint">${translate("ui.officialRecordsPhotosAndCorrespondenceHaveDifferentEvidential")}</p>${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<div class="note-box">${esc(r.notes)}</div>` : ""}`;
   } else {
     const d = doc(appState.selected.id);
     if (d)

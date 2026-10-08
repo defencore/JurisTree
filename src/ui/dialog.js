@@ -25,6 +25,7 @@ export function openDialog(
     wide = false,
     footer = true,
     validate = null,
+    onOpen = null,
   } = {},
 ) {
   if ($("#modal").open) closeModal();
@@ -38,6 +39,7 @@ export function openDialog(
   $("#modal").showModal();
   $("#modal .modal-body").scrollTop = 0;
   icons();
+  onOpen?.();
   return new Promise((resolve) => {
     appState.modalResolve = resolve;
     $("#modalForm").onsubmit = (e) => {

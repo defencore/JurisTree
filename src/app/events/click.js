@@ -7,7 +7,7 @@ import { commit } from "../../services/history.js";
 import { openFiles } from "../../services/files.js";
 import { exportArchive, exportImage } from "../../services/archive.js";
 import { doc, person } from "../../model/project.js";
-import { linkedDocs } from "../../model/evidence.js";
+import { linkedDocs, isOfficial } from "../../model/evidence.js";
 import { translate } from "../../i18n/index.js";
 import { graphAnalysisDialog } from "../../graph/controls.js";
 import { applyCamera, fit, focusPerson } from "../../graph/camera.js";
@@ -318,10 +318,7 @@ export function bindClickEvents() {
       }
       if (b.dataset.required) {
         const found = linkedDocs("person", b.dataset.requiredPerson).find(
-          (d) =>
-            d.type === b.dataset.required &&
-            d.status === "available" &&
-            d.evidence === "official",
+          (d) => d.type === b.dataset.required && isOfficial(d),
         );
         if (found) await viewDocument(found.id);
         else

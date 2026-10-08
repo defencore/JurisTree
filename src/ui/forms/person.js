@@ -24,7 +24,17 @@ export function renderPersonForm(p, req, id) {
   )}</select></label><label class="field">${translate("ui.exactBirthDate")}<input type="date" name="birthDate" value="${dateExact(p.birth)}"></label><label class="field">${translate("ui.orBirthYear")}<input name="birthYear" type="number" min="1" max="9999" value="${/^\d{4}$/.test(p.birth) ? p.birth : ""}" placeholder="${translate("ui.ifTheExactDateIsUnknown")}"></label><label class="field">${translate("ui.exactDeathDate")}<input type="date" name="deathDate" value="${dateExact(p.death)}"></label><label class="field">${translate("ui.orDeathYear")}<input name="deathYear" type="number" min="1" max="9999" value="${/^\d{4}$/.test(p.death) ? p.death : ""}" placeholder="${translate("ui.ifTheExactDateIsUnknown")}"></label><label class="field full">${translate("ui.placeOfOriginCountry")}<input name="place" value="${esc(p.place)}" maxlength="250"></label><label class="field full">${translate("ui.otherNamesAndSpellings")}<input name="aliases" value="${esc(p.aliases)}" placeholder="${translate("ui.maidenNameVariantsInOtherLanguages")}" maxlength="500"></label></div>${appState.project.groups.length ? `<p class="field-caption">${translate("ui.familyGroups")}</p>` + checks(appState.project.groups, "groupIds", p.groupIds || [], (g) => g.name) : ""}</section><details class="profile-editor-section"><summary>${icon("clipboard")}${translate("ui.requiredDocuments")}<span>${req.length}</span>${icon("chevron")}</summary><div><div class="check-grid">${Object.entries(
     types(),
   )
-    .filter(([t]) => !["photo", "letter", "other"].includes(t))
+    .filter(
+      ([t]) =>
+        ![
+          "photo",
+          "letter",
+          "testimony",
+          "rumor",
+          "recording",
+          "other",
+        ].includes(t),
+    )
     .map(
       ([t, l]) =>
         `<label><input type="checkbox" name="requirements" value="${t}" ${req.includes(t) ? "checked" : ""}>${esc(l)}</label>`,

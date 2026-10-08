@@ -1,3 +1,4 @@
+import { relationshipConfig, familyConnection } from "../core/relationships.js";
 import { getLocale } from "../i18n/index.js";
 import {
   GRAPH_FONT,
@@ -247,13 +248,23 @@ export function renderGraphAll() {
 export function roleGroup(r, id) {
   if (["parent", "adopted"].includes(r.type))
     return r.to === id ? "parents" : "children";
-  return r.type === "spouse" ? "partners" : "other";
+  return ["spouse", "partner"].includes(r.type) ? "partners" : "other";
 }
 export function roleLabel(r, id) {
   const other = person(r.from === id ? r.to : r.from),
     female = other?.gender === "f",
     male = other?.gender === "m";
   const group = roleGroup(r, id);
+  if (
+    ["spouse", "partner"].includes(r.type) &&
+    r.unionKind &&
+    r.unionKind !== "unspecified"
+  )
+    return (
+      relationshipConfig().fields.find((f) => f[0] === "unionKind")[3][
+        r.unionKind
+      ] || relTypes()[r.type]
+    );
   if (r.type === "adopted")
     return group === "parents"
       ? translate("ui.adoptiveParent")
@@ -295,6 +306,7 @@ export function graphRole(id) {
     };
   const r = appState.project.relations.find(
     (r) =>
+      familyConnection(r) &&
       ["parent", "adopted"].includes(r.type) &&
       ((r.from === appState.selected.id && r.to === id) ||
         (r.to === appState.selected.id && r.from === id)),
@@ -448,17 +460,19 @@ export function filteredGraphNodes() {
   return ns;
 }
 export function graphLine(a, b, horizontal = false, offset = 0) {
-  const c = connection(a, b, horizontal);
+  const across = horizontal || Math.abs(a.y - b.y) < 70;
+  const axis = across ? "y" : "x";
+  const c = connection(
+    { ...a, [axis]: a[axis] + offset },
+    { ...b, [axis]: b[axis] + offset },
+    horizontal,
+  );
   if (graphView().lineStyle === "straight") {
     const coordinates = c.path.match(
       /M([\d.-]+) ([\d.-]+).*?,([\d.-]+) ([\d.-]+)$/,
     );
     if (coordinates)
       c.path = `M${coordinates[1]} ${coordinates[2]} L${coordinates[3]} ${coordinates[4]}`;
-  }
-  if (offset) {
-    c.x += horizontal ? 0 : offset;
-    c.y += horizontal ? offset : 0;
   }
   return c;
 }
@@ -473,6 +487,17 @@ export function renderFilteredGraph(images = null, exporting = false) {
     highlight = full ? null : appState.analysisHighlight,
     path = highlight || appState.comparisonPath || route(),
     seen = new Set();
+  const pairs = new Map();
+  for (const r of appState.project.relations) {
+    if (!relationShown(r, full)) continue;
+    const a = map.get(r.from),
+      b = map.get(r.to);
+    if (!a || !b || a.id === b.id || a.kind === "group" || b.kind === "group")
+      continue;
+    const key = [a.id, b.id].sort().join("|");
+    if (!pairs.has(key)) pairs.set(key, []);
+    pairs.get(key).push(r);
+  }
   let edges = "";
   for (const r of appState.project.relations) {
     if (!relationShown(r, full)) continue;
@@ -482,11 +507,17 @@ export function renderFilteredGraph(images = null, exporting = false) {
     const key = a.id + "|" + b.id + "|" + r.type;
     if ((a.kind === "group" || b.kind === "group") && seen.has(key)) continue;
     seen.add(key);
+    const episodes = pairs.get([a.id, b.id].sort().join("|")) || [r];
+    const offset = Math.max(
+      -60,
+      Math.min(60, (episodes.indexOf(r) - (episodes.length - 1) / 2) * 28),
+    );
     const direction = ["parent", "adopted"].includes(r.type),
       c = graphLine(
         a,
         b,
-        ["spouse", "sibling", "acquaintance"].includes(r.type),
+        ["spouse", "partner", "sibling", "acquaintance"].includes(r.type),
+        offset,
       ),
       state = edgeState(r),
       onpath = (path.relations || []).includes(r.id),
@@ -507,8 +538,11 @@ export function renderFilteredGraph(images = null, exporting = false) {
             : person(r.from)?.gender === "m"
               ? translate("ui.father2")
               : translate("ui.parent2")
-          : r.type === "spouse"
-            ? translate("ui.partners2")
+          : ["spouse", "partner"].includes(r.type)
+            ? roleLabel(r, r.from) +
+              (r.fromDate || r.toDate
+                ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
+                : "")
             : r.type === "sibling"
               ? translate("ui.sibling2")
               : r.type === "adopted"

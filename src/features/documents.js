@@ -1,4 +1,12 @@
-import { renderDocumentForm } from "../ui/forms/document.js";
+import { isMedia } from "../core/attachments.js";
+import {
+  sourceEvidence,
+  sourceNeedsReview,
+  sourceVerificationConfig,
+} from "../core/sources.js";
+import { profileRecordError } from "../model/profile-records.js";
+import { recordValues } from "../ui/profile-fields.js";
+import { renderDocumentForm, bindDocumentForm } from "../ui/forms/document.js";
 import { defaultScopes, evidenceTypes, types } from "../core/config.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -50,9 +58,7 @@ export function renderDocuments() {
   );
   const docs = matched.filter((d) =>
     !appState.docStatusFilter || appState.docStatusFilter === "review"
-      ? appState.docStatusFilter !== "review" ||
-        d.status === "needs_review" ||
-        (d.status === "available" && d.evidence === "unverified")
+      ? appState.docStatusFilter !== "review" || sourceNeedsReview(d)
       : d.status === appState.docStatusFilter,
   );
   const tabs = [
@@ -65,13 +71,11 @@ export function renderDocuments() {
   const count = (f) =>
     matched.filter((d) =>
       !f || f === "review"
-        ? f !== "review" ||
-          d.status === "needs_review" ||
-          (d.status === "available" && d.evidence === "unverified")
+        ? f !== "review" || sourceNeedsReview(d)
         : d.status === f,
     ).length;
   $("#otherView").innerHTML =
-    `<div class="intro-line"><div><h2>${translate("ui.sourcesSupportingYourTree")}</h2><p>${translate("ui.aDocumentCanBeAvailableWithoutADigital")}</p></div></div><div class="drop-zone" id="dropZone" role="button" tabindex="0">${icon("upload")}<span>${translate("ui.addDocumentsOrPhotographs")}<small>${translate("ui.dropFilesPhotosAreCompressedPdfsUpTo")}</small></span><span class="btn small">${translate("ui.chooseFiles")}</span></div><div class="filterbar"><div class="search">${icon("search")}<input id="docSearch" value="${esc(appState.docFilter)}" placeholder="${translate("ui.nameArchiveRecordNumberOrText")}" aria-label="${translate("ui.searchSources")}"></div><select id="docTypeFilter" aria-label="${translate("ui.sourceType")}"><option value="">${translate("ui.allTypes")}</option>${typeOptions(types(), appState.docTypeFilter)}</select><select id="docFileFilter" aria-label="${translate("ui.fileAvailability")}"><option value="">${translate("ui.allRecords")}</option><option value="attached" ${appState.docFileFilter === "attached" ? "selected" : ""}>${translate("ui.fileAttached2")}</option><option value="missing" ${appState.docFileFilter === "missing" ? "selected" : ""}>${translate("ui.noDigitalCopy2")}</option></select><label class="source-all"><input type="checkbox" id="docShowAll" ${appState.docShowAll ? "checked" : ""}>${translate("ui.allTreeSources")}</label><div class="layout-switch"><button class="${appState.docLayout === "cards" ? "active" : ""}" data-doc-layout="cards" aria-label="${translate("ui.sourceCards")}">${icon("grid")}</button><button class="${appState.docLayout === "table" ? "active" : ""}" data-doc-layout="table" aria-label="${translate("ui.sourceTable")}">${icon("list")}</button></div></div><div class="source-tabs">${tabs.map(([f, l]) => `<button class="source-tab ${appState.docStatusFilter === f ? "active" : ""}" data-source-filter="${f}">${l}<span>${count(f)}</span></button>`).join("")}</div>${appState.docLayout === "table" ? `<div class="doc-table-wrap"><table class="doc-table"><thead><tr><th>${translate("ui.source")}</th><th>${translate("ui.availability")}</th><th>${translate("ui.evidenceType")}</th><th>${translate("ui.file")}</th><th></th></tr></thead><tbody>${docs.map((d) => `<tr><td><button data-document="${d.id}">${esc(d.title)}</button><small>${esc(d.repository || d.source || types()[d.type])}</small></td><td>${statusBadge(d)}</td><td><span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${esc(evidenceTypes()[d.evidence])}</span></td><td><span class="file-state ${hasFile(d) ? "attached" : ""}">${hasFile(d) ? bytes(d.size) : translate("ui.notAttached")}</span></td><td><button class="iconbtn small" data-edit-document="${d.id}" aria-label="${translate("ui.editSource")}">${icon("edit")}</button></td></tr>`).join("")}</tbody></table></div>` : `<div class="doc-grid">${docs.map((d) => `<article class="doc-card"><button class="doc-preview ${d.type}" data-document="${d.id}" aria-label="${translate("ui.open")} ${esc(d.title)}">${d.mime?.startsWith("image/") && hasFile(d) ? `<img src="${objectUrl(d.assetId)}" alt="">` : icon(documentIcon(d))}<span class="preview-tag">${esc(types()[d.type])}</span></button><div class="doc-body">${statusBadge(d)}<h3>${esc(d.title)}</h3><span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${icon(d.evidence === "official" ? "badge" : "help")}${esc(evidenceTypes()[d.evidence])}</span><p class="source-origin">${icon("landmark")}${esc(d.repository || d.source || translate("ui.sourceNotSpecified"))}</p>${d.reference ? `<p>${esc(d.reference)}</p>` : ""}<p class="source-links">${d.people.length} ${translate("ui.people")} ${d.relations.length} ${translate("ui.relationships")}${d.date ? " · " + esc(d.date) : ""}</p></div><div class="doc-foot"><span class="file-state ${hasFile(d) ? "attached" : ""}">${icon("paperclip")}${hasFile(d) ? translate("ui.fileAttached2") : translate("ui.noCopy")}</span><button class="iconbtn small" data-attach-document="${d.id}" aria-label="${hasFile(d) ? translate("ui.replace") : translate("ui.add")} ${translate("ui.file2")}" title="${hasFile(d) ? translate("ui.replace") : translate("ui.add")} ${translate("ui.file2")}">${icon("upload")}</button><button class="iconbtn small" data-edit-document="${d.id}" aria-label="${translate("ui.editSource")}" title="${translate("ui.edit")}">${icon("edit")}</button><button class="iconbtn small" data-document="${d.id}" aria-label="${translate("ui.openSource")}" title="${translate("ui.open")}">${icon("eye")}</button></div></article>`).join("")}</div>`}${docs.length ? "" : `<div class="empty">${icon("book")}<h2>${appState.project.documents.length ? translate("ui.nothingMatchesTheseFilters") : translate("ui.startWithYourFirstSource")}</h2><p>${translate("ui.addAFileOrARecordOfA")}</p><button class="btn primary" data-action="reference">${icon("plus")}${translate("ui.addRecord")}</button></div>`}`;
+    `<div class="intro-line"><div><h2>${translate("ui.sourcesSupportingYourTree")}</h2><p>${translate("ui.aDocumentCanBeAvailableWithoutADigital")}</p></div></div><div class="drop-zone" id="dropZone" role="button" tabindex="0">${icon("upload")}<span>${translate("ui.addDocumentsOrPhotographs")}<small>${translate("ui.attachmentUploadHint")}</small></span><span class="btn small">${translate("ui.chooseFiles")}</span></div><div class="filterbar"><div class="search">${icon("search")}<input id="docSearch" value="${esc(appState.docFilter)}" placeholder="${translate("ui.nameArchiveRecordNumberOrText")}" aria-label="${translate("ui.searchSources")}"></div><select id="docTypeFilter" aria-label="${translate("ui.sourceType")}"><option value="">${translate("ui.allTypes")}</option>${typeOptions(types(), appState.docTypeFilter)}</select><select id="docFileFilter" aria-label="${translate("ui.fileAvailability")}"><option value="">${translate("ui.allRecords")}</option><option value="attached" ${appState.docFileFilter === "attached" ? "selected" : ""}>${translate("ui.fileAttached2")}</option><option value="missing" ${appState.docFileFilter === "missing" ? "selected" : ""}>${translate("ui.noDigitalCopy2")}</option></select><label class="source-all"><input type="checkbox" id="docShowAll" ${appState.docShowAll ? "checked" : ""}>${translate("ui.allTreeSources")}</label><div class="layout-switch"><button class="${appState.docLayout === "cards" ? "active" : ""}" data-doc-layout="cards" aria-label="${translate("ui.sourceCards")}">${icon("grid")}</button><button class="${appState.docLayout === "table" ? "active" : ""}" data-doc-layout="table" aria-label="${translate("ui.sourceTable")}">${icon("list")}</button></div></div><div class="source-tabs">${tabs.map(([f, l]) => `<button class="source-tab ${appState.docStatusFilter === f ? "active" : ""}" data-source-filter="${f}">${l}<span>${count(f)}</span></button>`).join("")}</div>${appState.docLayout === "table" ? `<div class="doc-table-wrap"><table class="doc-table"><thead><tr><th>${translate("ui.source")}</th><th>${translate("ui.availability")}</th><th>${translate("ui.evidenceType")}</th><th>${translate("ui.file")}</th><th></th></tr></thead><tbody>${docs.map((d) => `<tr><td><button data-document="${d.id}">${esc(d.title)}</button><small>${esc(d.repository || d.source || types()[d.type])}</small></td><td>${statusBadge(d)}</td><td><span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${esc(evidenceTypes()[d.evidence])}</span></td><td><span class="file-state ${hasFile(d) ? "attached" : ""}">${hasFile(d) ? bytes(d.size) : translate("ui.notAttached")}</span></td><td><button class="iconbtn small" data-edit-document="${d.id}" aria-label="${translate("ui.editSource")}">${icon("edit")}</button></td></tr>`).join("")}</tbody></table></div>` : `<div class="doc-grid">${docs.map((d) => `<article class="doc-card"><button class="doc-preview ${d.type}" data-document="${d.id}" aria-label="${translate("ui.open")} ${esc(d.title)}">${d.mime?.startsWith("image/") && hasFile(d) ? `<img src="${objectUrl(d.assetId)}" alt="">` : icon(documentIcon(d))}<span class="preview-tag">${esc(types()[d.type])}</span></button><div class="doc-body">${statusBadge(d)}<h3>${esc(d.title)}</h3><span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${icon(d.evidence === "official" ? "badge" : "help")}${esc(evidenceTypes()[d.evidence])}</span><p class="source-origin">${icon("landmark")}${esc(d.repository || d.source || translate("ui.sourceNotSpecified"))}</p>${d.reference ? `<p>${esc(d.reference)}</p>` : ""}<p class="source-links">${d.people.length} ${translate("ui.people")} ${d.relations.length} ${translate("ui.relationships")}${d.date ? " · " + esc(d.date) : ""}</p></div><div class="doc-foot"><span class="file-state ${hasFile(d) ? "attached" : ""}">${icon("paperclip")}${hasFile(d) ? translate("ui.fileAttached2") : translate("ui.noCopy")}</span><button class="iconbtn small" data-attach-document="${d.id}" aria-label="${hasFile(d) ? translate("ui.replace") : translate("ui.add")} ${translate("ui.file2")}" title="${hasFile(d) ? translate("ui.replace") : translate("ui.add")} ${translate("ui.file2")}">${icon("upload")}</button><button class="iconbtn small" data-edit-document="${d.id}" aria-label="${translate("ui.editSource")}" title="${translate("ui.edit")}">${icon("edit")}</button><button class="iconbtn small" data-document="${d.id}" aria-label="${translate("ui.openSource")}" title="${translate("ui.open")}">${icon("eye")}</button></div></article>`).join("")}</div>`}${docs.length ? "" : `<div class="empty">${icon("book")}<h2>${appState.project.documents.length ? translate("ui.nothingMatchesTheseFilters") : translate("ui.startWithYourFirstSource")}</h2><p>${translate("ui.addAFileOrARecordOfA")}</p><button class="btn primary" data-action="reference">${icon("plus")}${translate("ui.addRecord")}</button></div>`}`;
 }
 export function renderGaps() {
   const gs = gaps(),
@@ -113,9 +117,7 @@ export async function editDocument(id = null, file = null, context = {}) {
         title: file?.name || "",
         type: context.type || "other",
         status: context.status || (file ? "needs_review" : "requested"),
-        evidence: ["photo", "letter"].includes(context.type)
-          ? "indirect"
-          : "unverified",
+        evidence: "unverified",
         people: context.personId ? [context.personId] : [],
         relations: context.relationId ? [context.relationId] : [],
         propertyIds: context.propertyId ? [context.propertyId] : [],
@@ -149,23 +151,32 @@ export async function editDocument(id = null, file = null, context = {}) {
       old.evidence = "indirect";
   }
   const chosenType =
-    file?.mime.startsWith("image/") && old.type === "other" && !id
-      ? "photo"
-      : old.type;
-  const chosenEvidence = ["photo", "letter"].includes(chosenType)
-    ? "indirect"
-    : old.evidence;
+    !id && isMedia(file?.mime)
+      ? "recording"
+      : file?.mime.startsWith("image/") && old.type === "other" && !id
+        ? "photo"
+        : old.type;
+  const chosenEvidence = sourceEvidence({ ...old, type: chosenType });
   const f = await openDialog(
     id ? translate("ui.editSource") : translate("ui.addSource"),
     renderDocumentForm(file, old, chosenType, id, chosenEvidence),
     {
       wide: true,
+      onOpen: bindDocumentForm,
       validate: (f) =>
         !f.get("title").trim()
           ? translate("ui.enterASourceTitle")
           : f.get("sourceUrl") && !safeUrl(f.get("sourceUrl"))
             ? translate("ui.theLinkMustStartWithHttpsOrHttp")
-            : "",
+            : profileRecordError(
+                sourceVerificationConfig(),
+                Object.fromEntries(
+                  sourceVerificationConfig().fields.map(([key]) => [
+                    key,
+                    f.get("source-" + key) || "",
+                  ]),
+                ),
+              ),
     },
   );
   if (!f) return;
@@ -173,9 +184,13 @@ export async function editDocument(id = null, file = null, context = {}) {
     title: f.get("title").trim(),
     type: f.get("type"),
     status: f.get("status"),
-    evidence: ["photo", "letter"].includes(f.get("type"))
-      ? "indirect"
-      : f.get("evidence"),
+    evidence: f.get("evidence"),
+    ...Object.fromEntries(
+      sourceVerificationConfig().fields.map(([key]) => [
+        key,
+        f.get("source-" + key) || "",
+      ]),
+    ),
     people: [...new Set([...f.getAll("people"), ...f.getAll("subjectIds")])],
     subjectIds: f.getAll("subjectIds"),
     relations: f.getAll("relations"),
@@ -196,6 +211,7 @@ export async function editDocument(id = null, file = null, context = {}) {
     "notes",
   ])
     data[k] = String(f.get(k) || "");
+  data.evidence = sourceEvidence(data);
   commit(() => {
     let d = old;
     if (id) Object.assign(d, data);
@@ -231,7 +247,9 @@ export async function viewDocument(id) {
       ? `<img class="file-view" src="${url}" alt="${esc(d.title)}">`
       : d.mime === "application/pdf" && url
         ? `<iframe class="pdf-view" src="${url}" title="${esc(d.title)}"></iframe>`
-        : `<div class="file-placeholder">${icon(documentIcon(d))}<p>${url ? translate("ui.fileAvailableToDownload") : d.status === "available" ? `${translate("ui.documentMarkedAsAvailable")}<br>${translate("ui.noDigitalCopyAttachedYet")}` : d.status === "requested" ? `${translate("ui.documentRequested2")}<br>${translate("ui.attachTheFileWhenReceived")}` : d.status === "not_found" ? `${translate("ui.documentNotFound")}<br>${translate("ui.recordDetailsOfYourSearch")}` : `${translate("ui.sourceDetailsSaved")}<br>${translate("ui.addAFileOrAnExternalLink")}`}</p><button type="button" class="btn" data-attach-document="${id}">${icon("upload")}${url ? translate("ui.replaceFile") : translate("ui.addFile")}</button></div>`;
+        : isMedia(d.mime) && url
+          ? `<${d.mime.startsWith("audio/") ? "audio" : "video"} class="media-view" controls preload="metadata" src="${url}" aria-label="${esc(d.title)}"></${d.mime.startsWith("audio/") ? "audio" : "video"}>`
+          : `<div class="file-placeholder">${icon(documentIcon(d))}<p>${url ? translate("ui.fileAvailableToDownload") : d.status === "available" ? `${translate("ui.documentMarkedAsAvailable")}<br>${translate("ui.noDigitalCopyAttachedYet")}` : d.status === "requested" ? `${translate("ui.documentRequested2")}<br>${translate("ui.attachTheFileWhenReceived")}` : d.status === "not_found" ? `${translate("ui.documentNotFound")}<br>${translate("ui.recordDetailsOfYourSearch")}` : `${translate("ui.sourceDetailsSaved")}<br>${translate("ui.addAFileOrAnExternalLink")}`}</p><button type="button" class="btn" data-attach-document="${id}">${icon("upload")}${url ? translate("ui.replaceFile") : translate("ui.addFile")}</button></div>`;
   const details = [
     [translate("ui.documentType"), types()[d.type]],
     [translate("ui.receivedFromSource"), d.source],
@@ -240,6 +258,7 @@ export async function viewDocument(id) {
     [translate("ui.documentDate"), d.date],
     [translate("ui.accessedRequested"), d.accessedAt],
     [translate("ui.language"), d.language],
+    ...recordValues(sourceVerificationConfig(), d),
   ];
   await openDialog(
     d.title,

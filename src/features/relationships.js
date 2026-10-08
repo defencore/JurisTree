@@ -1,4 +1,13 @@
-import { relTypes } from "../core/config.js";
+import {
+  collectRelationship,
+  duplicateRelationship,
+  relationshipConfig,
+} from "../core/relationships.js";
+import { profileRecordError } from "../model/profile-records.js";
+import {
+  renderRelationshipForm,
+  bindRelationshipForm,
+} from "../ui/forms/relationship.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
@@ -7,7 +16,7 @@ import { kinshipBetween } from "../model/kinship.js";
 import { person, relation } from "../model/project.js";
 import { isParentCycle } from "../model/validation.js";
 import { commit } from "../services/history.js";
-import { avatar, personOptions, typeOptions } from "../ui/components.js";
+import { avatar, personOptions } from "../ui/components.js";
 import { openDialog, toast } from "../ui/dialog.js";
 import { icon } from "../ui/icons.js";
 export async function editRelation(id = null, context = {}) {
@@ -34,8 +43,10 @@ export async function editRelation(id = null, context = {}) {
       };
   const f = await openDialog(
     id ? translate("ui.editRelationship") : translate("ui.addRelationship"),
-    `<div class="upload-info">${translate("ui.forParenthoodSelectTheParentFirstAndThe")}</div><label class="field">${translate("ui.firstPerson")}<select name="from">${personOptions(r.from)}</select></label><label class="field">${translate("ui.relationshipType")}<select name="type">${typeOptions(relTypes(), r.type)}</select></label><label class="field">${translate("ui.secondPerson")}<select name="to">${personOptions(r.to)}</select></label><label class="field">${translate("ui.whatIsKnownAboutThisRelationship")}<textarea name="notes" maxlength="15000">${esc(r.notes)}</textarea></label><label class="check"><input name="disputed" type="checkbox" ${r.disputed ? "checked" : ""}>${translate("ui.sourcesContradictEachOther")}</label>${id ? `<button type="button" class="btn danger small" data-delete-relation="${id}" style="margin-top:18px">${icon("trash")}${translate("ui.deleteRelationship")}</button>` : ""}`,
+    renderRelationshipForm(r, id),
     {
+      wide: true,
+      onOpen: bindRelationshipForm,
       validate: (f) => {
         const a = f.get("from"),
           b = f.get("to"),
@@ -43,15 +54,14 @@ export async function editRelation(id = null, context = {}) {
         if (a === b) return translate("ui.selectTwoDifferentPeople");
         if (["parent", "adopted"].includes(t) && isParentCycle(a, b, id))
           return translate("ui.thisWouldCreateAGenerationCycleCheckThe");
+        const details = collectRelationship(f);
+        const error = profileRecordError(relationshipConfig(), details);
+        if (error) return error;
         if (
-          appState.project.relations.some(
-            (x) =>
-              x.id !== id &&
-              x.type === t &&
-              ((x.from === a && x.to === b) ||
-                (!["parent", "adopted"].includes(t) &&
-                  x.from === b &&
-                  x.to === a)),
+          duplicateRelationship(
+            appState.project.relations,
+            { from: a, to: b, type: t, ...details },
+            id,
           )
         )
           return translate("ui.thisRelationshipAlreadyExists");
@@ -67,6 +77,7 @@ export async function editRelation(id = null, context = {}) {
       type: f.get("type"),
       notes: f.get("notes"),
       disputed: f.has("disputed"),
+      ...collectRelationship(f),
     };
     if (id) Object.assign(r, data);
     else {

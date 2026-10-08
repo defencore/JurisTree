@@ -30,7 +30,7 @@ export function familyLayout(tree) {
   );
   const peers = tree.relations.filter(
     (r) =>
-      ["spouse", "sibling"].includes(r.type) &&
+      ["spouse", "partner", "sibling"].includes(r.type) &&
       ids.has(r.from) &&
       ids.has(r.to),
   );

@@ -1,3 +1,5 @@
+import { familyConnection } from "../core/relationships.js";
+import { sourceEvidence, sourceNeedsReview } from "../core/sources.js";
 import { types } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
@@ -35,28 +37,20 @@ export function linkedDocs(kind, id) {
 export function isOfficial(d) {
   return (
     d.status === "available" &&
-    d.evidence === "official" &&
-    !["photo", "letter"].includes(d.type)
+    sourceEvidence(d) === "official" &&
+    !["pending", "refuted", "inconclusive"].includes(d.verification)
   );
 }
 export function edgeState(r) {
   const ds = linkedDocs("relation", r.id);
-  if (r.disputed) return "conflict";
-  if (ds.some(isOfficial)) return "official";
-  if (
-    ds.some(
-      (d) =>
-        d.status === "needs_review" ||
-        (d.status === "available" && d.evidence === "unverified"),
-    )
-  )
+  if (r.disputed || ["disputed", "refuted"].includes(r.verification))
+    return "conflict";
+  if (r.verification === "unverified" || r.type === "unconfirmed")
     return "review";
+  if (ds.some(isOfficial)) return "official";
+  if (ds.some((d) => sourceNeedsReview(d))) return "review";
   if (
-    ds.some(
-      (d) =>
-        d.status === "available" &&
-        (d.evidence === "indirect" || ["photo", "letter"].includes(d.type)),
-    )
+    ds.some((d) => d.status === "available" && sourceEvidence(d) === "indirect")
   )
     return "indirect";
   if (ds.some((d) => d.status === "requested")) return "requested";
@@ -91,7 +85,7 @@ export function route() {
     if (visited.has(curr.id)) continue;
     visited.add(curr.id);
     for (const r of appState.project.relations) {
-      if (["acquaintance", "unconfirmed"].includes(r.type)) continue;
+      if (!familyConnection(r)) continue;
       if (r.from === curr.id || r.to === curr.id) {
         const id = r.from === curr.id ? r.to : r.from;
         if (!visited.has(id))
@@ -114,7 +108,7 @@ export function requirements(p) {
   if (!Array.isArray(ts)) {
     ts = ["birth"];
     if (p.death || p.lifeStatus === "deceased") ts.push("death");
-    if (p.aliases) ts.push("name_change");
+    if (p.aliases || p.nameHistory?.length) ts.push("name_change");
     if (
       appState.project.purpose === "inheritance" &&
       p.id === appState.project.subjectId
@@ -154,9 +148,7 @@ export function gaps() {
   const rs =
     appState.project.purpose === "inheritance" && path.found
       ? appState.project.relations.filter((r) => path.relations.includes(r.id))
-      : appState.project.relations.filter(
-          (r) => !["acquaintance", "unconfirmed"].includes(r.type),
-        );
+      : appState.project.relations.filter(familyConnection);
   const edgeGaps = rs
     .filter((r) => edgeState(r) !== "official")
     .map((r) => ({

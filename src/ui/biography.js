@@ -1,3 +1,5 @@
+import { relationshipConfig } from "../core/relationships.js";
+import { sourceVerificationConfig } from "../core/sources.js";
 import {
   evidenceTypes,
   recordConfigs,
@@ -30,23 +32,25 @@ function record(sectionKey, item) {
 
 function source(d) {
   const url = sourceLink(d);
-  return `<article class="biography-record"><h4>${esc(d.title)}</h4>${fields([
-    [translate("ui.documentType"), types()[d.type]],
-    [translate("ui.documentAvailability"), statusTypes()[d.status]],
-    [translate("ui.evidenceType"), evidenceTypes()[d.evidence]],
-    [translate("ui.documentDate"), displayDate(d.date)],
-    [translate("ui.receivedFromSource"), d.source],
-    [translate("ui.archiveOrCollection"), d.repository],
-    [translate("ui.recordReference"), d.reference],
-    [translate("ui.accessedRequested"), displayDate(d.accessedAt)],
-    [translate("ui.language"), d.language],
+  return `<article class="biography-record"><h4>${esc(d.title)}</h4>${fields(
     [
-      translate("ui.file"),
-      d.filename ? `${d.filename}${d.size ? ` · ${bytes(d.size)}` : ""}` : "",
-    ],
-    [translate("ui.documentText"), d.transcription],
-    [translate("ui.notes"), d.notes],
-  ])}${url ? `<a class="biography-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>` : ""}<div class="biography-record-actions"><button type="button" class="btn small" data-document="${d.id}">${icon("eye")}${translate("ui.openSource")}</button>${hasFile(d) ? `<button type="button" class="btn small" data-download-doc="${d.id}">${icon("download")}${translate("ui.downloadFile")}</button>` : `<span class="hint">${translate("ui.noDigitalCopyAttachedYet")}</span>`}</div></article>`;
+      [translate("ui.documentType"), types()[d.type]],
+      [translate("ui.documentAvailability"), statusTypes()[d.status]],
+      [translate("ui.evidenceType"), evidenceTypes()[d.evidence]],
+      [translate("ui.documentDate"), displayDate(d.date)],
+      [translate("ui.receivedFromSource"), d.source],
+      [translate("ui.archiveOrCollection"), d.repository],
+      [translate("ui.recordReference"), d.reference],
+      [translate("ui.accessedRequested"), displayDate(d.accessedAt)],
+      [translate("ui.language"), d.language],
+      [
+        translate("ui.file"),
+        d.filename ? `${d.filename}${d.size ? ` · ${bytes(d.size)}` : ""}` : "",
+      ],
+      [translate("ui.documentText"), d.transcription],
+      [translate("ui.notes"), d.notes],
+    ].concat(recordValues(sourceVerificationConfig(), d)),
+  )}${url ? `<a class="biography-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>` : ""}<div class="biography-record-actions"><button type="button" class="btn small" data-document="${d.id}">${icon("eye")}${translate("ui.openSource")}</button>${hasFile(d) ? `<button type="button" class="btn small" data-download-doc="${d.id}">${icon("download")}${translate("ui.downloadFile")}</button>` : `<span class="hint">${translate("ui.noDigitalCopyAttachedYet")}</span>`}</div></article>`;
 }
 
 export function renderBiography({
@@ -153,7 +157,7 @@ export function renderBiography({
         const sources = documents.filter((d) =>
           (d.relations || []).includes(r.id),
         );
-        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(other?.name)}</h4><p class="hint">${esc(other ? years(other) : "")}</p>${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
+        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(other?.name)}</h4><p class="hint">${esc(other ? years(other) : "")}</p>${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
       })
       .join(""),
     "relationships",

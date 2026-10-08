@@ -206,6 +206,7 @@ export function graphStepLabel(r, from) {
         : translate("ui.parent2");
   return {
     spouse: translate("ui.partner4"),
+    partner: translate("ui.personalPartnership"),
     sibling: translate("ui.sibling2"),
     acquaintance: translate("ui.acquaintance2"),
     unconfirmed: translate("ui.possibleConnection"),

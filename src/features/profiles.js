@@ -74,6 +74,12 @@ export async function editPerson(id = null) {
   };
   if (data.death) data.lifeStatus = "deceased";
   if (
+    data.nameHistory?.length &&
+    !p.nameHistory?.length &&
+    !data.requirements.includes("name_change")
+  )
+    data.requirements.push("name_change");
+  if (
     data.lifeStatus === "deceased" &&
     !p.death &&
     p.lifeStatus !== "deceased" &&

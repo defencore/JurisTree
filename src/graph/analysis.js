@@ -544,7 +544,7 @@ export function applyGraphPreset(preset) {
   const cfg = defaultGraphView();
   if (preset === "family")
     cfg.types = ["parent", "spouse", "sibling", "adopted"];
-  if (preset === "social") cfg.types = ["spouse", "acquaintance"];
+  if (preset === "social") cfg.types = ["spouse", "partner", "acquaintance"];
   if (preset === "proven") cfg.states = ["official"];
   commit(() => (appState.project.graphView = cfg));
   fit();

@@ -119,6 +119,7 @@ test("touch rearranging commits one undoable movement", async ({ page }) => {
   await touch(session, "touchStart", [
     [undo.x + undo.width / 2, undo.y + undo.height / 2],
   ]);
+  await page.waitForTimeout(80);
   await touch(session, "touchEnd", []);
   await expect(node).toHaveAttribute("transform", original);
 });
