@@ -79,9 +79,7 @@ test("mobile map gives space to the graph and supports real pan, pinch and tap g
   expect(errors).toEqual([]);
 });
 
-test("touch rearranging is explicit, cancellable and undoable", async ({
-  page,
-}) => {
+test("cancelled touch rearranging restores the card", async ({ page }) => {
   const node = page.locator('.node[data-node="p5"]');
   const original = await node.getAttribute("transform");
   const session = await page.context().newCDPSession(page);
@@ -90,7 +88,7 @@ test("touch rearranging is explicit, cancellable and undoable", async ({
     "aria-pressed",
     "true",
   );
-  let card = await node.locator(".card").boundingBox();
+  const card = await node.locator(".card").boundingBox();
   await drag(
     session,
     [card.x + 40, card.y + 35],
@@ -98,7 +96,14 @@ test("touch rearranging is explicit, cancellable and undoable", async ({
     true,
   );
   await expect(node).toHaveAttribute("transform", original);
-  card = await node.locator(".card").boundingBox();
+});
+
+test("touch rearranging commits one undoable movement", async ({ page }) => {
+  const node = page.locator('.node[data-node="p5"]');
+  const original = await node.getAttribute("transform");
+  const session = await page.context().newCDPSession(page);
+  await page.locator('[data-action="touch-move"]').tap();
+  const card = await node.locator(".card").boundingBox();
   await drag(session, [card.x + 40, card.y + 35], [card.x + 90, card.y + 85]);
   await expect(node).not.toHaveAttribute("transform", original);
   await expect
