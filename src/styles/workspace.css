@@ -22,20 +22,11 @@
   min-width: 220px;
 }
 .brandmark {
-  color: var(--gold);
-  display: grid;
-  place-items: center;
-  box-shadow: none;
-  background: var(--blue-dark);
-  border: 1px solid var(--gold);
-  border-radius: 4px;
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
   height: 36px;
   width: 36px;
-}
-.brandmark .icon {
-  height: 24px;
-  stroke-width: 1.9;
-  width: 24px;
 }
 .brand b {
   font-family: var(--ui-font);

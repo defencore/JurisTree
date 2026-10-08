@@ -166,13 +166,8 @@
     font-size: 1.3rem;
   }
   .brandmark {
-    border-radius: 10px;
     height: 35px;
     width: 35px;
-  }
-  .brandmark .icon {
-    height: 23px;
-    width: 23px;
   }
   .project-title {
     display: none;
@@ -620,7 +615,6 @@
     font-size: 1.5rem;
   }
   .brandmark {
-    border-radius: 4px;
     height: 31px;
     width: 31px;
   }
@@ -967,10 +961,6 @@
   .brandmark {
     height: 31px;
     width: 31px;
-  }
-  .brandmark .icon {
-    height: 22px;
-    width: 22px;
   }
   .brand small,
   .project-title {

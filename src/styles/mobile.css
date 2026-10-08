@@ -11,7 +11,6 @@
     padding: 8px;
     gap: 6px;
   }
-  .topbar .brandmark,
   .top-actions .start-home {
     display: none;
   }
@@ -240,8 +239,18 @@
   }
 }
 @media (max-width: 360px) {
-  .topbar .brand b {
-    font-size: 1rem;
+  .topbar .brand > div {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .topbar .brand {
+    gap: 0;
   }
   .top-actions .btn {
     padding: 8px;

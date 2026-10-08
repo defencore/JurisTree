@@ -1,3 +1,5 @@
+import { brandMark } from "../brand.js";
+
 export const workspaceTemplate = `
 <div id="appShell" hidden>
   <header class="topbar">
@@ -9,7 +11,7 @@ export const workspaceTemplate = `
       <i data-icon="menu"></i>
     </button>
     <div class="brand">
-      <span class="brandmark"><i data-icon="tree"></i></span>
+      ${brandMark}
       <div>
         <b>JurisTree</b><small>@@ui.peopleDocumentsRelationships@@</small>
       </div>

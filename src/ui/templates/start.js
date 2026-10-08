@@ -1,3 +1,5 @@
+import { brandMark } from "../brand.js";
+
 export const startTemplate = `
 <section
   class="start-screen"
@@ -6,7 +8,7 @@ export const startTemplate = `
 >
   <header class="start-topbar">
     <div class="brand">
-      <span class="brandmark"><i data-icon="tree"></i></span>
+      ${brandMark}
       <div>
         <b>JurisTree</b><small>@@ui.peopleDocumentsRelationships@@</small>
       </div>

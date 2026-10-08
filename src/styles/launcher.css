@@ -21,9 +21,6 @@
 .start-topbar .brand small {
   color: var(--line);
 }
-.start-topbar .brandmark {
-  background: var(--muted);
-}
 .start-help {
   background: color-mix(in srgb, var(--paper) 5%, transparent);
   border-color: var(--muted);
