@@ -78,6 +78,7 @@ a:hover {
   display: none !important;
 }
 .icon {
+  pointer-events: none;
   fill: none;
   flex-shrink: 0;
   stroke: currentColor;
