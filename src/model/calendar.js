@@ -33,6 +33,13 @@ export function monthOccurrences(
   month = localDateString().slice(0, 7),
 ) {
   const { first, last } = monthBounds(month);
+  return dateOccurrences(events, first, last);
+}
+export function yearOccurrences(events, year = localDateString().slice(0, 4)) {
+  monthBounds(year + "-01");
+  return dateOccurrences(events, year + "-01-01", year + "-12-31");
+}
+function dateOccurrences(events, first, last) {
   return events
     .flatMap((event) => {
       if (!dateExact(event.date)) return [];

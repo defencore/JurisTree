@@ -1,3 +1,4 @@
+import { populateDemoDetails } from "./demo-details.js";
 import { fresh } from "../model/project.js";
 import { demoPeople, demoRelations } from "./demo-people.js";
 import { populateDemoRecords } from "./demo-records.js";
@@ -37,5 +38,6 @@ export function sample() {
     ],
   });
   populateDemoRecords(project);
+  populateDemoDetails(project);
   return project;
 }

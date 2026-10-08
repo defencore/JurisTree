@@ -1,3 +1,8 @@
+import { appearanceSection } from "./appearance.js";
+import { medicalSection } from "./medical.js";
+import { skillsSection } from "./skills.js";
+import { weaponsSection } from "./weapons.js";
+import { travelSection } from "./travel.js";
 import { legalSection } from "./legal.js";
 import { financesSection } from "./finances.js";
 import { identityHistorySection } from "./identity-history.js";
@@ -13,6 +18,11 @@ import { claimsSection } from "./claims.js";
 
 export function extendedProfileSections() {
   return {
+    appearance: appearanceSection(),
+    medical: medicalSection(),
+    skills: skillsSection(),
+    weapons: weaponsSection(),
+    travel: travelSection(),
     legal: legalSection(),
     finances: financesSection(),
     identityHistory: identityHistorySection(),

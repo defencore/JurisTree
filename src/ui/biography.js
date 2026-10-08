@@ -61,6 +61,7 @@ export function renderBiography({
   groups,
 }) {
   let html = `<article class="biography"><header class="biography-header">${avatar(p)}<div><h2>${esc(p.name)}</h2><p>${esc(years(p))}</p><p class="hint">${translate("ui.autobiographyDescription")}</p></div></header>`;
+  html += `<div class="biography-toolbar"><button type="button" class="btn" data-print-biography="${p.id}">${icon("printer")}${translate("ui.printBiography")}</button><p class="hint">${translate("ui.printBiographyHint")}</p></div>`;
   html += section(
     translate("ui.basicInformation"),
     "user",

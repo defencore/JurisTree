@@ -7,7 +7,7 @@ import { dateExact } from "../../model/dates.js";
 import { typeOptions, personOptions } from "../components.js";
 import { icon } from "../icons.js";
 
-function field(section, record, [key, label, type, options]) {
+function field(section, record, [key, label, type, options], cfg) {
   const name = section + "-" + key;
   const value = record[key] ?? "";
   let input;
@@ -20,7 +20,7 @@ function field(section, record, [key, label, type, options]) {
   else if (type === "textarea")
     input = `<textarea name="${name}" rows="3" maxlength="5000">${esc(value)}</textarea>`;
   else
-    input = `<input name="${name}" type="${type === "date" ? "date" : ["number", "year"].includes(type) ? "number" : "text"}" value="${esc(type === "date" ? dateExact(value) : value)}" ${type === "number" ? 'step="any" inputmode="decimal"' : type === "year" ? 'min="1" max="9999" step="1" inputmode="numeric"' : 'maxlength="1000"'} ${type === "period" ? `placeholder="${translate("ui.yearOrYyyyMmDd")}"` : ""}>`;
+    input = `<input name="${name}" type="${type === "date" ? "date" : ["number", "year"].includes(type) ? "number" : "text"}" value="${esc(type === "date" ? dateExact(value) : value)}" ${type === "number" ? `step="any" inputmode="decimal" ${cfg.numericMinimums?.[key] != null ? `min="${cfg.numericMinimums[key]}"` : ""}` : type === "year" ? 'min="1" max="9999" step="1" inputmode="numeric"' : 'maxlength="1000"'} ${type === "period" ? `placeholder="${translate("ui.yearOrYyyyMmDd")}"` : ""}>`;
   return `<label class="field ${["textarea", "source"].includes(type) ? "full" : ""}">${esc(label)}${input}</label>`;
 }
 
@@ -33,7 +33,7 @@ export function renderRecordFields(section, cfg, record = {}) {
   const groups = cfg.groups || [{ label: "", fields: cfg.fields }];
   return groups
     .map((group) => {
-      const inputs = `<div class="form-grid">${group.fields.map((entry) => field(section, record, entry)).join("")}</div>`;
+      const inputs = `<div class="form-grid">${group.fields.map((entry) => field(section, record, entry, cfg)).join("")}</div>`;
       return group.label
         ? `<details class="record-field-group"><summary>${esc(group.label)}${icon("chevron")}</summary>${inputs}</details>`
         : inputs;

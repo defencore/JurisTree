@@ -77,5 +77,6 @@ export const dialogsTemplate = `
   class="upload-hidden"
   accept=".zip,.json"
 />
+<div id="biographyPrint"></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 `;

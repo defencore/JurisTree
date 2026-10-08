@@ -1,3 +1,4 @@
+import { renderSearch } from "../../features/search.js";
 import { renderCalendar } from "../../features/calendar.js";
 import { renderPeople } from "../../ui/render.js";
 import { renderEvents } from "../../features/events.js";
@@ -7,6 +8,11 @@ import { $, $$ } from "../../core/dom.js";
 import { getLocale } from "../../i18n/index.js";
 export function bindInputEvents() {
   document.addEventListener("input", (e) => {
+    if (e.target.id === "globalSearch") {
+      appState.searchLimit = 20;
+      renderSearch();
+      return;
+    }
     if (e.target.id === "calendarSearch") {
       const start = e.target.selectionStart;
       appState.calendarSearch = e.target.value;

@@ -17,6 +17,7 @@ export function financesSection() {
             "select",
             {
               income: "ui.income",
+              expense: "ui.expense",
               gift: "ui.gift",
               debt: "ui.debt",
               loan: "ui.loan",
@@ -28,6 +29,7 @@ export function financesSection() {
             },
           ],
           ["title", "ui.label"],
+          ["category", "ui.spendingCategory"],
           ["amount", "ui.amount", "number"],
           ["currency", "ui.currency"],
           ["date", "ui.transactionDate", "date"],
@@ -67,7 +69,10 @@ export function financesSection() {
             {
               unspecified: "ui.notSpecified",
               once: "ui.oneTimeEvent",
+              daily: "ui.daily",
+              weekly: "ui.weekly",
               monthly: "ui.monthly",
+              quarterly: "ui.quarterly",
               annual: "ui.annually",
               other: "ui.other",
             },
@@ -92,5 +97,16 @@ export function financesSection() {
       attributionGroup,
     ],
     [["from", "to"]],
+    {
+      calendar: {
+        type: "finance",
+        dates: [
+          ["date", ""],
+          ["from", "ui.started"],
+          ["to", "ui.ended"],
+          ["dueDate", "ui.dueDate"],
+        ],
+      },
+    },
   );
 }

@@ -17,6 +17,11 @@ export function legalSection() {
             "select",
             {
               case: "ui.courtCase",
+              administrativeOffense: "ui.administrativeOffense",
+              criminalOffense: "ui.criminalOffense",
+              investigation: "ui.investigation",
+              charge: "ui.formalCharge",
+              acquittal: "ui.acquittal",
               propertyDivision: "ui.propertyDivision",
               claim: "ui.legalClaim",
               hearing: "ui.courtHearing",
@@ -37,6 +42,10 @@ export function legalSection() {
         "ui.caseDetails",
         [
           ["caseNumber", "ui.caseNumber"],
+          ["country", "ui.country"],
+          ["legalProvision", "ui.legalProvision"],
+          ["fineAmount", "ui.fineAmount", "number"],
+          ["fineCurrency", "ui.currency"],
           ["authority", "ui.courtAuthority"],
           ["location", "ui.place"],
           [
@@ -51,6 +60,7 @@ export function legalSection() {
               victim: "ui.victim",
               detained: "ui.detainedPerson",
               convicted: "ui.convictedPerson",
+              suspect: "ui.suspect",
               other: "ui.other",
             },
           ],
@@ -76,5 +86,15 @@ export function legalSection() {
       attributionGroup,
     ],
     [["from", "to"]],
+    {
+      calendar: {
+        type: "legal",
+        dates: [
+          ["date", ""],
+          ["from", "ui.started"],
+          ["to", "ui.ended"],
+        ],
+      },
+    },
   );
 }

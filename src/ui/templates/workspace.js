@@ -45,6 +45,10 @@ export const workspaceTemplate = `
       </button>
     </div>
   </header>
+  <section class="global-search-bar" aria-label="@@ui.globalSearch@@">
+    <div class="global-search-input"><i data-icon="search"></i><input id="globalSearch" type="search" autocomplete="off" placeholder="@@ui.globalSearchPlaceholder@@" aria-label="@@ui.globalSearch@@" aria-controls="globalSearchResults" aria-expanded="false"><button type="button" class="iconbtn small" data-action="clear-search" aria-label="@@ui.clearSearch@@"><i data-icon="x"></i></button></div>
+    <div id="globalSearchResults" class="global-search-results" role="region" aria-label="@@ui.searchResults@@" hidden></div>
+  </section>
   <div class="workspace">
     <aside class="sidebar" id="sidebar">
       <div class="purpose">

@@ -14,3 +14,6 @@
 @import "./favorites.css";
 @import "./floating.css";
 @import "./calendar.css";
+
+@import url("./global-search.css");
+@import url("./print.css");

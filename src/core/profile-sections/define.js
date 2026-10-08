@@ -8,6 +8,7 @@ export function defineSection(
   recordLabel,
   groups,
   dateRanges = [],
+  options = {},
 ) {
   const translated = groups.map(([label, fields]) => ({
     label: label ? translate(label) : "",
@@ -34,6 +35,7 @@ export function defineSection(
       groups: translated,
       fields: translated.flatMap((group) => group.fields),
       dateRanges,
+      ...options,
     },
   };
 }

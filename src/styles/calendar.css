@@ -176,3 +176,116 @@
     padding: 7px 2px;
   }
 }
+.calendar-mode {
+  display: flex;
+  gap: 4px;
+}
+.calendar-mode .active {
+  background: #e1eef9;
+  border-color: #337cb0;
+  color: #245d85;
+}
+#calendarYear {
+  width: 110px;
+}
+.calendar-year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.calendar-month {
+  min-width: 0;
+  border: 1px solid #bdcedb;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+}
+.calendar-month:hover,
+.calendar-month:focus-visible {
+  background: #edf6fd;
+  border-color: #337cb0;
+}
+.calendar-month-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.calendar-month-title strong {
+  font-size: 14px;
+}
+.mini-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  text-align: center;
+}
+.mini-calendar-grid .calendar-weekday {
+  padding: 4px 0;
+  border: 0;
+  font-size: 10px;
+  background: transparent;
+}
+.mini-calendar-grid .calendar-blank {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.mini-calendar-day {
+  font-size: 12px;
+  line-height: 26px;
+  position: relative;
+}
+.mini-calendar-day.has-events {
+  color: #236597;
+  font-weight: 700;
+  background: #e3eff9;
+  border-radius: 3px;
+}
+.mini-calendar-day.jubilee {
+  background: #fff1cb;
+  color: #806016;
+}
+.mini-calendar-day.today {
+  box-shadow: inset 0 0 0 1px #337cb0;
+  border-radius: 3px;
+}
+@media (min-width: 1500px) {
+  .calendar-year-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .calendar-year-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .calendar-year-grid {
+    gap: 8px;
+  }
+  .calendar-month {
+    padding: 8px;
+  }
+  .calendar-month-title {
+    gap: 4px;
+  }
+  .calendar-month-title strong {
+    font-size: 12px;
+  }
+  .calendar-month-title .pill {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+  .mini-calendar-day {
+    font-size: 11px;
+    line-height: 23px;
+  }
+  .calendar-toolbar #calendarYear {
+    flex: 0 0 90px;
+  }
+}

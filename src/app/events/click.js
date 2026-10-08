@@ -1,4 +1,9 @@
-import { renderCalendar } from "../../features/calendar.js";
+import { printBiography } from "../../features/print-biography.js";
+import { openSearchResult } from "../../features/search.js";
+import {
+  renderCalendar,
+  changeCalendarMonth,
+} from "../../features/calendar.js";
 import { toggleFavorite } from "../../features/favorites.js";
 import { render, select } from "../../ui/render.js";
 import { icons } from "../../ui/icons.js";
@@ -49,6 +54,23 @@ export function bindClickEvents() {
     );
     if (!b) return;
     try {
+      if (b.dataset.printBiography) {
+        await printBiography(b.dataset.printBiography);
+        return;
+      }
+      if (b.dataset.searchKind) {
+        await openSearchResult(b.dataset.searchKind, b.dataset.searchId);
+        return;
+      }
+      if (b.dataset.calendarOpenMonth) {
+        changeCalendarMonth(b.dataset.calendarOpenMonth);
+        return;
+      }
+      if (b.dataset.calendarMode) {
+        appState.calendarMode = b.dataset.calendarMode;
+        renderCalendar();
+        return;
+      }
       if (b.dataset.calendarDay) {
         appState.calendarDay = b.dataset.calendarDay;
         renderCalendar();

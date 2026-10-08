@@ -59,6 +59,41 @@ export function relationshipConfig() {
         ],
       ],
       [
+        "ui.relationshipContext",
+        [
+          [
+            "quality",
+            "ui.relationshipQuality",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              good: "ui.goodRelationship",
+              neutral: "ui.neutralRelationship",
+              difficult: "ui.difficultRelationship",
+              hostile: "ui.hostileRelationship",
+              mixed: "ui.mixedRelationship",
+            },
+          ],
+          [
+            "context",
+            "ui.relationshipContextType",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              friendship: "ui.friendship",
+              family: "ui.familyContext",
+              professional: "ui.professionalContext",
+              business: "ui.businessContext",
+              neighbour: "ui.neighbourContext",
+              romantic: "ui.romanticRelationship",
+              conflict: "ui.conflictContext",
+              other: "ui.other",
+            },
+          ],
+          ["contextNotes", "ui.relationshipContextDetails", "textarea"],
+        ],
+      ],
+      [
         "ui.verificationDetails",
         [
           [

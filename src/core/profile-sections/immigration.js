@@ -18,6 +18,12 @@ export function immigrationSection() {
             {
               unspecified: "ui.notSpecified",
               citizen: "ui.citizen",
+              formerCitizen: "ui.formerCitizen",
+              stateless: "ui.stateless",
+              applicant: "ui.statusApplicant",
+              resident: "ui.resident",
+              permit: "ui.residencePermit",
+              asylum: "ui.asylumSeeker",
               visa: "ui.visa",
               temporary: "ui.temporaryResidence",
               permanent: "ui.permanentResidence",
@@ -29,6 +35,29 @@ export function immigrationSection() {
           ["permitNumber", "ui.permitNumber"],
           ["from", "ui.validFrom", "period"],
           ["to", "ui.validUntil", "period"],
+        ],
+      ],
+      [
+        "ui.citizenshipChanges",
+        [
+          [
+            "change",
+            "ui.citizenshipChangeType",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              acquired: "ui.citizenshipAcquired",
+              renounced: "ui.citizenshipRenounced",
+              lost: "ui.citizenshipLost",
+              restored: "ui.citizenshipRestored",
+              changed: "ui.citizenshipChanged",
+              other: "ui.other",
+            },
+          ],
+          ["previousCountry", "ui.previousCitizenship"],
+          ["changeDate", "ui.citizenshipChangeDate", "date"],
+          ["residenceType", "ui.residencyType"],
+          ["statusReason", "ui.statusReason", "textarea"],
         ],
       ],
       [
@@ -65,5 +94,19 @@ export function immigrationSection() {
       ["applicationDate", "decisionDate"],
       ["entryDate", "exitDate"],
     ],
+    {
+      calendar: {
+        type: "immigration",
+        dates: [
+          ["from", "ui.validFrom"],
+          ["to", "ui.validUntil"],
+          ["changeDate", "ui.citizenshipChangeDate"],
+          ["applicationDate", "ui.applicationDate"],
+          ["decisionDate", "ui.decisionDate"],
+          ["entryDate", "ui.entryDate"],
+          ["exitDate", "ui.exitDate"],
+        ],
+      },
+    },
   );
 }

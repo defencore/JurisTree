@@ -1,3 +1,4 @@
+import { renderSearch } from "../features/search.js";
 import { renderCalendar } from "../features/calendar.js";
 import { favoriteButton, renderFavorites } from "../features/favorites.js";
 import { windowControls } from "./floating-windows.js";
@@ -69,6 +70,7 @@ export function renderAll() {
   renderFavorites();
   renderInspector();
   renderStatusBoard();
+  if (!$("#globalSearchResults").hidden) renderSearch();
   icons();
 }
 export function renderPeople() {

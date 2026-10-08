@@ -1,0 +1,64 @@
+import { defineSection } from "./define.js";
+import { attributionGroup } from "./attribution.js";
+
+export function skillsSection() {
+  return defineSection(
+    "skillRecords",
+    "ui.skillsHobbies",
+    "sparkles",
+    "ui.skillRecord",
+    [
+      [
+        null,
+        [
+          [
+            "category",
+            "ui.category",
+            "select",
+            {
+              skill: "ui.skill",
+              hobby: "ui.hobbies",
+              sport: "ui.sport",
+              martialArt: "ui.martialArt",
+              weapons: "ui.weaponsProficiency",
+              teaching: "ui.teachingActivity",
+              construction: "ui.constructionActivity",
+              development: "ui.developmentActivity",
+              other: "ui.other",
+            },
+          ],
+          ["name", "ui.skillActivityName"],
+          [
+            "level",
+            "ui.proficiencyLevel",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              beginner: "ui.beginner",
+              intermediate: "ui.intermediate",
+              advanced: "ui.advanced",
+              professional: "ui.professional",
+              other: "ui.other",
+            },
+          ],
+          ["from", "ui.from", "period"],
+          ["to", "ui.to", "period"],
+          ["frequency", "ui.frequencyContext"],
+          ["description", "ui.description", "textarea"],
+        ],
+      ],
+      [
+        "ui.qualifications",
+        [
+          ["qualification", "ui.qualification"],
+          ["issuer", "ui.issuingAuthority"],
+          ["certificateNumber", "ui.certificateNumber"],
+          ["expiryDate", "ui.validUntil", "date"],
+        ],
+      ],
+      attributionGroup,
+    ],
+    [["from", "to"]],
+    { calendar: { type: "skill", dates: [["expiryDate", "ui.validUntil"]] } },
+  );
+}

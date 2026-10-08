@@ -1,3 +1,4 @@
+import { bindSearchEvents } from "../features/search.js";
 import { bindKeyboardEvents } from "./events/keyboard.js";
 import { bindUploadsEvents } from "./events/uploads.js";
 import { bindDialogEvents } from "../ui/dialog.js";
@@ -14,5 +15,6 @@ export function bindEvents() {
   bindInputEvents();
   bindResizeEvents();
   bindLauncherEvents();
+  bindSearchEvents();
   bindKeyboardEvents();
 }

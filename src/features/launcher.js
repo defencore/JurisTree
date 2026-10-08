@@ -120,6 +120,8 @@ export function activateTree(
   appState.showDocs = false;
   appState.eventSearch = "";
   appState.eventType = "";
+  appState.calendarMode = "month";
+  appState.calendarUndatedLimit = 80;
   appState.calendarMonth = "";
   appState.calendarDay = "";
   appState.calendarSearch = "";
@@ -132,6 +134,10 @@ export function activateTree(
     z: 1,
   };
   $("#peopleSearch").value = "";
+  $("#globalSearch").value = "";
+  $("#globalSearchResults").hidden = true;
+  $("#globalSearch").setAttribute("aria-expanded", "false");
+  appState.searchLimit = 20;
   $("#sidebar").classList.remove("open");
   $("#inspector").classList.remove("open");
   appState.selected = appState.project.people.length

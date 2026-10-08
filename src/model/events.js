@@ -1,3 +1,4 @@
+import { recordConfigs } from "../core/config.js";
 import { translate } from "../i18n/index.js";
 import { sourceEvidence } from "../core/sources.js";
 
@@ -7,6 +8,7 @@ export function collectProjectEvents(
   { sections = null, groupId = "" } = {},
 ) {
   const events = [],
+    configs = recordConfigs(),
     included = (key) => !sections || sections.includes(key);
   const selected = new Set(
     project.people
@@ -181,43 +183,33 @@ export function collectProjectEvents(
           "pets",
         );
       }
-    for (const [section, key, type] of [
-      ["legal", "legalRecords", "legal"],
-      ["finances", "financialRecords", "finance"],
-    ])
-      if (included(section))
-        for (const r of p[key] || []) {
-          const seen = new Set();
-          for (const [field, prefix] of [
-            ["date", ""],
-            ["from", translate("ui.started")],
-            ["to", translate("ui.ended")],
-            ["dueDate", translate("ui.dueDate")],
-          ]) {
-            if (!r[field] || seen.has(r[field])) continue;
-            seen.add(r[field]);
-            add(
-              type,
-              r.id + "-" + field,
-              [
-                prefix,
-                r.title ||
-                  translate(
-                    type === "legal" ? "ui.legalRecord" : "ui.financialRecord",
-                  ),
-              ]
-                .filter(Boolean)
-                .join(" · "),
-              r[field],
-              false,
-              r.sourceId,
-              r.notes,
-              r.id,
-              section,
-            );
-            events.at(-1).verification = r.verification;
-          }
+    for (const [section, cfg] of Object.entries(configs)) {
+      if (!cfg.calendar || !included(section)) continue;
+      for (const r of p[cfg.key] || []) {
+        const seen = new Set();
+        for (const [field, message] of cfg.calendar.dates) {
+          if (!r[field] || seen.has(r[field])) continue;
+          seen.add(r[field]);
+          add(
+            cfg.calendar.type,
+            r.id + "-" + field,
+            [
+              message ? translate(message) : "",
+              r.title || r.name || r.country || cfg.label,
+            ]
+              .filter(Boolean)
+              .join(" · "),
+            r[field],
+            false,
+            r.sourceId,
+            r.notes,
+            r.id,
+            section,
+          );
+          events.at(-1).verification = r.verification;
         }
+      }
+    }
   }
   const peopleById = new Map(project.people.map((p) => [p.id, p]));
   for (const r of project.relations) {

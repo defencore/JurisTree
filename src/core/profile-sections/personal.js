@@ -1,4 +1,5 @@
 import { defineSection } from "./define.js";
+import { attributionGroup } from "./attribution.js";
 
 export function personalSection() {
   return defineSection(
@@ -22,6 +23,10 @@ export function personalSection() {
               religion: "ui.religiousViews",
               politics: "ui.politicalViews",
               preferences: "ui.personalPreferences",
+              food: "ui.foodPreferences",
+              attraction: "ui.attractionPreferences",
+              lifestyle: "ui.lifestyleActivities",
+              charity: "ui.charityActivity",
               other: "ui.other",
             },
           ],
@@ -30,28 +35,14 @@ export function personalSection() {
         ],
       ],
       [
-        "ui.contextAndAttribution",
+        "ui.periodAndFrequency",
         [
-          [
-            "basis",
-            "ui.informationBasis",
-            "select",
-            {
-              unspecified: "ui.notSpecified",
-              self: "ui.selfReported",
-              observation: "ui.recordedObservation",
-              source: "ui.documentedSource",
-            },
-          ],
-          ["reportedBy", "ui.reportedRecordedBy"],
-          ["recordedAt", "ui.recordedOn", "date"],
           ["frequency", "ui.frequencyContext"],
           ["from", "ui.from", "period"],
           ["to", "ui.to", "period"],
-          ["notes", "ui.notes", "textarea"],
-          ["sourceId", "ui.source", "source"],
         ],
       ],
+      attributionGroup,
     ],
     [["from", "to"]],
   );

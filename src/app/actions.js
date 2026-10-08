@@ -1,4 +1,5 @@
-import { moveCalendarMonth } from "../features/calendar.js";
+import { closeSearch, renderSearch } from "../features/search.js";
+import { moveCalendarPeriod, renderCalendar } from "../features/calendar.js";
 import { localDateString } from "../model/dates.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -42,6 +43,16 @@ export async function newTree() {
 }
 export async function handleAction(action) {
   const handlers = {
+    "close-search": closeSearch,
+    "clear-search": () => {
+      $("#globalSearch").value = "";
+      closeSearch();
+      $("#globalSearch").focus();
+    },
+    "more-search": () => {
+      appState.searchLimit += 20;
+      renderSearch();
+    },
     start: showStartScreen,
     "start-create": createFromTemplate,
     "start-continue": continueDraft,
@@ -53,8 +64,12 @@ export async function handleAction(action) {
     "add-event": () => editFamilyEvent(),
     "add-calendar-event": () =>
       editFamilyEvent(null, null, appState.calendarDay),
-    "calendar-previous": () => moveCalendarMonth(-1),
-    "calendar-next": () => moveCalendarMonth(1),
+    "more-calendar-dates": () => {
+      appState.calendarUndatedLimit += 80;
+      renderCalendar();
+    },
+    "calendar-previous": () => moveCalendarPeriod(-1),
+    "calendar-next": () => moveCalendarPeriod(1),
     "calendar-today": () => {
       appState.calendarMonth = localDateString().slice(0, 7);
       appState.calendarDay = localDateString();

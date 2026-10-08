@@ -1,6 +1,7 @@
 import {
   renderCalendar,
   changeCalendarMonth,
+  changeCalendarYear,
 } from "../../features/calendar.js";
 import { commit } from "../../services/history.js";
 import { processFiles, setPortrait } from "../../services/files.js";
@@ -16,6 +17,10 @@ import { state as appState } from "../../core/state.js";
 export function bindChangeEvents() {
   document.addEventListener("change", (e) => {
     const t = e.target;
+    if (t.id === "calendarYear") {
+      changeCalendarYear(t.value);
+      return;
+    }
     if (t.id === "calendarMonth") {
       changeCalendarMonth(t.value);
       return;

@@ -12,6 +12,12 @@ export function profileRecordError(cfg, record) {
       return translate("ui.invalidProfileDate");
     if (type === "number" && !Number.isFinite(Number(value)))
       return translate("ui.invalidProfileNumber");
+    if (
+      type === "number" &&
+      cfg.numericMinimums?.[key] != null &&
+      Number(value) < cfg.numericMinimums[key]
+    )
+      return translate("ui.invalidProfileNumber");
     if (type === "year" && (!/^\d{4}$/.test(value) || Number(value) < 1))
       return translate("ui.invalidProfileYear");
   }
