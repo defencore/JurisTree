@@ -21,6 +21,13 @@ import { customSection } from "./custom.js";
 import { namesSection } from "./names.js";
 import { educationSection } from "./education.js";
 import { claimsSection } from "./claims.js";
+import { assetsSection } from "./assets.js";
+import { encumbrancesSection } from "./encumbrances.js";
+import { accountsSection } from "./accounts.js";
+import { cryptoSection } from "./crypto.js";
+import { companiesSection } from "./companies.js";
+import { sanctionsSection } from "./sanctions.js";
+import { politicalSection } from "./political.js";
 
 export function extendedProfileSections() {
   return {
@@ -38,6 +45,13 @@ export function extendedProfileSections() {
     travel: travelSection(),
     legal: legalSection(),
     finances: financesSection(),
+    assets: assetsSection(),
+    encumbrances: encumbrancesSection(),
+    accounts: accountsSection(),
+    crypto: cryptoSection(),
+    companies: companiesSection(),
+    sanctions: sanctionsSection(),
+    political: politicalSection(),
     identityHistory: identityHistorySection(),
     occupations: workSection(),
     names: namesSection(),

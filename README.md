@@ -2,12 +2,12 @@
 
 JurisTree is a multilingual workspace for family relationships, personal profiles, documents, evidence, events and property planning. It runs entirely in the browser and can be hosted on GitHub Pages.
 
-The application uses native JavaScript ES modules and plain CSS. It has no backend, accounts, remote database, production Node.js runtime or CDN dependency. JSZip and SVG icons are included locally.
+The application uses native JavaScript ES modules and plain CSS. It has no backend, user accounts, remote database, production Node.js runtime or CDN dependency. JSZip and SVG icons are included locally.
 
 ## Features
 
 - Family, inheritance, property, research and blank project templates.
-- People, family groups and eight relationship types, including biological parenthood, adoption, step-parenthood and acquaintance.
+- People, family groups and eleven relationship types, including biological parenthood, adoption, step-parenthood and acquaintance.
 - Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts. Person cards show full birth/death dates on separate rows and icon-and-text life/age badges.
 - Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Selecting a person from the list centers their card at a readable scale on desktop and mobile. Mobile controls are collapsible and the person panel opens as a bottom sheet.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
@@ -17,9 +17,11 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Document references, digital attachments, evidence states and configurable checklists.
 - Profiles with contacts, residence history, biographies, work, education, interests, health information and pets.
 - Optional identity documents, citizenship and immigration records, tax declarations, personal portrait entries and custom facts. Each section supports multiple records, dates, notes and linked sources.
+- Optional identified assets, property restrictions, financial accounts, cryptoassets, company interests, sanctions records and political party affiliation.
+- Formal and informal professional connections, with directed reporting lines, organization, roles, periods and verification.
 - Optional pregnancy outcomes, death circumstances, military service and awards, linked witnesses and dated contact or social profiles.
 - Biography review with configurable periods, minimum gap lengths, corroborated-only coverage and records awaiting verification.
-- A complete autobiography view for every person, available from the map, people list and profile panel. It includes populated profile sections regardless of workspace visibility, family relationships, property, notes and linked sources with attachments.
+- A complete autobiography view for every person, available from the map, people list and profile panel. It includes populated profile sections regardless of workspace visibility, family and professional relationships, property, notes and linked sources with attachments.
 - Month and year calendar views with direct year navigation, birthdays, wedding anniversaries, jubilees, memorial dates, travel, medical reviews, status changes and other dated records.
 - Global search across all stored values and linked context, with combined queries, field filters, keyboard navigation and multilingual terms.
 - A4 autobiography printing and browser Save as PDF, including every populated section and source reference.
@@ -28,7 +30,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.
 - English, Ukrainian and Russian interfaces, displayed as **EN / UA / RU**.
 
-The demo contains 99 people, 160 relationships, 96 source references and 10 family groups, spanning eight generations from 1824 to 2025. All identities, relationships, institutions, identifiers and personal details are invented. The project title carries the fictional-data notice; individual records use natural names and descriptions.
+The demo contains 99 people, 163 relationships, 96 source references and 10 family groups, spanning eight generations from 1824 to 2025. All identities, relationships, institutions, identifiers and personal details are invented. The project title carries the fictional-data notice; individual records use natural names and descriptions.
 
 Surname histories match the recorded events: Jane Hart became Jane Doe, Jamie Doe became Jamie Roe, Robin Vale became Robin Roe on adoption, and Casey Ward became Casey Roe on marriage. Jesse Ward retains her biological father's surname. Morgan Blake retains her birth surname throughout her marriage and divorce. Biological, adoptive and step-parent relationships remain separate.
 
@@ -74,15 +76,30 @@ Open a person's editor and expand **Add more information** to use sections outsi
 | Military service and records   | Service, registration, reserve, training, awards and discharge; country, branch, unit, role, rank, service periods/status, military ID and service numbers, registration office, specialty, fitness category, appointments, discharge and sources                                                      |
 | Witnesses and testimony        | Event, date, place, linked person or external witness, role, reported statement, contact, interview date, statement reference, availability, reviewer, verification and source                                                                                                                         |
 | Contacts and social profiles   | Phone, email, social profile, messenger, website or other contact; platform, username, HTTP/HTTPS URL, current/former status, periods, attribution and source                                                                                                                                          |
+| Identified assets              | Asset type and identifier, country/location, registered and beneficial ownership, holder/controller references, ownership share, value/currency, valuation/discovery dates, registry, periods and attribution                                                                                          |
+| Property restrictions          | Attachment, seizure, freeze, lien, pledge or mortgage; affected asset/account identifier, authority, case/order, dates, active/lifted status, scope, amount/currency, beneficiary and attribution                                                                                                      |
+| Financial accounts             | Bank, brokerage, payment or custody accounts; institution, country, account number, IBAN, SWIFT/BIC, holder/role, status, opening/closure, recorded balance/date, restrictions and attribution                                                                                                         |
+| Cryptoassets                   | Public wallets, holdings and exchange accounts; asset/symbol, network, address, contract, platform, quantity, ownership, holder, dated valuation, transactions, restrictions and attribution                                                                                                           |
+| Companies and interests        | Company/registration/tax identifiers, jurisdiction, role, direct/indirect/beneficial/nominee interest, share and voting percentages, share class/count, capital contribution, intermediary, control, periods and attribution                                                                           |
+| Sanctions and associations     | Direct designation or association, regime, authority, jurisdiction, measure, status, list identifier, legal instrument, listing/removal/check dates, official URL, related person/entity and attribution                                                                                               |
+| Political party affiliation    | Party, abbreviation, country, membership/candidacy/support/donation, branch, role, membership reference, current/former status, periods and attribution                                                                                                                                                |
 | Custom facts                   | A category, label, value, period, notes and source for details beyond the predefined fields                                                                                                                                                                                                            |
 
 Dates and numeric amounts are validated during editing and import. Monetary values retain the entered precision, including zero, and are not calculated automatically. A personal portrait stores entered descriptions and their attribution; it does not infer beliefs or make psychological assessments. These modules capture information and sources, rather than generate country-specific migration or tax forms. Court and financial counterparties can be linked to an existing person or entered as an external party. Monetary records do not automatically create reciprocal entries or calculate account balances. Gender, orientation and treatment records retain their independent dates and attribution; they do not infer one another or automatically overwrite the basic gender field.
+
+Identified assets form a per-person inventory, separate from the property's inheritance/allocation plan. Reuse an asset or account identifier in a restriction record to find both through search. Restrictions record their own dates and status; they do not change ownership or account balances automatically.
+
+Company interests are per-person records. Use separate entries for different roles, share classes and periods, and consistent registration identifiers across profiles. Registered and beneficial interests can overlap; the application does not add them together or calculate indirect ownership. Account balances, crypto quantities and valuations are dated, manually entered observations, with their original decimal strings preserved. There are no live balance, pricing or blockchain queries.
+
+A direct sanctions designation and an association with a designated person or entity are distinct record types. An association does not designate the other party. Enter the regime, list reference, status, dates, official URL and verification independently; there is no automatic sanctions screening or propagation. Party affiliation is dated history, separate from the personal portrait's political views.
 
 ## Relationship history and source verification
 
 Choose **Registered marriage** for marriage or a registered civil partnership. Choose **Partnership / dating** for an unregistered union, cohabitation, dating, romantic relationships, an affair / lovers or another partnership. An affair is an explicitly entered subtype; overlapping dates do not classify a relationship automatically. Add the subtype, status, duration pattern, start/end dates, place and registration reference as applicable. Use separate records for separate episodes between the same people. Relationship period fields use `fromDate` and `toDate`; `from` and `to` remain person IDs.
 
 Use **Parenthood** for biological parents, **Adoption** for adoptive parents and **Step-parent / step-child** for a parent's partner who is not recorded as a biological or adoptive parent. A child can have biological and adoptive records at the same time. Step-parent links remain visible but do not establish biological or adoptive ancestry. Half-sibling descriptions require both people to have at least two recorded biological parents and exactly one shared parent; unknown parents are not guessed.
+
+Choose **Work / service connection** for professional or business connections, **Subordination** for reporting lines, or **Sanctions-related connection** for a recorded association. These types support organization, department, formal/informal/mixed character, each person's role, reference, periods, current/ended status and verification. For subordination, select the subordinate first and the manager second: the arrow points **subordinate → supervisor**. Profiles show the other person's role from the selected person's perspective. Multiple periods and organizations can connect the same people. These links do not establish family ancestry or inheritance paths. Graph analysis uses **Follow arrows** or **Reverse arrows** for both parental and reporting connections; the former follows parent → child and subordinate → supervisor.
 
 Each relationship can record its quality (good, neutral, difficult, hostile or mixed), social context, context notes, verification, attribution and review notes. Explicitly unverified or refuted links remain visible on the graph but do not establish kinship or inheritance paths. Dating and cohabitation are social links. Ended or divorced marriages are retained as history and excluded from current kinship paths. Disputed family links remain marked as disputed.
 
@@ -209,6 +226,7 @@ src/
     state.js               Shared runtime state and history collections
     config.js              Record types, profile sections and display settings
     profile-sections/      Independent extended profile definitions and field groups
+    professional-relationships.js Professional fields and connection direction rules
     theme.js               Shared interface and SVG color tokens
     viewport.js            Shared mobile layout breakpoint
     dom.js                 DOM queries and HTML escaping
@@ -260,6 +278,7 @@ src/
     demo-records.js         Detailed core profile and property records
     demo-details.js         Residence, appearance, health, skills, travel and citizenship
     demo-life-records.js    Attributed life events, service, testimony and contacts
+    demo-business-records.js Assets, restrictions, accounts, companies and organizational links
     demo-sources.js         Core evidence references and review states
   styles/                  Base, workspace, graph, forms and feature stylesheets
   vendor/                  Local JSZip distribution and its module entry point
@@ -287,7 +306,7 @@ The optional browser `document.modelContext` integration is isolated in `service
 
 ### A new profile section
 
-Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Its optional `numericMinimums` validates lower bounds. Its optional `calendar: { type, dates: [[field, messageKey]] }` declares dates for the shared event collector; new modules can contribute dates without modifying the collector. Its optional `coverage: { from, to, current: { field: [values] }, kinds }` declares continuous periods for biography review. Its optional `validate(record)` supplies section-specific validation. Field types include text, textarea, select, person reference, source, HTTP/HTTPS URL, exact date, partial period, year and number. Person references resolve to names and are cleared if the referenced person is removed. Unlabelled groups show immediately; labelled groups become expandable details.
+Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Its optional `numericMinimums` and `numericMaximums` validate lower and upper bounds and set matching form constraints. Its optional `calendar: { type, dates: [[field, messageKey]] }` declares dates for the shared event collector; new modules can contribute dates without modifying the collector. Its optional `coverage: { from, to, current: { field: [values] }, kinds }` declares continuous periods for biography review. Its optional `validate(record)` supplies section-specific validation. Field types include text, textarea, select, person reference, source, HTTP/HTTPS URL, exact date, partial period, year and number. Person references resolve to names and are cleared if the referenced person is removed. Unlabelled groups show immediately; labelled groups become expandable details.
 
 The registry feeds the editor, collection, import validation, source cleanup, workspace scope picker and complete autobiography. Add translations in all three catalogs and tests for meaningful validation or persistence behavior. Choose initial visibility in `defaultScopes` only when the section should appear in that workspace by default; otherwise it is accessible through **Add more information**. Core profile sections remain defined in `core/config.js`.
 

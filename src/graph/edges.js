@@ -8,6 +8,11 @@ import { edgeState, route } from "../model/evidence.js";
 import { person } from "../model/project.js";
 import { roleLabel } from "../model/relationship-labels.js";
 import { translate } from "../i18n/index.js";
+import { relTypes } from "../core/config.js";
+import {
+  isDirectedRelationship,
+  isProfessionalRelationship,
+} from "../core/professional-relationships.js";
 export function renderGraphEdges(ns, exporting = false) {
   const map = new Map(ns.map((n) => [n.id, n]));
   ns.filter((n) => n.kind === "group").forEach((n) =>
@@ -43,13 +48,8 @@ export function renderGraphEdges(ns, exporting = false) {
       -60,
       Math.min(60, (episodes.indexOf(r) - (episodes.length - 1) / 2) * 28),
     );
-    const direction = ["parent", "adopted", "step_parent"].includes(r.type),
-      c = graphLine(
-        a,
-        b,
-        ["spouse", "partner", "sibling", "acquaintance"].includes(r.type),
-        offset,
-      ),
+    const direction = isDirectedRelationship(r.type),
+      c = graphLine(a, b, !direction, offset),
       state = edgeState(r),
       onpath = (path.relations || []).includes(r.id),
       active =
@@ -63,26 +63,31 @@ export function renderGraphEdges(ns, exporting = false) {
     const label =
       a.kind === "group" || b.kind === "group"
         ? translate("ui.familyConnection")
-        : r.type === "parent"
-          ? person(r.from)?.gender === "f"
-            ? translate("ui.mother2")
-            : person(r.from)?.gender === "m"
-              ? translate("ui.father2")
-              : translate("ui.parent2")
-          : r.type === "step_parent"
-            ? translate("ui.stepParenthood")
-            : ["spouse", "partner"].includes(r.type)
-              ? roleLabel(r, r.from) +
-                (r.fromDate || r.toDate
-                  ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
-                  : "")
-              : r.type === "sibling"
-                ? translate("ui.sibling2")
-                : r.type === "adopted"
-                  ? translate("ui.adoption2")
-                  : r.type === "acquaintance"
-                    ? translate("ui.acquaintance2")
-                    : translate("ui.possibleConnection");
+        : isProfessionalRelationship(r.type)
+          ? relTypes()[r.type] +
+            (r.fromDate || r.toDate
+              ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
+              : "")
+          : r.type === "parent"
+            ? person(r.from)?.gender === "f"
+              ? translate("ui.mother2")
+              : person(r.from)?.gender === "m"
+                ? translate("ui.father2")
+                : translate("ui.parent2")
+            : r.type === "step_parent"
+              ? translate("ui.stepParenthood")
+              : ["spouse", "partner"].includes(r.type)
+                ? roleLabel(r, r.from) +
+                  (r.fromDate || r.toDate
+                    ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
+                    : "")
+                : r.type === "sibling"
+                  ? translate("ui.sibling2")
+                  : r.type === "adopted"
+                    ? translate("ui.adoption2")
+                    : r.type === "acquaintance"
+                      ? translate("ui.acquaintance2")
+                      : translate("ui.possibleConnection");
     const width = graphTextWidth(label, 14, 400) + 16,
       horizontal = !direction && Math.abs(a.y - b.y) < 70,
       ly =
@@ -90,7 +95,7 @@ export function renderGraphEdges(ns, exporting = false) {
           ? Math.min(a.y, b.y) - 17
           : c.y + (direction ? (a.x < b.x ? -12 : a.x > b.x ? 12 : 0) : 0),
       opacity = highlight && !onpath ? 0.22 : 1;
-    edges += `<g class="edge" data-edge="${r.id}" role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(person(r.from)?.name + " — " + label + " — " + person(r.to)?.name)}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18"/>${onpath || active ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${full || cfg.showLabels ? `<rect x="${c.x - width / 2}" y="${ly - 10}" width="${width}" height="22" rx="3" fill="#fff" fill-opacity=".95"/>${svgText(label, c.x - width / 2 + 8, ly + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400)}` : ""}</g>`;
+    edges += `<g class="edge" data-edge="${r.id}" role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(person(r.from)?.name + " — " + label + " — " + person(r.to)?.name)}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18"/>${onpath || active ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${full || cfg.showLabels ? `<rect x="${c.x - width / 2}" y="${ly - 10}" width="${width}" height="22" rx="3" fill="#fff" fill-opacity=".95"/>${svgText(label, c.x - width / 2 + 8, ly + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}` : ""}</g>`;
   }
   if (appState.showDocs && (full || cfg.documentLinks))
     for (const d of appState.project.documents) {

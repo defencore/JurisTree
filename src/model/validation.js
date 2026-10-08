@@ -21,6 +21,10 @@ import { translate } from "../i18n/index.js";
 import { dateExact, partialDate } from "./dates.js";
 import { fresh } from "./project.js";
 import { profileRecordError } from "./profile-records.js";
+import {
+  isProfessionalRelationship,
+  professionalFieldKeys,
+} from "../core/professional-relationships.js";
 export function isParentCycle(from, to, except) {
   const stack = [to],
     seen = new Set();
@@ -179,12 +183,28 @@ export function validateImport(raw) {
         value = Object.keys(options)[0];
       details[key] = value;
     }
-    const unionOptions = relationshipFields(r.type)
-      .groups.flatMap((g) => g.fields)
-      .find((f) => f[0] === "unionKind")?.[3];
+    const typeFields = relationshipFields(r.type).groups.flatMap(
+      (g) => g.fields,
+    );
+    const unionOptions = typeFields.find((f) => f[0] === "unionKind")?.[3];
     if (
       details.unionKind !== "unspecified" &&
       !unionOptions?.[details.unionKind]
+    )
+      throw Error(translate("ui.invalidRelationship"));
+    if (
+      isProfessionalRelationship(r.type) &&
+      !Object.hasOwn(
+        typeFields.find((f) => f[0] === "status")[3],
+        details.status,
+      )
+    )
+      throw Error(translate("ui.invalidRelationship"));
+    if (
+      !isProfessionalRelationship(r.type) &&
+      [...professionalFieldKeys].some(
+        (key) => details[key] && details[key] !== "unspecified",
+      )
     )
       throw Error(translate("ui.invalidRelationship"));
     const error = profileRecordError(cfg, details);

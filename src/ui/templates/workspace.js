@@ -211,7 +211,7 @@ export const workspaceTemplate = `
             >
           </div>
           <div class="canvas-hint">
-            <i data-icon="route"></i>@@ui.arrowsPointFromParentsToChildren@@
+            <i data-icon="route"></i>@@ui.directedRelationshipHint@@
           </div>
         </div>
         <svg

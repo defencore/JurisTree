@@ -1,6 +1,7 @@
 import { recordConfigs } from "../core/config.js";
 import { translate } from "../i18n/index.js";
 import { sourceEvidence } from "../core/sources.js";
+import { isProfessionalRelationship } from "../core/professional-relationships.js";
 
 /** Collect dates from the project. Profile visibility is an optional view filter. */
 export function collectProjectEvents(
@@ -196,6 +197,10 @@ export function collectProjectEvents(
               message ? translate(message) : "",
               r.title ||
                 r.name ||
+                r.company ||
+                r.party ||
+                r.label ||
+                r.asset ||
                 [r.country, r.city, r.address].filter(Boolean).join(", ") ||
                 cfg.label,
             ]
@@ -216,7 +221,11 @@ export function collectProjectEvents(
   const peopleById = new Map(project.people.map((p) => [p.id, p]));
   for (const r of project.relations) {
     if (!selected.has(r.from) && !selected.has(r.to)) continue;
-    if (!["spouse", "partner"].includes(r.type)) continue;
+    if (
+      !["spouse", "partner"].includes(r.type) &&
+      !isProfessionalRelationship(r.type)
+    )
+      continue;
     const names = [r.from, r.to]
       .map((id) => peopleById.get(id)?.name)
       .filter(Boolean)
@@ -241,7 +250,11 @@ export function collectProjectEvents(
         personId: r.from,
         relatedPersonIds: [r.to],
         relationId: r.id,
-        type: "anniversary",
+        type: isProfessionalRelationship(r.type)
+          ? r.type === "sanctions_link"
+            ? "sanction"
+            : "professional"
+          : "anniversary",
         title: translate(label) + " · " + names,
         date,
         annual: repeats,

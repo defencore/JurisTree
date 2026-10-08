@@ -1,4 +1,10 @@
 import { defineSection } from "./profile-sections/define.js";
+import {
+  isDirectedRelationship,
+  isProfessionalRelationship,
+  professionalFieldKeys,
+  professionalRelationshipGroup,
+} from "./professional-relationships.js";
 
 export function relationshipConfig() {
   return defineSection(
@@ -59,6 +65,7 @@ export function relationshipConfig() {
           ["registration", "ui.registrationReference"],
         ],
       ],
+      professionalRelationshipGroup,
       [
         "ui.relationshipContext",
         [
@@ -131,6 +138,7 @@ export function familyConnection(r) {
 export function relationshipFields(type) {
   const cfg = relationshipConfig();
   const partnership = ["spouse", "partner"].includes(type);
+  const professional = isProfessionalRelationship(type);
   const allowed =
     type === "spouse"
       ? ["unspecified", "marriage", "civil", "religious", "other"]
@@ -145,27 +153,45 @@ export function relationshipFields(type) {
         ];
   return {
     ...cfg,
-    groups: cfg.groups.map((group) => ({
-      ...group,
-      fields: group.fields
-        .filter(
-          ([key]) =>
-            partnership ||
-            !["unionKind", "status", "duration", "registration"].includes(key),
-        )
-        .map((entry) =>
-          entry[0] === "unionKind"
-            ? [
-                ...entry.slice(0, 3),
-                Object.fromEntries(
-                  Object.entries(entry[3]).filter(([key]) =>
-                    allowed.includes(key),
+    groups: cfg.groups
+      .map((group) => ({
+        ...group,
+        fields: group.fields
+          .filter(
+            ([key]) =>
+              (professional || !professionalFieldKeys.has(key)) &&
+              (partnership ||
+                ![
+                  "unionKind",
+                  "registration",
+                  ...(professional ? [] : ["status", "duration"]),
+                ].includes(key)),
+          )
+          .map((entry) =>
+            entry[0] === "unionKind"
+              ? [
+                  ...entry.slice(0, 3),
+                  Object.fromEntries(
+                    Object.entries(entry[3]).filter(([key]) =>
+                      allowed.includes(key),
+                    ),
                   ),
-                ),
-              ]
-            : entry,
-        ),
-    })),
+                ]
+              : entry[0] === "status" && professional
+                ? [
+                    ...entry.slice(0, 3),
+                    Object.fromEntries(
+                      Object.entries(entry[3]).filter(([key]) =>
+                        ["unspecified", "current", "ended", "other"].includes(
+                          key,
+                        ),
+                      ),
+                    ),
+                  ]
+                : entry,
+          ),
+      }))
+      .filter((group) => group.fields.length),
   };
 }
 
@@ -197,11 +223,18 @@ export function duplicateRelationship(relations, candidate, except) {
       r.id !== except &&
       r.type === candidate.type &&
       ((r.from === candidate.from && r.to === candidate.to) ||
-        (!["parent", "adopted", "step_parent"].includes(r.type) &&
+        (!isDirectedRelationship(r.type) &&
           r.to === candidate.from &&
           r.from === candidate.to)) &&
       (["parent", "adopted", "step_parent", "sibling"].includes(r.type) ||
-        ["unionKind", "fromDate", "toDate"].every(
+        [
+          "unionKind",
+          "fromDate",
+          "toDate",
+          ...(isProfessionalRelationship(candidate.type)
+            ? ["organization", "professionalKind", "formality"]
+            : []),
+        ].every(
           (key) =>
             (r[key] || "unspecified") === (candidate[key] || "unspecified"),
         )),

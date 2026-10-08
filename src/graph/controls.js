@@ -1,4 +1,6 @@
 import { renderGraphHelpForm } from "../ui/forms/graph-help.js";
+import { isProfessionalRelationship } from "../core/professional-relationships.js";
+import { roleLabel } from "../model/relationship-labels.js";
 import { renderGraphFiltersForm } from "../ui/forms/graph-filters.js";
 import { renderGraphAnalysisForm } from "../ui/forms/graph-analysis.js";
 import { getLocale } from "../i18n/index.js";
@@ -196,6 +198,7 @@ export function analysisOptions() {
   };
 }
 export function graphStepLabel(r, from) {
+  if (isProfessionalRelationship(r.type)) return roleLabel(r, from);
   if (r.type === "step_parent")
     return translate(r.from === from ? "ui.stepChild" : "ui.stepParent");
   if (["parent", "adopted"].includes(r.type))

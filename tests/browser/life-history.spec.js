@@ -125,7 +125,7 @@ test("edits life events, service, witnesses and social contacts and restores the
   expect(p.lifeStatus).toBe("living");
   expect(p.death).toBe("");
   expect(p.gender).toBe("x");
-  expect(manifest.relations).toHaveLength(160);
+  expect(manifest.relations).toHaveLength(163);
   await page.locator("[data-close]").first().click();
   await page.locator("#importInput").setInputFiles({
     name: "life-history.zip",

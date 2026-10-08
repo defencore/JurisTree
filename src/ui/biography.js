@@ -166,7 +166,7 @@ export function renderBiography({
     "groups",
   );
   html += section(
-    translate("ui.familyRelationships"),
+    translate("ui.recordedRelationships"),
     "link",
     relations
       .map((r) => {

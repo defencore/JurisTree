@@ -51,6 +51,12 @@ export function graphLegendItems() {
     },
     {
       key: "neutral",
+      directed: true,
+      label: translate("ui.subordinateToSupervisor"),
+      section: "role",
+    },
+    {
+      key: "neutral",
       label: translate("ui.otherRelationshipsNoArrow"),
       section: "role",
     },
@@ -96,6 +102,6 @@ export function exportLineLegend(width, y) {
     .join("");
   return {
     height,
-    markup: `<g class="export-legend"><path d="M38 ${y - 4}H${width - 38}" stroke="#d5deea"/>${svgText(translate("ui.lineKeyColorIndicatesSourcesArrowsPointTo"), 38, y + 17, 120, 1, 13, "#3e516c", 700)}${cells}${svgText(translate("ui.juristreeSourceStatesAreUserAssessmentsNotLegal"), 38, y + height - 12, 150, 1, 12, "#3e516c", 400)}</g>`,
+    markup: `<g class="export-legend"><path d="M38 ${y - 4}H${width - 38}" stroke="#d5deea"/>${svgText(translate("ui.relationshipLineKey"), 38, y + 17, 120, 1, 13, "#3e516c", 700)}${cells}${svgText(translate("ui.juristreeSourceStatesAreUserAssessmentsNotLegal"), 38, y + height - 12, 150, 1, 12, "#3e516c", 400)}</g>`,
   };
 }

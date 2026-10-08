@@ -10,6 +10,7 @@ import { group, person, relation, withProjectIndex } from "../model/project.js";
 import { commit } from "../services/history.js";
 import { closeModal } from "../ui/dialog.js";
 import { render } from "../ui/render.js";
+import { isDirectedRelationship } from "../core/professional-relationships.js";
 export function defaultGraphView() {
   return {
     types: Object.keys(relTypes()),
@@ -166,7 +167,7 @@ export function searchGraph(options = {}) {
       (scope !== "all" && !relationShown(r))
     )
       continue;
-    const directed = ["parent", "adopted", "step_parent"].includes(r.type);
+    const directed = isDirectedRelationship(r.type);
     if (!directed || direction !== "up")
       adj.get(r.from).push({
         to: r.to,

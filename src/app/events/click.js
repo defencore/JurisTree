@@ -197,9 +197,11 @@ export function bindClickEvents() {
         const type =
           b.dataset.addKin === "partners"
             ? "spouse"
-            : b.dataset.addKin === "other"
-              ? "acquaintance"
-              : "parent";
+            : b.dataset.addKin === "professional"
+              ? "professional"
+              : b.dataset.addKin === "other"
+                ? "acquaintance"
+                : "parent";
         await editRelation(
           null,
           b.dataset.addKin === "parents"

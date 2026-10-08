@@ -2,7 +2,9 @@ import { relationshipConfig } from "../core/relationships.js";
 import { relTypes } from "../core/config.js";
 import { person } from "./project.js";
 import { translate } from "../i18n/index.js";
+import { isProfessionalRelationship } from "../core/professional-relationships.js";
 export function roleGroup(r, id) {
+  if (isProfessionalRelationship(r.type)) return "professional";
   if (["parent", "adopted", "step_parent"].includes(r.type))
     return r.to === id ? "parents" : "children";
   return ["spouse", "partner"].includes(r.type) ? "partners" : "other";
@@ -13,6 +15,10 @@ export function roleLabel(r, id) {
     female = other?.gender === "f",
     male = other?.gender === "m";
   const group = roleGroup(r, id);
+  if (r.type === "reports_to")
+    return translate(
+      id === r.from ? "ui.supervisorPerson" : "ui.subordinatePerson",
+    );
   if (
     ["spouse", "partner"].includes(r.type) &&
     r.unionKind &&

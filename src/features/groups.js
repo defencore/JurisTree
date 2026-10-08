@@ -18,6 +18,7 @@ export function kinGroups(p) {
     ["parents", translate("ui.parents"), "people"],
     ["children", translate("ui.children"), "tree"],
     ["partners", translate("ui.partners"), "heart"],
+    ["professional", translate("ui.professionalConnection"), "briefcase"],
     ["other", translate("ui.otherRelationships"), "link"],
   ];
   const rs = appState.project.relations.filter(
@@ -26,7 +27,8 @@ export function kinGroups(p) {
   return groups
     .map(([key, title, ic]) => {
       const list = rs.filter((r) => roleGroup(r, p.id) === key);
-      if (!list.length && ["partners", "other"].includes(key)) return "";
+      if (!list.length && ["partners", "professional", "other"].includes(key))
+        return "";
       return `<section class="kin-group"><h3 class="kin-head ${key}">${icon(ic)}${title}<span>${list.length}</span><button class="iconbtn small ghost" data-add-kin="${key}" data-kin-person="${p.id}" aria-label="${translate("ui.add2")} ${title}" title="${translate("ui.add2")} ${title}">${icon("plus")}</button></h3>${
         list
           .map((r) => {

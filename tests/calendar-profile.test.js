@@ -75,9 +75,17 @@ test("calendar includes hidden profile dates and distinguishes current and ended
   const robin = birthdays.find((event) => event.personId === "p6");
   assert.equal(robin.next.years, 35);
   assert.equal(robin.jubilee, true);
+  const selected = new Set(
+    project.people.filter((p) => p.groupIds.includes("g1")).map((p) => p.id),
+  );
+  for (const event of collectProjectEvents(project, { groupId: "g1" }))
+    assert.ok(
+      selected.has(event.personId) ||
+        event.relatedPersonIds?.some((id) => selected.has(id)),
+    );
   assert.ok(
     !collectProjectEvents(project, { groupId: "g1" }).some(
-      (e) => e.personId === "p11",
+      (e) => e.personId === "p11" && !e.relationId,
     ),
   );
 });

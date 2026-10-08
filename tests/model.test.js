@@ -44,7 +44,7 @@ test("all language catalogs have the same complete keys", () => {
 test("demo data round-trips through the validated archive model", () => {
   const model = validateImport(JSON.parse(JSON.stringify(project())));
   assert.equal(model.people.length, 99);
-  assert.equal(model.relations.length, 160);
+  assert.equal(model.relations.length, 163);
   assert.equal(model.documents.length, 96);
 });
 

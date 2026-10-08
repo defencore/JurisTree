@@ -1,5 +1,6 @@
 import { populateDemoDetails } from "./demo-details.js";
 import { populateLifeRecords } from "./demo-life-records.js";
+import { populateBusinessRecords } from "./demo-business-records.js";
 import { fresh } from "../model/project.js";
 import { demoPeople, demoRelations } from "./demo-people.js";
 import { populateDemoRecords } from "./demo-records.js";
@@ -45,6 +46,7 @@ export function sample() {
   populateDemoFamilies(project);
   populateBranchProfiles(project);
   populateLifeRecords(project);
+  populateBusinessRecords(project);
   const layout = familyLayout(project);
   for (const kind of ["people", "documents", "property"])
     for (const record of project[kind])

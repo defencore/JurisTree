@@ -17,6 +17,12 @@ export function profileRecordError(cfg, record) {
       return translate("ui.invalidProfileUrl");
     if (
       type === "number" &&
+      cfg.numericMaximums?.[key] != null &&
+      Number(value) > cfg.numericMaximums[key]
+    )
+      return translate("ui.invalidProfileNumber");
+    if (
+      type === "number" &&
       cfg.numericMinimums?.[key] != null &&
       Number(value) < cfg.numericMinimums[key]
     )

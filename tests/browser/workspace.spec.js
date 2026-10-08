@@ -268,7 +268,7 @@ test("adds groups, relationships, property shares and personal events", async ({
   await page.locator('#modal select[name="to"]').selectOption("p7");
   await page.locator('#modal select[name="type"]').selectOption("sibling");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator(".graph-view-summary")).toContainText("161/161");
+  await expect(page.locator(".graph-view-summary")).toContainText("164/164");
   await page.locator('[data-view="property"]').click();
   await page.locator('#viewActions [data-action="add-property"]').click();
   await page.locator('#modal input[name="title"]').fill("Family house");
