@@ -1,0 +1,79 @@
+.favorites-section {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.favorite-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.favorite-person {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 6px 0;
+}
+.favorite-person span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.favorite-person .avatar {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+}
+.favorite-button.active {
+  color: #98701b;
+  background: #fff7df;
+}
+.favorite-button.active .icon {
+  fill: #f8df91;
+}
+.favorite-rail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #fffdf4;
+  min-height: 44px;
+  min-width: 0;
+}
+.favorite-rail > span {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+  color: #74581d;
+  font-size: 13px;
+}
+.favorite-rail > div {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+}
+.favorite-rail button {
+  white-space: nowrap;
+}
+.graph-favorite {
+  cursor: pointer;
+}
+@media (max-width: 760px) {
+  .favorite-rail {
+    padding: 4px 8px;
+    gap: 8px;
+  }
+  .favorite-rail > span {
+    font-size: 0;
+  }
+  .favorite-rail button {
+    min-height: 40px;
+  }
+}

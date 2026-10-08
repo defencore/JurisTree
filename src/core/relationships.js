@@ -160,10 +160,10 @@ export function duplicateRelationship(relations, candidate, except) {
       r.id !== except &&
       r.type === candidate.type &&
       ((r.from === candidate.from && r.to === candidate.to) ||
-        (!["parent", "adopted"].includes(r.type) &&
+        (!["parent", "adopted", "step_parent"].includes(r.type) &&
           r.to === candidate.from &&
           r.from === candidate.to)) &&
-      (["parent", "adopted", "sibling"].includes(r.type) ||
+      (["parent", "adopted", "step_parent", "sibling"].includes(r.type) ||
         ["unionKind", "fromDate", "toDate"].every(
           (key) =>
             (r[key] || "unspecified") === (candidate[key] || "unspecified"),

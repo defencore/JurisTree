@@ -1,3 +1,4 @@
+import { person } from "../model/project.js";
 import { esc } from "../core/dom.js";
 import { displayDate } from "../model/dates.js";
 
@@ -19,9 +20,11 @@ export function recordValues(cfg, record) {
           ? ""
           : type === "select"
             ? options[value] || value
-            : ["date", "period"].includes(type)
-              ? displayDate(value)
-              : value,
+            : type === "person"
+              ? person(value)?.name || ""
+              : ["date", "period"].includes(type)
+                ? displayDate(value)
+                : value,
       ];
     });
 }

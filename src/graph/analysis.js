@@ -166,7 +166,7 @@ export function searchGraph(options = {}) {
       (scope !== "all" && !relationShown(r))
     )
       continue;
-    const directed = ["parent", "adopted"].includes(r.type);
+    const directed = ["parent", "adopted", "step_parent"].includes(r.type);
     if (!directed || direction !== "up")
       adj.get(r.from).push({
         to: r.to,
@@ -543,7 +543,7 @@ export function applyGraphPreset(preset) {
   resetAnalysis();
   const cfg = defaultGraphView();
   if (preset === "family")
-    cfg.types = ["parent", "spouse", "sibling", "adopted"];
+    cfg.types = ["parent", "spouse", "sibling", "adopted", "step_parent"];
   if (preset === "social") cfg.types = ["spouse", "partner", "acquaintance"];
   if (preset === "proven") cfg.states = ["official"];
   commit(() => (appState.project.graphView = cfg));

@@ -1,3 +1,4 @@
+import { renderCalendar } from "../../features/calendar.js";
 import { renderPeople } from "../../ui/render.js";
 import { renderEvents } from "../../features/events.js";
 import { renderDocuments } from "../../features/documents.js";
@@ -6,6 +7,13 @@ import { $, $$ } from "../../core/dom.js";
 import { getLocale } from "../../i18n/index.js";
 export function bindInputEvents() {
   document.addEventListener("input", (e) => {
+    if (e.target.id === "calendarSearch") {
+      const start = e.target.selectionStart;
+      appState.calendarSearch = e.target.value;
+      renderCalendar();
+      $("#calendarSearch").focus();
+      $("#calendarSearch").setSelectionRange(start, start);
+    }
     if (e.target.id === "networkSeedSearch") {
       const q = e.target.value.toLocaleLowerCase(getLocale());
       $$("[data-seed-name]").forEach(

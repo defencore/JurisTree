@@ -10,6 +10,7 @@ export function renderPersonForm(p, req, id) {
   return `<section class="form-section"><p class="field-caption">${icon("user")}${translate("ui.basicInformation")}</p><div class="form-grid"><label class="field full">${translate("ui.fullName")}<input name="name" value="${esc(p.name)}" placeholder="${translate("ui.firstAndLastName")}" required maxlength="150"></label><label class="field">${translate("ui.gender")}<select name="gender">${typeOptions(
     {
       u: translate("ui.notSpecified"),
+      x: translate("ui.nonbinaryOther"),
       f: translate("ui.female"),
       m: translate("ui.male"),
     },

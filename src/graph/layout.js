@@ -24,7 +24,7 @@ export function familyLayout(tree) {
   };
   const parents = tree.relations.filter(
     (r) =>
-      ["parent", "adopted"].includes(r.type) &&
+      ["parent", "adopted", "step_parent"].includes(r.type) &&
       ids.has(r.from) &&
       ids.has(r.to),
   );

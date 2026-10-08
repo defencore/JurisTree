@@ -59,7 +59,7 @@ export function bindTouchInteractions(graph) {
       if (
         event.pointerType !== "touch" ||
         appState.analysisBusy ||
-        event.target.closest("[data-biography]")
+        event.target.closest("[data-biography],[data-favorite]")
       )
         return;
       event.preventDefault();

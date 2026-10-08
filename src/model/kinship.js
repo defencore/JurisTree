@@ -322,6 +322,34 @@ export function kinshipBetween(from, to, affinity = true) {
         ...new Set([...c.a.relations, ...c.b.relations, ...(c.extra || [])]),
       ],
       people = [...new Set([...c.a.people, ...c.b.people])];
+    if (
+      label.kind === "sibling" &&
+      !relations.some((id) => relation(id)?.type === "adopted")
+    ) {
+      const parents = (id) =>
+        new Set(
+          appState.project.relations
+            .filter(
+              (r) => r.type === "parent" && familyConnection(r) && r.to === id,
+            )
+            .map((r) => r.from),
+        );
+      const first = parents(from),
+        second = parents(to);
+      if (
+        first.size >= 2 &&
+        second.size >= 2 &&
+        [...first].filter((id) => second.has(id)).length === 1
+      ) {
+        label.kind = "half_sibling";
+        label.label = genderWord(
+          b,
+          translate("ui.halfSister"),
+          translate("ui.halfBrother"),
+          translate("ui.halfSibling"),
+        );
+      }
+    }
     return {
       found: true,
       ...label,
@@ -433,9 +461,13 @@ export function kinshipBetween(from, to, affinity = true) {
             ? translate("ui.acquaintanceKinshipNotEstablished")
             : ["ended", "divorced"].includes(other.status)
               ? translate("ui.endedRelationship")
-              : other.type === "partner"
-                ? relTypes().partner
-                : translate("ui.possibleRelationshipKinshipNotConfirmed"),
+              : other.type === "step_parent"
+                ? translate(
+                    other.from === from ? "ui.stepChild" : "ui.stepParent",
+                  )
+                : other.type === "partner"
+                  ? relTypes().partner
+                  : translate("ui.possibleRelationshipKinshipNotConfirmed"),
         people: [from, to],
         relations: [other.id],
       }

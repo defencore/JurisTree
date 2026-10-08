@@ -23,7 +23,7 @@ export function bindGraphInteractions() {
       e.button !== 0 ||
       e.pointerType === "touch" ||
       appState.analysisBusy ||
-      e.target.closest("[data-biography]")
+      e.target.closest("[data-biography],[data-favorite]")
     )
       return;
     const n = e.target.closest("[data-node]"),

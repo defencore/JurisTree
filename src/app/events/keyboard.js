@@ -1,3 +1,4 @@
+import { toggleFavorite } from "../../features/favorites.js";
 import { render, select } from "../../ui/render.js";
 import { redo, undo } from "../../services/history.js";
 import { openFiles } from "../../services/files.js";
@@ -27,6 +28,16 @@ export function bindKeyboardEvents() {
       $("#cropDialog").open
     )
       return;
+    const favorite = e.target.closest("[data-favorite]");
+    if (
+      favorite &&
+      favorite.tagName !== "BUTTON" &&
+      ["Enter", " "].includes(e.key)
+    ) {
+      e.preventDefault();
+      toggleFavorite(favorite.dataset.favorite);
+      return;
+    }
     const biography = e.target.closest("[data-biography]");
     if (
       biography &&

@@ -196,6 +196,8 @@ export function analysisOptions() {
   };
 }
 export function graphStepLabel(r, from) {
+  if (r.type === "step_parent")
+    return translate(r.from === from ? "ui.stepChild" : "ui.stepParent");
   if (["parent", "adopted"].includes(r.type))
     return r.from === from
       ? r.type === "adopted"

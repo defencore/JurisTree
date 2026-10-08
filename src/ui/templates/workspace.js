@@ -58,6 +58,7 @@ export const workspaceTemplate = `
           <i data-icon="sliders"></i>@@ui.chooseVisibleData@@
         </button>
       </div>
+      <section class="favorites-section"><p class="section-label">@@ui.workingPeople@@</p><div id="favoriteList"></div></section>
       <nav class="nav" aria-label="@@ui.workspaceSections@@">
         <p class="section-label nav-label">@@ui.workspaceSections@@</p>
         <button
@@ -80,6 +81,7 @@ export const workspaceTemplate = `
             ><b>@@ui.eventsAndDates@@</b
             ><small>@@ui.anniversariesAndTimeline@@</small></span
           ><span class="count" id="eventCount"></span></button
+        ><button class="navbtn" data-view="calendar"><span class="nav-icon"><i data-icon="calendarClock"></i></span><span class="nav-text"><b>@@ui.calendar@@</b><small>@@ui.birthdaysAndAnniversaries@@</small></span></button
         ><button
           class="navbtn"
           data-view="documents"
@@ -177,6 +179,7 @@ export const workspaceTemplate = `
         <button class="btn" data-action="touch-move" aria-pressed="false"><i data-icon="move"></i><span>@@ui.moveCards@@</span></button>
         <p id="mobileMapHint">@@ui.mobileMapHint@@</p>
       </div>
+      <div id="favoriteRail" class="favorite-rail" hidden></div>
       <div class="map-settings" id="mapSettings">
       <div class="status-board" id="statusBoard"></div>
       <div id="pathPanel"></div>

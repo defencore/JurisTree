@@ -32,7 +32,7 @@ export function isParentCycle(from, to, except) {
     for (const r of appState.project.relations)
       if (
         r.id !== except &&
-        ["parent", "adopted"].includes(r.type) &&
+        ["parent", "adopted", "step_parent"].includes(r.type) &&
         r.from === v
       )
         stack.push(r.to);
@@ -101,7 +101,8 @@ export function validateImport(raw) {
       place: str(v.place, 250),
       notes: str(v.notes, 15000),
       avatarId: str(v.avatarId, 100),
-      gender: ["m", "f", "u"].includes(v.gender) ? v.gender : "u",
+      favorite: v.favorite === true,
+      gender: ["m", "f", "u", "x"].includes(v.gender) ? v.gender : "u",
       lifeStatus: v.death
         ? "deceased"
         : ["unknown", "living", "deceased"].includes(v.lifeStatus)
@@ -156,6 +157,12 @@ export function validateImport(raw) {
     return x;
   });
   const peopleIds = new Set(p.people.map((x) => x.id));
+  for (const person of p.people)
+    for (const cfg of Object.values(recordConfigs()))
+      for (const record of person[cfg.key])
+        for (const [key, , type] of cfg.fields)
+          if (type === "person" && !peopleIds.has(record[key]))
+            record[key] = "";
   p.relations = list("relations", 2500).map((r) => {
     if (
       !peopleIds.has(r.from) ||
@@ -297,7 +304,7 @@ export function validateImport(raw) {
   const indegrees = new Map(p.people.map((x) => [x.id, 0])),
     children = new Map(p.people.map((x) => [x.id, []]));
   for (const r of p.relations)
-    if (["parent", "adopted"].includes(r.type)) {
+    if (["parent", "adopted", "step_parent"].includes(r.type)) {
       indegrees.set(r.to, indegrees.get(r.to) + 1);
       children.get(r.from).push(r.to);
     }

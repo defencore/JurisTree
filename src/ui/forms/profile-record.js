@@ -4,7 +4,7 @@ import { state as appState } from "../../core/state.js";
 import { uid } from "../../core/utils.js";
 import { translate } from "../../i18n/index.js";
 import { dateExact } from "../../model/dates.js";
-import { typeOptions } from "../components.js";
+import { typeOptions, personOptions } from "../components.js";
 import { icon } from "../icons.js";
 
 function field(section, record, [key, label, type, options]) {
@@ -13,6 +13,8 @@ function field(section, record, [key, label, type, options]) {
   let input;
   if (type === "select")
     input = `<select name="${name}">${typeOptions(options, value || Object.keys(options)[0])}</select>`;
+  else if (type === "person")
+    input = `<select name="${name}">${personOptions(value, true)}</select>`;
   else if (type === "source")
     input = `<select name="${name}"><option value="">${translate("ui.noSource")}</option>${appState.project.documents.map((d) => `<option value="${d.id}" ${d.id === value ? "selected" : ""}>${esc(d.title)}</option>`).join("")}</select>`;
   else if (type === "textarea")

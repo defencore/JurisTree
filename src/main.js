@@ -1,3 +1,4 @@
+import { bindFloatingWindows } from "./ui/floating-windows.js";
 import { startTemplates } from "./core/config.js";
 import { init } from "./app/bootstrap.js";
 import { bindEvents } from "./app/events.js";
@@ -12,6 +13,7 @@ mountShell();
 setLanguage(getLanguage());
 localizeShell();
 bindEvents();
+bindFloatingWindows();
 bindGraphInteractions();
 document.addEventListener("change", (event) => {
   if (!event.target.matches("[data-language]")) return;

@@ -1,3 +1,6 @@
+import { renderCalendar } from "../features/calendar.js";
+import { favoriteButton, renderFavorites } from "../features/favorites.js";
+import { windowControls } from "./floating-windows.js";
 import { relationshipConfig } from "../core/relationships.js";
 import { fields, recordValues } from "./profile-fields.js";
 import { getLocale } from "../i18n/index.js";
@@ -63,6 +66,7 @@ export function renderAll() {
   renderGroups();
   renderPeople();
   renderMain();
+  renderFavorites();
   renderInspector();
   renderStatusBoard();
   icons();
@@ -106,6 +110,7 @@ export function renderMain() {
       gaps: translate("ui.evidenceAndGaps"),
       property: translate("ui.propertyAndShares"),
       events: translate("ui.eventsAndAnniversaries"),
+      calendar: translate("ui.calendar"),
     },
     eyebrows = {
       tree: translate("ui.familyRelationships"),
@@ -113,6 +118,7 @@ export function renderMain() {
       gaps: translate("ui.nextSteps"),
       property: translate("ui.ownershipAndAllocationPlan"),
       events: translate("ui.familyTimeline"),
+      calendar: translate("ui.birthdaysAndAnniversaries"),
     };
   $("#viewTitle").textContent = titles[appState.view];
   $("#viewEyebrow").textContent = eyebrows[appState.view];
@@ -120,18 +126,20 @@ export function renderMain() {
     ? translate("ui.demoTreeFictionalData")
     : appState.project.title;
   $("#canvasWrap").hidden = appState.view !== "tree";
-  $("#statusBoard").hidden = appState.view === "events";
+  $("#statusBoard").hidden = ["events", "calendar"].includes(appState.view);
   $("#otherView").hidden = appState.view === "tree";
   $("#viewActions").innerHTML =
     appState.view === "tree"
       ? `<button class="btn" data-action="compare" title="${translate("ui.howAreWeRelated")}">${icon("compare")}<span>${translate("ui.kinship")}</span></button><button class="btn" data-action="add-relation" title="${translate("ui.addRelationship")}">${icon("link")}<span>${translate("ui.relationship")}</span></button><button class="btn primary" data-action="add-person" title="${translate("ui.addPerson")}">${icon("addPerson")}<span>${translate("ui.addPerson")}</span></button>${appState.comparisonPath ? `<button class="iconbtn" data-action="clear-comparison" title="${translate("ui.clearPathHighlight")}" aria-label="${translate("ui.clearPathHighlight")}">${icon("x")}</button>` : ""}`
-      : appState.view === "events"
-        ? profileScope().includes("timeline")
-          ? `<button class="btn primary" data-action="add-event">${icon("plus")}${translate("ui.addEvent")}</button>`
-          : `<button class="btn" data-action="scope">${icon("sliders")}${translate("ui.configureSections")}</button>`
-        : appState.view === "property"
-          ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
-          : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
+      : appState.view === "calendar"
+        ? `<button class="btn primary" data-action="add-calendar-event">${icon("plus")}${translate("ui.addEvent")}</button>`
+        : appState.view === "events"
+          ? profileScope().includes("timeline")
+            ? `<button class="btn primary" data-action="add-event">${icon("plus")}${translate("ui.addEvent")}</button>`
+            : `<button class="btn" data-action="scope">${icon("sliders")}${translate("ui.configureSections")}</button>`
+          : appState.view === "property"
+            ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
+            : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
   const path = route();
   $("#pathPanel").innerHTML =
     appState.view === "tree" && appState.project.purpose === "inheritance"
@@ -142,13 +150,14 @@ export function renderMain() {
     renderGraph();
     return;
   }
-  if (appState.view === "events") renderEvents();
+  if (appState.view === "calendar") renderCalendar();
+  else if (appState.view === "events") renderEvents();
   else if (appState.view === "documents") renderDocuments();
   else if (appState.view === "gaps") renderGaps();
   else renderProperty();
 }
 export function renderInspector() {
-  let html = `<div class="inspector-header"><b>${translate("ui.personDetails")}</b><button class="iconbtn mobile-only" data-action="close-panel" aria-label="${translate("ui.closeDetails")}">${icon("panelClose")}</button></div>`;
+  let html = `<div class="inspector-header" tabindex="0" title="${translate("ui.moveWindowHint")}"><b>${translate("ui.personDetails")}</b><div class="window-head-actions">${windowControls()}<button class="iconbtn mobile-only" data-action="close-panel" aria-label="${translate("ui.closeDetails")}">${icon("panelClose")}</button></div></div>`;
   if (!appState.selected) {
     $("#inspector").innerHTML =
       html +
@@ -169,7 +178,7 @@ export function renderInspector() {
       .map((g) => `<span class="pill">${esc(g.name)}</span>`)
       .join(
         "",
-      )}${p.id === appState.project.subjectId ? `<span class="pill blue">${icon("fingerprint")}${translate("ui.ownerDeceasedEstateOwner")}</span>` : ""}${p.id === appState.project.claimantId ? `<span class="pill teal">${icon("user")}${translate("ui.claimant")}</span>` : ""}</div></div><div class="profile-actions"><button class="btn small" data-edit-person="${p.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small" data-portrait="${p.id}">${icon("photo")}${translate("ui.photo")}</button></div><button class="btn compare-profile" data-action="compare">${icon("compare")}${translate("ui.howAreWeRelated")}</button>${biographyButton(p)}${kinGroups(p)}<div class="panel-section"><div class="panel-title"><h3>${translate("ui.requiredDocuments")}</h3><small>${done} / ${req.length} ${translate("ui.available2")}</small></div><div class="progress"><i style="width:${req.length ? (done / req.length) * 100 : 100}%"></i></div>${req.map((t) => requirementCard(p, t)).join("") || `<p class="hint">${translate("ui.configureTheChecklistInThePersonProfile")}</p>`}</div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.sourcesForThisPerson")}</h3><button class="btn small ghost" data-add-for="${p.id}">${icon("plus")}${translate("ui.add")}</button></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.noCertificatesPhotosOrArchiveRecordsAddedYet")}</p>`}</div>${renderPersonDetails(p)}${p.aliases ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.otherNames")}</h3></div><div class="note-box">${esc(p.aliases)}</div></div>` : ""}${p.notes ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.notes")}</h3></div><div class="note-box">${esc(p.notes)}</div></div>` : ""}`;
+      )}${p.id === appState.project.subjectId ? `<span class="pill blue">${icon("fingerprint")}${translate("ui.ownerDeceasedEstateOwner")}</span>` : ""}${p.id === appState.project.claimantId ? `<span class="pill teal">${icon("user")}${translate("ui.claimant")}</span>` : ""}</div></div><div class="profile-actions">${favoriteButton(p)}<button class="btn small" data-edit-person="${p.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small" data-portrait="${p.id}">${icon("photo")}${translate("ui.photo")}</button></div><button class="btn compare-profile" data-action="compare">${icon("compare")}${translate("ui.howAreWeRelated")}</button>${biographyButton(p)}${kinGroups(p)}<div class="panel-section"><div class="panel-title"><h3>${translate("ui.requiredDocuments")}</h3><small>${done} / ${req.length} ${translate("ui.available2")}</small></div><div class="progress"><i style="width:${req.length ? (done / req.length) * 100 : 100}%"></i></div>${req.map((t) => requirementCard(p, t)).join("") || `<p class="hint">${translate("ui.configureTheChecklistInThePersonProfile")}</p>`}</div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.sourcesForThisPerson")}</h3><button class="btn small ghost" data-add-for="${p.id}">${icon("plus")}${translate("ui.add")}</button></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.noCertificatesPhotosOrArchiveRecordsAddedYet")}</p>`}</div>${renderPersonDetails(p)}${p.aliases ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.otherNames")}</h3></div><div class="note-box">${esc(p.aliases)}</div></div>` : ""}${p.notes ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.notes")}</h3></div><div class="note-box">${esc(p.notes)}</div></div>` : ""}`;
   } else if (appState.selected.kind === "relation") {
     const r = relation(appState.selected.id);
     if (!r) return;
@@ -185,7 +194,7 @@ export function renderInspector() {
       requested: translate("ui.documentRequested"),
       conflict: translate("ui.disputedRelationship"),
     };
-    html = `<div class="inspector-header"><b>${translate("ui.relationshipDetails")}</b><button class="iconbtn mobile-only" data-action="close-panel" aria-label="${translate("ui.closeDetails")}">${icon("panelClose")}</button></div><div class="profile"><h2>${esc(relTypes()[r.type])}</h2><div class="rel-direction"><div><small>${["parent", "adopted"].includes(r.type) ? esc(roleLabel(r, r.to)) : translate("ui.firstPerson")}</small><br><b>${esc(a.name)}</b></div><div><small>${["parent", "adopted"].includes(r.type) ? esc(roleLabel(r, r.from)) : translate("ui.secondPerson")}</small><br><b>${esc(b.name)}</b></div></div><div class="pills"><span class="pill ${state === "official" ? "teal" : state === "conflict" ? "red" : state === "review" ? "review" : state === "requested" ? "blue" : "amber"}">${icon(state === "official" ? "fileCheck" : state === "missing" ? "fileMissing" : "book")}${labels[state]}</span></div></div><div class="profile-actions"><button class="btn small" data-edit-relation="${r.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small primary" data-add-relation-doc="${r.id}">${icon("plus")}${translate("ui.source")}</button><button class="btn small" ${relationShown(r, false, true) ? "data-hide-graph-relation" : "data-reveal-graph-relation"}="${r.id}">${icon("sliders")}${relationShown(r, false, true) ? translate("ui.hideOnMap") : translate("ui.showOnMap")}</button></div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.evidenceForThisRelationship")}</h3><small>${ds.length}</small></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.attachADocumentToThisSpecificRelationship")}</p>`}</div><p class="hint">${translate("ui.officialRecordsPhotosAndCorrespondenceHaveDifferentEvidential")}</p>${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<div class="note-box">${esc(r.notes)}</div>` : ""}`;
+    html = `<div class="inspector-header" tabindex="0" title="${translate("ui.moveWindowHint")}"><b>${translate("ui.relationshipDetails")}</b><div class="window-head-actions">${windowControls()}<button class="iconbtn mobile-only" data-action="close-panel" aria-label="${translate("ui.closeDetails")}">${icon("panelClose")}</button></div></div><div class="profile"><h2>${esc(relTypes()[r.type])}</h2><div class="rel-direction"><div><small>${["parent", "adopted", "step_parent"].includes(r.type) ? esc(roleLabel(r, r.to)) : translate("ui.firstPerson")}</small><br><b>${esc(a.name)}</b></div><div><small>${["parent", "adopted", "step_parent"].includes(r.type) ? esc(roleLabel(r, r.from)) : translate("ui.secondPerson")}</small><br><b>${esc(b.name)}</b></div></div><div class="pills"><span class="pill ${state === "official" ? "teal" : state === "conflict" ? "red" : state === "review" ? "review" : state === "requested" ? "blue" : "amber"}">${icon(state === "official" ? "fileCheck" : state === "missing" ? "fileMissing" : "book")}${labels[state]}</span></div></div><div class="profile-actions"><button class="btn small" data-edit-relation="${r.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small primary" data-add-relation-doc="${r.id}">${icon("plus")}${translate("ui.source")}</button><button class="btn small" ${relationShown(r, false, true) ? "data-hide-graph-relation" : "data-reveal-graph-relation"}="${r.id}">${icon("sliders")}${relationShown(r, false, true) ? translate("ui.hideOnMap") : translate("ui.showOnMap")}</button></div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.evidenceForThisRelationship")}</h3><small>${ds.length}</small></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.attachADocumentToThisSpecificRelationship")}</p>`}</div><p class="hint">${translate("ui.officialRecordsPhotosAndCorrespondenceHaveDifferentEvidential")}</p>${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<div class="note-box">${esc(r.notes)}</div>` : ""}`;
   } else {
     const d = doc(appState.selected.id);
     if (d)
@@ -234,6 +243,7 @@ export function select(kind, id) {
     renderInspector();
     icons();
   }
+  renderFavorites();
   $("#inspector").classList.add("open");
   if (innerWidth <= 760) $("#sidebar").classList.remove("open");
 }

@@ -27,6 +27,7 @@ export function relTypes() {
     partner: translate("ui.personalPartnership"),
     sibling: translate("ui.sibling"),
     adopted: translate("ui.adoption"),
+    step_parent: translate("ui.stepParenthood"),
     acquaintance: translate("ui.acquaintance"),
     unconfirmed: translate("ui.possibleKinship"),
   };
@@ -87,7 +88,6 @@ export function sectionInfo() {
     contacts: [translate("ui.contactsAndSocialProfiles"), "phone"],
     residences: [translate("ui.addressHistory"), "mapPin"],
     biography: [translate("ui.biographyAndHistory"), "book"],
-    occupations: [translate("ui.workEducationService"), "briefcase"],
     interests: [translate("ui.hobbiesAndInterests"), "sparkles"],
     health: [translate("ui.healthInformation"), "heartPulse"],
     pets: [translate("ui.pets"), "paw"],
@@ -127,6 +127,7 @@ export function recordConfigs() {
       label: translate("ui.event"),
       fields: [
         ["title", translate("ui.event"), "text"],
+        ["category", translate("ui.eventType"), "select", eventCategories()],
         ["date", translate("ui.date"), "date"],
         [
           "repeat",
@@ -173,30 +174,6 @@ export function recordConfigs() {
         ["sourceId", translate("ui.source"), "source"],
       ],
     },
-    occupations: {
-      key: "occupations",
-      label: translate("ui.workplaceSchool"),
-      fields: [
-        ["organization", translate("ui.institutionOrganization"), "text"],
-        ["role", translate("ui.positionSpecialty"), "text"],
-        [
-          "kind",
-          translate("ui.type"),
-          "select",
-          {
-            work: translate("ui.work"),
-            education: translate("ui.education"),
-            service: translate("ui.service"),
-            other: translate("ui.other"),
-          },
-        ],
-        ["from", translate("ui.from"), "period"],
-        ["to", translate("ui.to"), "period"],
-        ["location", translate("ui.place"), "text"],
-        ["notes", translate("ui.notes"), "textarea"],
-        ["sourceId", translate("ui.source"), "source"],
-      ],
-    },
     pets: {
       key: "pets",
       label: translate("ui.pet"),
@@ -225,12 +202,26 @@ export function recordConfigs() {
 export function familyEventTypes() {
   return {
     birth: [translate("ui.birth"), "baby"],
-    death: [translate("ui.memorialDates"), "heart"],
+    death: [translate("ui.deathAnniversary"), "heart"],
     custom: [translate("ui.eventsAndAnniversaries"), "calendarClock"],
+    anniversary: [translate("ui.anniversaries"), "heart"],
+    jubilee: [translate("ui.jubilees"), "sparkles"],
+    memorial: [translate("ui.memorialDates"), "heart"],
+    legal: [translate("ui.legalHistory"), "landmark"],
+    finance: [translate("ui.financialHistory"), "property"],
+    education: [translate("ui.education"), "book"],
     residence: [translate("ui.residence"), "mapPin"],
     occupation: [translate("ui.workAndEducation"), "briefcase"],
     pet: [translate("ui.pets"), "paw"],
   };
+}
+export function eventCategories() {
+  return Object.fromEntries(
+    ["custom", "anniversary", "jubilee", "memorial", "legal"].map((key) => [
+      key,
+      familyEventTypes()[key][0],
+    ]),
+  );
 }
 export function graphStateInfo() {
   return {

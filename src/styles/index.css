@@ -10,3 +10,7 @@
 @import "./responsive.css";
 @import "./language.css";
 @import "./mobile.css";
+
+@import "./favorites.css";
+@import "./floating.css";
+@import "./calendar.css";

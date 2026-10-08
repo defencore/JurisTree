@@ -140,7 +140,7 @@ export function nodeSVG(n, images = null, exporting = false) {
       missing = req.filter((r) => r.state === "missing").length;
     const color = "#4f6474",
       bg = "#edf1f4";
-    inside = `<circle cx="42" cy="43" r="26" fill="${bg}"/>${n.avatarId && (images ? images[n.avatarId] : objectUrl(n.avatarId)) ? `<defs><clipPath id="c-${n.id}"><circle cx="42" cy="43" r="26"/></clipPath></defs><image href="${esc(images ? images[n.avatarId] : objectUrl(n.avatarId))}" x="16" y="17" width="52" height="52" preserveAspectRatio="xMidYMid slice" clip-path="url(#c-${n.id})"/>` : `<text x="42" y="49" text-anchor="middle" font-family="${GRAPH_FONT}" fill="${color}" font-size="17" font-weight="700">${esc(initials(n.name))}</text>`}${svgText(n.name, 83, 35, 17, 2, 16, "#263545", 700, PERSON_CARD_WIDTH - 96)}${svgText(years(n), 16, 85, 40, 1, 14, "#465d70", 400, PERSON_CARD_WIDTH - (exporting ? 32 : 74))}<path d="M15 99H${PERSON_CARD_WIDTH - 15}" stroke="#dbe3ea"/>${svgText(translate("ui.documents"), 16, 116, 25, 1, 14, "#405d74", 400)}`;
+    inside = `<circle cx="42" cy="43" r="26" fill="${bg}"/>${n.avatarId && (images ? images[n.avatarId] : objectUrl(n.avatarId)) ? `<defs><clipPath id="c-${n.id}"><circle cx="42" cy="43" r="26"/></clipPath></defs><image href="${esc(images ? images[n.avatarId] : objectUrl(n.avatarId))}" x="16" y="17" width="52" height="52" preserveAspectRatio="xMidYMid slice" clip-path="url(#c-${n.id})"/>` : `<text x="42" y="49" text-anchor="middle" font-family="${GRAPH_FONT}" fill="${color}" font-size="17" font-weight="700">${esc(initials(n.name))}</text>`}${svgText(n.name, 83, 35, 17, 2, 16, "#263545", 700, PERSON_CARD_WIDTH - 96)}${svgText(years(n), 16, 85, 40, 1, 14, "#465d70", 400, PERSON_CARD_WIDTH - (exporting ? 32 : 116))}<path d="M15 99H${PERSON_CARD_WIDTH - 15}" stroke="#dbe3ea"/>${svgText(translate("ui.documents"), 16, 116, 25, 1, 14, "#405d74", 400)}`;
     const badges = [
       [`${translate("ui.available3")} ${ready}`, "#21664b", "#edf6f0"],
       [`${translate("ui.missing")} ${missing}`, "#805b19", "#fff5df"],
@@ -198,7 +198,11 @@ export function nodeSVG(n, images = null, exporting = false) {
     n.kind === "person" && !exporting
       ? `<g class="graph-biography" data-biography="${n.id}" transform="translate(${n.x + PERSON_CARD_WIDTH - 42} ${n.y + 70})" role="button" tabindex="0" aria-label="${esc(translate("ui.viewAutobiographyOf", { name: n.name }))}" opacity="${dim ? 0.3 : 1}"><title>${esc(translate("ui.autobiography"))}</title><rect class="biography-hit" x="-8" y="-10" width="44" height="44" fill="transparent"/><rect width="28" height="24" rx="4" fill="#edf3f8" stroke="#b9cddd"/>${svgIcon("book", 6, 4, "#315d7c", 0.65)}</g>`
       : "";
-  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(n.name || n.title)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="#fff" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${biography}`;
+  const favorite =
+    n.kind === "person" && !exporting
+      ? `<g class="graph-favorite" data-favorite="${n.id}" transform="translate(${n.x + PERSON_CARD_WIDTH - 82} ${n.y + 70})" role="button" tabindex="0" aria-pressed="${!!n.favorite}" aria-label="${esc(translate(n.favorite ? "ui.removeFavorite" : "ui.addFavorite") + ": " + n.name)}"><rect x="-8" y="-10" width="44" height="44" fill="transparent"/><rect width="28" height="24" rx="4" fill="${n.favorite ? "#fff3c9" : "#edf3f8"}" stroke="#b9cddd"/>${svgIcon("star", 6, 4, n.favorite ? "#98701b" : "#315d7c", 0.65)}</g>`
+      : "";
+  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(n.name || n.title)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="#fff" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${biography}${favorite}`;
 }
 export function connection(a, b, horizontal = false) {
   let x1 = a.x + a.w / 2,
@@ -246,7 +250,7 @@ export function renderGraphAll() {
   );
 }
 export function roleGroup(r, id) {
-  if (["parent", "adopted"].includes(r.type))
+  if (["parent", "adopted", "step_parent"].includes(r.type))
     return r.to === id ? "parents" : "children";
   return ["spouse", "partner"].includes(r.type) ? "partners" : "other";
 }
@@ -265,6 +269,8 @@ export function roleLabel(r, id) {
         r.unionKind
       ] || relTypes()[r.type]
     );
+  if (r.type === "step_parent")
+    return translate(group === "parents" ? "ui.stepParent" : "ui.stepChild");
   if (r.type === "adopted")
     return group === "parents"
       ? translate("ui.adoptiveParent")
@@ -512,7 +518,7 @@ export function renderFilteredGraph(images = null, exporting = false) {
       -60,
       Math.min(60, (episodes.indexOf(r) - (episodes.length - 1) / 2) * 28),
     );
-    const direction = ["parent", "adopted"].includes(r.type),
+    const direction = ["parent", "adopted", "step_parent"].includes(r.type),
       c = graphLine(
         a,
         b,
@@ -538,18 +544,20 @@ export function renderFilteredGraph(images = null, exporting = false) {
             : person(r.from)?.gender === "m"
               ? translate("ui.father2")
               : translate("ui.parent2")
-          : ["spouse", "partner"].includes(r.type)
-            ? roleLabel(r, r.from) +
-              (r.fromDate || r.toDate
-                ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
-                : "")
-            : r.type === "sibling"
-              ? translate("ui.sibling2")
-              : r.type === "adopted"
-                ? translate("ui.adoption2")
-                : r.type === "acquaintance"
-                  ? translate("ui.acquaintance2")
-                  : translate("ui.possibleConnection");
+          : r.type === "step_parent"
+            ? translate("ui.stepParenthood")
+            : ["spouse", "partner"].includes(r.type)
+              ? roleLabel(r, r.from) +
+                (r.fromDate || r.toDate
+                  ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
+                  : "")
+              : r.type === "sibling"
+                ? translate("ui.sibling2")
+                : r.type === "adopted"
+                  ? translate("ui.adoption2")
+                  : r.type === "acquaintance"
+                    ? translate("ui.acquaintance2")
+                    : translate("ui.possibleConnection");
     const width = graphTextWidth(label, 14, 400) + 16,
       horizontal = !direction && Math.abs(a.y - b.y) < 70,
       ly =

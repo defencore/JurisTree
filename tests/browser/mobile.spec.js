@@ -61,7 +61,7 @@ test("mobile map gives space to the graph and supports real pan, pinch and tap g
   const card = await node.locator(".card").boundingBox();
   await page.touchscreen.tap(card.x + 40, card.y + 35);
   await expect(page.locator("#inspector")).toHaveClass(/open/);
-  await expect(page.locator("#inspector h2")).toHaveText("Jesse Doe");
+  await expect(page.locator("#inspector h2")).toHaveText("Jesse Roe");
   const sheet = await page.locator("#inspector").boundingBox();
   expect(sheet.height).toBeLessThanOrEqual(844 * 0.61);
   await page.locator('[data-action="close-panel"]').tap();
@@ -126,11 +126,11 @@ test("mobile history controls respond to native touch taps", async ({
   await page.locator('#viewActions [data-action="add-person"]').tap();
   await page.locator('#modal [name="name"]').fill("Fictional Touch Doe");
   await page.locator('#modal button[type="submit"]').tap();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(9);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(13);
   await page.locator('[data-action="undo"]').tap();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(8);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(12);
   await page.locator('[data-action="redo"]').tap();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(9);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(13);
 });
 
 test("phone users can open the autobiography and edit optional document details", async ({

@@ -1,3 +1,7 @@
+import {
+  renderCalendar,
+  changeCalendarMonth,
+} from "../../features/calendar.js";
 import { commit } from "../../services/history.js";
 import { processFiles, setPortrait } from "../../services/files.js";
 import { importFile } from "../../services/archive.js";
@@ -12,6 +16,15 @@ import { state as appState } from "../../core/state.js";
 export function bindChangeEvents() {
   document.addEventListener("change", (e) => {
     const t = e.target;
+    if (t.id === "calendarMonth") {
+      changeCalendarMonth(t.value);
+      return;
+    }
+    if (t.id === "calendarType") {
+      appState.calendarType = t.value;
+      renderCalendar();
+      return;
+    }
     if (t.id === "graphLayout") {
       arrangeGraph(t.value);
       return;

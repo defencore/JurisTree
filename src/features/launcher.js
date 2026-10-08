@@ -120,6 +120,10 @@ export function activateTree(
   appState.showDocs = false;
   appState.eventSearch = "";
   appState.eventType = "";
+  appState.calendarMonth = "";
+  appState.calendarDay = "";
+  appState.calendarSearch = "";
+  appState.calendarType = "";
   appState.eventMode = "upcoming";
   appState.eventLimit = 80;
   appState.camera = {

@@ -7,19 +7,24 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 ## Features
 
 - Family, inheritance, property, research and blank project templates.
-- People, family groups and seven relationship types, including adoption and acquaintance.
+- People, family groups and eight relationship types, including biological parenthood, adoption, step-parenthood and acquaintance.
 - Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts.
 - Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Mobile controls are collapsible and the person panel opens as a bottom sheet.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
-- Kinship descriptions based on recorded relationships.
+- Kinship descriptions based on recorded relationships, including half-siblings when both biological parent sets are recorded.
+- Favorite people in a sidebar list and a quick-access strip; selecting a favorite centers their card at a readable scale across map filters.
+- Draggable dialogs and profile windows, with viewport bounds, touch support, keyboard movement and a reset-position control.
 - Document references, digital attachments, evidence states and configurable checklists.
 - Profiles with contacts, residence history, biographies, work, education, interests, health information and pets.
 - Optional identity documents, citizenship and immigration records, tax declarations, personal portrait entries and custom facts. Each section supports multiple records, dates, notes and linked sources.
 - A complete autobiography view for every person, available from the map, people list and profile panel. It includes populated profile sections regardless of workspace visibility, family relationships, property, notes and linked sources with attachments.
+- A separate monthly calendar for birthdays, wedding anniversaries, jubilees, memorial dates, personal events, education, work, court events and financial deadlines.
 - Upcoming anniversaries and a historical timeline, including partial dates and leap-day handling.
 - Property records with manually entered allocation shares.
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.
 - English, Ukrainian and Russian interfaces, displayed as **EN / UA / RU**.
+
+The expanded demo contains 12 people, 18 relationships and nine source references using explicit Doe/Roe placeholders. Surname changes have name-history records. Biological, adoptive and step-parent relationships are separate, including children from previous partnerships and half-siblings. Employment, public office, court cases, imprisonment, gifts, loans, deposits, investments and self-described identity history illustrate the optional modules.
 
 Demo people use explicit Doe/Roe placeholders. Their relationships, identity document numbers and personal details are invented. The launch screen opens before any demo is loaded or existing draft is replaced. Loading the updated demo does not rewrite existing saved projects.
 
@@ -27,28 +32,44 @@ Demo people use explicit Doe/Roe placeholders. Their relationships, identity doc
 
 Open a person's editor and expand **Add more information** to use sections outside the current workspace's visible scope. Select a section, add a record, then expand only the field groups you need. All sections remain editable regardless of workspace visibility. **Choose visible data** controls the sections in the person panel; the complete autobiography includes every populated section.
 
-| Module                      | Available information                                                                                                                                                                                                          |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Name history                | Maiden and birth surnames, legal and previous names, aliases, validity periods, reasons for changes and sources                                                                                                                |
-| Education                   | Institutions, degrees, fields of study, level, faculty, study periods/status, graduation dates, diploma references and sources                                                                                                 |
-| Reports and claims          | Attributed reports, rumors, testimony or recording-based statements, context, first-hand/hearsay basis, verification status, reviewer, findings and sources                                                                    |
-| Identity documents          | Document and passport type, country, series, number, issuing authority and code, issue/expiry dates, status, holder details, citizenship, personal number, registered address, machine-readable lines and a linked scan/source |
-| Citizenship and immigration | Country, status, visa/permit category and number, validity, application and decision, case/authority, citizenship basis, purpose, sponsor, travel dates, address and conditions                                                |
-| Tax information             | Country and year, tax ID and residence, currency, declaration metadata, income, deductions, credits, tax due/paid/refund, assets, liabilities and foreign accounts                                                             |
-| Personal portrait           | Character, habits, routine, values, religious or political views and preferences, with description, attribution, reporting date, context, period and source                                                                    |
-| Custom facts                | A category, label, value, period, notes and source for details beyond the predefined fields                                                                                                                                    |
+| Module                         | Available information                                                                                                                                                                                                          |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Name history                   | Maiden and birth surnames, legal and previous names, aliases, validity periods, reasons for changes and sources                                                                                                                |
+| Education                      | Institutions, degrees, fields of study, level, faculty, study periods/status, graduation dates, diploma references and sources                                                                                                 |
+| Reports and claims             | Attributed reports, rumors, testimony or recording-based statements, context, first-hand/hearsay basis, verification status, reviewer, findings and sources                                                                    |
+| Identity documents             | Document and passport type, country, series, number, issuing authority and code, issue/expiry dates, status, holder details, citizenship, personal number, registered address, machine-readable lines and a linked scan/source |
+| Citizenship and immigration    | Country, status, visa/permit category and number, validity, application and decision, case/authority, citizenship basis, purpose, sponsor, travel dates, address and conditions                                                |
+| Tax information                | Country and year, tax ID and residence, currency, declaration metadata, income, deductions, credits, tax due/paid/refund, assets, liabilities and foreign accounts                                                             |
+| Personal portrait              | Character, habits, routine, values, religious or political views and preferences, with description, attribution, reporting date, context, period and source                                                                    |
+| Court and custody history      | Cases, property division, claims, hearings, judgments, detention, imprisonment and release; dates, case number, court, role, counterparty, status, outcome, sentence conditions, attribution and source                        |
+| Financial history              | Income, gifts, debts, loans, deposits, investments, guarantees and obligations; amount, currency, direction, counterparty, institution, contract, deadline, interest, frequency, status, collateral and attribution            |
+| Employment and public office   | Organization, role, appointment or election, rank, work period, location, income, currency, pay frequency, appointment reference, notes and source                                                                             |
+| Gender and orientation history | Dated self-descriptions of gender identity, legal sex or orientation, and separately entered hormone treatment or procedure records; provider, country, attribution, verification and source                                   |
+| Custom facts                   | A category, label, value, period, notes and source for details beyond the predefined fields                                                                                                                                    |
 
-Dates and numeric amounts are validated during editing and import. Monetary values retain the entered precision, including zero, and are not calculated automatically. A personal portrait stores entered descriptions and their attribution; it does not infer beliefs or make psychological assessments. These modules capture information and sources, rather than generate country-specific migration or tax forms.
+Dates and numeric amounts are validated during editing and import. Monetary values retain the entered precision, including zero, and are not calculated automatically. A personal portrait stores entered descriptions and their attribution; it does not infer beliefs or make psychological assessments. These modules capture information and sources, rather than generate country-specific migration or tax forms. Court and financial counterparties can be linked to an existing person or entered as an external party. Monetary records do not automatically create reciprocal entries or calculate account balances. Gender, orientation and treatment records retain their independent dates and attribution; they do not infer one another or automatically overwrite the basic gender field.
 
 ## Relationship history and source verification
 
 Choose **Registered marriage** for marriage or a registered civil partnership. Choose **Partnership / dating** for an unregistered union, cohabitation, dating, romantic relationships or another partnership. Add the subtype, status, duration pattern, start/end dates, place and registration reference as applicable. Use separate records for separate episodes between the same people. Relationship period fields use `fromDate` and `toDate`; `from` and `to` remain person IDs.
+
+Use **Parenthood** for biological parents, **Adoption** for adoptive parents and **Step-parent / step-child** for a parent's partner who is not recorded as a biological or adoptive parent. A child can have biological and adoptive records at the same time. Step-parent links remain visible but do not establish biological or adoptive ancestry. Half-sibling descriptions require both people to have at least two recorded biological parents and exactly one shared parent; unknown parents are not guessed.
 
 Each relationship can record verification, attribution and review notes. Explicitly unverified or refuted links remain visible on the graph but do not establish kinship or inheritance paths. Dating and cohabitation are social links. Ended or divorced marriages are retained as history and excluded from current kinship paths. Disputed family links remain marked as disputed.
 
 Reports in a person's profile are separate statements, each with its own verification state. A recording can support multiple reports without automatically confirming them. Sources also have a separate review status, reviewer, review date and findings. Photographs, letters, testimony and recordings are indirect evidence; rumors remain unverified. Marking a recording as reviewed cannot turn it into an official family certificate.
 
 Attach audio/video recordings up to 20 MB, or reference larger recordings with an external source link. Supported formats are MP3, M4A, WAV, OGG, WebM, MP4 and MOV. Local files have browser-native playback controls; codec support depends on the browser. Transcriptions can be entered alongside the source. Media and verification metadata are included in ZIP backups.
+
+## Calendar and working tools
+
+Open **Calendar** in the navigation to browse a month, select a day and read its agenda. Search by person or event and filter by category. The calendar uses all populated profile sections independently of **Choose visible data**, and respects the selected family-group filter.
+
+Birthdays, memorial dates and current recorded wedding anniversaries repeat each year. Ended partnerships retain their original start and end dates without generating current wedding anniversaries. Every fifth annual anniversary receives a jubilee badge; custom jubilees can also be entered explicitly. February 29 anniversaries appear on February 28 in common years. Dates containing only a year remain listed separately until an exact day is supplied. **Add event** uses the selected day and supports annual or one-time events with a category, notes and a source.
+
+Use the star on a person card or in the profile panel to add or remove a favorite. Favorites are saved in the project, participate in undo/redo and travel in ZIP backups. They stay accessible when the people search or family-group filter changes.
+
+Drag a dialog or profile window by its header. Windows remain inside the viewport and can be reset with the layout button in the header. Focus a header and use **Alt + arrow keys** to move it, or **Alt + Home** to reset. Positions are temporary workspace state; a newly opened dialog starts in its default position.
 
 ## Using the map on a phone
 
@@ -119,7 +140,7 @@ src/
     dom.js                 DOM queries and HTML escaping
     utils.js               IDs, cloning, formatting, URLs and downloads
   model/                   Project selectors, validation, dates, evidence and kinship
-  features/                People, documents, groups, events, property and launcher flows
+  features/                People, favorites, calendar, documents, groups, events, property and launcher flows
   graph/                   Rendering, camera, mouse/touch interaction, layouts and analysis
   services/                IndexedDB saving, history, files, archives and browser tools
   ui/
@@ -129,6 +150,7 @@ src/
     forms/                 Individual dialog and form components
     profile-fields.js      Shared structured field display for profiles and biographies
     dialog.js              Dialog lifecycle and notifications
+    floating-windows.js    Shared mouse, touch and keyboard window positioning
     cropper.js             Client-side image preparation
     icons.js               One immutable collection of SVG icon paths
   i18n/
@@ -160,7 +182,7 @@ The optional browser `document.modelContext` integration is isolated in `service
 
 ### A new profile section
 
-Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Field types include text, textarea, select, source, exact date, partial period, year and number. Unlabelled groups show immediately; labelled groups become expandable details.
+Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Field types include text, textarea, select, person reference, source, exact date, partial period, year and number. Person references resolve to names and are cleared if the referenced person is removed. Unlabelled groups show immediately; labelled groups become expandable details.
 
 The registry feeds the editor, collection, import validation, source cleanup, workspace scope picker and complete autobiography. Add translations in all three catalogs and tests for meaningful validation or persistence behavior. Choose initial visibility in `defaultScopes` only when the section should appear in that workspace by default; otherwise it is accessible through **Add more information**. Core profile sections remain defined in `core/config.js`.
 

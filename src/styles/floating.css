@@ -1,0 +1,40 @@
+.modal-head,
+.inspector-header {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.modal-head:active,
+.inspector-header:active {
+  cursor: grabbing;
+}
+.window-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dialog[data-floating],
+.inspector[data-floating] {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  transform: none;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100dvh - 16px);
+}
+.inspector[data-floating] {
+  z-index: 45;
+  border: 1px solid #9eb6ca;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px #203b5233;
+}
+@media (min-width: 1081px) {
+  .workspace:has(.inspector[data-floating]) {
+    grid-template-columns: 254px minmax(0, 1fr);
+  }
+}
+
+.modal-head h2 {
+  flex: 1;
+  min-width: 0;
+}

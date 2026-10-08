@@ -1,3 +1,5 @@
+import { moveCalendarMonth } from "../features/calendar.js";
+import { localDateString } from "../model/dates.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { editDocument } from "../features/documents.js";
@@ -49,6 +51,15 @@ export async function handleAction(action) {
     coverage: coverageHelp,
     scope: editScope,
     "add-event": () => editFamilyEvent(),
+    "add-calendar-event": () =>
+      editFamilyEvent(null, null, appState.calendarDay),
+    "calendar-previous": () => moveCalendarMonth(-1),
+    "calendar-next": () => moveCalendarMonth(1),
+    "calendar-today": () => {
+      appState.calendarMonth = localDateString().slice(0, 7);
+      appState.calendarDay = localDateString();
+      renderMain();
+    },
     "more-events": () => {
       appState.eventLimit += 80;
       renderEvents();

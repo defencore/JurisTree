@@ -2,9 +2,26 @@ import { sample } from "../../src/data/demo.js";
 
 export function biographyProject() {
   const project = sample();
+  project.relations = project.relations.filter(
+    (r) => Number(r.id.slice(1)) <= 11,
+  );
+  project.documents = project.documents.filter(
+    (d) => Number(d.id.slice(1)) <= 4,
+  );
   const p = project.people.find((person) => person.id === "p5");
   Object.assign(p, {
     name: "Alex Example",
+    nameHistory: [],
+    educationRecords: [],
+    claims: [],
+    identityDocuments: [],
+    immigrationRecords: [],
+    taxRecords: [],
+    personalRecords: [],
+    customFacts: [],
+    legalRecords: [],
+    financialRecords: [],
+    identityHistory: [],
     aliases: "Alex Doe",
     lifeStatus: "living",
     place: "Kyiv, Ukraine",

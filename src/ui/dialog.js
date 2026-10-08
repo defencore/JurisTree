@@ -1,3 +1,4 @@
+import { resetWindow } from "./floating-windows.js";
 import { recordConfigs } from "../core/config.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -29,6 +30,7 @@ export function openDialog(
   } = {},
 ) {
   if ($("#modal").open) closeModal();
+  resetWindow($("#modal"));
   $("#modal").classList.toggle("wide", wide);
   $("#modalTitle").textContent = title;
   $("#modalContent").innerHTML = html;
@@ -80,6 +82,11 @@ export async function confirmDelete(kind, id) {
       const rs = appState.project.relations
         .filter((r) => r.from === id || r.to === id)
         .map((r) => r.id);
+      for (const p of appState.project.people)
+        for (const cfg of Object.values(recordConfigs()))
+          for (const record of p[cfg.key] || [])
+            for (const [key, , type] of cfg.fields)
+              if (type === "person" && record[key] === id) record[key] = "";
       appState.project.relations = appState.project.relations.filter(
         (r) => !rs.includes(r.id),
       );

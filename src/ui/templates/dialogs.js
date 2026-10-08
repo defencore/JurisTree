@@ -1,8 +1,9 @@
 export const dialogsTemplate = `
 <dialog class="dialog" id="modal">
   <form id="modalForm">
-    <div class="modal-head">
+    <div class="modal-head" tabindex="0" title="@@ui.moveWindowHint@@">
       <h2 id="modalTitle"></h2>
+      <button type="button" class="iconbtn small ghost" data-reset-window aria-label="@@ui.resetWindowPosition@@" title="@@ui.resetWindowPosition@@"><i data-icon="layout"></i></button>
       <button
         type="button"
         class="iconbtn ghost"
@@ -20,8 +21,9 @@ export const dialogsTemplate = `
   </form>
 </dialog>
 <dialog class="dialog wide" id="cropDialog">
-  <div class="modal-head">
+  <div class="modal-head" tabindex="0" title="@@ui.moveWindowHint@@">
     <h2 id="cropTitle">@@ui.prepareImage@@</h2>
+    <button type="button" class="iconbtn small ghost" data-reset-window aria-label="@@ui.resetWindowPosition@@" title="@@ui.resetWindowPosition@@"><i data-icon="layout"></i></button>
     <button class="iconbtn ghost" id="cropCancelTop" aria-label="@@ui.cancel@@">
       <i data-icon="x"></i>
     </button>

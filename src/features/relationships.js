@@ -52,7 +52,10 @@ export async function editRelation(id = null, context = {}) {
           b = f.get("to"),
           t = f.get("type");
         if (a === b) return translate("ui.selectTwoDifferentPeople");
-        if (["parent", "adopted"].includes(t) && isParentCycle(a, b, id))
+        if (
+          ["parent", "adopted", "step_parent"].includes(t) &&
+          isParentCycle(a, b, id)
+        )
           return translate("ui.thisWouldCreateAGenerationCycleCheckThe");
         const details = collectRelationship(f);
         const error = profileRecordError(relationshipConfig(), details);

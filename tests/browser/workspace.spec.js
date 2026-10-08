@@ -17,7 +17,7 @@ test.afterEach(() => expect(errors).toEqual([]));
 async function demo(page) {
   await page.locator("#startDemo").click();
   await expect(page.locator("#appShell")).toBeVisible();
-  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(8);
+  await expect(page.locator('.node[data-kind="person"]')).toHaveCount(12);
 }
 
 test("opens a complete autobiography from every person entry point and language", async ({
@@ -30,8 +30,8 @@ test("opens a complete autobiography from every person entry point and language"
     buffer: Buffer.from(JSON.stringify(biographyProject())),
   });
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator("#personList [data-biography]")).toHaveCount(8);
-  await expect(page.locator("#graph [data-biography]")).toHaveCount(8);
+  await expect(page.locator("#personList [data-biography]")).toHaveCount(12);
+  await expect(page.locator("#graph [data-biography]")).toHaveCount(12);
   const node = page.locator('.node[data-node="p5"]');
   const position = await node.getAttribute("transform");
   await page.locator('#graph [data-biography="p5"]').click();
@@ -85,7 +85,7 @@ test("opens a complete autobiography from every person entry point and language"
   await page.locator('#personList [data-person="p5"]').click();
   await page.locator('#inspector [data-biography="p5"]').click();
   await page.locator('.biography [data-biography="p3"]').click();
-  await expect(page.locator(".biography-header h2")).toHaveText("Jamie Doe");
+  await expect(page.locator(".biography-header h2")).toHaveText("Jamie Roe");
   await page.locator("[data-close]").first().click();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#graph [data-biography="p5"]').focus();
@@ -120,7 +120,7 @@ test("switches every language in the launch screen and editor", async ({
   await page.locator("#appShell [data-language]").selectOption("uk");
   await expect(page.locator("#viewTitle")).toHaveText("Схема зв’язків");
   await expect(page.locator("#projectTitle")).toHaveText(
-    "Doe family — fictional demo",
+    "Doe and Roe families — fictional demo",
   );
   await page.locator("#appShell [data-language]").selectOption("ru");
   await expect(page.locator("#viewTitle")).toHaveText("Схема связей");
@@ -176,7 +176,7 @@ test("exports a full ZIP, reimports it and exports SVG and PNG", async ({
   });
   await page.locator('#modal input[name="title"]').fill("Attachment test");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator("#docCount")).toHaveText("5");
+  await expect(page.locator("#docCount")).toHaveText("10");
   await expect(page.locator("#saveState")).toContainText("Draft saved");
   await page.locator('[data-action="export"]').click();
   const [zip] = await Promise.all([
@@ -192,7 +192,7 @@ test("exports a full ZIP, reimports it and exports SVG and PNG", async ({
   });
   await expect(page.locator("#modalTitle")).toHaveText("Import tree?");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator("#personList .person-row")).toHaveCount(8);
+  await expect(page.locator("#personList .person-row")).toHaveCount(12);
   await page.locator('[data-view="documents"]').click();
   await page
     .locator(".doc-card")
@@ -268,7 +268,7 @@ test("adds groups, relationships, property shares and personal events", async ({
   await page.locator('#modal select[name="to"]').selectOption("p7");
   await page.locator('#modal select[name="type"]').selectOption("sibling");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator(".graph-view-summary")).toContainText("12/12");
+  await expect(page.locator(".graph-view-summary")).toContainText("19/19");
   await page.locator('[data-view="property"]').click();
   await page.locator('#viewActions [data-action="add-property"]').click();
   await page.locator('#modal input[name="title"]').fill("Family house");
@@ -278,7 +278,14 @@ test("adds groups, relationships, property shares and personal events", async ({
   await page.locator('[name="allocation-percent"]').fill("100");
   await page.locator('#modal button[type="submit"]').click();
   await expect(page.locator("#otherView")).toContainText("Family house");
-  await expect(page.locator(".asset-total")).toContainText("100%");
+  await expect(
+    page
+      .locator(".asset-card")
+      .filter({
+        has: page.getByRole("heading", { name: "Family house", exact: true }),
+      })
+      .locator(".asset-total"),
+  ).toContainText("100%");
   await page.locator('[data-view="events"]').click();
   await page.locator('[data-action="add-event"]').click();
   await page.locator('#modal input[name="title"]').fill("Family gathering");
@@ -302,5 +309,5 @@ test("works without IndexedDB and explains the backup option", async ({
     "Autosave is unavailable",
   );
   await demo(page);
-  await expect(page.locator("#personList .person-row")).toHaveCount(8);
+  await expect(page.locator("#personList .person-row")).toHaveCount(12);
 });

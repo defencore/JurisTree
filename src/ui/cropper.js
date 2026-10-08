@@ -1,3 +1,4 @@
+import { resetWindow } from "./floating-windows.js";
 import { $ } from "../core/dom.js";
 import { bytes } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
@@ -123,6 +124,7 @@ export async function cropImage(file, portrait) {
   };
   $("#cropReset").onclick = reset;
   reset();
+  resetWindow($("#cropDialog"));
   $("#cropDialog").showModal();
   return new Promise((resolve) => {
     let finished = false;

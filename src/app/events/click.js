@@ -1,3 +1,5 @@
+import { renderCalendar } from "../../features/calendar.js";
+import { toggleFavorite } from "../../features/favorites.js";
 import { render, select } from "../../ui/render.js";
 import { icons } from "../../ui/icons.js";
 import { closeModal, confirmDelete, toast } from "../../ui/dialog.js";
@@ -43,10 +45,24 @@ import { handleAction } from "../actions.js";
 export function bindClickEvents() {
   document.addEventListener("click", async (e) => {
     const b = e.target.closest(
-      "button,[data-person],[data-biography],[data-document],[data-relation],[data-edge],[data-gap-kind],[data-required],[data-toggle-group]",
+      "button,[data-favorite],[data-person],[data-biography],[data-document],[data-relation],[data-edge],[data-gap-kind],[data-required],[data-toggle-group]",
     );
     if (!b) return;
     try {
+      if (b.dataset.calendarDay) {
+        appState.calendarDay = b.dataset.calendarDay;
+        renderCalendar();
+        return;
+      }
+      if (b.dataset.fastPerson) {
+        select("person", b.dataset.fastPerson);
+        focusPerson(b.dataset.fastPerson);
+        return;
+      }
+      if (b.dataset.favorite) {
+        toggleFavorite(b.dataset.favorite);
+        return;
+      }
       if (b.dataset.biography) {
         await viewBiography(b.dataset.biography);
         return;
@@ -110,7 +126,8 @@ export function bindClickEvents() {
       }
       if (b.hasAttribute("data-group-filter")) {
         appState.groupFilter = b.dataset.groupFilter;
-        if (appState.view !== "events") appState.view = "tree";
+        if (!["events", "calendar"].includes(appState.view))
+          appState.view = "tree";
         appState.eventLimit = 80;
         appState.comparisonPath = null;
         render();

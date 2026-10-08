@@ -73,6 +73,7 @@ export function renderBiography({
           f: translate("ui.female"),
           m: translate("ui.male"),
           u: translate("ui.notSpecified"),
+          x: translate("ui.nonbinaryOther"),
         }[p.gender || "u"],
       ],
       [
