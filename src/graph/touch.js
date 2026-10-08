@@ -126,9 +126,13 @@ export function bindTouchInteractions(graph) {
   );
   function finish(event) {
     if (!points.has(event.pointerId)) return;
+    if (graph.hasPointerCapture(event.pointerId))
+      graph.releasePointerCapture(event.pointerId);
     points.delete(event.pointerId);
     if (event.type === "pointercancel") {
       rollback();
+      for (const id of points.keys())
+        if (graph.hasPointerCapture(id)) graph.releasePointerCapture(id);
       points.clear();
       gesture = null;
       return;
