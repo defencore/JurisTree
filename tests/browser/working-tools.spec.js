@@ -256,7 +256,12 @@ test("deleting a counterparty clears linked references and undo restores them", 
   await page.locator('#modal button[type="submit"]').click();
   const readCounterparty = () =>
     page.evaluate(async () => {
-      const { state } = await import("./src/core/state.js");
+      const { state } = await import(
+        new URL(
+          "core/state.js",
+          document.querySelector('script[type="module"]').src,
+        ).href
+      );
       return state.project.people.find((p) => p.id === "p5").financialRecords[0]
         .counterpartyId;
     });

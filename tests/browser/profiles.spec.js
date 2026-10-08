@@ -117,7 +117,12 @@ test("edits detailed optional profiles, reports and name history and restores th
   ]);
   const buffer = await readFile(await download.path());
   const manifest = await page.evaluate(async (encoded) => {
-    const { default: Zip } = await import("./src/vendor/zip.js");
+    const { default: Zip } = await import(
+      new URL(
+        "vendor/zip.js",
+        document.querySelector('script[type="module"]').src,
+      ).href
+    );
     const zip = await Zip.loadAsync(
       Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0)),
     );

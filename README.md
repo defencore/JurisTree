@@ -142,7 +142,7 @@ Use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to select an existing Chromium executable. 
 2. Open **Settings → Pages** and choose **GitHub Actions** as the build source.
 3. The included `.github/workflows/pages.yml` validates the project, builds static files and publishes `dist/` after pushes to `main`. It can also be started manually.
 
-The build copies browser assets and adds `.nojekyll`; it does not bundle or transpile the application. Asset URLs and module imports are relative, so both a domain root and a URL such as `https://example.github.io/JurisTree/` work without a base-path configuration.
+The build copies the entire browser module graph and public assets to `assets/<content-hash>/`, rewrites the HTML entry points, and adds `.nojekyll`. Native relative imports are preserved; there is no bundling or transpilation. Changed code receives a new asset directory, preventing browser or CDN caches from combining modules from different releases, including CDNs that ignore query strings. Keep the HTML entry point uncached or revalidated in any additional CDN configuration. Asset URLs remain relative, so both a domain root and a URL such as `https://example.github.io/JurisTree/` work without a base-path configuration.
 
 The repository's `CNAME` file configures `juristree.global.agency` and is included in the deployment artifact. Set the same custom domain in **Settings → Pages** and enable HTTPS when its certificate is ready. To use the default GitHub Pages address, remove `CNAME` and clear the custom domain in those settings.
 

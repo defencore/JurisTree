@@ -109,7 +109,12 @@ test("touch rearranging commits one undoable movement", async ({ page }) => {
   await expect
     .poll(() =>
       page.evaluate(async () => {
-        const { state } = await import("./src/core/state.js");
+        const { state } = await import(
+          new URL(
+            "core/state.js",
+            document.querySelector('script[type="module"]').src,
+          ).href
+        );
         return state.history.length;
       }),
     )

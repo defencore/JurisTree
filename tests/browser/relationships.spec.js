@@ -131,7 +131,12 @@ test("attaches, plays and restores an audio source without promoting it to offic
   ]);
   const buffer = await readFile(await download.path());
   const archived = await page.evaluate(async (encoded) => {
-    const { default: Zip } = await import("./src/vendor/zip.js");
+    const { default: Zip } = await import(
+      new URL(
+        "vendor/zip.js",
+        document.querySelector('script[type="module"]').src,
+      ).href
+    );
     const zip = await Zip.loadAsync(
       Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0)),
     );
