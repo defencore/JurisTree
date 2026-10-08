@@ -1,4 +1,9 @@
 export default {
+  "ui.autobiography": "Autobiography",
+  "ui.viewAutobiographyOf": "View autobiography: {name}",
+  "ui.autobiographyDescription":
+    "All recorded information, including sections hidden in this workspace.",
+  "ui.yes": "Yes",
   "ui.birthCertificate": "Birth certificate",
   "ui.marriageCertificate": "Marriage certificate",
   "ui.deathCertificate": "Death certificate",

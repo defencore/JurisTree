@@ -20,6 +20,7 @@ import {
 import { editRelation } from "../../features/relationships.js";
 import { allocationRow, editProperty } from "../../features/property.js";
 import { editPerson, recordRow } from "../../features/profiles.js";
+import { viewBiography } from "../../features/biography.js";
 import { selectStartTemplate } from "../../features/launcher.js";
 import { deleteGroup, editGroup, toggleGroup } from "../../features/groups.js";
 import {
@@ -40,10 +41,14 @@ import { handleAction } from "../actions.js";
 export function bindClickEvents() {
   document.addEventListener("click", async (e) => {
     const b = e.target.closest(
-      "button,[data-person],[data-document],[data-relation],[data-edge],[data-gap-kind],[data-required],[data-toggle-group]",
+      "button,[data-person],[data-biography],[data-document],[data-relation],[data-edge],[data-gap-kind],[data-required],[data-toggle-group]",
     );
     if (!b) return;
     try {
+      if (b.dataset.biography) {
+        await viewBiography(b.dataset.biography);
+        return;
+      }
       if (b.dataset.startTemplate) {
         selectStartTemplate(b.dataset.startTemplate);
         return;

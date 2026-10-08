@@ -11,6 +11,7 @@ import {
 import { editProperty } from "../../features/property.js";
 import { toggleGroup } from "../../features/groups.js";
 import { viewDocument } from "../../features/documents.js";
+import { viewBiography } from "../../features/biography.js";
 import { $ } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
 export function bindKeyboardEvents() {
@@ -26,6 +27,16 @@ export function bindKeyboardEvents() {
       $("#cropDialog").open
     )
       return;
+    const biography = e.target.closest("[data-biography]");
+    if (
+      biography &&
+      biography.tagName !== "BUTTON" &&
+      ["Enter", " "].includes(e.key)
+    ) {
+      e.preventDefault();
+      viewBiography(biography.dataset.biography);
+      return;
+    }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
       e.preventDefault();
       e.shiftKey ? redo() : undo();

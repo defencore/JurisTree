@@ -16,7 +16,12 @@ import { nodeItem, person } from "../model/project.js";
 export function bindGraphInteractions() {
   const graph = $("#graph");
   graph.addEventListener("pointerdown", (e) => {
-    if (e.button !== 0 || appState.analysisBusy) return;
+    if (
+      e.button !== 0 ||
+      appState.analysisBusy ||
+      e.target.closest("[data-biography]")
+    )
+      return;
     const n = e.target.closest("[data-node]"),
       rect = graph.getBoundingClientRect();
     if (n && (e.ctrlKey || e.metaKey || e.shiftKey)) {

@@ -221,7 +221,7 @@
   background: #e4eef7;
   box-shadow: inset 2px 0 #337eb2;
 }
-.person-row > span:nth-child(2) {
+.person-select > span:nth-child(2) {
   flex: 1;
   min-width: 0;
 }
@@ -845,13 +845,13 @@
 .people-section .search {
   margin-bottom: 10px;
 }
-.person-row > .avatar {
+.person-select > .avatar {
   flex: 0 0 31px;
   height: 31px;
   margin-top: 2px;
   width: 31px;
 }
-.person-row > .person-row-text {
+.person-select > .person-row-text {
   flex: 1;
   min-width: 0;
 }

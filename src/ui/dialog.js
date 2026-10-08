@@ -36,6 +36,7 @@ export function openDialog(
     ? `<button type="button" class="btn" data-close>${translate("ui.cancel")}</button><button class="btn primary" type="submit">${esc(submit)}</button>`
     : `<button type="button" class="btn" data-close>${translate("ui.close")}</button>`;
   $("#modal").showModal();
+  $("#modal .modal-body").scrollTop = 0;
   icons();
   return new Promise((resolve) => {
     appState.modalResolve = resolve;

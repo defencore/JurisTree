@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
+import { biographyProject } from "../fixtures/biography.js";
 
 const errors = [];
 test.beforeEach(async ({ page }) => {
@@ -18,6 +19,90 @@ async function demo(page) {
   await expect(page.locator("#appShell")).toBeVisible();
   await expect(page.locator('.node[data-kind="person"]')).toHaveCount(8);
 }
+
+test("opens a complete autobiography from every person entry point and language", async ({
+  page,
+}) => {
+  await demo(page);
+  await page.locator("#importInput").setInputFiles({
+    name: "biography.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(biographyProject())),
+  });
+  await page.locator('#modal button[type="submit"]').click();
+  await expect(page.locator("#personList [data-biography]")).toHaveCount(8);
+  await expect(page.locator("#graph [data-biography]")).toHaveCount(8);
+  const node = page.locator('.node[data-node="p5"]');
+  const position = await node.getAttribute("transform");
+  await page.locator('#graph [data-biography="p5"]').click();
+  await expect(page.locator("#modalTitle")).toHaveText("Autobiography");
+  expect(
+    await page
+      .locator("#modal .modal-body")
+      .evaluate((element) => element.scrollTop),
+  ).toBe(0);
+  for (const value of [
+    "My life story.",
+    "Literal <b>text</b>",
+    "Graduation",
+    "alex@example.org",
+    "10 Example Street",
+    "Example University",
+    "Architecture",
+    "Sunny",
+    "Recorded health details",
+    "Watercolor painting",
+    "Local history",
+    "Family studio",
+    "0 USD",
+    "75%",
+    "Family book collection",
+    "30%",
+    "Relationship-only source",
+    "Property-only source",
+    "Research note for the complete profile",
+  ])
+    await expect(page.locator(".biography")).toContainText(value);
+  await expect(
+    page.locator(".biography script, .biography .biography-prose b"),
+  ).toHaveCount(0);
+  await expect(page.locator(".biography")).not.toContainText(
+    "Unrelated source",
+  );
+  await page.locator("[data-close]").first().click();
+  await expect(node).toHaveAttribute("transform", position);
+  for (const [language, title] of [
+    ["uk", "Автобіографія"],
+    ["ru", "Автобиография"],
+    ["en", "Autobiography"],
+  ]) {
+    await page.locator("#appShell [data-language]").selectOption(language);
+    await page.locator('#personList [data-biography="p5"]').click();
+    await expect(page.locator("#modalTitle")).toHaveText(title);
+    await expect(page.locator(".biography")).toContainText("Alex Example");
+    await page.locator("[data-close]").first().click();
+  }
+  await page.locator('#personList [data-person="p5"]').click();
+  await page.locator('#inspector [data-biography="p5"]').click();
+  await page.locator('.biography [data-biography="p3"]').click();
+  await expect(page.locator(".biography-header h2")).toHaveText("Олена Коваль");
+  await page.locator("[data-close]").first().click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#graph [data-biography="p5"]').focus();
+  await page.locator('#graph [data-biography="p5"]').press("Space");
+  await expect(page.locator("#modalTitle")).toHaveText("Autobiography");
+  expect(
+    await page
+      .locator("#modal .modal-body")
+      .evaluate((element) => element.scrollTop),
+  ).toBe(0);
+  expect(
+    await page
+      .locator("#modalContent")
+      .evaluate((element) => element.scrollWidth <= element.clientWidth),
+  ).toBe(true);
+  await page.screenshot({ path: "test-results/mobile-biography.png" });
+});
 
 test("switches every language in the launch screen and editor", async ({
   page,

@@ -11,6 +11,10 @@ import { icon } from "./icons.js";
 export function avatar(p) {
   return `<span class="avatar ${p.gender === "f" ? "" : "alt"}">${p.avatarId && appState.blobs.has(p.avatarId) ? `<img alt="" src="${objectUrl(p.avatarId)}">` : esc(initials(p.name))}</span>`;
 }
+export function biographyButton(p, compact = false) {
+  const label = esc(translate("ui.viewAutobiographyOf", { name: p.name }));
+  return `<button type="button" class="${compact ? "iconbtn small person-biography" : "btn biography-profile"}" data-biography="${p.id}" aria-label="${label}" title="${label}">${icon("book")}${compact ? "" : translate("ui.autobiography")}</button>`;
+}
 export function documentIcon(d) {
   return (
     {

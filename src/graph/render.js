@@ -139,7 +139,7 @@ export function nodeSVG(n, images = null, exporting = false) {
       missing = req.filter((r) => r.state === "missing").length;
     const color = "#4f6474",
       bg = "#edf1f4";
-    inside = `<circle cx="42" cy="43" r="26" fill="${bg}"/>${n.avatarId && (images ? images[n.avatarId] : objectUrl(n.avatarId)) ? `<defs><clipPath id="c-${n.id}"><circle cx="42" cy="43" r="26"/></clipPath></defs><image href="${esc(images ? images[n.avatarId] : objectUrl(n.avatarId))}" x="16" y="17" width="52" height="52" preserveAspectRatio="xMidYMid slice" clip-path="url(#c-${n.id})"/>` : `<text x="42" y="49" text-anchor="middle" font-family="${GRAPH_FONT}" fill="${color}" font-size="17" font-weight="700">${esc(initials(n.name))}</text>`}${svgText(n.name, 83, 35, 17, 2, 16, "#263545", 700, PERSON_CARD_WIDTH - 96)}${svgText(years(n), 16, 85, 40, 1, 14, "#465d70", 400, PERSON_CARD_WIDTH - 32)}<path d="M15 99H${PERSON_CARD_WIDTH - 15}" stroke="#dbe3ea"/>${svgText(translate("ui.documents"), 16, 116, 25, 1, 14, "#405d74", 400)}`;
+    inside = `<circle cx="42" cy="43" r="26" fill="${bg}"/>${n.avatarId && (images ? images[n.avatarId] : objectUrl(n.avatarId)) ? `<defs><clipPath id="c-${n.id}"><circle cx="42" cy="43" r="26"/></clipPath></defs><image href="${esc(images ? images[n.avatarId] : objectUrl(n.avatarId))}" x="16" y="17" width="52" height="52" preserveAspectRatio="xMidYMid slice" clip-path="url(#c-${n.id})"/>` : `<text x="42" y="49" text-anchor="middle" font-family="${GRAPH_FONT}" fill="${color}" font-size="17" font-weight="700">${esc(initials(n.name))}</text>`}${svgText(n.name, 83, 35, 17, 2, 16, "#263545", 700, PERSON_CARD_WIDTH - 96)}${svgText(years(n), 16, 85, 40, 1, 14, "#465d70", 400, PERSON_CARD_WIDTH - (exporting ? 32 : 74))}<path d="M15 99H${PERSON_CARD_WIDTH - 15}" stroke="#dbe3ea"/>${svgText(translate("ui.documents"), 16, 116, 25, 1, 14, "#405d74", 400)}`;
     const badges = [
       [`${translate("ui.available3")} ${ready}`, "#21664b", "#edf6f0"],
       [`${translate("ui.missing")} ${missing}`, "#805b19", "#fff5df"],
@@ -193,7 +193,11 @@ export function nodeSVG(n, images = null, exporting = false) {
   } else {
     inside = `<rect x="16" y="17" width="38" height="42" rx="10" fill="#eaf7f0"/>${svgIcon("home", 24, 27, "#148469", 0.9)}${svgText(n.title, 66, 35, 22, 2, 15)}${svgText(n.value ? new Intl.NumberFormat(getLocale()).format(Number(n.value)) + " " + n.currency : translate("ui.valueNotSpecified"), 16, 94, 31, 1, 13, "#8c92a7", 400)}`;
   }
-  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(n.name || n.title)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="#fff" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>`;
+  const biography =
+    n.kind === "person" && !exporting
+      ? `<g class="graph-biography" data-biography="${n.id}" transform="translate(${n.x + PERSON_CARD_WIDTH - 42} ${n.y + 70})" role="button" tabindex="0" aria-label="${esc(translate("ui.viewAutobiographyOf", { name: n.name }))}" opacity="${dim ? 0.3 : 1}"><title>${esc(translate("ui.autobiography"))}</title><rect width="28" height="24" rx="4" fill="#edf3f8" stroke="#b9cddd"/>${svgIcon("book", 6, 4, "#315d7c", 0.65)}</g>`
+      : "";
+  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(n.name || n.title)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="#fff" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${biography}`;
 }
 export function connection(a, b, horizontal = false) {
   let x1 = a.x + a.w / 2,

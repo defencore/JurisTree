@@ -1,0 +1,138 @@
+.person-select {
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+  gap: 8px;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+}
+.person-biography {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.biography-profile {
+  margin-top: 9px;
+  width: 100%;
+}
+.graph-biography {
+  cursor: pointer;
+}
+.graph-biography:hover rect,
+.graph-biography:focus-visible rect {
+  fill: #dcebf6;
+  stroke: #245d85;
+  stroke-width: 2;
+}
+.biography {
+  overflow-wrap: anywhere;
+}
+.biography-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 20px;
+}
+.biography-header .avatar {
+  flex: 0 0 72px;
+  height: 72px;
+  font-size: 1.5rem;
+}
+.biography-header h2 {
+  margin: 0;
+  color: #254c69;
+  font-size: 1.5rem;
+}
+.biography-header p {
+  margin: 4px 0 0;
+}
+.biography-section {
+  border-top: 1px solid var(--line);
+  padding: 20px 0;
+}
+.biography-section:last-child {
+  padding-bottom: 0;
+}
+.biography-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #315670;
+  font-size: 1rem;
+  margin: 0 0 14px;
+}
+.biography-section h3 .icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+.biography-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 24px;
+  margin: 0;
+}
+.biography-fields dt {
+  font-size: 0.8125rem;
+  color: #617789;
+  margin-bottom: 3px;
+}
+.biography-fields dd {
+  margin: 0;
+  white-space: pre-wrap;
+  color: #28475d;
+}
+.biography-prose {
+  white-space: pre-wrap;
+  color: #435f73;
+  line-height: 1.8;
+  margin: 0;
+}
+.biography-record {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background: #fafcfd;
+}
+.biography-record:last-child {
+  margin-bottom: 0;
+}
+.biography-record h4 {
+  margin: 0 0 12px;
+  color: #28475d;
+}
+.biography-record > .btn,
+.biography-record > .text-source {
+  margin-top: 12px;
+}
+.biography-record-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.biography-link {
+  display: block;
+  margin-top: 12px;
+}
+@media (max-width: 600px) {
+  .biography-header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .biography-header .avatar {
+    flex-basis: 48px;
+    height: 48px;
+    font-size: 1rem;
+  }
+  .biography-header h2 {
+    font-size: 1.2rem;
+  }
+  .biography-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

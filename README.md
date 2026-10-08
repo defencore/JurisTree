@@ -13,6 +13,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Kinship descriptions based on recorded relationships.
 - Document references, digital attachments, evidence states and configurable checklists.
 - Profiles with contacts, residence history, biographies, work, education, interests, health information and pets.
+- A complete autobiography view for every person, available from the map, people list and profile panel. It includes populated profile sections regardless of workspace visibility, family relationships, property, notes and linked sources with attachments.
 - Upcoming anniversaries and a historical timeline, including partial dates and leap-day handling.
 - Property records with manually entered allocation shares.
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.

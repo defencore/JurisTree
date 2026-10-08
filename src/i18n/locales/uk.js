@@ -1,4 +1,9 @@
 export default {
+  "ui.autobiography": "Автобіографія",
+  "ui.viewAutobiographyOf": "Переглянути автобіографію: {name}",
+  "ui.autobiographyDescription":
+    "Усі внесені відомості, включно з розділами, прихованими в поточному режимі роботи.",
+  "ui.yes": "Так",
   "ui.birthCertificate": "Свідоцтво про народження",
   "ui.marriageCertificate": "Свідоцтво про шлюб",
   "ui.deathCertificate": "Свідоцтво про смерть",
