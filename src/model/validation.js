@@ -1,3 +1,4 @@
+import { normalizePersonFilter } from "../core/person-filter-fields.js";
 import {
   defaultScopes,
   evidenceTypes,
@@ -94,6 +95,25 @@ export function validateImport(raw) {
     x: Number.isFinite(g.x) ? pos(g.x) : null,
     y: Number.isFinite(g.y) ? pos(g.y) : null,
   }));
+  p.personFilterViews = list("personFilterViews", 20, true).map((view) => {
+    const name = str(view.name, 150).trim();
+    if (!name) throw Error(translate("ui.filterNameRequired"));
+    try {
+      const query = normalizePersonFilter(view.query);
+      if (
+        query.rules.some(
+          (r) =>
+            r.field === "section" &&
+            !Object.hasOwn(recordConfigs(), r.value) &&
+            !["missing", "known"].includes(r.operator),
+        )
+      )
+        throw Error("Invalid profile filter section");
+      return { id: view.id, name, query };
+    } catch {
+      throw Error(translate("ui.filterInvalidCondition"));
+    }
+  });
   const groupIds = new Set(p.groups.map((g) => g.id));
   p.people = list("people", 600).map((v) => {
     const x = {

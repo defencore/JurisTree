@@ -1,3 +1,4 @@
+import { personPassesFilter } from "../features/person-filter-state.js";
 import { getLocale } from "../i18n/index.js";
 import { graphStateInfo, relTypes } from "../core/config.js";
 import { state as appState } from "../core/state.js";
@@ -93,6 +94,7 @@ export function visiblePeople(full = fullDiagram()) {
       : appState.project.people.filter((p) =>
           (p.groupIds || []).includes(appState.groupFilter),
         );
+  if (!full) ps = ps.filter((p) => personPassesFilter(p.id));
   if (!full && appState.graphFocus)
     ps = ps.filter((p) => appState.graphFocus.people.includes(p.id));
   if (!full && !cfg.showIsolated) {

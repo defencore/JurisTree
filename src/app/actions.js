@@ -1,3 +1,7 @@
+import {
+  editPersonFilters,
+  clearPersonFilters,
+} from "../features/person-filters.js";
 import { closeSearch, renderSearch } from "../features/search.js";
 import { updateBiographyReview } from "../features/biography-review.js";
 import { moveCalendarPeriod, renderCalendar } from "../features/calendar.js";
@@ -44,6 +48,8 @@ export async function newTree() {
 }
 export async function handleAction(action) {
   const handlers = {
+    "person-filters": editPersonFilters,
+    "clear-person-filters": clearPersonFilters,
     "update-biography-review": updateBiographyReview,
     "close-search": closeSearch,
     "clear-search": () => {

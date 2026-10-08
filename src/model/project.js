@@ -38,6 +38,7 @@ export function fresh() {
     documents: [],
     property: [],
     groups: [],
+    personFilterViews: [],
     scopePreferences: {},
     graphView: defaultGraphView(),
     subjectId: "",

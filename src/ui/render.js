@@ -1,3 +1,8 @@
+import { renderPersonFilterBar } from "../features/person-filters.js";
+import {
+  personPassesFilter,
+  resetPersonFilter,
+} from "../features/person-filter-state.js";
 import { $, $$ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
@@ -44,6 +49,7 @@ export function renderAll() {
     else b.removeAttribute("aria-current");
   });
   document.body.classList.toggle("view-full", appState.view !== "tree");
+  renderPersonFilterBar();
   renderGroups();
   renderPeople();
   renderMain();
@@ -118,6 +124,10 @@ export function select(kind, id) {
   let scopeChanged = false;
   if (kind === "person") {
     const p = person(id);
+    if (!personPassesFilter(id)) {
+      resetPersonFilter();
+      scopeChanged = true;
+    }
     if (
       appState.groupFilter &&
       !(p.groupIds || []).includes(appState.groupFilter)

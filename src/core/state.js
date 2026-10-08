@@ -1,3 +1,4 @@
+import { emptyPersonFilter } from "./person-filter-fields.js";
 /** Runtime-only state. Persist only project data and referenced attachment blobs. */
 export const state = {
   project: undefined,
@@ -29,6 +30,7 @@ export const state = {
   docLayout: "list",
   docShowAll: false,
   groupFilter: "",
+  personFilter: emptyPersonFilter(),
   exportingDiagram: false,
   comparisonPath: null,
   currentKinResult: null,

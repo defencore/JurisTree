@@ -18,4 +18,5 @@
 
 @import url("./global-search.css");
 @import "./person-status.css";
+@import "./person-filters.css";
 @import url("./print.css");

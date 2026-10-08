@@ -47,6 +47,7 @@ export const workspaceTemplate = `
   </header>
   <section class="global-search-bar" aria-label="@@ui.globalSearch@@">
     <div class="global-search-input"><i data-icon="search"></i><input id="globalSearch" type="search" autocomplete="off" placeholder="@@ui.globalSearchPlaceholder@@" aria-label="@@ui.globalSearch@@" aria-controls="globalSearchResults" aria-expanded="false"><button type="button" class="iconbtn small" data-action="clear-search" aria-label="@@ui.clearSearch@@"><i data-icon="x"></i></button></div>
+    <button type="button" class="btn person-filter-toggle" data-action="person-filters" aria-haspopup="dialog" aria-pressed="false"><i data-icon="sliders"></i><span>@@ui.personFilters@@</span><b id="personFilterCount"></b></button>
     <div id="globalSearchResults" class="global-search-results" role="region" aria-label="@@ui.searchResults@@" hidden></div>
   </section>
   <div class="workspace">
@@ -177,6 +178,7 @@ export const workspaceTemplate = `
         </div>
         <div class="view-actions" id="viewActions"></div>
       </div>
+      <section id="personFilterBar" class="person-filter-bar" aria-live="polite" hidden></section>
       <div class="mobile-map-bar">
         <button class="btn" data-action="mobile-tools" aria-expanded="false" aria-controls="mapSettings"><i data-icon="sliders"></i><span>@@ui.mapOptions@@</span></button>
         <button class="iconbtn" data-action="focus-person" aria-label="@@ui.focusPerson@@" title="@@ui.focusPerson@@"><i data-icon="user"></i></button>

@@ -23,6 +23,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Biography review with configurable periods, minimum gap lengths, corroborated-only coverage and records awaiting verification.
 - A complete autobiography view for every person, available from the map, people list and profile panel. It includes populated profile sections regardless of workspace visibility, family and professional relationships, property, notes and linked sources with attachments.
 - Month and year calendar views with direct year navigation, birthdays, wedding anniversaries, jubilees, memorial dates, travel, medical reviews, status changes and other dated records.
+- Advanced people filters with AND/OR conditions, quick selections, live result statistics, sorting, saved project queries and CSV exports.
 - Global search across all stored values and linked context, with combined queries, field filters, keyboard navigation and multilingual terms.
 - A4 autobiography printing and browser Save as PDF, including every populated section and source reference.
 - Upcoming anniversaries and a historical timeline, including partial dates and leap-day handling.
@@ -131,6 +132,22 @@ Coverage comes from education, residence, work and military service periods decl
 
 A gap means that no eligible dated record covers that period. It is not proof of misconduct or a reputation assessment. Record follow-up questions, explanations and sources in **Reports and claims**. The review does not modify data. It can support biographical review, including a marriage agency's review of information supplied by a person, without inferring undisclosed conduct or personal characteristics.
 
+## Advanced people filters
+
+Open **People filters** beside the global search bar. Quick conditions add living/deceased people, minors, people with/without identity document records or available sources, birthdays or anniversaries within 30 days, no recorded children and recorded adoption. A quick condition replaces existing conditions on the same field. Add custom conditions and choose **Match all (AND)** or **Match any (OR)**, including repeated country conditions for trips to multiple destinations. Each set supports up to 20 conditions.
+
+Conditions cover life status, age ranges, gender, favorites, identity document records, available sources, source references, attached files, official sources, records awaiting review, children/adoption, days until birthdays/anniversaries, identified asset shares and counts, accounts, crypto records, companies, visited countries, residence/citizenship history, party affiliation, sanctions record type, any populated profile section, family groups and the existing all-value search syntax.
+
+Preview the matching people and summary counts, sort by name, age, upcoming birthday or asset amount in a chosen currency, then **Apply to map and list**. The sidebar's group filter also applies; the sidebar's name search can further narrow its list. The active result bar shows the count and a clear action, including when there are no matches. Relationship display filters and graph analysis remain separate. Global search and favorites can open any person; selecting a person outside the people filter clears it so that the selected person can be displayed. Full diagram exports and complete biographies retain all project data; the current-diagram export respects the visible filter.
+
+Save a named set to reuse it in this project. Up to 20 sets are stored in `personFilterViews` and included in ZIP/JSON backups. Saving/deleting a set participates in undo/redo. Active filters are temporary view state: starting/importing another project resets them. Export CSV from the preview to download every matching row, independently of result pagination. The CSV includes the evaluation date, age bounds, source/file/child counts, adoption, next dates, destinations and separate asset columns by currency. Its English column names are stable; potentially executable spreadsheet formula prefixes in user values are escaped.
+
+The query engine keeps unknowns explicit. Missing age or amounts do not satisfy a numeric or negative condition; use **No recorded value** to find them. A partial birth year matches a numeric range only if the entire possible age interval fits. Deceased people use their age at the exact recorded death date; unknown death dates leave their age unknown. The under-18 filter excludes deceased people and uncertain eighteenth-birthday boundaries. Zero children means no qualifying biological/adoptive links are recorded, not a claim about a person's actual family. Unverified/refuted links and step-parent links do not contribute to this count.
+
+Identity document counts cover non-refuted entries in the person's dedicated section, including historical passports/IDs; their presence does not establish validity or an attached scan. Source counts use direct person/subject links and profile source references across all workspace modes. Available sources exclude refuted records; attached files must exist in the current browser's attachment collection. A reference without a file, a requested document and an available official source are different conditions. Travel destinations require a completed trip or an actual entry date on/before the evaluation date; planned/cancelled and refuted records are excluded. Countries remain entered text, with case-insensitive matching and suggestions from project records. Residence, citizenship, party, company and sanctions criteria describe recorded history rather than infer current legal status. Anniversaries include eligible current weddings, memorial dates and recurring profile events, with both partners included and leap days handled consistently with the calendar.
+
+Asset amount conditions require an explicit currency and use current `assetRecords` values multiplied by known ownership percentages. They exclude disposed, ended, future and refuted observations; for repeated identifiers in one profile, the latest dated observation is used. Missing currency/value/share is reported as incomplete and contributes no amount. Decimal observations are accumulated before conversion to a browser number. There is no currency conversion, net-worth calculation or automatic addition of accounts, crypto valuations, company shares or the property allocation plan. Overlapping nominal/legal/beneficial interests are not consolidated. Amounts remain indicative recorded estimates.
+
 ## Global search and printable biographies
 
 The search bar at the top of every workspace searches all stored values, including optional sections hidden in the current view. Results include people, sources, relationships, property and family groups. Source transcriptions and metadata are searchable; binary attachments are not automatically transcribed or indexed. Linked source and relationship context can also match a person.
@@ -225,6 +242,7 @@ src/
   core/
     state.js               Shared runtime state and history collections
     config.js              Record types, profile sections and display settings
+    person-filter-fields.js Filter field, operator and query validation registry
     profile-sections/      Independent extended profile definitions and field groups
     professional-relationships.js Professional fields and connection direction rules
     theme.js               Shared interface and SVG color tokens
@@ -233,6 +251,9 @@ src/
     utils.js               IDs, cloning, formatting, URLs and downloads
   model/                   Project selectors, validation, dates, person status, relationship labels, evidence and kinship
     biography-review.js    Pure interval coverage, gap detection and clarification lists
+    person-filters.js      Query evaluation, conservative comparisons and CSV export
+    person-filter-facts.js Shared analytical facts, dates, source and family counts
+    person-filter-assets.js Dated inventory observations and currency/share totals
     contacts.js            Safe phone, email and social contact links
   features/                People, favorites, calendar, search, printing, biography review, documents and launcher flows
   graph/

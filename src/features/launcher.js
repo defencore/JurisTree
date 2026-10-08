@@ -1,3 +1,4 @@
+import { resetPersonFilter } from "./person-filter-state.js";
 import { importFile } from "../services/archive.js";
 import { renderCapabilitiesForm } from "../ui/forms/capabilities.js";
 import { getLocale } from "../i18n/index.js";
@@ -112,6 +113,7 @@ export function activateTree(
   appState.savedDraft = null;
   appState.view = "tree";
   appState.groupFilter = "";
+  resetPersonFilter();
   appState.comparisonPath = null;
   appState.docFilter = "";
   appState.docTypeFilter = "";

@@ -1,3 +1,4 @@
+import { personPassesFilter } from "../features/person-filter-state.js";
 import { personStatusMarkup } from "./person-status.js";
 import { getLocale, translate } from "../i18n/index.js";
 import { $, esc } from "../core/dom.js";
@@ -15,6 +16,7 @@ export function renderPeopleAll() {
   const q = $("#peopleSearch").value.toLocaleLowerCase(getLocale());
   const ps = appState.project.people.filter(
     (p) =>
+      personPassesFilter(p.id) &&
       (!appState.groupFilter ||
         (p.groupIds || []).includes(appState.groupFilter)) &&
       [
@@ -37,5 +39,5 @@ export function renderPeopleAll() {
         return `<div class="person-row ${appState.selected?.kind === "person" && appState.selected.id === p.id ? "selected" : ""}"><button type="button" class="person-select" data-person="${p.id}" aria-label="${esc(p.name + (dates ? ", " + dates : "") + ". " + status)}" ${appState.selected?.kind === "person" && appState.selected.id === p.id ? 'aria-current="true"' : ""}>${avatar(p)}<span class="person-row-text"><b>${esc(p.name)}</b><small>${esc(dates)}</small>${personStatusMarkup(p)}</span><span class="row-state ${missing ? "" : "ready"}" title="${status}">${icon(missing ? "fileMissing" : "fileCheck")}${missing ? `<span>${missing}</span>` : ""}</span></button>${biographyButton(p, true)}</div>`;
       })
       .join("") ||
-    `<p class="hint">${q ? translate("ui.noPeopleMatchThisSearch") : translate("ui.noPeopleYetAddTheFirstPerson")}</p>`;
+    `<p class="hint">${q || appState.personFilter.rules.length ? translate("ui.noPeopleMatchThisSearch") : translate("ui.noPeopleYetAddTheFirstPerson")}</p>`;
 }

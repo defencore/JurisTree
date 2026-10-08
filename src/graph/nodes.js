@@ -158,7 +158,9 @@ export function filteredGraphNodes() {
             (full || sourceInScope(d)) &&
             (full ||
               d.people.some((id) => peopleIds.has(id)) ||
-              (!appState.groupFilter && !appState.graphFocus)),
+              (!appState.groupFilter &&
+                !appState.graphFocus &&
+                !appState.personFilter.rules.length)),
         )
         .map((d, i) => ({
           ...d,
@@ -175,7 +177,7 @@ export function filteredGraphNodes() {
         .filter(
           (a) =>
             full ||
-            !appState.graphFocus ||
+            (!appState.graphFocus && !appState.personFilter.rules.length) ||
             peopleIds.has(a.ownerId) ||
             (a.allocations || []).some((x) => peopleIds.has(x.personId)),
         )

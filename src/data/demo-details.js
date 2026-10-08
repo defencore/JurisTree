@@ -143,6 +143,41 @@ export function populateDemoDetails(project) {
       basis: "self",
     },
   ];
+  person("p5").travelRecords.push({
+    id: "journey-ward-france",
+    title: "Museum research visit to France",
+    fromCountry: "Canada",
+    toCountry: "France",
+    departureDate: "2015-04-03",
+    entryDate: "2015-04-04",
+    exitDate: "2015-04-12",
+    returnDate: "2015-04-12",
+    fromCity: "Ottawa",
+    toCity: "Paris",
+    purpose: "work",
+    status: "completed",
+    verification: "pending",
+    basis: "self",
+    reportedBy: "Jesse Ward",
+  });
+  person("p6").travelRecords = [
+    {
+      id: "journey-roe-japan",
+      title: "Architectural study trip to Japan",
+      fromCountry: "Canada",
+      toCountry: "Japan",
+      departureDate: "2019-05-01",
+      entryDate: "2019-05-02",
+      exitDate: "2019-05-14",
+      returnDate: "2019-05-14",
+      toCity: "Kyoto",
+      purpose: "study",
+      status: "completed",
+      verification: "pending",
+      basis: "self",
+      reportedBy: "Robin Roe",
+    },
+  ];
   person("p10").immigrationRecords = [
     {
       id: "demo-former-citizenship",
