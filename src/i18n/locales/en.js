@@ -2008,4 +2008,16 @@ export default {
     "Amounts are indicative sums of current identified-asset values multiplied by recorded ownership percentages, separately for each currency. Missing currency, value or share is omitted. For repeated asset identifiers, the latest dated observation is used. Disposed, ended, future and refuted holdings are excluded. Accounts, crypto valuations, company interests and the property allocation plan are not added to the inventory; overlapping legal/beneficial interests are not consolidated.",
   "ui.no": "No",
   "ui.filterUnavailableChoice": "Unavailable choice",
+  "ui.wife": "Wife",
+  "ui.husband": "Husband",
+  "ui.spouseRole": "Spouse",
+  "ui.graphRelativeTo": "Relative to: {name}",
+  "ui.graphAncestorRoles": "Parents and ancestors",
+  "ui.graphDescendantRoles": "Children and descendants",
+  "ui.graphSiblingRoles": "Brothers and sisters",
+  "ui.graphCollateralRoles": "Aunts, uncles, nieces, nephews and cousins",
+  "ui.graphAffinityRoles": "Partner's relatives and stepfamily",
+  "ui.graphRoleNote":
+    "Card labels are relative to the selected person and follow recorded family paths, including adoption. Cousins show degree and any generation difference. Line colors describe source states.",
+  "ui.mapKey": "Map key",
 };

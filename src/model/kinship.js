@@ -4,7 +4,12 @@ import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { edgeState } from "./evidence.js";
 import { person, relation } from "./project.js";
+import { withKinshipIndex } from "./kinship-index.js";
 export function ancestorPaths(id) {
+  return withKinshipIndex((index) => indexedAncestorPaths(id, index));
+}
+function indexedAncestorPaths(id, index) {
+  if (index.ancestors.has(id)) return index.ancestors.get(id);
   const paths = new Map([
       [
         id,
@@ -19,13 +24,7 @@ export function ancestorPaths(id) {
     queue = [paths.get(id)];
   while (queue.length) {
     const current = queue.shift();
-    for (const r of appState.project.relations) {
-      if (
-        !familyConnection(r) ||
-        !["parent", "adopted"].includes(r.type) ||
-        r.to !== current.id
-      )
-        continue;
+    for (const r of index.parents.get(current.id) || []) {
       const next = {
         id: r.from,
         distance: current.distance + 1,
@@ -38,6 +37,7 @@ export function ancestorPaths(id) {
       }
     }
   }
+  index.ancestors.set(id, paths);
   return paths;
 }
 export function genderWord(p, f, m, u) {
@@ -170,6 +170,9 @@ export function relationFromDistances(a, b, p) {
   };
 }
 export function familyPath(from, to) {
+  return withKinshipIndex((index) => indexedFamilyPath(from, to, index));
+}
+function indexedFamilyPath(from, to, index) {
   const queue = [
       {
         id: from,
@@ -184,9 +187,7 @@ export function familyPath(from, to) {
     if (node.id === to) return node;
     if (seen.has(node.id)) continue;
     seen.add(node.id);
-    for (const r of appState.project.relations) {
-      if (!familyConnection(r) || (r.from !== node.id && r.to !== node.id))
-        continue;
+    for (const r of index.family.get(node.id) || []) {
       const id = r.from === node.id ? r.to : r.from;
       if (seen.has(id)) continue;
       const step = ["parent", "adopted"].includes(r.type)
@@ -254,6 +255,9 @@ export function affinityLabel(path, target) {
   };
 }
 export function kinshipBetween(from, to, affinity = true) {
+  return withKinshipIndex((index) => kinshipResult(from, to, affinity, index));
+}
+function kinshipResult(from, to, affinity, index) {
   const a = person(from),
     b = person(to);
   if (!a || !b)
@@ -280,9 +284,7 @@ export function kinshipBetween(from, to, affinity = true) {
         a: pathA,
         b: pb.get(id),
       });
-  for (const r of appState.project.relations.filter(
-    (r) => r.type === "sibling" && familyConnection(r),
-  )) {
+  for (const r of index.siblings) {
     for (const [x, y] of [
       [r.from, r.to],
       [r.to, r.from],
@@ -328,10 +330,8 @@ export function kinshipBetween(from, to, affinity = true) {
     ) {
       const parents = (id) =>
         new Set(
-          appState.project.relations
-            .filter(
-              (r) => r.type === "parent" && familyConnection(r) && r.to === id,
-            )
+          (index.parents.get(id) || [])
+            .filter((r) => r.type === "parent")
             .map((r) => r.from),
         );
       const first = parents(from),
@@ -368,9 +368,8 @@ export function kinshipBetween(from, to, affinity = true) {
       verified: relations.every((id) => edgeState(relation(id)) === "official"),
     };
   }
-  const spouse = appState.project.relations.find(
+  const spouse = (index.family.get(from) || []).find(
     (r) =>
-      familyConnection(r) &&
       r.type === "spouse" &&
       ((r.from === from && r.to === to) || (r.from === to && r.to === from)),
   );
@@ -408,11 +407,8 @@ export function kinshipBetween(from, to, affinity = true) {
         ),
       };
     }
-    for (const r of appState.project.relations.filter(
-      (r) =>
-        familyConnection(r) &&
-        r.type === "spouse" &&
-        (r.from === from || r.to === from),
+    for (const r of (index.family.get(from) || []).filter(
+      (r) => r.type === "spouse" && (r.from === from || r.to === from),
     )) {
       const partner = r.from === from ? r.to : r.from,
         k = kinshipBetween(partner, to, false);
@@ -427,11 +423,8 @@ export function kinshipBetween(from, to, affinity = true) {
           verified: false,
         };
     }
-    for (const r of appState.project.relations.filter(
-      (r) =>
-        familyConnection(r) &&
-        r.type === "spouse" &&
-        (r.from === to || r.to === to),
+    for (const r of (index.family.get(to) || []).filter(
+      (r) => r.type === "spouse" && (r.from === to || r.to === to),
     )) {
       const partner = r.from === to ? r.to : r.from,
         k = kinshipBetween(from, partner, false);

@@ -281,9 +281,6 @@
     font-size: 0.6875rem;
     padding: 5px;
   }
-  .map-key span.key-self {
-    display: none;
-  }
   .canvas-hint,
   .canvas-top .btn {
     font-size: 0.6875rem;

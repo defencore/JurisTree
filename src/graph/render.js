@@ -2,6 +2,7 @@ import { $, $$ } from "../core/dom.js";
 import { graphStateInfo } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { withProjectIndex } from "../model/project.js";
+import { withKinshipIndex } from "../model/kinship-index.js";
 import { applyCamera } from "./camera.js";
 import { renderGraphControls } from "./controls.js";
 import { graphLineStyle, renderGraphLegend } from "./legend.js";
@@ -36,6 +37,9 @@ export function graphDefs() {
 }
 
 export function renderFilteredGraph(images = null, exporting = false) {
+  return withKinshipIndex(() => renderIndexedGraph(images, exporting));
+}
+function renderIndexedGraph(images, exporting) {
   const nodes = filteredGraphNodes();
   return (
     groupBackdrop(nodes) +

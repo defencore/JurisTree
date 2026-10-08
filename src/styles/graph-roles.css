@@ -1,0 +1,23 @@
+.role-reference {
+  min-width: 0;
+  max-width: 100%;
+}
+.role-reference b {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.role-sample {
+  width: 24px;
+  height: 20px;
+  flex: 0 0 24px;
+}
+.graph-role-legend {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.graph-role-legend .legend-group-label {
+  overflow-wrap: anywhere;
+}

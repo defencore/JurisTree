@@ -111,9 +111,17 @@
     display: none;
   }
   .canvas-top,
-  .canvas-hint,
-  .legend {
+  .canvas-hint {
     display: none;
+  }
+  .legend {
+    bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+    left: 8px;
+    right: auto;
+    max-width: calc(100% - 16px);
+  }
+  .legend[open] {
+    width: calc(100% - 16px);
   }
   .graph-tools {
     bottom: calc(8px + env(safe-area-inset-bottom, 0px));

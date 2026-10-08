@@ -9,7 +9,19 @@ import { requirements } from "../../model/evidence.js";
 import { objectUrl } from "../../services/files.js";
 import { svgIcon } from "../../ui/icons.js";
 import { personStatusBadges } from "../../ui/person-status.js";
-import { graphTextWidth, svgPill, svgText } from "../text.js";
+import { graphTextWidth, svgPill, svgText, wrapMeasuredText } from "../text.js";
+
+function roleBadge(role) {
+  if (!role) return "";
+  const width = Math.min(
+    PERSON_CARD_WIDTH - 28,
+    graphTextWidth(role.label, 12.5, 700) + 16,
+  );
+  const rows = wrapMeasuredText(role.label, width - 16, 2, 12.5, 700);
+  const height = rows.length * 16.25 + 8;
+  const y = 5 - height;
+  return `<g class="person-card-role"><title>${esc(role.description || role.label)}</title><rect x="14" y="${y}" width="${width}" height="${height}" rx="4" fill="${role.bg}" stroke="${role.color}" stroke-width="0.8"/>${svgText(role.label, 22, y + 16.5, 100, 2, 12.5, role.color, 700, width - 16)}</g>`;
+}
 
 function statusRow(person) {
   let x = 16;
@@ -74,7 +86,7 @@ export function personCard(person, images, role) {
   <path d="M16 132H${PERSON_CARD_WIDTH - 16}" stroke="${theme.line}"/>
   ${svgText(translate("ui.documents"), 16, 152, 40, 1, 13, theme.muted, 400, PERSON_CARD_WIDTH - 116)}
   <g transform="translate(16 181) scale(${scale})">${evidence}</g>
-  ${role ? svgPill(role.label, 14, -13, role.color, role.bg, 12.5).svg : ""}
+  ${roleBadge(role)}
   ${person.id === state.project.subjectId ? `<g><title>${esc(translate("ui.ownerDeceasedEstateOwner"))}</title><circle cx="64" cy="48" r="8" fill="${theme["accent-soft"]}"/>${svgIcon("fingerprint", 58, 42, theme.accent, 0.5)}</g>` : ""}`;
 }
 export function personCardActions(person, dim) {

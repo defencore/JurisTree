@@ -205,15 +205,7 @@ export const workspaceTemplate = `
       ></section>
       <div class="canvas-wrap" id="canvasWrap">
         <div class="canvas-top">
-          <div class="map-key">
-            <span class="key-parent"
-              ><i data-icon="people"></i>@@ui.parents@@</span
-            ><span class="key-self"
-              ><i data-icon="selectedPerson"></i>@@ui.selectedPerson@@</span
-            ><span class="key-child"
-              ><i data-icon="tree"></i>@@ui.children@@</span
-            >
-          </div>
+          <div class="map-key" id="graphRoleContext" hidden></div>
           <div class="canvas-hint">
             <i data-icon="route"></i>@@ui.directedRelationshipHint@@
           </div>
@@ -285,7 +277,7 @@ export const workspaceTemplate = `
         </div>
         <details class="legend" id="graphLegend">
           <summary>
-            <i data-icon="help"></i>@@ui.lineKey@@<i data-icon="chevron"></i>
+            <i data-icon="help"></i>@@ui.mapKey@@<i data-icon="chevron"></i>
           </summary>
           <div class="legend-content" id="legendContent"></div>
         </details>

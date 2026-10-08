@@ -81,11 +81,16 @@ export function nodeSVG(n, images = null, exporting = false) {
     n.kind === "person" && !exporting ? personCardActions(n, dim) : "";
   const label =
     n.kind === "person"
-      ? [n.name, years(n), ...personStatusBadges(n).map((b) => b.label)].join(
-          " · ",
-        )
+      ? [
+          n.name,
+          role?.description || role?.label,
+          years(n),
+          ...personStatusBadges(n).map((b) => b.label),
+        ]
+          .filter(Boolean)
+          .join(" · ")
       : n.name || n.title;
-  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(label)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="${theme.paper}" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${actions}`;
+  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" ${role ? `data-kinship-role="${role.kind}" data-kinship-group="${role.group}"` : ""} transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(label)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="${role?.bg || theme.paper}" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${actions}`;
 }
 
 export function groupBackdrop(nodes) {

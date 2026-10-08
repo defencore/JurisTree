@@ -8,7 +8,7 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 
 - Family, inheritance, property, research and blank project templates.
 - People, family groups and eleven relationship types, including biological parenthood, adoption, step-parenthood and acquaintance.
-- Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts. Person cards show full birth/death dates on separate rows and icon-and-text life/age badges.
+- Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts. Person cards show full birth/death dates on separate rows, icon-and-text life/age badges and selection-relative family roles.
 - Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Selecting a person from the list centers their card at a readable scale on desktop and mobile. Mobile controls are collapsible and the person panel opens as a bottom sheet.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
 - Kinship descriptions based on recorded relationships, including half-siblings when both biological parent sets are recorded.
@@ -132,6 +132,12 @@ Coverage comes from education, residence, work and military service periods decl
 
 A gap means that no eligible dated record covers that period. It is not proof of misconduct or a reputation assessment. Record follow-up questions, explanations and sources in **Reports and claims**. The review does not modify data. It can support biographical review, including a marriage agency's review of information supplied by a person, without inferring undisclosed conduct or personal characteristics.
 
+## Selection-relative family roles
+
+Selecting a person colors and labels related cards using the complete recorded family graph: parents, children, spouses/partners, full/half siblings, grandparents, grandchildren, aunts/uncles, nieces/nephews, distant cousins and relatives through marriage. Cousins retain their degree and generation difference. Direct adoptive parents/children and stepfamily have explicit labels; adoption and disputed links in longer paths appear in the badge tooltip and accessible card description. Unverified/refuted links do not establish kinship, and social/professional links do not create family roles. Family groups and visible-map filters do not change the underlying calculation.
+
+The map key identifies the selected person and explains card colors separately from source-state line colors. Long role labels wrap above the card. Changing selection, language or relationship data refreshes the roles. A shared adjacency/ancestry index serves each calculation/render, and role results are cached across view redraws. SVG/PNG diagram exports omit temporary selection-relative highlights.
+
 ## Advanced people filters
 
 Open **People filters** beside the global search bar. Quick conditions add living/deceased people, minors, people with/without identity document records or available sources, birthdays or anniversaries within 30 days, no recorded children and recorded adoption. A quick condition replaces existing conditions on the same field. Add custom conditions and choose **Match all (AND)** or **Match any (OR)**, including repeated country conditions for trips to multiple destinations. Each set supports up to 20 conditions.
@@ -252,6 +258,7 @@ src/
     dom.js                 DOM queries and HTML escaping
     utils.js               IDs, cloning, formatting, URLs and downloads
   model/                   Project selectors, validation, dates, person status, relationship labels, evidence and kinship
+    kinship-index.js       Scoped family adjacency and shared ancestry calculations
     biography-review.js    Pure interval coverage, gap detection and clarification lists
     person-filters.js      Query evaluation, conservative comparisons and CSV export
     person-filter-facts.js Shared analytical facts, dates, source and family counts
@@ -265,7 +272,8 @@ src/
     edges.js               Relationship, source and property lines
     geometry.js            Connection paths
     text.js                Measured SVG text wrapping and pills
-    roles.js               Selection-relative family badges
+    roles.js               Cached selection-relative family roles and card colors
+    role-legend.js         Selected-person context and family color key
     layouts/               Pure family, circle and network algorithms
     layout.js              Layout actions, history and camera orchestration
     camera.js              Zoom and positioning

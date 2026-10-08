@@ -7,6 +7,7 @@ import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { svgText } from "./text.js";
 import { translate } from "../i18n/index.js";
+import { renderGraphRoleLegend } from "./role-legend.js";
 export function graphLineStyle(key) {
   if (Object.hasOwn(auxiliaryLineStyles(), key))
     return auxiliaryLineStyles()[key];
@@ -85,6 +86,7 @@ export function renderGraphLegend() {
         )
         .join("");
   $("#legendContent").innerHTML =
+    renderGraphRoleLegend() +
     `<p class="legend-group-label">${translate("ui.colorAndDashesSourceState")}</p><div class="legend-states">${rows("proof")}</div><p class="legend-group-label">${translate("ui.lineDirectionAndPurpose")}</p><div class="legend-states">${rows("role")}</div><p class="legend-note">${translate("ui.theLabelShowsRelationshipTypeColorShowsEvidence")}</p>`;
 }
 export function exportLineLegend(width, y) {
