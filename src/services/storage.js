@@ -1,14 +1,13 @@
-import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { pruneBlobs, usedBlobs } from "./files.js";
 import { toast } from "../ui/dialog.js";
-import { icon } from "../ui/icons.js";
+import { updateSaveStatus } from "../ui/save-status.js";
 export function scheduleSave() {
   if (!appState.editorActive) return;
   clearTimeout(appState.saveTimer);
-  $("#saveState").innerHTML = icon("circle") + translate("ui.saving");
+  updateSaveStatus("saving");
   appState.saveTimer = setTimeout(() => saveNow(), 400);
 }
 export async function saveNow() {
@@ -34,9 +33,9 @@ export async function saveNow() {
     );
   try {
     await appState.saveSerial;
-    $("#saveState").innerHTML = icon("check") + translate("ui.draftSaved");
+    updateSaveStatus("saved");
   } catch {
-    $("#saveState").textContent = translate("ui.saveAZipArchive");
+    updateSaveStatus("unavailable");
     toast(translate("ui.couldNotSaveTheBrowserDraftExportA"), true);
   }
 }

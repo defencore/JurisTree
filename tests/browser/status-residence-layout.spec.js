@@ -174,3 +174,24 @@ test("translated counters and filters stay inside every workspace view on tablet
     }
   }
 });
+
+test("completed autosave and restored-draft labels follow every language change", async ({
+  page,
+}) => {
+  await expect(page.locator("#saveState")).toContainText("Draft saved");
+  for (const [language, label] of [
+    ["uk", "Чернетку збережено"],
+    ["ru", "Черновик сохранён"],
+    ["en", "Draft saved"],
+  ]) {
+    await page.locator(".topbar [data-language]").selectOption(language);
+    await expect(page.locator("#saveState")).toContainText(label);
+  }
+  await page.reload();
+  await page.locator("#startContinue").click();
+  await expect(page.locator("#saveState")).toContainText("Draft on device");
+  await page.locator(".topbar [data-language]").selectOption("uk");
+  await expect(page.locator("#saveState")).toContainText(
+    "Чернетка на пристрої",
+  );
+});

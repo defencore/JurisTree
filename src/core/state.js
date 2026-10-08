@@ -16,6 +16,7 @@ export const state = {
   urls: new Map(),
   db: null,
   saveTimer: undefined,
+  saveStatus: "",
   saveSerial: Promise.resolve(),
   fileContext: {},
   portraitPerson: null,

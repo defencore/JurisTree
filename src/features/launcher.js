@@ -17,6 +17,7 @@ import { scheduleSave } from "../services/storage.js";
 import { openDialog } from "../ui/dialog.js";
 import { icon } from "../ui/icons.js";
 import { render } from "../ui/render.js";
+import { updateSaveStatus } from "../ui/save-status.js";
 export function launchDraft() {
   return appState.editorActive
     ? {
@@ -152,8 +153,7 @@ export function activateTree(
   render();
   requestAnimationFrame(() => (isMobileLayout() ? focusPerson() : fit()));
   if (persist) scheduleSave();
-  else
-    $("#saveState").innerHTML = icon("check") + translate("ui.draftOnDevice");
+  else updateSaveStatus("restored");
 }
 export async function createFromTemplate() {
   if (!appState.initialized || appState.startBusy) return false;

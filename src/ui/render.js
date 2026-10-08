@@ -13,6 +13,7 @@ import { renderProperty } from "../features/property.js";
 import { profileScope } from "../features/profiles.js";
 import { renderPeople } from "./people.js";
 import { renderInspector } from "./inspector.js";
+import { renderSaveStatus } from "./save-status.js";
 import { renderStatusBoard } from "./status-board.js";
 import { personOptions } from "./components.js";
 import { icon, icons } from "./icons.js";
@@ -26,6 +27,7 @@ export function render() {
 }
 
 export function renderAll() {
+  renderSaveStatus();
   $("#projectTitle").textContent = appState.project.title;
   $("#demoTag").hidden = !appState.project.demo;
   $("#purpose").value = appState.project.purpose;

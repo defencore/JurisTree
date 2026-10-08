@@ -204,6 +204,7 @@ src/
     people.js              People list
     inspector.js           Person and relationship panel
     status-board.js        Workspace document counters
+    save-status.js         Save phase display in the current interface language
     person-status.js       Shared translated life and age badges
     components.js          Shared HTML components
     forms/                 Individual dialog and form components
