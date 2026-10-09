@@ -3,6 +3,27 @@ import { state as appState } from "../core/state.js";
 import { edgeState } from "./evidence.js";
 import { group } from "./lookup.js";
 import { personPassesFilter } from "./person-filter-state.js";
+import { directConnections } from "./direct-connections.js";
+
+let directCache = null;
+export function directConnectionScope() {
+  const project = appState.project,
+    rootId = appState.directConnectionRoot;
+  if (!rootId || !project) return null;
+  if (
+    !directCache ||
+    directCache.project !== project ||
+    directCache.rootId !== rootId ||
+    directCache.updatedAt !== project.updatedAt
+  )
+    directCache = {
+      project,
+      rootId,
+      updatedAt: project.updatedAt,
+      scope: directConnections(project, rootId),
+    };
+  return directCache.scope;
+}
 
 export function graphView() {
   return normalizeGraphView(appState.project.graphView);
@@ -14,6 +35,8 @@ export function fullDiagram() {
 }
 export function relationShown(r, full = fullDiagram(), ignoreFocus = false) {
   if (full) return true;
+  const direct = directConnectionScope();
+  if (direct) return direct.relations.has(r.id);
   const cfg = graphView();
   if (
     !appState.analysisReveal.has(r.id) &&
@@ -29,6 +52,9 @@ export function relationShown(r, full = fullDiagram(), ignoreFocus = false) {
   );
 }
 export function visiblePeople(full = fullDiagram()) {
+  const direct = !full && directConnectionScope();
+  if (direct)
+    return appState.project.people.filter((p) => direct.people.has(p.id));
   const cfg = graphView();
   let ps =
     full || !appState.groupFilter
@@ -59,6 +85,7 @@ export function visiblePeople(full = fullDiagram()) {
   return ps;
 }
 export function resetAnalysis(restoreGroup = true) {
+  appState.directConnectionRoot = "";
   appState.graphFocus = null;
   appState.analysisHighlight = null;
   appState.analysisReveal.clear();

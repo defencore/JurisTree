@@ -2,12 +2,13 @@ import { esc } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { theme } from "../core/theme.js";
 import { translate } from "../i18n/index.js";
-import { fullDiagram } from "../model/graph-view.js";
+import { directConnectionScope, fullDiagram } from "../model/graph-view.js";
 import { svgIcon } from "../ui/icons.js";
 import { groupFrames } from "./group-frames.js";
 import { graphTextWidth, svgText } from "./text.js";
 
 export function visibleGroupFrames(nodes) {
+  if (!fullDiagram() && directConnectionScope()) return [];
   const groups = state.project.groups.filter(
     (group) =>
       fullDiagram() ||

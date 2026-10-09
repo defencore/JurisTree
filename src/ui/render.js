@@ -6,7 +6,7 @@ import { renderGraph } from "../graph/render.js";
 import { translate } from "../i18n/index.js";
 import { familyEvents } from "../model/events.js";
 import { gaps, route, sourceInScope } from "../model/evidence.js";
-import { resetAnalysis } from "../model/graph-view.js";
+import { directConnectionScope, resetAnalysis } from "../model/graph-view.js";
 import { person } from "../model/lookup.js";
 import {
   personPassesFilter,
@@ -122,7 +122,13 @@ export function renderMain() {
 }
 
 export function select(kind, id) {
+  let direct = directConnectionScope();
+  if (direct && kind === "person" && !direct.people.has(id)) {
+    appState.directConnectionRoot = "";
+    direct = null;
+  }
   if (
+    !direct &&
     appState.graphFocus &&
     kind === "person" &&
     !appState.graphFocus.people.includes(id)
@@ -132,7 +138,7 @@ export function select(kind, id) {
   appState.graphSelectionAnchor = kind === "person" ? id : "";
   appState.comparisonPath = null;
   let scopeChanged = false;
-  if (kind === "person") {
+  if (kind === "person" && !direct) {
     const p = person(id);
     if (!personPassesFilter(id)) {
       resetPersonFilter();

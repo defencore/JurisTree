@@ -31,6 +31,8 @@ export function redo() {
   emitSignal("project:changed");
 }
 export function repairSelection() {
+  if (appState.directConnectionRoot && !person(appState.directConnectionRoot))
+    appState.directConnectionRoot = "";
   if (!person(appState.graphSelectionAnchor))
     appState.graphSelectionAnchor = "";
   if (appState.profileFocus && !person(appState.profileFocus))

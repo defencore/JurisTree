@@ -5,6 +5,7 @@ import { openFiles } from "../../features/attachments.js";
 import { viewBiography } from "../../features/biography.js";
 import { viewDocument } from "../../features/document-view.js";
 import { toggleFavorite } from "../../features/favorites.js";
+import { restoreConnectionMap } from "../../features/direct-connections.js";
 import {
   clearGraphSelection,
   toggleGraphSelection,
@@ -58,7 +59,8 @@ export function bindKeyboardEvents() {
       exportArchive();
     }
     if (e.key === "Escape") {
-      if (appState.graphFocus || appState.analysisHighlight) {
+      if (appState.directConnectionRoot) restoreConnectionMap();
+      else if (appState.graphFocus || appState.analysisHighlight) {
         resetAnalysis();
         appState.multiSelection.clear();
         appState.graphSelectionAnchor = "";

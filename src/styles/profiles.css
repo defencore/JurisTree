@@ -53,6 +53,10 @@
   flex-wrap: wrap;
   gap: 7px;
 }
+.direct-connections-button {
+  margin-top: 9px;
+  width: 100%;
+}
 .profile-actions .btn {
   flex: 1;
   font-size: 0.8125rem;

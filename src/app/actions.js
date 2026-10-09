@@ -5,6 +5,10 @@ import { openFiles } from "../features/attachments.js";
 import { updateBiographyReview } from "../features/biography-review.js";
 import { moveCalendarPeriod } from "../features/calendar.js";
 import { editDocument } from "../features/documents.js";
+import {
+  focusDirectConnections,
+  restoreConnectionMap,
+} from "../features/direct-connections.js";
 import { editFamilyEvent } from "../features/events.js";
 import {
   applyGraphAnalysis,
@@ -125,6 +129,8 @@ export async function handleAction(action) {
     redo,
     fit,
     "focus-person": () => focusPerson(),
+    "direct-connections": focusDirectConnections,
+    "restore-connection-map": restoreConnectionMap,
     "mobile-tools": () => {
       const open = document.body.classList.toggle("mobile-tools-open");
       if (open) $("#inspector").classList.remove("open");

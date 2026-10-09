@@ -1677,6 +1677,14 @@ export default {
     "Комбінуйте слова; беріть фрази в лапки; використовуйте name:, gender:, document:, country:, type:. Розділяйте варіанти знаком |, виключайте слово знаком -.",
   "ui.lifeStatusUnknown": "Статус життя невідомий",
   "ui.under18": "До 18 років",
+  "ui.directConnections": "Прямі зв’язки",
+  "ui.directConnectionsOf": "Прямі зв’язки: {name}",
+  "ui.directConnectionsHint":
+    "Тимчасово показати лише цю особу та її прямі зв’язки. Розставте картки й поверніть схему.",
+  "ui.chooseDirectPerson": "Спочатку виберіть особу",
+  "ui.directConnectionsCount":
+    "Пов’язаних осіб: {count} · Тимчасово приховано: {hidden}",
+  "ui.restoreConnectionMap": "Повернути схему",
   "ui.currentAge": "Вік",
   "ui.ageAtDeath": "Вік на момент смерті",
   "ui.ageNeedsClarification": "Вік потребує уточнення",

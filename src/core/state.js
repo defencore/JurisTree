@@ -58,6 +58,7 @@ export const state = {
   eventOrder: "desc",
   eventLimit: 80,
   graphFocus: null,
+  directConnectionRoot: "",
   analysisHighlight: null,
   analysisReveal: new Set(),
   analysisExpandedGroups: new Set(),

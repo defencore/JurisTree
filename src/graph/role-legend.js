@@ -7,7 +7,8 @@ import { graphRoleGroups } from "./roles.js";
 
 export function renderGraphRoleLegend() {
   const selected =
-    state.selected?.kind === "person" && person(state.selected.id);
+    person(state.directConnectionRoot) ||
+    (state.selected?.kind === "person" && person(state.selected.id));
   const context = $("#graphRoleContext");
   context.hidden = !selected;
   context.innerHTML = selected

@@ -1684,6 +1684,14 @@ export default {
     "Комбинируйте слова; заключайте фразы в кавычки; используйте name:, gender:, document:, country:, type:. Разделяйте варианты знаком |, исключайте слово знаком -.",
   "ui.lifeStatusUnknown": "Статус жизни неизвестен",
   "ui.under18": "До 18 лет",
+  "ui.directConnections": "Прямые связи",
+  "ui.directConnectionsOf": "Прямые связи: {name}",
+  "ui.directConnectionsHint":
+    "Временно показать только этого человека и его прямые связи. Расставьте карточки и вернитесь к схеме.",
+  "ui.chooseDirectPerson": "Сначала выберите человека",
+  "ui.directConnectionsCount":
+    "Связанных людей: {count} · Временно скрыто: {hidden}",
+  "ui.restoreConnectionMap": "Вернуть схему",
   "ui.currentAge": "Возраст",
   "ui.ageAtDeath": "Возраст на момент смерти",
   "ui.ageNeedsClarification": "Возраст требует уточнения",

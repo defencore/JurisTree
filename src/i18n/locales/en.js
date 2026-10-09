@@ -1675,6 +1675,14 @@ export default {
     "Combine words; quote phrases; use name:, gender:, document:, country:, type:. Separate alternatives with | and exclude a word with -.",
   "ui.lifeStatusUnknown": "Life status unknown",
   "ui.under18": "Under 18",
+  "ui.directConnections": "Direct connections",
+  "ui.directConnectionsOf": "Direct connections: {name}",
+  "ui.directConnectionsHint":
+    "Temporarily show only this person and their direct connections. Move cards, then return to the map.",
+  "ui.chooseDirectPerson": "Select a person first",
+  "ui.directConnectionsCount":
+    "Connected people: {count} · Temporarily hidden: {hidden}",
+  "ui.restoreConnectionMap": "Return to map",
   "ui.currentAge": "Current age",
   "ui.ageAtDeath": "Age at death",
   "ui.ageNeedsClarification": "Age needs clarification",

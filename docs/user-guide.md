@@ -282,6 +282,12 @@ To record where someone lived, open the person editor and choose **Residence his
 
 The navy, pale blue and gold palette follows the [Franciscans reference website](https://l2.franciscans.dev/uk). `src/core/theme.js` owns the shared color tokens, applied as CSS custom properties and used directly in person-card SVG exports. Typography retains the existing Tahoma/Verdana/DejaVu Sans stacks. Workspace height is calculated by the shell's flex layout; tablet panels and mobile navigation use the shared header offset to avoid covering search.
 
+## Arranging direct connections
+
+Select a person and choose **Direct connections** in their panel or the map toolbar. The map highlights that person and their immediate recorded relationships, in either direction and of any type. Other people, sources, property cards and group frames are temporarily hidden. This view includes connections excluded by display filters, while keeping their evidence states. It does not infer indirect relatives.
+
+Move the visible cards manually or choose a layout. Automatic layouts move only these people and avoid hidden cards; their new positions remain when you choose **Return to map** or press Escape. Selecting a visible neighbor keeps the original reference person; choose **Direct connections** again to work from that neighbor. Search for someone outside this view to leave it. Returning restores the previous filters and group collapse states. This temporary view is not stored in the draft or ZIP, but card positions are. Use **Saved views** to keep named arrangements.
+
 ## Using the map on a phone
 
 Arrange cards manually, then open **Saved views** beside **Layout**, enter a name and choose **Save current view**. Each view stores all card positions, group collapse states, zoom, map center and display filters, including connection-search focus. Select a saved view to restore it after automatic layout. Use its edit button to rename, replace it with the current arrangement or delete it. Up to 20 views are kept in the tree's local draft and ZIP archive. Restoring moves existing cards without reverting profile edits or relationships; people added later keep their placement. On another screen size, the same map center and zoom are retained.

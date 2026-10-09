@@ -38,6 +38,7 @@ export function toggleGraphSelection(id) {
 
 export function applyGraphAnalysis(result, label, focus = false) {
   if (!result?.people?.length) return;
+  appState.directConnectionRoot = "";
   appState.graphSelectionAnchor = "";
   if (appState.analysisReturnGroup === null)
     appState.analysisReturnGroup = appState.groupFilter;

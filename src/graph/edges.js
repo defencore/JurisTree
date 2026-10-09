@@ -8,7 +8,12 @@ import {
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { edgeState, route } from "../model/evidence.js";
-import { fullDiagram, graphView, relationShown } from "../model/graph-view.js";
+import {
+  directConnectionScope,
+  fullDiagram,
+  graphView,
+  relationShown,
+} from "../model/graph-view.js";
 import { person } from "../model/lookup.js";
 import { relationshipLabel } from "../model/relationship-labels.js";
 import { graphLine } from "./geometry.js";
@@ -22,8 +27,11 @@ export function renderGraphEdges(ns, exporting = false) {
   );
   const full = fullDiagram(),
     cfg = graphView(),
-    highlight = full ? null : appState.analysisHighlight,
-    path = highlight || appState.comparisonPath || route(),
+    direct = !full && directConnectionScope(),
+    highlight = full ? null : direct || appState.analysisHighlight,
+    path = direct
+      ? { relations: [...direct.relations] }
+      : highlight || appState.comparisonPath || route(),
     seen = new Set();
   const pairs = new Map();
   for (const r of appState.project.relations) {
@@ -97,7 +105,7 @@ export function renderGraphEdges(ns, exporting = false) {
           ? Math.min(a.y, b.y) - 17
           : c.y + (direction ? (a.x < b.x ? -12 : a.x > b.x ? 12 : 0) : 0),
       opacity = highlight && !onpath ? 0.22 : 1;
-    edges += `<g class="edge" data-edge="${r.id}" role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(person(r.from)?.name + " — " + label + " — " + person(r.to)?.name)}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18"/>${onpath || active ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${full || cfg.showLabels ? `<rect x="${c.x - width / 2}" y="${ly - 10}" width="${width}" height="22" rx="3" fill="#fff" fill-opacity=".95"/>${svgText(label, c.x - width / 2 + 8, ly + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}` : ""}</g>`;
+    edges += `<g class="edge" data-edge="${r.id}" ${direct ? 'data-direct-connection="true"' : ""} role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(person(r.from)?.name + " — " + label + " — " + person(r.to)?.name)}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18"/>${onpath || active ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${full || direct || cfg.showLabels ? `<rect x="${c.x - width / 2}" y="${ly - 10}" width="${width}" height="22" rx="3" fill="#fff" fill-opacity=".95"/>${svgText(label, c.x - width / 2 + 8, ly + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}` : ""}</g>`;
   }
   if (appState.showDocs && (full || cfg.documentLinks))
     for (const d of appState.project.documents) {

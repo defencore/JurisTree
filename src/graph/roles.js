@@ -158,7 +158,10 @@ function resolveRole(from, to) {
 
 /** Cache the selected person's roles across camera, layout and filter redraws. */
 export function graphRole(id) {
-  const selected = state.selected;
+  const selected =
+    state.directConnectionRoot && person(state.directConnectionRoot)
+      ? { kind: "person", id: state.directConnectionRoot }
+      : state.selected;
   if (selected?.kind !== "person" || !person(selected.id)) return null;
   const key = [state.project.updatedAt, selected.id, getLanguage()].join("|");
   if (!cache || cache.project !== state.project || cache.key !== key)

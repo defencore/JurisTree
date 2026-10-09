@@ -5,7 +5,7 @@ import { theme } from "../core/theme.js";
 import { getLocale, translate } from "../i18n/index.js";
 import { personDisplayName, personLifeDates } from "../model/person-display.js";
 import { hasFile, requirements } from "../model/evidence.js";
-import { fullDiagram } from "../model/graph-view.js";
+import { directConnectionScope, fullDiagram } from "../model/graph-view.js";
 import { person } from "../model/lookup.js";
 import { documentIcon } from "../ui/components.js";
 import { svgIcon } from "../ui/icons.js";
@@ -20,9 +20,15 @@ export function nodeSVG(n, images = null, exporting = false) {
       (appState.multiSelection.has(n.id) ||
         (n.kind === "group" &&
           n.members.some((id) => appState.multiSelection.has(id)))),
-    focus = !fullDiagram() && appState.analysisHighlight?.people.includes(n.id),
+    direct = !fullDiagram() && directConnectionScope(),
+    focus =
+      !fullDiagram() &&
+      (direct
+        ? direct.people.has(n.id)
+        : appState.analysisHighlight?.people.includes(n.id)),
     dim =
       !fullDiagram() &&
+      !direct &&
       appState.analysisHighlight &&
       n.kind === "person" &&
       !focus &&

@@ -362,6 +362,9 @@
   flex-wrap: wrap;
   gap: 6px;
 }
+.graph-context-actions .btn.primary {
+  color: var(--paper);
+}
 .graph-tools .iconbtn {
   border-radius: 3px;
   color: var(--muted);

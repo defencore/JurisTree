@@ -1,5 +1,6 @@
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
+import { directConnectionScope } from "../model/graph-view.js";
 import { clone } from "../core/utils.js";
 import { isMobileLayout } from "../core/viewport.js";
 import { viewDocument } from "../features/document-view.js";
@@ -52,12 +53,17 @@ export function bindGraphInteractions() {
     }
     if (n) {
       const item = nodeItem(n.dataset.kind, n.dataset.node),
-        displayed = filteredGraphNodes().find((x) => x.id === item.id);
+        displayed = filteredGraphNodes().find((x) => x.id === item.id),
+        direct = directConnectionScope();
       if (!displayed) return;
       const items =
         n.dataset.kind === "person" && appState.multiSelection.has(item.id)
           ? appState.project.people
-              .filter((p) => appState.multiSelection.has(p.id))
+              .filter(
+                (p) =>
+                  appState.multiSelection.has(p.id) &&
+                  (!direct || direct.people.has(p.id)),
+              )
               .map((p) => ({
                 id: p.id,
                 x: p.x,

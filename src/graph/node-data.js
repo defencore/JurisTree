@@ -2,19 +2,25 @@ import { workspaceModes } from "../core/workspace-modes.js";
 import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { sourceInScope } from "../model/evidence.js";
-import { fullDiagram, visiblePeople } from "../model/graph-view.js";
+import {
+  directConnectionScope,
+  fullDiagram,
+  visiblePeople,
+} from "../model/graph-view.js";
 
 export function filteredGraphNodes() {
   const full = fullDiagram(),
+    direct = !full && directConnectionScope(),
     shown = visiblePeople(full),
-    collapsed = full
-      ? []
-      : appState.project.groups.filter(
-          (g) =>
-            g.collapsed &&
-            !appState.analysisExpandedGroups.has(g.id) &&
-            (!appState.groupFilter || appState.groupFilter === g.id),
-        ),
+    collapsed =
+      full || direct
+        ? []
+        : appState.project.groups.filter(
+            (g) =>
+              g.collapsed &&
+              !appState.analysisExpandedGroups.has(g.id) &&
+              (!appState.groupFilter || appState.groupFilter === g.id),
+          ),
     hidden = new Set(),
     ns = [];
   for (const g of collapsed) {
@@ -44,7 +50,7 @@ export function filteredGraphNodes() {
       })),
   );
   const peopleIds = new Set(shown.map((p) => p.id));
-  if (appState.showDocs)
+  if (appState.showDocs && !direct)
     ns.push(
       ...appState.project.documents
         .filter(
@@ -65,7 +71,7 @@ export function filteredGraphNodes() {
           h: 128,
         })),
     );
-  if (workspaceModes()[appState.project.purpose].propertyMap)
+  if (workspaceModes()[appState.project.purpose].propertyMap && !direct)
     ns.push(
       ...appState.project.property
         .filter(

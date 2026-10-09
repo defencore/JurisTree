@@ -337,6 +337,7 @@ export async function fullSVG(scope = "full") {
 }
 export function exportDialog() {
   const filtered =
+    appState.directConnectionRoot ||
     appState.groupFilter ||
     appState.graphFocus ||
     graphView().types.length < Object.keys(relTypes()).length ||

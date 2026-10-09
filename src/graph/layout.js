@@ -1,7 +1,11 @@
 import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
-import { graphView, relationShown } from "../model/graph-view.js";
+import {
+  directConnectionScope,
+  graphView,
+  relationShown,
+} from "../model/graph-view.js";
 import { group, person } from "../model/lookup.js";
 import { withProjectIndex } from "../model/project.js";
 import { commit } from "../services/history.js";
@@ -10,22 +14,41 @@ import { renderGraphControls } from "../ui/graph-controls.js";
 import { fit } from "./camera.js";
 import { familyLayout } from "./layouts/family.js";
 import { circularLayout, networkLayout } from "./layouts/network.js";
+import { positionScopedLayout } from "./layouts/scoped.js";
 import { filteredGraphNodes } from "./node-data.js";
+
+const layoutScopeKey = () =>
+  JSON.stringify([
+    appState.groupFilter,
+    appState.graphFocus?.people || [],
+    appState.directConnectionRoot,
+  ]);
 
 export async function arrangeGraph(style = graphView().layout) {
   if (appState.analysisBusy) return;
   const start = appState.project,
     updatedAt = appState.project.updatedAt,
-    scopeKey =
-      appState.groupFilter +
-      "|" +
-      JSON.stringify(appState.graphFocus?.people || []),
+    scopeKey = layoutScopeKey(),
+    direct = directConnectionScope(),
     cfg = graphView();
   appState.analysisBusy = true;
   renderGraphControls();
   try {
     let positions;
-    if (style === "generations") positions = familyLayout(appState.project);
+    if (style === "generations")
+      positions = familyLayout(
+        direct
+          ? {
+              ...start,
+              people: start.people.filter((p) => direct.people.has(p.id)),
+              relations: start.relations.filter((r) =>
+                direct.relations.has(r.id),
+              ),
+              documents: [],
+              property: [],
+            }
+          : start,
+      );
     else {
       const nodes = filteredGraphNodes().filter((n) =>
         ["person", "group"].includes(n.kind),
@@ -50,14 +73,13 @@ export async function arrangeGraph(style = graphView().layout) {
     if (
       appState.project !== start ||
       appState.project.updatedAt !== updatedAt ||
-      appState.groupFilter +
-        "|" +
-        JSON.stringify(appState.graphFocus?.people || []) !==
-        scopeKey
+      layoutScopeKey() !== scopeKey
     ) {
       toast(translate("ui.treeChangedDuringLayoutTryAgain"));
       return;
     }
+    if (direct)
+      positions.people = positionScopedLayout(positions.people, start, direct);
     commit(() => {
       appState.project.graphView = {
         ...cfg,
@@ -90,6 +112,7 @@ export async function arrangeGraph(style = graphView().layout) {
           }
         }
       }
+      if (direct) return;
       if (style === "generations") {
         appState.project.groups.forEach((g) => {
           g.x = null;
