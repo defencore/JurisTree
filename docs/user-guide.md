@@ -294,6 +294,8 @@ Enable **Show grid** and **Snap to grid**, then set the spacing in map units. Ca
 
 Routes stay attached to moving cards and are included in the browser draft, ZIP backups and **Saved views**. SVG/PNG exports retain routes and moved captions, including parts outside the viewport, and omit editing handles and the grid. Routes are adjusted manually; moving a card can require moving its waypoints to avoid newly overlapping objects.
 
+Manual connections float along the card perimeter toward their nearest waypoint. Moving a waypoint therefore changes the exit or entry point instead of forcing the line through the middle of a card edge. In **Right angles**, drag a small blue handle on a horizontal or vertical section to move the whole section sideways. White handles move individual waypoints. Both support arrow keys, grid snapping, undo and gesture cancellation; locked connections show no editing handles.
+
 Select a card or line and choose **Lock position** to fix its placement. Use Ctrl/Cmd/Shift or **Select items** in Placement to lock several cards and captions together. Padlocks identify fixed objects. **Unlock position** releases the explicit locks on the selected objects. You can still select a fixed card and edit its profile.
 
 Dragging, alignment, snapping and automatic layouts leave locked cards unchanged. Alignment uses selected fixed objects as anchors; distribution preserves fixed items between movable ones. Automatic layouts place movable cards around fixed cards. Locked connection waypoints and captions stay in map coordinates while the line ends follow their cards; automatic portions of a line continue to adapt to its endpoints. To keep both endpoints stationary, lock their cards as well.

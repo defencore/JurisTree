@@ -878,6 +878,17 @@
   cursor: move;
   touch-action: none;
 }
+.route-segment {
+  cursor: ns-resize;
+  touch-action: none;
+}
+.route-segment[data-segment-axis="x"] {
+  cursor: ew-resize;
+}
+.route-segment:focus > circle:last-child {
+  stroke: var(--gold);
+  stroke-width: 3;
+}
 .route-point:focus > circle:last-child {
   stroke: var(--gold);
   stroke-width: 3;

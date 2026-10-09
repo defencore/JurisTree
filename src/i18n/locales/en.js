@@ -2558,7 +2558,7 @@ export default {
   "ui.diagramTools": "Placement",
   "ui.diagramEditing": "Diagram editing",
   "ui.diagramHint":
-    "Select a line or drag a label. Ctrl / ⌘ + click selects cards and labels for alignment.",
+    "Blue handles move line sections; white handles move waypoints. Drag labels; Ctrl / ⌘ + click selects items for alignment.",
   "ui.selectDiagramLine": "Select a line or group title on the map",
   "ui.routeStyle": "Route",
   "ui.routeAuto": "Automatic",
@@ -2585,6 +2585,8 @@ export default {
   "ui.selectedDiagramItems": "Selected items: {count}",
   "ui.routePointHint":
     "Waypoint {number}. Drag or use arrow keys; Delete removes it.",
+  "ui.routeSegmentHint":
+    "Move this line section sideways by dragging or using arrow keys.",
   "ui.diagramLabelHint":
     "Drag this label; Ctrl / ⌘ + click adds it to the selection.",
   "ui.waypointLimit": "A line can have up to 32 waypoints.",

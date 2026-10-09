@@ -10,6 +10,9 @@ import {
 } from "../src/model/diagram.js";
 import {
   connectorVertices,
+  connectorPoints,
+  closestRouteInsertion,
+  shiftConnectorSegment,
   routedConnector,
 } from "../src/model/connector-path.js";
 import { captureMapView, restoreMapView } from "../src/model/map-views.js";
@@ -19,6 +22,55 @@ const route = (points = [], label = null, style = "orthogonal") => ({
   style,
   points,
   label,
+});
+
+test("floating endpoints align with nearby waypoints, and dragging a section preserves right angles and the input route", () => {
+  const a = { x: 0, y: 0, w: 100, h: 60 },
+    b = { x: 400, y: 100, w: 100, h: 60 };
+  const manual = route([
+    { x: 200, y: 20 },
+    { x: 200, y: 120 },
+  ]);
+  assert.deepEqual(
+    connectorVertices(a, b, manual).map(({ x, y }) => ({ x, y })),
+    [
+      { x: 100, y: 20 },
+      { x: 200, y: 20 },
+      { x: 200, y: 120 },
+      { x: 400, y: 120 },
+    ],
+  );
+  const shifted = shiftConnectorSegment(a, b, manual, 1, 40);
+  assert.deepEqual(shifted.points, [
+    { x: 240, y: 20 },
+    { x: 240, y: 120 },
+  ]);
+  assert.deepEqual(manual.points, [
+    { x: 200, y: 20 },
+    { x: 200, y: 120 },
+  ]);
+  const movedExit = shiftConnectorSegment(a, b, manual, 0, 10);
+  assert.equal(connectorVertices(a, b, movedExit)[0].y, 30);
+  const points = connectorPoints(a, b, shifted);
+  for (let i = 1; i < points.length; i++)
+    assert.ok(
+      points[i].x === points[i - 1].x || points[i].y === points[i - 1].y,
+    );
+  assert.equal(closestRouteInsertion(a, b, manual, { x: 190, y: 90 }), 1);
+  assert.equal(closestRouteInsertion(a, a, route(), { x: 100, y: 30 }), 0);
+  const straight = shiftConnectorSegment(a, { ...b, y: 0 }, route(), 0, 8);
+  assert.equal(straight.points.length, 2);
+  assert.equal(connectorVertices(a, { ...b, y: 0 }, straight)[0].y, 38);
+  const top = connectorVertices(a, b, route([{ x: 20, y: -60 }]));
+  assert.equal(top[0].x, 20);
+  assert.equal(top[0].y, 0);
+  const slant = connectorVertices(
+    a,
+    b,
+    route([{ x: 200, y: 10 }], null, "polyline"),
+  )[0];
+  assert.equal(slant.x, 100);
+  assert.ok(slant.y > 10 && slant.y < 30);
 });
 test("manual routes validate every coordinate, style and point limit, retaining only existing graph connections", () => {
   const p = sample(),
@@ -102,7 +154,9 @@ test("manual connectors visit waypoints, attach to card boundaries and follow mo
     { ...manual, style: "polyline" },
     automatic,
   );
-  assert.equal(polyline.path.match(/L/g).length, manual.points.length + 1);
+  assert.ok(polyline.path.match(/L/g).length <= manual.points.length + 1);
+  for (const point of manual.points)
+    assert.ok(polyline.path.includes("L" + point.x + " " + point.y));
 });
 
 test("alignment accounts for different caption widths and distribution preserves outer cards with equal gaps", () => {

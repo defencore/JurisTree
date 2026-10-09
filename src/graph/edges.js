@@ -1,5 +1,8 @@
 import { diagramKey, diagramRoute } from "../model/diagram.js";
-import { routedConnector } from "../model/connector-path.js";
+import {
+  routedConnector,
+  routeLabelPosition,
+} from "../model/connector-path.js";
 import {
   connectorAttributes,
   connectorLabel,
@@ -141,8 +144,14 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
                   : 0
               : 0),
       opacity = highlight && !onpath ? 0.22 : 1;
-    const lx = route.label?.x ?? c.x,
-      labelY = route.label?.y ?? ly,
+    const position = routeLabelPosition(
+        route,
+        { x: c.x, y: ly },
+        width,
+        period ? 46 : 22,
+      ),
+      lx = position.x,
+      labelY = position.y,
       box = {
         x: lx - width / 2,
         y: labelY - 10,
@@ -181,8 +190,9 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
               appState.diagramEditing &&
               appState.diagramConnectionKey === key),
           width = Math.min(340, graphTextWidth(d.title, 12, 400) + 16),
-          lx = route.label?.x ?? c.x,
-          ly = route.label?.y ?? c.y,
+          position = routeLabelPosition(route, c, width),
+          lx = position.x,
+          ly = position.y,
           box = { x: lx - width / 2, y: ly - 10, w: width, h: 22 };
         if (showLabel && boxes) boxes.push(box);
         edges += `<g class="connector" ${connectorAttributes(key, n, p, d.title)} opacity="${highlight ? 0.3 : 1}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18" vector-effect="non-scaling-stroke"/><path class="connector-path" d="${c.path}" fill="none" ${graphStrokeAttributes("source")}/>${showLabel ? connectorLabel(key, box, svgText(d.title, lx - width / 2 + 8, ly + 5, 40, 1, 12, "#3e516c", 400, width - 16), exporting) : ""}</g>`;
@@ -201,10 +211,11 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
         const key = diagramKey("p", a.id, al.personId),
           route = diagramRoute(appState.project, key),
           c = routedConnector(n, p, route, graphLine(n, p)),
-          lx = route.label?.x ?? c.x,
-          ly = route.label?.y ?? c.y,
           label = al.percent + "%",
           width = graphTextWidth(label, 13, 600) + 16,
+          position = routeLabelPosition(route, c, width),
+          lx = position.x,
+          ly = position.y,
           box = { x: lx - width / 2, y: ly - 10, w: width, h: 22 };
         reportRouteBounds(route, boxes);
         if (boxes) boxes.push(box);

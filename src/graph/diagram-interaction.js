@@ -12,7 +12,11 @@ import {
   storeRoute,
   toggleDiagramNode,
 } from "../features/diagram.js";
-import { connectorVertices, closestSegment } from "../model/connector-path.js";
+import {
+  closestRouteInsertion,
+  connectorPoints,
+  shiftConnectorSegment,
+} from "../model/connector-path.js";
 import { diagramRoute, snapPoint } from "../model/diagram.js";
 import { graphView } from "../model/graph-view.js";
 import { commit } from "../services/history.js";
@@ -22,6 +26,29 @@ const bounded = (point) => ({
   x: Math.max(-100000, Math.min(100000, point.x)),
   y: Math.max(-100000, Math.min(100000, point.y)),
 });
+const markerPosition = (element) => {
+  const matrix = element.transform.baseVal.getItem(0).matrix;
+  return { x: matrix.e, y: matrix.f };
+};
+function focusSegment(key, axis, position) {
+  const markers = [
+    ...document.querySelectorAll(
+      '#graph [data-route-segment][data-connector="' +
+        key +
+        '"][data-segment-axis="' +
+        axis +
+        '"]',
+    ),
+  ];
+  markers.sort((a, b) => {
+    const distance = (el) => {
+      const p = markerPosition(el);
+      return Math.hypot(p.x - position.x, p.y - position.y);
+    };
+    return distance(a) - distance(b);
+  });
+  markers[0]?.focus({ preventScroll: true });
+}
 export function bindDiagramInteractions(graph) {
   let gesture = null,
     consumedClick = false;
@@ -61,6 +88,7 @@ export function bindDiagramInteractions(graph) {
         return;
       const label = event.target.closest("[data-route-label]"),
         handle = event.target.closest("[data-route-point]"),
+        segment = event.target.closest("[data-route-segment]"),
         connector = event.target.closest("[data-connector]"),
         adding = state.diagramAddPoint;
       const node = event.target.closest("[data-node]");
@@ -92,6 +120,7 @@ export function bindDiagramInteractions(graph) {
       if (
         !adding &&
         !handle &&
+        !segment &&
         !(
           label &&
           state.diagramLabelSelection.has(key) &&
@@ -121,9 +150,25 @@ export function bindDiagramInteractions(graph) {
         consumedClick = true;
         return;
       }
-      if (!adding && !label && !handle) return;
+      if (!adding && !label && !handle && !segment) return;
       const route = clone(diagramRoute(state.project, key));
       let index = handle ? Number(handle.dataset.routePoint) : -1;
+      let section = null;
+      if (segment) {
+        const el = connectorElement(key),
+          nodes = filteredGraphNodes();
+        const a = nodes.find((n) => n.id === el?.dataset.fromNode),
+          b = nodes.find((n) => n.id === el?.dataset.toNode);
+        if (!a || !b) return;
+        section = {
+          a,
+          b,
+          index: Number(segment.dataset.routeSegment),
+          axis: segment.dataset.segmentAxis,
+          marker: markerPosition(segment),
+        };
+        section.origin = connectorPoints(a, b, route)[section.index];
+      }
       const labels = new Map();
       if (label && !adding)
         for (const selected of state.diagramLabelSelection) {
@@ -138,7 +183,7 @@ export function bindDiagramInteractions(graph) {
           a = nodes.find((n) => n.id === el?.dataset.fromNode),
           b = nodes.find((n) => n.id === el?.dataset.toNode);
         if (!a || !b) return;
-        index = closestSegment(connectorVertices(a, b, route), start);
+        index = closestRouteInsertion(a, b, route, start);
         route.points.splice(
           index,
           0,
@@ -154,6 +199,7 @@ export function bindDiagramInteractions(graph) {
         key,
         index,
         labels,
+        section,
         before,
         start,
         pointerId: event.pointerId,
@@ -161,6 +207,7 @@ export function bindDiagramInteractions(graph) {
         adding,
         moved: adding,
       };
+      graph.focus({ preventScroll: true });
       graph.setPointerCapture(event.pointerId);
       redrawDiagram();
     },
@@ -175,9 +222,29 @@ export function bindDiagramInteractions(graph) {
       const current = point(event),
         dx = current.x - gesture.start.x,
         dy = current.y - gesture.start.y;
-      if (Math.hypot(dx, dy) * state.camera.z > 3) gesture.moved = true;
+      const distance = gesture.section
+        ? Math.abs(gesture.section.axis === "x" ? dx : dy)
+        : Math.hypot(dx, dy);
+      if (distance * state.camera.z > 3) gesture.moved = true;
       if (!gesture.moved) return;
-      if (gesture.index >= 0) {
+      if (gesture.section) {
+        const { a, b, index, axis, origin } = gesture.section,
+          desired = snapPoint(
+            { x: origin.x + dx, y: origin.y + dy },
+            graphView(),
+            event.altKey,
+          );
+        storeRoute(
+          gesture.key,
+          shiftConnectorSegment(
+            a,
+            b,
+            gesture.route,
+            index,
+            desired[axis] - origin[axis],
+          ),
+        );
+      } else if (gesture.index >= 0) {
         const route = clone(gesture.route),
           original = gesture.route.points[gesture.index];
         route.points[gesture.index] = bounded(
@@ -233,6 +300,12 @@ export function bindDiagramInteractions(graph) {
           completed.key +
           '"]',
       )?.focus({ preventScroll: true });
+    else if (completed.section)
+      focusSegment(
+        completed.key,
+        completed.section.axis,
+        completed.section.marker,
+      );
   }
   graph.addEventListener("pointerup", finish, true);
   graph.addEventListener("pointercancel", finish, true);
@@ -270,6 +343,7 @@ export function bindDiagramInteractions(graph) {
       }
       const handle = event.target.closest("[data-route-point]"),
         label = event.target.closest("[data-route-label]"),
+        segment = event.target.closest("[data-route-segment]"),
         directions = {
           ArrowLeft: [-1, 0],
           ArrowRight: [1, 0],
@@ -279,7 +353,7 @@ export function bindDiagramInteractions(graph) {
       const connector = event.target.closest(
         "[data-connector][data-from-node]",
       );
-      if (connector && !label && !handle && event.key === "Enter") {
+      if (connector && !label && !handle && !segment && event.key === "Enter") {
         event.preventDefault();
         event.stopImmediatePropagation();
         selectDiagramConnection(connector.dataset.connector);
@@ -306,6 +380,50 @@ export function bindDiagramInteractions(graph) {
           true,
         );
         labelElement(label.dataset.routeLabel)?.focus({ preventScroll: true });
+        return;
+      }
+      if (segment && directions[event.key]) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const key = segment.dataset.connector,
+          el = connectorElement(key),
+          nodes = filteredGraphNodes(),
+          a = nodes.find((n) => n.id === el?.dataset.fromNode),
+          b = nodes.find((n) => n.id === el?.dataset.toNode),
+          axis = segment.dataset.segmentAxis,
+          delta =
+            directions[event.key][axis === "x" ? 0 : 1] *
+            (graphView().snapToGrid ? graphView().gridSize : 5) *
+            (event.shiftKey ? 5 : 1);
+        if (!a || !b || !delta || connectorPlacementLocked(state.project, key))
+          return;
+        const origin = connectorPoints(a, b, diagramRoute(state.project, key))[
+            Number(segment.dataset.routeSegment)
+          ],
+          desired = snapPoint(
+            {
+              x: origin.x + (axis === "x" ? delta : 0),
+              y: origin.y + (axis === "y" ? delta : 0),
+            },
+            graphView(),
+            event.altKey,
+          ),
+          offset = desired[axis] - origin[axis];
+        const position = markerPosition(segment);
+        position[axis] += offset;
+        commit(() =>
+          storeRoute(
+            key,
+            shiftConnectorSegment(
+              a,
+              b,
+              diagramRoute(state.project, key),
+              Number(segment.dataset.routeSegment),
+              offset,
+            ),
+          ),
+        );
+        focusSegment(key, axis, position);
         return;
       }
       if ((!handle && !label) || !directions[event.key]) return;

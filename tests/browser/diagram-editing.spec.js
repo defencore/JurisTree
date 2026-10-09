@@ -409,6 +409,7 @@ test.describe("desktop diagram editing", () => {
       expect(output.height).toBeGreaterThan(2000);
       expect(output.svg).toContain("-1500 1900");
       expect(output.svg).not.toContain('class="route-point"');
+      expect(output.svg).not.toContain('class="route-segment"');
       expect(output.svg).not.toContain('class="diagram-grid"');
       expect(output.svg).not.toContain("diagram-label-selected");
     }
@@ -524,9 +525,18 @@ for (const [language, width] of [
         ),
       ).toBe(true);
       await page.locator('[data-action="diagram-select-items"]').tap();
-      for (const id of ["p1", "p2"])
+      await expect(
+        page.locator('[data-action="diagram-select-items"]'),
+      ).toHaveAttribute("aria-pressed", "true");
+      for (const id of ["p1", "p2"]) {
         await page.locator('#graph [data-node="' + id + '"] .card').tap();
-      expect((await stateOf(page)).selection.sort()).toEqual(["p1", "p2"]);
+        await expect
+          .poll(async () => (await stateOf(page)).selection)
+          .toContain(id);
+      }
+      await expect
+        .poll(async () => (await stateOf(page)).selection.sort())
+        .toEqual(["p1", "p2"]);
       await page.locator("[data-diagram-align]").selectOption("bottom");
       const arranged = (await stateOf(page)).project.people;
       expect(arranged[0].y).toBe(arranged[1].y);
@@ -534,6 +544,182 @@ for (const [language, width] of [
         path: "test-results/diagram-editing-" + language + "-phone.png",
       });
       await session.detach();
+    });
+  });
+}
+
+for (const [language, width, phone] of [
+  ["uk", 1680, false],
+  ["en", 390, true],
+  ["uk", 320, true],
+  ["ru", 320, true],
+]) {
+  test.describe(language + " floating connections at " + width + "px", () => {
+    test.use({
+      viewport: { width, height: phone ? 900 : 1100 },
+      hasTouch: phone,
+      isMobile: phone,
+    });
+    test("sections move together, endpoints follow waypoints and cancellation, undo, locks and reload preserve the route", async ({
+      page,
+    }) => {
+      await fixture(page, true);
+      await page.locator("#appShell [data-language]").selectOption(language);
+      await editing(page);
+      await page.evaluate(async () => {
+        const base = document.querySelector('script[type="module"]').src;
+        const { state } = await import(new URL("core/state.js", base).href);
+        const { selectDiagramConnection } = await import(
+          new URL("features/diagram.js", base).href
+        );
+        const { fit } = await import(new URL("graph/camera.js", base).href);
+        state.project.diagram = {
+          "r:r1": {
+            style: "orthogonal",
+            points: [
+              { x: 340, y: 160 },
+              { x: 340, y: 400 },
+              { x: 760, y: 400 },
+              { x: 760, y: 100 },
+            ],
+            label: { x: 200, y: -50 },
+          },
+        };
+        selectDiagramConnection("r:r1");
+        fit();
+      });
+      const path = page.locator(
+        '#graph [data-connector="r:r1"] .connector-path',
+      );
+      await expect(path).toHaveAttribute("d", /^M280 160 /);
+      await expect(path).toHaveAttribute("d", /L710 100$/);
+      const marker = page.locator('#graph [data-route-segment="2"]');
+      await expect(marker).toBeVisible();
+      const before = await stateOf(page);
+      if (phone) {
+        const session = await page.context().newCDPSession(page),
+          box = await marker.boundingBox();
+        let start = {
+          x: box.x + box.width / 2,
+          y: box.y + box.height / 2,
+          id: 0,
+        };
+        for (const [type, touchPoints] of [
+          ["touchStart", [start]],
+          ["touchMove", [{ ...start, y: start.y + 24 }]],
+        ])
+          await session.send("Input.dispatchTouchEvent", { type, touchPoints });
+        await expect
+          .poll(async () => (await stateOf(page)).project.diagram)
+          .not.toEqual(before.project.diagram);
+        await session.send("Input.dispatchTouchEvent", {
+          type: "touchCancel",
+          touchPoints: [],
+        });
+        await expect
+          .poll(async () => (await stateOf(page)).project.diagram)
+          .toEqual(before.project.diagram);
+        const current = await marker.boundingBox();
+        start = {
+          x: current.x + current.width / 2,
+          y: current.y + current.height / 2,
+          id: 0,
+        };
+        for (const [type, touchPoints] of [
+          ["touchStart", [start]],
+          ["touchMove", [{ ...start, y: start.y + 24 }]],
+          ["touchEnd", []],
+        ])
+          await session.send("Input.dispatchTouchEvent", { type, touchPoints });
+        await session.detach();
+      } else {
+        await drag(page, marker, 24, 0);
+        expect((await stateOf(page)).project.diagram).toEqual(
+          before.project.diagram,
+        );
+        expect((await stateOf(page)).history).toBe(before.history);
+        const box = await marker.boundingBox();
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(
+          box.x + box.width / 2,
+          box.y + box.height / 2 + 24,
+        );
+        await page.keyboard.press("Escape");
+        await page.mouse.up();
+        expect((await stateOf(page)).project.diagram).toEqual(
+          before.project.diagram,
+        );
+        await drag(page, marker, 0, 24);
+      }
+      await expect
+        .poll(async () => (await stateOf(page)).history)
+        .toBe(before.history + 1);
+      const moved = await stateOf(page),
+        points = moved.project.diagram["r:r1"].points;
+      expect(points[1].y).toBeGreaterThan(400);
+      expect(points[2].y).toBe(points[1].y);
+      expect(points[0]).toEqual(before.project.diagram["r:r1"].points[0]);
+      expect(points[3]).toEqual(before.project.diagram["r:r1"].points[3]);
+      const drawn = (await path.getAttribute("d"))
+        .match(/[ML][^ML]+/g)
+        .map((s) => s.slice(1).split(" ").map(Number));
+      for (let i = 1; i < drawn.length; i++)
+        expect(
+          drawn[i][0] === drawn[i - 1][0] || drawn[i][1] === drawn[i - 1][1],
+        ).toBe(true);
+      await page.locator('[data-action="undo"]').click();
+      expect((await stateOf(page)).project.diagram).toEqual(
+        before.project.diagram,
+      );
+      await page.locator('[data-action="redo"]').click();
+      expect((await stateOf(page)).project.diagram).toEqual(
+        moved.project.diagram,
+      );
+      await marker.focus();
+      await page.keyboard.press("ArrowDown");
+      const keyed = await stateOf(page);
+      expect(keyed.project.diagram["r:r1"].points[1].y).toBe(points[1].y + 5);
+      await page.locator('[data-diagram-setting="snapToGrid"]').check();
+      await marker.focus();
+      await page.keyboard.press("ArrowDown");
+      expect(
+        (await stateOf(page)).project.diagram["r:r1"].points[1].y % 20,
+      ).toBe(0);
+      await page.screenshot({
+        path:
+          "test-results/floating-controls-" + language + "-" + width + ".png",
+      });
+      await page.locator('[data-action="lock-placement"]').click();
+      await expect(
+        page.locator("#graph [data-route-segment],#graph [data-route-point]"),
+      ).toHaveCount(0);
+      const locked = await stateOf(page);
+      await page.screenshot({
+        path:
+          "test-results/floating-connections-" +
+          language +
+          "-" +
+          width +
+          ".png",
+      });
+      await page.evaluate(async () => {
+        const { saveNow } = await import(
+          new URL(
+            "services/storage.js",
+            document.querySelector('script[type="module"]').src,
+          ).href
+        );
+        await saveNow();
+      });
+      await page.reload();
+      await page.locator("#startContinue").click();
+      expect((await stateOf(page)).project.diagram).toEqual(
+        locked.project.diagram,
+      );
+      expect((await stateOf(page)).project.placementLocks).toEqual(
+        locked.project.placementLocks,
+      );
     });
   });
 }

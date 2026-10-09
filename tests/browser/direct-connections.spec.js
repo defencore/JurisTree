@@ -97,6 +97,12 @@ test("direct connections highlight one hop, keep the reference while moving neig
     "self",
   );
   await page.locator('#personList [data-person="p8"]').click();
+  const focused = await page
+    .locator('#graph [data-node="p8"] .card')
+    .boundingBox();
+  expect(focused.y + focused.height / 2).toBeLessThan(
+    page.viewportSize().height,
+  );
   await dragCard(page, "p8");
   const moved = await snapshot(page);
   expect(moved.root).toBe("p6");

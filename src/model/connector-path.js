@@ -1,15 +1,25 @@
-function anchor(card, target) {
+import { MAX_ROUTE_POINTS } from "./diagram.js";
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+function anchor(card, target, orthogonal) {
   const center = { x: card.x + card.w / 2, y: card.y + card.h / 2 },
     dx = target.x - center.x,
     dy = target.y - center.y;
+  if (!orthogonal) {
+    if (!dx && !dy) return { x: center.x + card.w / 2, y: center.y };
+    const scale =
+      1 /
+      Math.max(Math.abs(dx) / (card.w / 2), Math.abs(dy) / (card.h / 2), 1e-9);
+    return { x: center.x + dx * scale, y: center.y + dy * scale };
+  }
   return Math.abs(dx) / card.w >= Math.abs(dy) / card.h
     ? {
         x: center.x + (dx >= 0 ? card.w / 2 : -card.w / 2),
-        y: center.y,
+        y: clamp(target.y, card.y + 8, card.y + card.h - 8),
         horizontal: true,
       }
     : {
-        x: center.x,
+        x: clamp(target.x, card.x + 8, card.x + card.w - 8),
         y: center.y + (dy >= 0 ? card.h / 2 : -card.h / 2),
         horizontal: false,
       };
@@ -17,7 +27,12 @@ function anchor(card, target) {
 export function connectorVertices(a, b, route) {
   const first = route.points[0] || { x: b.x + b.w / 2, y: b.y + b.h / 2 },
     last = route.points.at(-1) || { x: a.x + a.w / 2, y: a.y + a.h / 2 };
-  return [anchor(a, first), ...route.points, anchor(b, last)];
+  const orthogonal = route.style !== "polyline";
+  return [
+    anchor(a, first, orthogonal),
+    ...route.points,
+    anchor(b, last, orthogonal),
+  ];
 }
 function midpoint(points) {
   const lengths = points
@@ -36,8 +51,7 @@ function midpoint(points) {
   }
   return points[0];
 }
-export function routedConnector(a, b, route, automatic) {
-  if (route.style === "auto" && !route.points.length) return automatic;
+export function connectorPoints(a, b, route) {
   const vertices = connectorVertices(a, b, route),
     points = [vertices[0]];
   if (route.style === "orthogonal" && !route.points.length) {
@@ -79,18 +93,91 @@ export function routedConnector(a, b, route, automatic) {
             : Math.abs(next.x - previous.x) >= Math.abs(next.y - previous.y);
       points.push(
         horizontal
-          ? { x: next.x, y: previous.y }
-          : { x: previous.x, y: next.y },
+          ? { x: next.x, y: previous.y, insertIndex: i - 1 }
+          : { x: previous.x, y: next.y, insertIndex: i - 1 },
       );
     }
-    points.push(next);
+    points.push({ ...next, insertIndex: i - 1 });
   }
-  const middle = midpoint(points);
+  const unique = points.filter(
+    (p, i) => !i || p.x !== points[i - 1].x || p.y !== points[i - 1].y,
+  );
+  return route.points.length
+    ? unique
+    : unique.filter((p, i) => {
+        const before = unique[i - 1],
+          after = unique[i + 1];
+        return (
+          !before ||
+          !after ||
+          !(
+            (before.x === p.x && p.x === after.x) ||
+            (before.y === p.y && p.y === after.y)
+          )
+        );
+      });
+}
+export function shiftConnectorSegment(a, b, route, index, offset) {
+  const points = connectorPoints(a, b, route).map(({ x, y }) => ({
+    x: clamp(x, -100000, 100000),
+    y: clamp(y, -100000, 100000),
+  }));
+  if (
+    route.style !== "orthogonal" ||
+    !points[index + 1] ||
+    points.length - 2 > MAX_ROUTE_POINTS
+  )
+    return route;
+  const axis = points[index].y === points[index + 1].y ? "y" : "x";
+  if (points.length === 2) {
+    const [start, end] = points;
+    points.splice(
+      1,
+      0,
+      ...[0.25, 0.75].map((t) => ({
+        x: start.x + (end.x - start.x) * t,
+        y: start.y + (end.y - start.y) * t,
+      })),
+    );
+    index = 1;
+  }
+  for (const i of [index, index + 1])
+    if (i > 0 && i < points.length - 1)
+      points[i][axis] = clamp(points[i][axis] + offset, -100000, 100000);
+  return { ...route, points: points.slice(1, -1) };
+}
+export function closestRouteInsertion(a, b, route, point) {
+  const points = connectorPoints(a, b, route);
+  return Math.min(
+    route.points.length,
+    points[closestSegment(points, point) + 1]?.insertIndex ?? 0,
+  );
+}
+export function routedConnector(a, b, route, automatic) {
+  if (route.style === "auto" && !route.points.length) return automatic;
+  const points = connectorPoints(a, b, route),
+    middle = midpoint(points);
   return {
     path: points.map((p, i) => (i ? "L" : "M") + p.x + " " + p.y).join(" "),
     x: middle.x,
     y: middle.y,
   };
+}
+
+export function routeLabelPosition(route, fallback, width, height = 22) {
+  if (route.label) return route.label;
+  const conflicts = route.points.filter(
+    (p) =>
+      Math.abs(p.x - fallback.x) < width / 2 + 20 &&
+      p.y > fallback.y - 30 &&
+      p.y < fallback.y + height + 10,
+  );
+  return conflicts.length
+    ? {
+        x: fallback.x,
+        y: Math.min(...conflicts.map((p) => p.y)) - height + 10 - 60,
+      }
+    : fallback;
 }
 export function closestSegment(vertices, point) {
   let best = 0,

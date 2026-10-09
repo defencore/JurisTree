@@ -15,7 +15,9 @@ export function focusPerson(
     nodes.find((n) => n.kind === "person") ||
     nodes[0];
   if (!node) return fit();
-  const rect = $("#graph").getBoundingClientRect();
+  const graph = $("#graph");
+  graph.scrollIntoView({ block: "nearest", inline: "nearest" });
+  const rect = graph.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
   const overlays = [$(".graph-tools"), $(".legend"), $("#inspector")]
     .filter(Boolean)
@@ -81,21 +83,37 @@ export function bounds(ns = filteredGraphNodes()) {
   };
 }
 export function fit(ns = filteredGraphNodes()) {
-  const el = $("#graph"),
-    rect = el.getBoundingClientRect();
+  const el = $("#graph");
+  el.scrollIntoView({ block: "nearest", inline: "nearest" });
+  const rect = el.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
-  const b = bounds(ns);
+  const overlays = [$(".graph-tools"), $(".legend")]
+      .filter(Boolean)
+      .map((el) => el.getBoundingClientRect())
+      .filter(
+        (box) =>
+          box.width &&
+          box.height &&
+          box.top < rect.bottom &&
+          box.bottom > rect.top,
+      ),
+    bottomSpace = Math.max(
+      0,
+      ...overlays.map((box) => rect.bottom - box.top + 12),
+    ),
+    height = Math.max(40, rect.height - bottomSpace),
+    b = bounds(ns);
   appState.camera.z = Math.min(
     1.1,
     Math.max(
       CAMERA_MIN_ZOOM,
-      Math.min((rect.width - 40) / b.w, (rect.height - 75) / b.h),
+      Math.min((rect.width - 40) / b.w, (height - 40) / b.h),
     ),
   );
   appState.camera.x =
     (rect.width - b.w * appState.camera.z) / 2 - b.x * appState.camera.z;
   appState.camera.y =
-    (rect.height - b.h * appState.camera.z) / 2 - b.y * appState.camera.z - 10;
+    (height - b.h * appState.camera.z) / 2 - b.y * appState.camera.z;
   applyCamera();
 }
 export function zoom(factor, x, y) {
