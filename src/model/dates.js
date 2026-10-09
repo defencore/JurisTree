@@ -14,14 +14,23 @@ export function dateExact(value) {
 export function displayDate(value) {
   const v = String(value || "");
   if (dateExact(v)) {
-    return new Intl.DateTimeFormat(getLocale(), {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      timeZone: "UTC",
-    }).format(new Date(utcDay(v) * 86400000));
+    return v.split("-").reverse().join(".");
   }
   return v;
+}
+/** Convert entered day/month/year dates to the canonical archive representation. */
+export function dateInputValue(value) {
+  const text = String(value || "").trim(),
+    match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(text),
+    canonical = match ? `${match[3]}-${match[2]}-${match[1]}` : text;
+  return dateExact(canonical) ? canonical : text;
+}
+
+export function displayDateTime(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  return `${displayDate(localDateString(date))} ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }
 export function partialDate(value) {
   const text = String(value || "");

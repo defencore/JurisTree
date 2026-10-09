@@ -27,7 +27,7 @@ test("person cards show full dates and distinct life and minor badges in every l
       .allTextContents();
     expect(dates).toEqual(
       language === "en"
-        ? ["03/04/1932", "11/03/2011 (79 years)"]
+        ? ["04.03.1932", "03.11.2011 (79 years)"]
         : language === "uk"
           ? ["04.03.1932", "03.11.2011 (79 років)"]
           : ["04.03.1932", "03.11.2011 (79 лет)"],

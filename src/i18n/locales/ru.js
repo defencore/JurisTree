@@ -883,7 +883,7 @@ export default {
   "ui.sourcePhoto": "Источник / фото",
   "ui.deleteRecord": "Удалить запись",
   "ui.noSource": "Без источника",
-  "ui.yearOrYyyyMmDd": "Год или ГГГГ-ММ-ДД",
+  "ui.yearOrDayMonthYear": "Год или DD.MM.YYYY",
   "ui.lifeStoryAndHistoricalInformation":
     "Жизнь человека и исторические сведения",
   "ui.supportingSources": "Внешние подтверждения",
@@ -1691,6 +1691,7 @@ export default {
   "ui.directConnectionsCount":
     "Связанных людей: {count} · Временно скрыто: {hidden}",
   "ui.restoreConnectionMap": "Вернуть схему",
+  "ui.chooseDate": "Выбрать дату",
   "ui.currentAge": "Возраст",
   "ui.ageAtDeath": "Возраст на момент смерти",
   "ui.ageNeedsClarification": "Возраст требует уточнения",

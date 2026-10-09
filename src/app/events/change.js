@@ -11,7 +11,7 @@ import {
 import { updatePathSearchMode } from "../../features/graph-tools.js";
 import { renderKinResult } from "../../features/relationships.js";
 import { arrangeGraph } from "../../graph/layout.js";
-import { dateExact } from "../../model/dates.js";
+import { dateExact, dateInputValue } from "../../model/dates.js";
 import { resetAnalysis } from "../../model/graph-view.js";
 import { commit } from "../../services/history.js";
 import { renderMain } from "../../ui/render.js";
@@ -24,7 +24,16 @@ export function bindChangeEvents() {
   document.addEventListener("change", (e) => {
     const t = e.target;
     if (t.id === "propertyDate") {
-      if (dateExact(t.value)) appState.propertyDate = t.value;
+      const date = dateInputValue(t.value);
+      if (!date) {
+        renderProperty();
+        return;
+      }
+      if (!dateExact(date)) {
+        t.reportValidity();
+        return;
+      }
+      appState.propertyDate = date;
       renderProperty();
       return;
     }

@@ -1,7 +1,7 @@
 import { esc } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
 import { translate } from "../../i18n/index.js";
-import { dateExact } from "../../model/dates.js";
+import { dateInput } from "../date-input.js";
 import { checks, typeOptions } from "../components.js";
 import { icon } from "../icons.js";
 
@@ -21,5 +21,5 @@ export function renderPersonBasics(p, creationLinks = "") {
       deceased: translate("ui.deceased"),
     },
     p.death ? "deceased" : p.lifeStatus || "unknown",
-  )}</select></label></div>${creationLinks}<div class="form-grid"><label class="field">${translate("ui.exactBirthDate")}<input type="date" name="birthDate" value="${dateExact(p.birth)}"></label><label class="field">${translate("ui.orBirthYear")}<input name="birthYear" type="number" min="1" max="9999" value="${/^\d{4}$/.test(p.birth) ? p.birth : ""}" placeholder="${translate("ui.ifTheExactDateIsUnknown")}"></label><label class="field">${translate("ui.exactDeathDate")}<input type="date" name="deathDate" value="${dateExact(p.death)}"></label><label class="field">${translate("ui.orDeathYear")}<input name="deathYear" type="number" min="1" max="9999" value="${/^\d{4}$/.test(p.death) ? p.death : ""}" placeholder="${translate("ui.ifTheExactDateIsUnknown")}"></label><label class="field full">${translate("ui.placeOfBirth")}<input name="place" value="${esc(p.place)}" maxlength="250"></label><label class="field full">${translate("ui.otherNamesAndSpellings")}<input name="aliases" value="${esc(p.aliases)}" placeholder="${translate("ui.maidenNameVariantsInOtherLanguages")}" maxlength="500"></label></div>${appState.project.groups.length ? `<p class="field-caption">${translate("ui.familyGroups")}</p>` + checks(appState.project.groups, "groupIds", p.groupIds || [], (g) => g.name) : ""}</section>`;
+  )}</select></label></div>${creationLinks}<div class="form-grid"><label class="field">${translate("ui.exactBirthDate")}${dateInput("birthDate", p.birth)}</label><label class="field">${translate("ui.orBirthYear")}<input name="birthYear" type="number" min="1" max="9999" value="${/^\d{4}$/.test(p.birth) ? p.birth : ""}" placeholder="${translate("ui.ifTheExactDateIsUnknown")}"></label><label class="field">${translate("ui.exactDeathDate")}${dateInput("deathDate", p.death)}</label><label class="field">${translate("ui.orDeathYear")}<input name="deathYear" type="number" min="1" max="9999" value="${/^\d{4}$/.test(p.death) ? p.death : ""}" placeholder="${translate("ui.ifTheExactDateIsUnknown")}"></label><label class="field full">${translate("ui.placeOfBirth")}<input name="place" value="${esc(p.place)}" maxlength="250"></label><label class="field full">${translate("ui.otherNamesAndSpellings")}<input name="aliases" value="${esc(p.aliases)}" placeholder="${translate("ui.maidenNameVariantsInOtherLanguages")}" maxlength="500"></label></div>${appState.project.groups.length ? `<p class="field-caption">${translate("ui.familyGroups")}</p>` + checks(appState.project.groups, "groupIds", p.groupIds || [], (g) => g.name) : ""}</section>`;
 }

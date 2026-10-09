@@ -31,7 +31,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.property-controls input[type="date"] {
+.property-controls [data-date-input] {
   width: 175px;
 }
 .asset-card,
@@ -217,7 +217,7 @@
   .property-controls.focused .property-history-actions {
     flex: 0 0 auto;
   }
-  .property-controls input[type="date"] {
+  .property-controls [data-date-input] {
     width: 100%;
   }
   .asset-card,

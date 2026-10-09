@@ -15,7 +15,10 @@ import {
   relationShown,
 } from "../model/graph-view.js";
 import { person } from "../model/lookup.js";
-import { relationshipLabel } from "../model/relationship-labels.js";
+import {
+  relationshipLabel,
+  relationshipPeriod,
+} from "../model/relationship-labels.js";
 import { graphLine } from "./geometry.js";
 import { graphStrokeAttributes } from "./legend.js";
 import { graphTextWidth, svgText } from "./text.js";
@@ -74,10 +77,7 @@ export function renderGraphEdges(ns, exporting = false) {
       a.kind === "group" || b.kind === "group"
         ? translate("ui.familyConnection")
         : isProfessionalRelationship(r.type)
-          ? relTypes()[r.type] +
-            (r.fromDate || r.toDate
-              ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
-              : "")
+          ? relTypes()[r.type]
           : r.type === "parent"
             ? person(r.from)?.gender === "f"
               ? translate("ui.mother2")
@@ -87,10 +87,7 @@ export function renderGraphEdges(ns, exporting = false) {
             : r.type === "step_parent"
               ? translate("ui.stepParenthood")
               : ["spouse", "partner"].includes(r.type)
-                ? relationshipLabel(r) +
-                  (r.fromDate || r.toDate
-                    ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
-                    : "")
+                ? relationshipLabel(r)
                 : r.type === "sibling"
                   ? translate("ui.sibling2")
                   : r.type === "adopted"
@@ -98,14 +95,43 @@ export function renderGraphEdges(ns, exporting = false) {
                     : r.type === "acquaintance"
                       ? translate("ui.acquaintance2")
                       : translate("ui.possibleConnection");
-    const width = graphTextWidth(label, 14, 400) + 16,
+    const period =
+        a.kind === "group" || b.kind === "group" ? "" : relationshipPeriod(r),
+      heights = episodes.map((episode) =>
+        a.kind !== "group" && b.kind !== "group" && relationshipPeriod(episode)
+          ? 42
+          : 22,
+      ),
+      index = episodes.indexOf(r),
+      precedingHeight = heights
+        .slice(0, index)
+        .reduce((sum, height) => sum + height + 6, 0),
+      totalHeight =
+        heights.reduce((sum, height) => sum + height, 0) +
+        (heights.length - 1) * 6,
+      width =
+        Math.max(
+          graphTextWidth(label, 14, 400),
+          graphTextWidth(period, 12, 400),
+        ) + 16,
       horizontal = !direction && Math.abs(a.y - b.y) < 70,
       ly =
         horizontal && Math.abs(b.x - a.x) - (a.w + b.w) / 2 < width + 12
-          ? Math.min(a.y, b.y) - 17
-          : c.y + (direction ? (a.x < b.x ? -12 : a.x > b.x ? 12 : 0) : 0),
+          ? Math.min(a.y, b.y) + 5 - totalHeight + precedingHeight
+          : c.y -
+            (Math.abs(a.y - b.y) < 70 ? offset : 0) +
+            precedingHeight +
+            heights[index] / 2 -
+            totalHeight / 2 +
+            (direction && episodes.length === 1
+              ? a.x < b.x
+                ? -12
+                : a.x > b.x
+                  ? 12
+                  : 0
+              : 0),
       opacity = highlight && !onpath ? 0.22 : 1;
-    edges += `<g class="edge" data-edge="${r.id}" ${direct ? 'data-direct-connection="true"' : ""} role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(person(r.from)?.name + " — " + label + " — " + person(r.to)?.name)}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18"/>${onpath || active ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${full || direct || cfg.showLabels ? `<rect x="${c.x - width / 2}" y="${ly - 10}" width="${width}" height="22" rx="3" fill="#fff" fill-opacity=".95"/>${svgText(label, c.x - width / 2 + 8, ly + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}` : ""}</g>`;
+    edges += `<g class="edge" data-edge="${r.id}" ${direct ? 'data-direct-connection="true"' : ""} role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(person(r.from)?.name + " — " + label + (period ? " · " + period : "") + " — " + person(r.to)?.name)}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18"/>${onpath || active ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${full || direct || cfg.showLabels ? `<rect x="${c.x - width / 2}" y="${ly - 10}" width="${width}" height="${period ? 42 : 22}" rx="3" fill="#fff" fill-opacity=".95"/><g class="relationship-title">${svgText(label, c.x - width / 2 + 8, ly + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}</g>${period ? `<g class="relationship-period">${svgText(period, c.x - width / 2 + 8, ly + 23, 60, 1, 12, "#3e516c", 400, width - 16)}</g>` : ""}` : ""}</g>`;
   }
   if (appState.showDocs && (full || cfg.documentLinks))
     for (const d of appState.project.documents) {

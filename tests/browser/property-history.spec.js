@@ -63,7 +63,7 @@ test("property analysis follows dated owners and preserves the other family bran
   await date(page, "1933-01-01");
   await page.locator("#propertyDate").fill("");
   await page.locator("#propertyDate").press("Tab");
-  await expect(page.locator("#propertyDate")).toHaveValue("1933-01-01");
+  await expect(page.locator("#propertyDate")).toHaveValue("01.01.1933");
   await expect(snapshot).toContainText("Edward Doe");
   await expect(snapshot).toContainText("Florence Hart");
   await expect(snapshot).not.toContainText("Alice Doe");

@@ -1,3 +1,4 @@
+import { displayDate } from "../model/dates.js";
 import { personDisplayName } from "../model/person-display.js";
 import { docStates } from "../core/config.js";
 import { esc } from "../core/dom.js";
@@ -100,9 +101,11 @@ export function citation(d) {
     d.source,
     d.repository,
     d.reference,
-    d.date ? `${translate("ui.documentDate2")} ` + d.date : "",
+    d.date ? `${translate("ui.documentDate2")} ` + displayDate(d.date) : "",
     sourceLink(d),
-    d.accessedAt ? `${translate("ui.accessed")} ` + d.accessedAt : "",
+    d.accessedAt
+      ? `${translate("ui.accessed")} ` + displayDate(d.accessedAt)
+      : "",
   ]
     .filter(Boolean)
     .join(" · ");

@@ -126,7 +126,7 @@ test("calendar shows hidden profile dates, jubilee birthdays and saved memorial 
     "Annual family gathering",
   );
   await page.locator('[data-action="add-calendar-event"]').click();
-  await expect(page.locator('#modal [name="date"]')).toHaveValue("2026-10-20");
+  await expect(page.locator('#modal [name="date"]')).toHaveValue("20.10.2026");
   await page.locator('#modal [name="title"]').fill("Example remembrance day");
   await page.locator('#modal [name="category"]').selectOption("memorial");
   await page.locator('#modal button[type="submit"]').click();

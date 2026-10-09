@@ -194,6 +194,8 @@ Module imports are acyclic. Core, model and storage modules never import UI, gra
 
 Forms are separate components from the operations that validate and save them. Profile sections use the record configuration in `core/config.js` for fields, rendering, collection and import validation.
 
+`model/dates.js` owns date validation and display. Complete dates use `DD.MM.YYYY` in every language; known years retain their precision. `ui/date-input.js` provides the shared text field and native calendar picker, converting named fields to canonical `YYYY-MM-DD` values at the `formdata` boundary. Archive data, chronological comparisons and calculations continue to use canonical dates. Use this component for new exact-date or period fields; controllers reading fields directly must call `dateInputValue()` before validation or storage. Relationship titles and periods render on separate lines, with additional spacing between episodes connecting the same people.
+
 The optional browser `document.modelContext` integration is isolated in `app/browser-tools.js`. The application also works when this browser API is absent.
 
 ## Adding functionality
@@ -224,7 +226,7 @@ Import `translate` from `i18n/index.js` and use a stable, descriptive key:
 translate("ui.save");
 ```
 
-All catalogs must contain the same keys. Missing messages fail explicitly instead of silently mixing languages. `getLocale()` supplies the active locale for sorting and date formatting. Ukrainian uses the standard locale code `uk` internally and the requested **UA** label in the interface.
+All catalogs must contain the same keys. Missing messages fail explicitly instead of silently mixing languages. `getLocale()` supplies the active locale for sorting, month names and plural rules. Complete numeric dates keep the common `DD.MM.YYYY` format. Ukrainian uses the standard locale code `uk` internally and the requested **UA** label in the interface.
 
 Translate interface messages before inserting user data. Names, notes, source titles and imported content are never machine-translated. Language selection is stored separately from project data; changing it re-renders the interface without replacing the project.
 

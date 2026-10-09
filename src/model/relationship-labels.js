@@ -1,3 +1,4 @@
+import { displayDate } from "./dates.js";
 import { relTypes } from "../core/config.js";
 import { isProfessionalRelationship } from "../core/professional-relationships.js";
 import { relationshipConfig } from "../core/relationships.js";
@@ -76,4 +77,17 @@ export function roleLabel(r, id) {
         ? translate("ui.brother")
         : translate("ui.sibling")
     : relTypes()[r.type];
+}
+
+export function relationshipPeriod(relationship) {
+  return [
+    relationship.fromDate
+      ? `${translate("ui.from")} ${displayDate(relationship.fromDate)}`
+      : "",
+    relationship.toDate
+      ? `${translate("ui.to")} ${displayDate(relationship.toDate)}`
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" — ");
 }

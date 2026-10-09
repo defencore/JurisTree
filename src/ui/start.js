@@ -1,7 +1,8 @@
+import { displayDateTime } from "../model/dates.js";
 import { startTemplates } from "../core/workspace-modes.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { getLocale, translate } from "../i18n/index.js";
+import { translate } from "../i18n/index.js";
 import { launchDraft } from "../model/workspace.js";
 import { icon } from "./icons.js";
 
@@ -29,8 +30,7 @@ export function renderStart() {
       ? translate("ui.currentWorkInThisWindow")
       : draft.project.updatedAt &&
           Number.isFinite(Date.parse(draft.project.updatedAt))
-        ? `${translate("ui.saved")} ` +
-          new Date(draft.project.updatedAt).toLocaleString(getLocale())
+        ? `${translate("ui.saved")} ` + displayDateTime(draft.project.updatedAt)
         : translate("ui.draftInThisBrowser");
   }
   $("#startStorageNote").textContent = !appState.initialized

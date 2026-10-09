@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 for (const [language, width, age, death] of [
-  ["en", 1280, "37 years", "11/03/2011 (79 years)"],
+  ["en", 1280, "37 years", "03.11.2011 (79 years)"],
   ["uk", 390, "37 років", "03.11.2011 (79 років)"],
   ["ru", 320, "37 лет", "03.11.2011 (79 лет)"],
 ]) {

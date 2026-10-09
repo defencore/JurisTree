@@ -90,7 +90,7 @@ test("living ages replace the death row, while deceased ages stay tied to the de
       lifeStatus: "living",
     };
   for (const [language, livingAge, deathValue] of [
-    ["en", "37 years", "11/03/2011 (79 years)"],
+    ["en", "37 years", "03.11.2011 (79 years)"],
     ["uk", "37 років", "03.11.2011 (79 років)"],
     ["ru", "37 лет", "03.11.2011 (79 лет)"],
   ]) {

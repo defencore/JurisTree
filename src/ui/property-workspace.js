@@ -1,3 +1,4 @@
+import { dateInput } from "./date-input.js";
 import { personDisplayName } from "../model/person-display.js";
 import { esc } from "../core/dom.js";
 import { state } from "../core/state.js";
@@ -39,7 +40,7 @@ function propertyCard(asset, date) {
 export function propertyWorkspace() {
   const date = state.propertyDate,
     focus = state.project.property.find((a) => a.id === state.propertyFocus);
-  const toolbar = `<div class="property-controls ${focus ? "focused" : ""}"><label class="field">${t("ui.propertyAsOf")}<input type="date" id="propertyDate" value="${esc(date)}"></label>${focus ? "" : `<div class="search">${icon("search")}<input id="propertySearch" value="${esc(state.propertySearch)}" placeholder="${t("ui.propertySearchHint")}" aria-label="${t("ui.propertySearchHint")}"></div><label class="field">${t("ui.filter")}<select id="propertyReviewFilter">${typeOptions({ all: t("ui.propertyAll"), claims: t("ui.propertyWithClaims"), review: t("ui.propertyNeedsReview") }, state.propertyReviewFilter)}</select></label>`}<div class="property-history-actions"><button class="iconbtn" data-property-command="undo" aria-label="${t("ui.undo")}" title="${t("ui.undoCtrlZ")}" ${state.history.length ? "" : "disabled"}>${icon("undo")}</button><button class="iconbtn" data-property-command="redo" aria-label="${t("ui.redo")}" title="${t("ui.redoCtrlShiftZ")}" ${state.future.length ? "" : "disabled"}>${icon("redo")}</button></div></div>`;
+  const toolbar = `<div class="property-controls ${focus ? "focused" : ""}"><label class="field">${t("ui.propertyAsOf")}${dateInput("", date, { id: "propertyDate" })}</label>${focus ? "" : `<div class="search">${icon("search")}<input id="propertySearch" value="${esc(state.propertySearch)}" placeholder="${t("ui.propertySearchHint")}" aria-label="${t("ui.propertySearchHint")}"></div><label class="field">${t("ui.filter")}<select id="propertyReviewFilter">${typeOptions({ all: t("ui.propertyAll"), claims: t("ui.propertyWithClaims"), review: t("ui.propertyNeedsReview") }, state.propertyReviewFilter)}</select></label>`}<div class="property-history-actions"><button class="iconbtn" data-property-command="undo" aria-label="${t("ui.undo")}" title="${t("ui.undoCtrlZ")}" ${state.history.length ? "" : "disabled"}>${icon("undo")}</button><button class="iconbtn" data-property-command="redo" aria-label="${t("ui.redo")}" title="${t("ui.redoCtrlShiftZ")}" ${state.future.length ? "" : "disabled"}>${icon("redo")}</button></div></div>`;
   if (focus)
     return (
       toolbar + propertyHistoryView(focus, date) + allocationSummary(focus)

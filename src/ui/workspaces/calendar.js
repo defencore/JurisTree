@@ -85,7 +85,7 @@ export function renderCalendar() {
           .slice(0, appState.calendarUndatedLimit)
           .map(
             (e) =>
-              `<p><button type="button" class="text-person" data-edit-person="${e.personId}">${esc(personDisplayName(person(e.personId)))}</button> · ${esc(e.title)} · ${esc(e.date)}</p>`,
+              `<p><button type="button" class="text-person" data-edit-person="${e.personId}">${esc(personDisplayName(person(e.personId)))}</button> · ${esc(e.title)} · ${esc(displayDate(e.date))}</p>`,
           )
           .join(
             "",

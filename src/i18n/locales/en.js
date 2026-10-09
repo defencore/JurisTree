@@ -880,7 +880,7 @@ export default {
   "ui.sourcePhoto": "Source / photo",
   "ui.deleteRecord": "Delete record",
   "ui.noSource": "No source",
-  "ui.yearOrYyyyMmDd": "Year or YYYY-MM-DD",
+  "ui.yearOrDayMonthYear": "Year or DD.MM.YYYY",
   "ui.lifeStoryAndHistoricalInformation":
     "Life story and historical information",
   "ui.supportingSources": "Supporting sources",
@@ -1682,6 +1682,7 @@ export default {
   "ui.directConnectionsCount":
     "Connected people: {count} · Temporarily hidden: {hidden}",
   "ui.restoreConnectionMap": "Return to map",
+  "ui.chooseDate": "Choose a date",
   "ui.currentAge": "Current age",
   "ui.ageAtDeath": "Age at death",
   "ui.ageNeedsClarification": "Age needs clarification",

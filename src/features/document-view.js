@@ -1,3 +1,4 @@
+import { displayDate } from "../model/dates.js";
 import { personDisplayName } from "../model/person-display.js";
 import { evidenceTypes, types } from "../core/config.js";
 import { $, esc } from "../core/dom.js";
@@ -27,8 +28,8 @@ export async function viewDocument(id) {
     [translate("ui.sourceCollectionTitle"), d.collectionTitle],
     [translate("ui.sourceVolume"), d.volume],
     [translate("ui.sourcePages"), d.pages],
-    [translate("ui.documentDate"), d.date],
-    [translate("ui.accessedRequested"), d.accessedAt],
+    [translate("ui.documentDate"), displayDate(d.date)],
+    [translate("ui.accessedRequested"), displayDate(d.accessedAt)],
     [translate("ui.language"), d.language],
     ...recordValues(sourceVerificationConfig(), d),
   ];

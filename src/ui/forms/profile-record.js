@@ -4,7 +4,7 @@ import { esc } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
 import { uid } from "../../core/utils.js";
 import { translate } from "../../i18n/index.js";
-import { dateExact } from "../../model/dates.js";
+import { dateInput } from "../date-input.js";
 import { typeOptions, personOptions } from "../components.js";
 import { icon } from "../icons.js";
 
@@ -30,8 +30,10 @@ function field(section, record, [key, label, type, options], cfg) {
     input = `<select name="${name}"><option value="">${translate("ui.noSource")}</option>${appState.project.documents.map((d) => `<option value="${d.id}" ${d.id === value ? "selected" : ""}>${esc(d.title)}</option>`).join("")}</select>`;
   else if (type === "textarea")
     input = `<textarea name="${name}" rows="3" maxlength="5000">${esc(value)}</textarea>`;
+  else if (["date", "period"].includes(type))
+    input = dateInput(name, value, { period: type === "period" });
   else
-    input = `<input name="${name}" type="${["date", "url"].includes(type) ? type : ["number", "year"].includes(type) ? "number" : "text"}" value="${esc(type === "date" ? dateExact(value) : value)}" ${type === "number" ? `step="any" inputmode="decimal" ${numericBounds}` : type === "year" ? 'min="1" max="9999" step="1" inputmode="numeric"' : 'maxlength="1000"'} ${type === "period" ? `placeholder="${translate("ui.yearOrYyyyMmDd")}"` : ""}>`;
+    input = `<input name="${name}" type="${type === "url" ? type : ["number", "year"].includes(type) ? "number" : "text"}" value="${esc(value)}" ${type === "number" ? `step="any" inputmode="decimal" ${numericBounds}` : type === "year" ? 'min="1" max="9999" step="1" inputmode="numeric"' : 'maxlength="1000"'}>`;
   return `<label class="field ${["textarea", "source"].includes(type) ? "full" : ""}">${esc(label)}${input}</label>`;
 }
 

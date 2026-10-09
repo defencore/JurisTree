@@ -880,7 +880,7 @@ export default {
   "ui.sourcePhoto": "Джерело / фото",
   "ui.deleteRecord": "Видалити запис",
   "ui.noSource": "Без джерела",
-  "ui.yearOrYyyyMmDd": "Рік або РРРР-ММ-ДД",
+  "ui.yearOrDayMonthYear": "Рік або DD.MM.YYYY",
   "ui.lifeStoryAndHistoricalInformation":
     "Хто ця людина, її життя та історичні відомості",
   "ui.supportingSources": "Зовнішні підтвердження",
@@ -1684,6 +1684,7 @@ export default {
   "ui.directConnectionsCount":
     "Пов’язаних осіб: {count} · Тимчасово приховано: {hidden}",
   "ui.restoreConnectionMap": "Повернути схему",
+  "ui.chooseDate": "Вибрати дату",
   "ui.currentAge": "Вік",
   "ui.ageAtDeath": "Вік на момент смерті",
   "ui.ageNeedsClarification": "Вік потребує уточнення",
