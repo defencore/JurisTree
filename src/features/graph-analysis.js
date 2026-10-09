@@ -13,19 +13,32 @@ import { render } from "../ui/render.js";
 
 export function clearGraphSelection() {
   appState.multiSelection.clear();
+  appState.graphSelectionAnchor = "";
   renderGraph();
   renderGraphControls();
 }
 export function toggleGraphSelection(id) {
   if (!person(id)) return;
+  const anchor = appState.graphSelectionAnchor;
+  if (
+    !appState.multiSelection.size &&
+    anchor &&
+    anchor !== id &&
+    appState.selected?.kind === "person" &&
+    appState.selected.id === anchor &&
+    person(anchor)
+  )
+    appState.multiSelection.add(anchor);
   if (appState.multiSelection.has(id)) appState.multiSelection.delete(id);
   else appState.multiSelection.add(id);
+  appState.graphSelectionAnchor = "";
   renderGraph();
   renderGraphControls();
 }
 
 export function applyGraphAnalysis(result, label, focus = false) {
   if (!result?.people?.length) return;
+  appState.graphSelectionAnchor = "";
   if (appState.analysisReturnGroup === null)
     appState.analysisReturnGroup = appState.groupFilter;
   appState.groupFilter = "";

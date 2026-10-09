@@ -1,18 +1,22 @@
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
-import { isMobileLayout } from "../core/viewport.js";
-import { bounds, fit, focusPerson } from "../graph/camera.js";
 import { translate } from "../i18n/index.js";
 import { dateExact } from "../model/dates.js";
 import { requirements } from "../model/evidence.js";
-import { group, person } from "../model/lookup.js";
+import { person } from "../model/lookup.js";
+import {
+  collectCreationLinks,
+  creationLinksError,
+  creationLinkTargets,
+} from "../model/person-creation.js";
 import { collectProfile } from "../model/profile-form.js";
 import { profileScope } from "../model/profile-scope.js";
 import { profileFormError } from "../model/validation.js";
 import { commit } from "../services/history.js";
 import { openDialog } from "../ui/dialog.js";
 import { renderPersonForm } from "../ui/forms/person.js";
+import { bindCreationLinks } from "../ui/forms/person-links.js";
 import { renderProfileRecord } from "../ui/forms/profile-record.js";
 import { renderProfileScopeForm } from "../ui/forms/profile-scope.js";
 import { renderProjectForm } from "../ui/forms/project.js";
@@ -21,8 +25,10 @@ import {
   bindProfileNavigation,
   updateProfileCounts,
 } from "../ui/profile-navigation.js";
+import { createPerson } from "./person-creation.js";
 
 export async function editPerson(id = null, section = null, addRecord = false) {
+  const personId = id || uid();
   const p = id
     ? person(id)
     : {
@@ -45,13 +51,23 @@ export async function editPerson(id = null, section = null, addRecord = false) {
     }).map((t) => t.type);
   const f = await openDialog(
     id ? translate("ui.personProfile") : translate("ui.addPerson"),
-    renderPersonForm(p, req, id),
+    renderPersonForm(
+      p,
+      req,
+      id,
+      creationLinkTargets(
+        appState.project.people,
+        appState.multiSelection,
+        appState.selected,
+      ),
+    ),
     {
       wide: true,
       kind: "person",
       onOpen: () => {
         const editor = $("[data-profile-editor]");
         bindProfileNavigation(editor);
+        if (!id) bindCreationLinks(editor);
         if (!section) return;
         const target = $(`#records-${section}`);
         if (addRecord && target)
@@ -77,7 +93,14 @@ export async function editPerson(id = null, section = null, addRecord = false) {
           return translate("ui.deathCannotPrecedeBirth");
         if (dateExact(birth) && dateExact(death) && death < birth)
           return translate("ui.deathCannotPrecedeBirth");
-        return profileFormError(f, p);
+        const profileError = profileFormError(f, p);
+        if (profileError) return profileError;
+        if (!id) {
+          const error = creationLinksError(f, personId, appState.project);
+          if (error) $("[data-profile-editor]").profileJump("basic");
+          return error;
+        }
+        return "";
       },
     },
   );
@@ -109,28 +132,8 @@ export async function editPerson(id = null, section = null, addRecord = false) {
     !data.requirements.includes("death")
   )
     data.requirements.push("death");
-  commit(() => {
-    if (id) Object.assign(p, data);
-    else {
-      const b = bounds(),
-        np = {
-          ...data,
-          id: uid(),
-          avatarId: "",
-          x: appState.project.people.length ? b.x + b.w - 15 : 80,
-          y: appState.project.people.length ? 240 : 100,
-        };
-      appState.project.people.push(np);
-      if (appState.groupFilter && group(appState.groupFilter))
-        group(appState.groupFilter).collapsed = false;
-      appState.selected = {
-        kind: "person",
-        id: np.id,
-      };
-      if (appState.view === "people") appState.profileFocus = np.id;
-    }
-  });
-  if (!id && appState.view === "tree") isMobileLayout() ? focusPerson() : fit();
+  if (id) commit(() => Object.assign(p, data));
+  else createPerson(data, personId, collectCreationLinks(f, personId));
 }
 export async function editProject() {
   const f = await openDialog(

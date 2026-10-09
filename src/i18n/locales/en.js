@@ -972,7 +972,7 @@ export default {
     "Click a card to view parents, children, profile details and documents on the right. Drag the card to move it.",
   "ui.selectMultiplePeople": "Select multiple people",
   "ui.ctrlOrShiftClickAddsAPersonTo":
-    "Ctrl / ⌘ or Shift + click adds a person to the selection. Shift + drag on empty space selects with a box. Selected cards move together.",
+    "Ctrl / ⌘ or Shift + click adds a person to the selection. Select exactly two people in order, then choose Add relationship to prefill both. A normal click followed by Ctrl / ⌘ + click also selects a pair. Shift + drag on empty space selects with a box. Selected cards move together.",
   "ui.findConnections": "Find connections",
   "ui.pathConnectsTwoPeopleNeighborhoodFindsPeopleWithin":
     "Path connects two people; Neighborhood finds people within a distance; Common connections compares two people; Connecting network joins 2–8 selected people.",
@@ -2357,7 +2357,7 @@ export default {
     "“{mode}” suggests visible sections and tools. Changing it preserves people, relationships and profile information.",
   "ui.guidePeople": "Add people",
   "ui.guidePeopleOne":
-    "Open “{profiles}” or the relationship map and choose “{addPerson}”. Enter the name, then save. Repeat for each person.",
+    "Open “{profiles}” or the relationship map and choose “{addPerson}”. Enter the name. To connect this person immediately, enable “Add relationships now”, choose an existing person and the new person’s role relative to them. Add another row for a second parent or another connection, then save.",
   "ui.guidePeopleTwo":
     "Add birth and death dates or years, gender and life status when known. These values support age badges, calendar dates and family role labels.",
   "ui.guidePeopleThree":
@@ -2369,7 +2369,7 @@ export default {
     "The numbers below are birth years. Every person is fictional.",
   "ui.guideRelationships": "Connect parents, children and partners",
   "ui.guideRelationshipsOne":
-    "Choose “{addRelationship}” on the map or in a complete profile. Select the two people and the relationship type.",
+    "Choose “{addRelationship}” on the map or in a complete profile. To prefill both people, select two cards with Ctrl / ⌘ or Shift + click, in the required order, then choose “{addRelationship}”. Review the type and direction before saving.",
   "ui.guideRelationshipsTwo":
     "For “{parenthood}”, “{first}” is the parent and “{second}” is the child. Add a separate relationship from each known parent to each child.",
   "ui.guideRelationshipsThree":
@@ -2434,4 +2434,30 @@ export default {
     "Open a person’s “{biography}” and select “{print}”. In the browser print dialog, choose Save as PDF or a printer.",
   "ui.guideBackupNote":
     "Autosave keeps a draft in this browser on this device. Export ZIP regularly and before opening another project; drafts do not synchronize automatically.",
+  "ui.newRoleChild": "Child",
+  "ui.newRoleParent": "Parent",
+  "ui.newRoleSpouse": "Spouse",
+  "ui.newRolePartner": "Partner",
+  "ui.newRoleSibling": "Brother / sister",
+  "ui.newRoleAdoptedChild": "Adopted child",
+  "ui.newRoleAdoptiveParent": "Adoptive parent",
+  "ui.newRoleStepChild": "Stepchild",
+  "ui.newRoleStepParent": "Stepparent",
+  "ui.newRoleAcquaintance": "Acquaintance",
+  "ui.newRoleProfessional": "Professional contact",
+  "ui.newRoleSubordinate": "Subordinate",
+  "ui.newRoleSupervisor": "Supervisor",
+  "ui.newRoleSanctionsLink": "Sanctions connection",
+  "ui.newRoleUnconfirmed": "Possible relative",
+  "ui.createRelationshipsNow": "Add relationships now",
+  "ui.existingPerson": "Existing person",
+  "ui.newPersonRole": "New person is their…",
+  "ui.removeRelationship": "Remove relationship",
+  "ui.periodAndDetails": "Period and details",
+  "ui.addAnotherRelationship": "Add another relationship",
+  "ui.creationLinksHint":
+    "Choose the new person’s role relative to the selected person. Use a separate row for each connection, including each parent.",
+  "ui.creationLinksDetailsHint":
+    "The person and these relationships save together. You can add sources and further details later by opening a relationship.",
+  "ui.invalidQuickRelationship": "Choose a person and a relationship role.",
 };

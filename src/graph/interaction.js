@@ -32,6 +32,7 @@ export function bindGraphInteractions() {
     if (n && (e.ctrlKey || e.metaKey || e.shiftKey)) {
       if (n.dataset.kind === "person") toggleGraphSelection(n.dataset.node);
       else if (n.dataset.kind === "group") {
+        appState.graphSelectionAnchor = "";
         const g = filteredGraphNodes().find((x) => x.id === n.dataset.node);
         if (g) {
           const remove = g.members.every((id) =>
@@ -186,6 +187,7 @@ export function finishGraphDrag(e) {
         (Math.max(d.sy, d.ey) - rect.top - appState.camera.y) /
         appState.camera.z;
     appState.multiSelection = new Set(d.extend ? d.beforeSelection : []);
+    appState.graphSelectionAnchor = "";
     for (const n of filteredGraphNodes())
       if (
         ["person", "group"].includes(n.kind) &&

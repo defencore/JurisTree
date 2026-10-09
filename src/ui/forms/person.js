@@ -4,11 +4,12 @@ import { icon } from "../icons.js";
 import { profileNavigation } from "../profile-navigation.js";
 import { renderPersonBasics } from "./person-basic.js";
 import { renderPersonChecklist } from "./person-checklist.js";
+import { renderCreationLinks } from "./person-links.js";
 import { profileEditors } from "./profile-sections.js";
 
-export function renderPersonForm(p, req, id) {
+export function renderPersonForm(p, req, id, linkTargets = []) {
   const content =
-    renderPersonBasics(p) +
+    renderPersonBasics(p, id ? "" : renderCreationLinks(linkTargets)) +
     renderPersonChecklist(req) +
     `<section class="form-section" data-profile-panel="notes"><label class="field">${translate("ui.treeResearchNotes")}<textarea name="notes" maxlength="15000">${esc(p.notes)}</textarea></label></section>${profileEditors(p)}${id ? `<button type="button" class="btn small danger" data-delete-person="${id}">${icon("trash")}${translate("ui.deletePerson")}</button>` : ""}`;
   const extra = [

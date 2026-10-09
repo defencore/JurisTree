@@ -5,6 +5,42 @@
 .mobile-shade {
   display: none;
 }
+@media (min-width: 761px) and (max-width: 1050px) {
+  .mobile-map-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .mobile-map-bar > button {
+    min-height: 44px;
+  }
+  .mobile-map-bar > .iconbtn {
+    min-width: 44px;
+  }
+  .mobile-map-bar > p,
+  .mobile-map-bar > [data-action="touch-move"] {
+    display: none;
+  }
+  .map-settings {
+    display: none;
+  }
+  .mobile-tools-open .map-settings {
+    display: block;
+    max-height: 35dvh;
+    overflow: auto;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .view-full .mobile-map-bar {
+    display: none;
+  }
+  .view-full .map-settings {
+    display: contents;
+  }
+}
 @media (max-width: 760px) {
   .topbar {
     height: 60px;

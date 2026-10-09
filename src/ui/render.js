@@ -129,6 +129,7 @@ export function select(kind, id) {
   )
     resetAnalysis(false);
   appState.multiSelection.clear();
+  appState.graphSelectionAnchor = kind === "person" ? id : "";
   appState.comparisonPath = null;
   let scopeChanged = false;
   if (kind === "person") {

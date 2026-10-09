@@ -1,16 +1,14 @@
 import { $, esc } from "../core/dom.js";
-import {
-  collectRelationship,
-  duplicateRelationship,
-  relationshipConfig,
-} from "../core/relationships.js";
+import { collectRelationship } from "../core/relationships.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { kinshipBetween } from "../model/kinship.js";
 import { person, relation } from "../model/lookup.js";
-import { profileRecordError } from "../model/profile-records.js";
-import { isParentCycle } from "../model/validation.js";
+import {
+  relationshipDefaults,
+  relationshipDraftError,
+} from "../model/relationship-draft.js";
 import { commit } from "../services/history.js";
 import { avatar, personOptions } from "../ui/components.js";
 import { openDialog, toast } from "../ui/dialog.js";
@@ -25,23 +23,14 @@ export async function editRelation(id = null, context = {}) {
     toast(translate("ui.addAtLeastTwoPeopleFirst"));
     return;
   }
-  const from =
-    context.from ||
-    (appState.selected?.kind === "person"
-      ? appState.selected.id
-      : appState.project.people[0].id);
   const r = id
     ? relation(id)
-    : {
-        from,
-        to:
-          context.to ||
-          appState.project.people.find((p) => p.id !== from)?.id ||
-          appState.project.people[1].id,
-        type: context.type || "parent",
-        notes: "",
-        disputed: false,
-      };
+    : relationshipDefaults(
+        appState.project.people,
+        appState.multiSelection,
+        appState.selected,
+        context,
+      );
   const f = await openDialog(
     id ? translate("ui.editRelationship") : translate("ui.addRelationship"),
     renderRelationshipForm(r, id),
@@ -49,27 +38,17 @@ export async function editRelation(id = null, context = {}) {
       wide: true,
       onOpen: bindRelationshipForm,
       validate: (f) => {
-        const a = f.get("from"),
-          b = f.get("to"),
-          t = f.get("type");
-        if (a === b) return translate("ui.selectTwoDifferentPeople");
-        if (
-          ["parent", "adopted", "step_parent"].includes(t) &&
-          isParentCycle(a, b, id)
-        )
-          return translate("ui.thisWouldCreateAGenerationCycleCheckThe");
-        const details = collectRelationship(f);
-        const error = profileRecordError(relationshipConfig(), details);
-        if (error) return error;
-        if (
-          duplicateRelationship(
-            appState.project.relations,
-            { from: a, to: b, type: t, ...details },
-            id,
-          )
-        )
-          return translate("ui.thisRelationshipAlreadyExists");
-        return "";
+        return relationshipDraftError(
+          {
+            from: f.get("from"),
+            to: f.get("to"),
+            type: f.get("type"),
+            ...collectRelationship(f),
+          },
+          appState.project.relations,
+          new Set(appState.project.people.map((p) => p.id)),
+          id,
+        );
       },
     },
   );

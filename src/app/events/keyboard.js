@@ -61,6 +61,7 @@ export function bindKeyboardEvents() {
       if (appState.graphFocus || appState.analysisHighlight) {
         resetAnalysis();
         appState.multiSelection.clear();
+        appState.graphSelectionAnchor = "";
         render();
       } else clearGraphSelection();
       $("#sidebar").classList.remove("open");

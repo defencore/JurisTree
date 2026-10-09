@@ -24,7 +24,6 @@ import {
   relationshipFields,
 } from "../core/relationships.js";
 import { sourceEvidence, sourceVerificationConfig } from "../core/sources.js";
-import { state as appState } from "../core/state.js";
 import { safeUrl, uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { dateExact, partialDate } from "./dates.js";
@@ -41,24 +40,6 @@ import {
   propertyRecords,
 } from "./property-records.js";
 
-export function isParentCycle(from, to, except) {
-  const stack = [to],
-    seen = new Set();
-  while (stack.length) {
-    const v = stack.pop();
-    if (v === from) return true;
-    if (seen.has(v)) continue;
-    seen.add(v);
-    for (const r of appState.project.relations)
-      if (
-        r.id !== except &&
-        ["parent", "adopted", "step_parent"].includes(r.type) &&
-        r.from === v
-      )
-        stack.push(r.to);
-  }
-  return false;
-}
 export function validateImport(raw) {
   if (!raw || raw.format !== "juristree" || raw.version !== 1)
     throw Error(translate("ui.unsupportedJuristreeArchive"));

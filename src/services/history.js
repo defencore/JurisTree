@@ -31,6 +31,8 @@ export function redo() {
   emitSignal("project:changed");
 }
 export function repairSelection() {
+  if (!person(appState.graphSelectionAnchor))
+    appState.graphSelectionAnchor = "";
   if (appState.profileFocus && !person(appState.profileFocus))
     appState.profileFocus = "";
   appState.multiSelection = new Set(

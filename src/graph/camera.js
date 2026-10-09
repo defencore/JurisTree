@@ -14,11 +14,53 @@ export function focusPerson(
   if (!node) return fit();
   const rect = $("#graph").getBoundingClientRect();
   if (!rect.width || !rect.height) return;
-  const z = Math.min(1.1, Math.max(0.65, (rect.width - 48) / node.w));
+  const overlays = [$(".graph-tools"), $(".legend")]
+    .filter(Boolean)
+    .map((el) => el.getBoundingClientRect())
+    .filter((box) => box.width && box.height);
+  let z = Math.max(
+    0.15,
+    Math.min(
+      1.1,
+      (rect.width - 48) / node.w,
+      (rect.height - 76) / (node.h + 24),
+    ),
+  );
+  let centerX = rect.width / 2,
+    bottom = 64;
+  if (z < 0.85) {
+    const right = Math.max(0, ...overlays.map((box) => box.right - rect.left));
+    const larger = Math.min(
+      1.1,
+      (rect.width - 48) / node.w,
+      (rect.height - 24) / (node.h + 24),
+    );
+    if (larger > z && rect.width - right - 48 >= node.w * larger) {
+      z = larger;
+      centerX = (right + rect.width) / 2;
+      bottom = 12;
+    }
+  }
+  const overlapping = overlays.filter(
+    (box) =>
+      box.right > rect.left + centerX - (node.w * z) / 2 &&
+      box.left < rect.left + centerX + (node.w * z) / 2,
+  );
+  if (overlapping.length) {
+    bottom = Math.max(
+      bottom,
+      rect.bottom - Math.min(...overlapping.map((box) => box.top)) + 12,
+    );
+    z = Math.max(
+      0.15,
+      Math.min(z, (rect.height - bottom - 12) / (node.h + 24)),
+    );
+  }
+  const top = 12 + 24 * z;
   appState.camera = {
     z,
-    x: rect.width / 2 - (node.x + node.w / 2) * z,
-    y: rect.height / 2 - (node.y + node.h / 2) * z,
+    x: centerX - (node.x + node.w / 2) * z,
+    y: top + (rect.height - top - bottom) / 2 - (node.y + node.h / 2) * z,
   };
   applyCamera();
 }

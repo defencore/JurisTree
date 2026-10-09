@@ -42,6 +42,7 @@ export function activateTree(
   }
   resetAnalysis(false);
   appState.multiSelection.clear();
+  appState.graphSelectionAnchor = "";
   appState.selectionMode = false;
   appState.touchMove = false;
   document.body.classList.remove("mobile-tools-open");

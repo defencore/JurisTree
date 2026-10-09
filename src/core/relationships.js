@@ -220,7 +220,7 @@ export function collectRelationship(form) {
 export function duplicateRelationship(relations, candidate, except) {
   return relations.some(
     (r) =>
-      r.id !== except &&
+      (except == null || r.id !== except) &&
       r.type === candidate.type &&
       ((r.from === candidate.from && r.to === candidate.to) ||
         (!isDirectedRelationship(r.type) &&

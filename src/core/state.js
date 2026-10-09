@@ -64,6 +64,7 @@ export const state = {
   analysisExpandedGroups: new Set(),
   analysisReturnGroup: null,
   multiSelection: new Set(),
+  graphSelectionAnchor: "",
   selectionMode: false,
   touchMove: false,
   analysisResult: null,

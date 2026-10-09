@@ -10,8 +10,11 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 
 - Eight workspace modes and an optional blank project template.
 - People, family groups and family or professional relationship types, including biological parenthood, adoption, step-parenthood and acquaintance.
+- Optional relationships during person creation, including both parents, with explicit roles, periods and verification. Person and links save and undo together. New cards appear near the current view or relatives and are centered at a readable scale.
+- Ordered two-person selection with Ctrl / ⌘ or Shift + click, including the sidebar list, prefills the relationship editor. A normal click followed by a modified click also selects a pair.
 - Interactive SVG map with dragging, zoom, multiple selection, filters and generation, circle or network layouts. Person cards show full birth/death dates on separate rows, icon-and-text life/age badges and selection-relative family roles.
 - Touch navigation with one-finger panning, two-finger zoom, readable person focus and an explicit card movement mode. Selecting a person from the list centers their card at a readable scale on desktop and mobile. Mobile controls are collapsible and the person panel opens as a bottom sheet.
+- Collapsible map options on tablets; adding a person closes overlapping phone/tablet panels to expose their card.
 - Shortest and alternative paths, neighborhoods, common connections and connecting networks.
 - Kinship descriptions based on recorded relationships, including half-siblings when both biological parent sets are recorded.
 - Favorite people in a sidebar list and a quick-access strip; selecting a favorite centers their card at a readable scale across map filters.

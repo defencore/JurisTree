@@ -14,6 +14,10 @@ To inspect the finished exercise first, download **Example JSON** from the in-ap
 
 Choose **Add person** on the map or in **People & profiles**. Enter a name and save. Add dates or years, gender and life status when known. Only the name is required.
 
+To connect the person immediately, enable **Add relationships now** in the basic information section. Choose an **Existing person** and the **New person is their…** role. For example, select Alex Doe and **Child** when adding Jamie Doe. Use **Add another relationship** to add Morgan Doe as the second parent. The person and every entered relationship save together and can be undone with one action. Leave this option unchecked to create a person without relationships.
+
+New cards appear near the current map view or their linked relatives, avoiding existing person cards. The map centers the new person without fitting the entire tree. On phones and tablets, the overlapping person panel closes so the new card remains visible; select the card to reopen it.
+
 For this exercise, enter these eight fictional people. The dates supplied are birth years, not complete birth dates.
 
 | Current name | Gender | Birth year | Maiden surname |
@@ -32,6 +36,8 @@ Use the current name in the main field. Add maiden surnames and previous names i
 ## 3. Record relationships
 
 Choose **Add relationship**, select **First person**, **Second person** and the relationship type, then save. Add dates, status and supporting sources when known.
+
+For faster entry, select exactly two cards with **Ctrl / ⌘ or Shift + click**, in the required order, then choose **Add relationship** on the selection strip or the map toolbar. Both people are filled in automatically. You can also click the first person normally, then Ctrl / ⌘ + click the second. Modified clicks work in the sidebar people list too. Review the relationship type and direction before saving. An explicit relationship action from a person's profile takes precedence over the map selection.
 
 Create these three **Registered marriage** relationships. Each marriage needs one entry; either partner may be selected first.
 
@@ -98,6 +104,8 @@ For a statement, recording or rumor, record who supplied it, when and what requi
 Select **Generations** under **Layout**, then **Show entire tree**. Reapply the layout as the tree grows and drag individual cards when needed. Select a person to see their relatives' roles. **How are we related?** compares two people; **Connection search** finds paths and networks. The top search and filters find recorded values and combinations.
 
 On a phone, pan with one finger and zoom with two. Enable **Move cards** to drag person cards. **Map options** opens layout, display and analysis controls.
+
+On tablets, **Map options** also keeps these controls together and leaves more space for the tree. Touch the selection-mode button there to select several people without a keyboard.
 
 If a person appears to be missing, check the active group, collapsed groups, search or analysis results, and **Display** settings. These controls hide data from the current view without deleting it.
 

@@ -1,0 +1,62 @@
+.creation-links {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 5px;
+  padding: 14px;
+  margin: 0 0 20px;
+}
+.creation-links-toggle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.creation-links .hint {
+  margin: 12px 0;
+}
+.creation-link {
+  position: relative;
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+}
+.creation-link-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  padding-right: 40px;
+}
+.creation-link .field {
+  min-width: 0;
+}
+.creation-link .field select {
+  text-overflow: ellipsis;
+}
+.creation-link-remove {
+  position: absolute;
+  top: 43px;
+  right: 0;
+}
+.creation-link-details > summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.creation-link-details .form-grid {
+  margin-top: 14px;
+}
+@media (max-width: 600px) {
+  .creation-link-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .creation-links {
+    padding: 12px;
+  }
+  .creation-link-fields {
+    padding-right: 52px;
+  }
+  .creation-links .btn,
+  .creation-link-remove {
+    min-height: 44px;
+  }
+  .creation-link-remove {
+    min-width: 44px;
+  }
+}

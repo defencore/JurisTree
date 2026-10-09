@@ -100,6 +100,7 @@ export async function handleAction(action) {
     },
     "add-person": () => editPerson(),
     "add-relation": () => editRelation(),
+    "link-selected": () => editRelation(),
     "add-document": () =>
       openFiles(
         appState.selected?.kind === "person"

@@ -16,6 +16,7 @@ import {
   hideGraphRelation,
   revealGraphRelation,
   showAnalysisResult,
+  toggleGraphSelection,
 } from "../../features/graph-analysis.js";
 import { graphAnalysisDialog } from "../../features/graph-tools.js";
 import { deleteGroup, editGroup, toggleGroup } from "../../features/groups.js";
@@ -55,6 +56,19 @@ import { renderEvents } from "../../ui/workspaces/events.js";
 import { handleAction } from "../actions.js";
 
 export function bindClickEvents() {
+  document.addEventListener("pointerdown", (e) => {
+    const target = e.target.closest("[data-person]");
+    if (
+      !target ||
+      e.button !== 0 ||
+      e.pointerType === "touch" ||
+      appState.view !== "tree" ||
+      !(e.ctrlKey || e.metaKey || e.shiftKey)
+    )
+      return;
+    e.preventDefault();
+    toggleGraphSelection(target.dataset.person);
+  });
   document.addEventListener("click", async (e) => {
     const b = e.target.closest(
       "button,[data-favorite],[data-person],[data-biography],[data-document],[data-relation],[data-edge],[data-gap-kind],[data-required],[data-toggle-group]",
@@ -388,6 +402,13 @@ export function bindClickEvents() {
         return;
       }
       if (b.dataset.person) {
+        if (
+          appState.view === "tree" &&
+          (e.ctrlKey || e.metaKey || e.shiftKey)
+        ) {
+          if (!e.detail) toggleGraphSelection(b.dataset.person);
+          return;
+        }
         select("person", b.dataset.person);
         focusPerson();
         return;

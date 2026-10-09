@@ -49,6 +49,8 @@ To use another static host, upload the contents of `dist/` while preserving its 
 
 ## Architecture
 
+Person creation uses `core/person-creation.js` for roles, `model/person-creation.js` for form collection and batch validation, and `features/person-creation.js` for one atomic project/history update. `ui/forms/person-links.js` owns progressive relationship rows. `model/relationship-draft.js` supplies ordered selection defaults and shared validation for both creation batches and the standalone editor. Placement calculations live in `model/person-placement.js`, with the current graph viewport and obstacles supplied by `graph/person-placement.js`. Adding a person never moves existing cards or fits the entire graph.
+
 ```text
 index.html                 Static document and relative asset entry points
 src/

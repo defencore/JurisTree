@@ -8,6 +8,7 @@ import {
   visiblePeople,
 } from "../model/graph-view.js";
 import { person } from "../model/lookup.js";
+import { selectedPeople } from "../model/relationship-draft.js";
 import { typeOptions } from "./components.js";
 import { icon } from "./icons.js";
 
@@ -45,18 +46,23 @@ export function renderGraphControls() {
     cfg.states.length !== Object.keys(graphStateInfo()).length ||
     cfg.hiddenRelations.length ||
     !cfg.showIsolated;
-  toolbar.innerHTML = `<div class="graph-toolbar-group"><button class="btn small graph-search-btn" data-action="graph-search">${icon("route")}${translate("ui.connectionSearch")}</button><button class="btn small ${changed ? "active" : ""}" data-action="graph-filters">${icon("sliders")}${translate("ui.display")}${changed ? `<span class="filter-mark">${translate("ui.changed")}</span>` : ""}</button><button class="iconbtn small ${appState.selectionMode ? "active" : ""}" data-action="selection-mode" aria-label="${translate("ui.boxSelectPeople")}" title="${translate("ui.boxSelectionShiftDrag")}" aria-pressed="${appState.selectionMode}">${icon("selectBox")}</button></div><div class="graph-toolbar-group"><label class="layout-control"><span>${translate("ui.layout")}</span><select id="graphLayout" aria-label="${translate("ui.mapLayout")}" ${appState.analysisBusy ? "disabled" : ""}>${typeOptions(
+  toolbar.innerHTML = `<div class="graph-toolbar-group"><button class="btn small graph-search-btn" data-action="graph-search">${icon("route")}${translate("ui.connectionSearch")}</button><button class="btn small ${changed ? "active" : ""}" data-action="graph-filters">${icon("sliders")}${translate("ui.display")}${changed ? `<span class="filter-mark">${translate("ui.changed")}</span>` : ""}</button><button class="iconbtn small ${appState.selectionMode ? "active" : ""}" data-action="selection-mode" aria-label="${translate("ui.boxSelectPeople")}" title="${translate("ui.boxSelectionShiftDrag")}" aria-pressed="${appState.selectionMode}">${icon("selectBox")}</button><button class="iconbtn small" data-action="graph-help" aria-label="${translate("ui.workingWithTheMap")}" title="${translate("ui.workingWithTheMap")}">${icon("help")}</button></div><div class="graph-toolbar-group"><label class="layout-control"><span>${translate("ui.layout")}</span><select id="graphLayout" aria-label="${translate("ui.mapLayout")}" ${appState.analysisBusy ? "disabled" : ""}>${typeOptions(
     {
       generations: translate("ui.generations3"),
       network: translate("ui.network"),
       circle: translate("ui.circle"),
     },
     cfg.layout,
-  )}</select></label><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span><button class="iconbtn small" data-action="graph-help" aria-label="${translate("ui.workingWithTheMap")}" title="${translate("ui.workingWithTheMap")}">${icon("help")}</button>`;
+  )}</select></label><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span>`;
   $("#graph").classList.toggle("selection-mode", appState.selectionMode);
   context.hidden =
     !appState.analysisHighlight &&
     !appState.graphFocus &&
     !appState.multiSelection.size;
-  context.innerHTML = `<div>${appState.analysisHighlight ? `<b>${esc(appState.analysisHighlight.label)}</b><span>${appState.graphFocus ? translate("ui.resultsOnly") : translate("ui.resultsHighlightedOnMap")}</span>` : `<b>${translate("ui.selectedPeople2")} ${appState.multiSelection.size}</b><span>${translate("ui.ctrlOrShiftClickToChangeSelection")}</span>`}</div><div class="graph-context-actions">${appState.multiSelection.size > 1 ? `<button class="btn small" data-action="graph-search">${translate("ui.searchSelected")}</button>` : ""}${appState.multiSelection.size ? `<button class="btn small" data-action="focus-selection">${translate("ui.selectedOnly")}</button>` : ""}${appState.analysisHighlight || appState.graphFocus ? `<button class="btn small" data-action="clear-analysis">${translate("ui.showEntireMap")}</button>` : `<button class="btn small ghost" data-action="clear-selection">${translate("ui.clear")}</button>`}</div>`;
+  const pair = selectedPeople(appState.project.people, appState.multiSelection);
+  const pairHint =
+    pair.length === 2
+      ? `${esc(person(pair[0]).name)} → ${esc(person(pair[1]).name)}`
+      : translate("ui.ctrlOrShiftClickToChangeSelection");
+  context.innerHTML = `<div>${appState.analysisHighlight ? `<b>${esc(appState.analysisHighlight.label)}</b><span>${appState.graphFocus ? translate("ui.resultsOnly") : translate("ui.resultsHighlightedOnMap")}</span>` : `<b>${translate("ui.selectedPeople2")} ${appState.multiSelection.size}</b><span>${pairHint}</span>`}</div><div class="graph-context-actions">${pair.length === 2 ? `<button class="btn small primary" data-action="link-selected">${icon("link")}${translate("ui.addRelationship")}</button>` : ""}${appState.multiSelection.size > 1 ? `<button class="btn small" data-action="graph-search">${translate("ui.searchSelected")}</button>` : ""}${appState.multiSelection.size ? `<button class="btn small" data-action="focus-selection">${translate("ui.selectedOnly")}</button>` : ""}${appState.analysisHighlight || appState.graphFocus ? `<button class="btn small" data-action="clear-analysis">${translate("ui.showEntireMap")}</button>` : `<button class="btn small ghost" data-action="clear-selection">${translate("ui.clear")}</button>`}</div>`;
 }
