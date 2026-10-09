@@ -109,8 +109,16 @@ export function updateProfileCounts() {
   if (!root) return;
   for (const panel of root.querySelectorAll("[data-profile-section]")) {
     const key = panel.dataset.profileSection;
+    const overview = panel.querySelector("[data-profile-overview]");
     const count = panel.querySelector(`#records-${key}`)
-      ? panel.querySelectorAll("[data-record-section]").length
+      ? panel.querySelectorAll("[data-record-section]").length +
+        Number(
+          !!overview &&
+            ([...overview.querySelectorAll("textarea")].some((input) =>
+              input.value.trim(),
+            ) ||
+              !!overview.querySelector('input[type="checkbox"]:checked')),
+        )
       : Number(
           [...panel.querySelectorAll("textarea")].some((input) =>
             input.value.trim(),

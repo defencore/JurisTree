@@ -6,6 +6,10 @@ export function collectProfile(form) {
     if (recordConfigs()[section]) {
       const cfg = recordConfigs()[section],
         ids = form.getAll(section + "-id");
+      if (cfg.overview) {
+        data[cfg.overview.field] = String(form.get(cfg.overview.field) || "");
+        data[cfg.overview.sourceIds] = form.getAll(cfg.overview.sourceIds);
+      }
       data[cfg.key] = ids
         .map((id, index) => {
           const record = {
@@ -24,12 +28,6 @@ export function collectProfile(form) {
     } else if (section === "biography") {
       data.biography = String(form.get("biography") || "");
       data.bioSourceIds = form.getAll("bioSourceIds");
-    } else if (section === "interests") {
-      data.hobbies = String(form.get("hobbies") || "");
-      data.interests = String(form.get("interests") || "");
-    } else {
-      data.health = String(form.get("health") || "");
-      data.healthSourceIds = form.getAll("healthSourceIds");
     }
   }
   return data;

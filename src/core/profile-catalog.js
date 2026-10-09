@@ -15,16 +15,28 @@ export function profileCatalog() {
         sectionInfo()[key][0],
         ...(configs[key]?.fields || []).map(([, label]) => label),
         ...(configs[key]?.groups || []).map(({ label }) => label),
+        ...(configs[key]?.fields || []).flatMap(([, , type, options]) =>
+          type === "select" ? Object.values(options) : [],
+        ),
+        configs[key]?.sectionHint || "",
+        configs[key]?.overview?.label || "",
       ].join(" "),
     })),
   }));
 }
 
+export function profileOverviewCount(person, cfg) {
+  return Number(
+    !!cfg.overview &&
+      (!!person[cfg.overview.field]?.trim() ||
+        !!person[cfg.overview.sourceIds]?.length),
+  );
+}
+
 export function profileSectionCount(person, key) {
   const cfg = recordConfigs()[key];
-  if (cfg) return (person[cfg.key] || []).length;
+  if (cfg)
+    return (person[cfg.key] || []).length + profileOverviewCount(person, cfg);
   if (key === "biography") return person.biography ? 1 : 0;
-  if (key === "interests") return person.hobbies || person.interests ? 1 : 0;
-  if (key === "health") return person.health ? 1 : 0;
   return 0;
 }

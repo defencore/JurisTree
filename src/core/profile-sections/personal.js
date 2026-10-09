@@ -1,5 +1,6 @@
 import { defineSection } from "./define.js";
 import { attributionGroup } from "./attribution.js";
+import { translate } from "../../i18n/index.js";
 
 export function personalSection() {
   return defineSection(
@@ -53,6 +54,7 @@ export function personalSection() {
     ],
     [["from", "to"]],
     {
+      sectionHint: translate("ui.personalSectionHint"),
       calendar: {
         type: "personal",
         dates: [

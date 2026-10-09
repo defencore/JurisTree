@@ -178,6 +178,7 @@ test("education and dated interests use focused section entry and appear in the 
   const hobby = page.locator("#records-skills .profile-record").last();
   await hobby.locator('[name="skills-category"]').selectOption("interest");
   await hobby.locator('[name="skills-name"]').fill("Watercolor painting");
+  await hobby.locator(".record-field-group > summary").first().click();
   await hobby.locator('[name="skills-from"]').fill("2015");
   await hobby.locator('[name="skills-to"]').fill("2020");
   await hobby.locator('[name="skills-timeStatus"]').selectOption("past");

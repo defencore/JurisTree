@@ -195,6 +195,9 @@
 .record-field-group > .form-grid {
   padding-top: 8px;
 }
+.profile-section-overview {
+  margin-bottom: 16px;
+}
 .profile-details > summary,
 .profile-editor-section > summary {
   align-items: center;

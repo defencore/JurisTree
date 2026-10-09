@@ -838,8 +838,6 @@ export default {
   "ui.addressHistory": "Адреса по периодам",
   "ui.biographyAndHistory": "Биографические сведения",
   "ui.workEducationService": "Работа и служба",
-  "ui.hobbiesAndInterests": "Увлечения и интересы",
-  "ui.healthInformation": "Состояние здоровья",
   "ui.pets": "Домашние животные",
   "ui.whichDataShouldBeShownForThisPurpose":
     "Какие данные показывать для этой цели?",
@@ -888,7 +886,6 @@ export default {
   "ui.supportingSources": "Внешние подтверждения",
   "ui.hobbies": "Увлечения",
   "ui.interests": "Интересы",
-  "ui.healthDetails": "Сведения о здоровье",
   "ui.relatedSources": "Связанные источники",
   "ui.record": "Запись",
   "ui.annualAnniversary": "· годовщина каждый год",
@@ -904,8 +901,8 @@ export default {
   "ui.endCannotPrecedeStart": ": окончание не может быть раньше начала.",
   "ui.petDeathCannotPrecedeBirth":
     "Питомец: дата смерти не может быть раньше рождения.",
-  "ui.eachSectionSupportsUpTo200Records":
-    "В каждом разделе можно добавить до 200 записей.",
+  "ui.profileSectionRecordLimit":
+    "Этот раздел поддерживает до {limit} записей.",
   "ui.enterAValidDateInSection": "Укажите действительную дату в разделе «",
   "ui.enterAValidBirthOrDeathDate":
     "Укажите действительную дату рождения или смерти.",
@@ -1526,7 +1523,7 @@ export default {
   "ui.glassesUse": "Очки",
   "ui.distinctiveFeatures": "Особые приметы",
   "ui.tattoosScars": "Татуировки, шрамы и другие приметы",
-  "ui.medicalHistory": "Медицинские сведения",
+  "ui.medicalHistory": "Здоровье",
   "ui.medicalRecord": "Медицинская запись",
   "ui.medicalRecordType": "Вид медицинской записи",
   "ui.illnessCondition": "Заболевание / состояние",
@@ -1552,8 +1549,7 @@ export default {
   "ui.medicalRecordNumber": "Номер документа / медицинской книжки",
   "ui.recordDate": "Дата записи",
   "ui.nextReviewDate": "Следующий приём / осмотр",
-  "ui.skillsHobbies": "Навыки, хобби и интересы",
-  "ui.skillRecord": "Навык / занятие",
+  "ui.skillRecord": "Занятие или навык",
   "ui.skill": "Навык",
   "ui.sport": "Спорт",
   "ui.martialArt": "Единоборство",
@@ -1561,13 +1557,12 @@ export default {
   "ui.teachingActivity": "Преподавание",
   "ui.constructionActivity": "Строительство",
   "ui.developmentActivity": "Развитие / создание",
-  "ui.skillActivityName": "Название навыка / занятия",
+  "ui.skillActivityName": "Занятие, тема или навык",
   "ui.proficiencyLevel": "Уровень владения",
   "ui.beginner": "Начальный",
   "ui.intermediate": "Средний",
   "ui.advanced": "Продвинутый",
   "ui.professional": "Профессиональный",
-  "ui.qualifications": "Квалификации и сертификаты",
   "ui.qualification": "Квалификация",
   "ui.certificateNumber": "Номер сертификата",
   "ui.weaponOwnership": "Оружие и разрешения",
@@ -2211,8 +2206,6 @@ export default {
   "ui.pastActivity": "В прошлом / завершено",
   "ui.pausedActivity": "Приостановлено",
   "ui.plannedActivity": "Запланировано",
-  "ui.datedInterestsHint":
-    "Периоды занятий добавляйте в «Навыки, хобби и интересы», а привычек, взглядов и предпочтений — в «Привычки и убеждения». Эти поля — краткий обзор.",
   "ui.addLegalRecord": "Добавить судебную / правовую запись",
   "ui.addCustodyRecord": "Добавить период содержания",
   "ui.openProfileSection": "Открыть раздел профиля",
@@ -2346,4 +2339,13 @@ export default {
   "ui.propertySharePercent": "Доля имущества (%)",
   "ui.propertyClaimRelationship":
     "Зафиксированная связь с лицом, через которое заявляется право",
+  "ui.activitiesAndSkills": "Увлечения и навыки",
+  "ui.activitiesAndSkillsHint":
+    "Увлечения, интересы и умения в одном месте. Достаточно названия или описания; даты и подробности — по необходимости.",
+  "ui.levelAndQualifications": "Уровень и квалификация",
+  "ui.healthOverview": "Общие сведения о здоровье",
+  "ui.healthSectionHint":
+    "Общие сведения и отдельные медицинские записи: заболевания, аллергии, лечение и пищевые ограничения.",
+  "ui.personalSectionHint":
+    "Привычки, предпочтения и убеждения и периоды их действия. Пищевые вкусы — здесь, медицинские ограничения — в разделе «Здоровье».",
 };

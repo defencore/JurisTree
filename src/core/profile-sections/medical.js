@@ -1,5 +1,6 @@
 import { defineSection } from "./define.js";
 import { attributionGroup } from "./attribution.js";
+import { translate } from "../../i18n/index.js";
 
 export function medicalSection() {
   return defineSection(
@@ -79,6 +80,13 @@ export function medicalSection() {
     ],
     [["from", "to"]],
     {
+      sectionHint: translate("ui.healthSectionHint"),
+      overview: {
+        field: "health",
+        sourceIds: "healthSourceIds",
+        label: translate("ui.healthOverview"),
+        maximumLength: 10000,
+      },
       calendar: {
         type: "medical",
         dates: [

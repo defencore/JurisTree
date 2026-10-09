@@ -27,7 +27,10 @@ export function biographyProject() {
     identityHistory: [],
     appearanceRecords: [],
     medicalRecords: [],
-    skillRecords: [],
+    skillRecords: [
+      { id: "profile-hobby", category: "hobby", name: "Watercolor painting" },
+      { id: "profile-interest", category: "interest", name: "Local history" },
+    ],
     weaponRecords: [],
     travelRecords: [],
     aliases: "Alex Doe",
@@ -37,8 +40,6 @@ export function biographyProject() {
     bioSourceIds: ["bio-source"],
     health: "Recorded health details",
     healthSourceIds: ["health-source"],
-    hobbies: "Watercolor painting",
-    interests: "Local history",
     notes: "Research note for the complete profile",
     requirements: ["birth", "archive"],
     events: [

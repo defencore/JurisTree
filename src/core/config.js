@@ -97,8 +97,6 @@ export function sectionInfo() {
   const sections = {
     timeline: [translate("ui.familyDates"), "calendarClock"],
     biography: [translate("ui.biographyAndHistory"), "book"],
-    interests: [translate("ui.hobbiesAndInterests"), "sparkles"],
-    health: [translate("ui.healthInformation"), "heartPulse"],
     pets: [translate("ui.pets"), "paw"],
     ...Object.fromEntries(
       Object.entries(extendedProfileSections()).map(([key, section]) => [
@@ -192,7 +190,7 @@ export function familyEventTypes() {
     military: [translate("ui.militaryHistory"), "shield"],
     testimony: [translate("ui.witnessesAndTestimony"), "users"],
     weapon: [translate("ui.weaponOwnership"), "shield"],
-    skill: [translate("ui.skillsHobbies"), "sparkles"],
+    skill: [translate("ui.activitiesAndSkills"), "sparkles"],
     education: [translate("ui.education"), "book"],
     personal: [translate("ui.personalPortrait"), "sparkles"],
     residence: [translate("ui.residence"), "mapPin"],

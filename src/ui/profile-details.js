@@ -7,6 +7,7 @@ import {
 import { translate } from "../i18n/index.js";
 import { displayDate } from "../model/dates.js";
 import { profileScope } from "../model/profile-scope.js";
+import { profileOverviewDetails } from "./profile-overview.js";
 import { sourceChips } from "./components.js";
 import { icon } from "./icons.js";
 import {
@@ -68,29 +69,15 @@ export function renderPersonDetails(p, { complete = false } = {}) {
   const renderSection = ({ key: section, search }) => {
     const [label, ic] = sectionInfo()[section];
     let body = "";
-    if (recordConfigs()[section])
-      body = (p[recordConfigs()[section].key] || [])
-        .map((r) => recordDetails(section, r))
-        .join("");
-    else if (section === "biography")
+    if (recordConfigs()[section]) {
+      const cfg = recordConfigs()[section];
+      body =
+        profileOverviewDetails(cfg, p) +
+        (p[cfg.key] || []).map((r) => recordDetails(section, r)).join("");
+    } else if (section === "biography")
       body =
         (p.biography ? `<div class="note-box">${esc(p.biography)}</div>` : "") +
         sourceChips(p.bioSourceIds);
-    else if (section === "interests")
-      body = [
-        [translate("ui.hobbies"), p.hobbies],
-        [translate("ui.interests"), p.interests],
-      ]
-        .filter(([, v]) => v)
-        .map(
-          ([l, v]) =>
-            `<p class="detail-label">${l}</p><div class="note-box">${esc(v)}</div>`,
-        )
-        .join("");
-    else
-      body =
-        (p.health ? `<div class="note-box">${esc(p.health)}</div>` : "") +
-        sourceChips(p.healthSourceIds);
     return `<details class="profile-details" ${section === "biography" || section === "timeline" ? "open" : ""} ${complete ? `data-profile-panel="${section}" data-profile-keywords="${esc(search)}"` : ""}><summary>${icon(ic)}${esc(label)}<span class="profile-record-count">${profileSectionCount(p, section) || ""}</span>${icon("chevron")}</summary><div>${body || `<p class="kin-empty">${translate("ui.noInformationYet")}</p>`}<button class="btn small ghost" data-open-profile-section="${section}" data-profile-person="${p.id}">${icon("edit")}${translate("ui.edit")}</button></div></details>`;
   };
   const visible = profileScope();

@@ -835,8 +835,6 @@ export default {
   "ui.addressHistory": "Address history",
   "ui.biographyAndHistory": "Biographical details",
   "ui.workEducationService": "Employment and service",
-  "ui.hobbiesAndInterests": "Hobbies and interests",
-  "ui.healthInformation": "Health information",
   "ui.pets": "Pets",
   "ui.whichDataShouldBeShownForThisPurpose":
     "Which data should be shown for this purpose?",
@@ -885,7 +883,6 @@ export default {
   "ui.supportingSources": "Supporting sources",
   "ui.hobbies": "Hobbies",
   "ui.interests": "Interests",
-  "ui.healthDetails": "Health details",
   "ui.relatedSources": "Related sources",
   "ui.record": "Record",
   "ui.annualAnniversary": "· annual anniversary",
@@ -900,8 +897,8 @@ export default {
   "ui.enterAValidDate": ": enter a valid date.",
   "ui.endCannotPrecedeStart": ": end cannot precede start.",
   "ui.petDeathCannotPrecedeBirth": "Pet: death cannot precede birth.",
-  "ui.eachSectionSupportsUpTo200Records":
-    "Each section supports up to 200 records.",
+  "ui.profileSectionRecordLimit":
+    "This section supports up to {limit} records.",
   "ui.enterAValidDateInSection": "Enter a valid date in section “",
   "ui.enterAValidBirthOrDeathDate": "Enter a valid birth or death date.",
   "ui.memorialDates": "Memorial dates",
@@ -1517,7 +1514,7 @@ export default {
   "ui.glassesUse": "Glasses",
   "ui.distinctiveFeatures": "Distinctive features",
   "ui.tattoosScars": "Tattoos, scars and other marks",
-  "ui.medicalHistory": "Medical information",
+  "ui.medicalHistory": "Health",
   "ui.medicalRecord": "Medical record",
   "ui.medicalRecordType": "Medical record type",
   "ui.illnessCondition": "Illness / condition",
@@ -1543,8 +1540,7 @@ export default {
   "ui.medicalRecordNumber": "Document / medical book number",
   "ui.recordDate": "Record date",
   "ui.nextReviewDate": "Next appointment / review",
-  "ui.skillsHobbies": "Skills, hobbies and interests",
-  "ui.skillRecord": "Skill / activity",
+  "ui.skillRecord": "Activity or skill",
   "ui.skill": "Skill",
   "ui.sport": "Sport",
   "ui.martialArt": "Martial art",
@@ -1552,13 +1548,12 @@ export default {
   "ui.teachingActivity": "Teaching",
   "ui.constructionActivity": "Building / construction",
   "ui.developmentActivity": "Development / creation",
-  "ui.skillActivityName": "Skill / activity name",
+  "ui.skillActivityName": "Activity, topic or skill",
   "ui.proficiencyLevel": "Proficiency level",
   "ui.beginner": "Beginner",
   "ui.intermediate": "Intermediate",
   "ui.advanced": "Advanced",
   "ui.professional": "Professional",
-  "ui.qualifications": "Qualifications and certificates",
   "ui.qualification": "Qualification",
   "ui.certificateNumber": "Certificate number",
   "ui.weaponOwnership": "Weapons and permits",
@@ -2199,8 +2194,6 @@ export default {
   "ui.pastActivity": "Past / ended",
   "ui.pausedActivity": "Paused",
   "ui.plannedActivity": "Planned",
-  "ui.datedInterestsHint":
-    "Use Skills, hobbies and interests for dated activities; use Habits and beliefs for periods of habits, beliefs and preferences. These fields are an overview.",
   "ui.addLegalRecord": "Add court / legal record",
   "ui.addCustodyRecord": "Add custody period",
   "ui.openProfileSection": "Open profile section",
@@ -2334,4 +2327,13 @@ export default {
   "ui.propertySharePercent": "Share of the property (%)",
   "ui.propertyClaimRelationship":
     "Recorded relationship to the person forming the basis",
+  "ui.activitiesAndSkills": "Hobbies and skills",
+  "ui.activitiesAndSkillsHint":
+    "Hobbies, interests and abilities in one place. Enter a name or description; add dates and other details as needed.",
+  "ui.levelAndQualifications": "Level and qualifications",
+  "ui.healthOverview": "General health summary",
+  "ui.healthSectionHint":
+    "General health notes and individual medical records: conditions, allergies, treatment and dietary restrictions.",
+  "ui.personalSectionHint":
+    "Habits, preferences and beliefs, with their periods. Food tastes belong here; medical dietary restrictions belong in Health.",
 };

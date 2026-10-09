@@ -11,17 +11,10 @@ export function profileGroups() {
       "ui.profileLifeGroup",
       ["biography", "education", "occupations", "timeline", "military"],
     ],
-    ["ui.profilePersonalGroup", ["interests", "skills", "personal", "pets"]],
+    ["ui.profilePersonalGroup", ["skills", "personal", "pets"]],
     [
       "ui.profileHealthGroup",
-      [
-        "appearance",
-        "health",
-        "medical",
-        "pregnancy",
-        "identityHistory",
-        "death",
-      ],
+      ["appearance", "medical", "pregnancy", "identityHistory", "death"],
     ],
     [
       "ui.profileLegalGroup",

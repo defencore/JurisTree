@@ -92,6 +92,7 @@ src/
     kinship-index.js       Scoped family adjacency and shared ancestry calculations
     biography-review.js    Pure interval coverage, gap detection and clarification lists
     profile-migrations.js  One-time normalization of earlier mixed profile history
+    profile-activities.js  One-time consolidation of former activity summaries and section keys
     person-filters.js      Query evaluation, conservative comparisons and CSV export
     person-filter-facts.js Shared analytical facts, dates, source and family counts
     person-filter-assets.js Dated inventory observations and currency/share totals

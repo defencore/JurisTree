@@ -5,6 +5,7 @@ import { collectProjectEvents } from "./events.js";
 import { nextAnniversary } from "./dates.js";
 import { isOfficial } from "./evidence.js";
 import { personAssetValues } from "./person-filter-assets.js";
+import { profileOverviewCount } from "../core/profile-catalog.js";
 
 const pending = (r) =>
   ["pending", "unverified", "inconclusive", "disputed"].includes(
@@ -51,7 +52,7 @@ export function buildPersonFilterFacts(project, today, files = new Map()) {
       records = [];
     for (const [key, cfg] of Object.entries(configs)) {
       const rows = p[cfg.key] || [];
-      if (rows.length) section.push(key);
+      if (rows.length || profileOverviewCount(p, cfg)) section.push(key);
       records.push(...rows);
       for (const r of rows)
         for (const [field, , type] of cfg.fields)

@@ -35,18 +35,16 @@ export function scopedPerson(p) {
   const result = clone(p),
     visible = profileScope();
   for (const [section, cfg] of Object.entries(recordConfigs()))
-    if (!visible.includes(section)) delete result[cfg.key];
+    if (!visible.includes(section)) {
+      delete result[cfg.key];
+      if (cfg.overview) {
+        delete result[cfg.overview.field];
+        delete result[cfg.overview.sourceIds];
+      }
+    }
   if (!visible.includes("biography")) {
     delete result.biography;
     delete result.bioSourceIds;
-  }
-  if (!visible.includes("health")) {
-    delete result.health;
-    delete result.healthSourceIds;
-  }
-  if (!visible.includes("interests")) {
-    delete result.hobbies;
-    delete result.interests;
   }
   return result;
 }

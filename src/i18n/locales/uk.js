@@ -835,8 +835,6 @@ export default {
   "ui.addressHistory": "Адреси за періоди",
   "ui.biographyAndHistory": "Біографічні відомості",
   "ui.workEducationService": "Робота та служба",
-  "ui.hobbiesAndInterests": "Захоплення та інтереси",
-  "ui.healthInformation": "Стан здоров’я",
   "ui.pets": "Домашні тварини",
   "ui.whichDataShouldBeShownForThisPurpose":
     "Які дані показувати для цієї мети?",
@@ -885,7 +883,6 @@ export default {
   "ui.supportingSources": "Зовнішні підтвердження",
   "ui.hobbies": "Захоплення",
   "ui.interests": "Інтереси",
-  "ui.healthDetails": "Відомості про здоров’я",
   "ui.relatedSources": "Пов’язані джерела",
   "ui.record": "Запис",
   "ui.annualAnniversary": "· річниця щороку",
@@ -901,8 +898,7 @@ export default {
   "ui.endCannotPrecedeStart": ": завершення не може бути раніше початку.",
   "ui.petDeathCannotPrecedeBirth":
     "Улюбленець: дата смерті не може бути раніше народження.",
-  "ui.eachSectionSupportsUpTo200Records":
-    "У кожному розділі можна додати до 200 записів.",
+  "ui.profileSectionRecordLimit": "Цей розділ підтримує до {limit} записів.",
   "ui.enterAValidDateInSection": "Вкажіть дійсну дату у розділі «",
   "ui.enterAValidBirthOrDeathDate":
     "Вкажіть дійсну дату народження або смерті.",
@@ -1520,7 +1516,7 @@ export default {
   "ui.glassesUse": "Окуляри",
   "ui.distinctiveFeatures": "Особливі прикмети",
   "ui.tattoosScars": "Татуювання, шрами та інші прикмети",
-  "ui.medicalHistory": "Медичні відомості",
+  "ui.medicalHistory": "Здоров’я",
   "ui.medicalRecord": "Медичний запис",
   "ui.medicalRecordType": "Вид медичного запису",
   "ui.illnessCondition": "Хвороба / стан",
@@ -1546,8 +1542,7 @@ export default {
   "ui.medicalRecordNumber": "Номер документа / медичної книжки",
   "ui.recordDate": "Дата запису",
   "ui.nextReviewDate": "Наступний прийом / огляд",
-  "ui.skillsHobbies": "Навички, хобі та інтереси",
-  "ui.skillRecord": "Навичка / заняття",
+  "ui.skillRecord": "Заняття або навичка",
   "ui.skill": "Навичка",
   "ui.sport": "Спорт",
   "ui.martialArt": "Єдиноборство",
@@ -1555,13 +1550,12 @@ export default {
   "ui.teachingActivity": "Навчання інших",
   "ui.constructionActivity": "Будівництво",
   "ui.developmentActivity": "Розвиток / створення",
-  "ui.skillActivityName": "Назва навички / заняття",
+  "ui.skillActivityName": "Заняття, тема або навичка",
   "ui.proficiencyLevel": "Рівень володіння",
   "ui.beginner": "Початковий",
   "ui.intermediate": "Середній",
   "ui.advanced": "Просунутий",
   "ui.professional": "Професійний",
-  "ui.qualifications": "Кваліфікації та сертифікати",
   "ui.qualification": "Кваліфікація",
   "ui.certificateNumber": "Номер сертифіката",
   "ui.weaponOwnership": "Зброя та дозволи",
@@ -2203,8 +2197,6 @@ export default {
   "ui.pastActivity": "У минулому / завершено",
   "ui.pausedActivity": "Призупинено",
   "ui.plannedActivity": "Заплановано",
-  "ui.datedInterestsHint":
-    "Періоди занять додавайте в «Навички, хобі та інтереси», а звичок, поглядів і вподобань — у «Звички та переконання». Ці поля — короткий огляд.",
   "ui.addLegalRecord": "Додати судовий / правовий запис",
   "ui.addCustodyRecord": "Додати період тримання",
   "ui.openProfileSection": "Відкрити розділ профілю",
@@ -2337,4 +2329,13 @@ export default {
   "ui.propertySharePercent": "Частка майна (%)",
   "ui.propertyClaimRelationship":
     "Зафіксований зв’язок з особою, через яку заявляється право",
+  "ui.activitiesAndSkills": "Захоплення та навички",
+  "ui.activitiesAndSkillsHint":
+    "Захоплення, інтереси та вміння в одному місці. Достатньо назви або опису; дати й подробиці — за потреби.",
+  "ui.levelAndQualifications": "Рівень і кваліфікація",
+  "ui.healthOverview": "Загальні відомості про здоров’я",
+  "ui.healthSectionHint":
+    "Загальні відомості та окремі медичні записи: захворювання, алергії, лікування й харчові обмеження.",
+  "ui.personalSectionHint":
+    "Звички, вподобання й переконання та періоди їх дії. Харчові смаки — тут, медичні обмеження — у розділі «Здоров’я».",
 };

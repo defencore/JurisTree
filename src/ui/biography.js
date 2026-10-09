@@ -25,6 +25,7 @@ import {
   recordReferenceActions,
 } from "./profile-fields.js";
 import { propertyHistoryReport } from "./property-history.js";
+import { profileOverviewDetails } from "./profile-overview.js";
 
 function section(label, symbol, body, key) {
   if (!body) return "";
@@ -126,25 +127,8 @@ export function renderBiography({
       html += section(
         label,
         symbol,
-        (p[cfg.key] || []).map((item) => record(key, item)).join(""),
-        key,
-      );
-    else if (key === "interests")
-      html += section(
-        label,
-        symbol,
-        fields([
-          [translate("ui.hobbies"), p.hobbies],
-          [translate("ui.interests"), p.interests],
-        ]),
-        key,
-      );
-    else if (key === "health")
-      html += section(
-        label,
-        symbol,
-        fields([[translate("ui.healthDetails"), p.health]]) +
-          sourceChips(p.healthSourceIds),
+        profileOverviewDetails(cfg, p) +
+          (p[cfg.key] || []).map((item) => record(key, item)).join(""),
         key,
       );
   }

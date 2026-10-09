@@ -1,21 +1,24 @@
 import { defineSection } from "./define.js";
 import { attributionGroup } from "./attribution.js";
+import { translate } from "../../i18n/index.js";
 
 export function skillsSection() {
   return defineSection(
     "skillRecords",
-    "ui.skillsHobbies",
+    "ui.activitiesAndSkills",
     "sparkles",
     "ui.skillRecord",
     [
       [
         null,
         [
+          ["name", "ui.skillActivityName"],
           [
             "category",
             "ui.category",
             "select",
             {
+              unspecified: "ui.notSpecified",
               skill: "ui.skill",
               hobby: "ui.hobbies",
               interest: "ui.interests",
@@ -28,20 +31,12 @@ export function skillsSection() {
               other: "ui.other",
             },
           ],
-          ["name", "ui.skillActivityName"],
-          [
-            "level",
-            "ui.proficiencyLevel",
-            "select",
-            {
-              unspecified: "ui.notSpecified",
-              beginner: "ui.beginner",
-              intermediate: "ui.intermediate",
-              advanced: "ui.advanced",
-              professional: "ui.professional",
-              other: "ui.other",
-            },
-          ],
+          ["description", "ui.description", "textarea"],
+        ],
+      ],
+      [
+        "ui.periodAndFrequency",
+        [
           ["from", "ui.from", "period"],
           ["to", "ui.to", "period"],
           [
@@ -57,12 +52,24 @@ export function skillsSection() {
             },
           ],
           ["frequency", "ui.frequencyContext"],
-          ["description", "ui.description", "textarea"],
         ],
       ],
       [
-        "ui.qualifications",
+        "ui.levelAndQualifications",
         [
+          [
+            "level",
+            "ui.proficiencyLevel",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              beginner: "ui.beginner",
+              intermediate: "ui.intermediate",
+              advanced: "ui.advanced",
+              professional: "ui.professional",
+              other: "ui.other",
+            },
+          ],
           ["qualification", "ui.qualification"],
           ["issuer", "ui.issuingAuthority"],
           ["certificateNumber", "ui.certificateNumber"],
@@ -73,6 +80,9 @@ export function skillsSection() {
     ],
     [["from", "to"]],
     {
+      sectionHint: translate("ui.activitiesAndSkillsHint"),
+      // Reserve two records for imported hobby and interest summaries.
+      maximumRecords: 202,
       calendar: {
         type: "skill",
         dates: [

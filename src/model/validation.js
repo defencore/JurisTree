@@ -30,6 +30,10 @@ import { translate } from "../i18n/index.js";
 import { dateExact, partialDate } from "./dates.js";
 import { collectProfile } from "./profile-form.js";
 import { migrateProfileHistory } from "./profile-migrations.js";
+import {
+  migrateProfileActivities,
+  migrateProfileSectionKeys,
+} from "./profile-activities.js";
 import { profileRecordError } from "./profile-records.js";
 import { fresh } from "./project.js";
 import {
@@ -127,7 +131,7 @@ export function validateImport(raw) {
   });
   const groupIds = new Set(p.groups.map((g) => g.id));
   p.people = list("people", 600).map((v) => {
-    v = migrateProfileHistory(v);
+    v = migrateProfileActivities(migrateProfileHistory(v));
     const x = {
       id: v.id,
       name: str(v.name, 150) || translate("ui.unnamed"),
@@ -151,15 +155,21 @@ export function validateImport(raw) {
         : null,
       groupIds: arr(v.groupIds).filter((id) => groupIds.has(id)),
       biography: str(v.biography, 30000),
-      hobbies: str(v.hobbies, 5000),
-      interests: str(v.interests, 5000),
-      health: str(v.health, 10000),
       bioSourceIds: arr(v.bioSourceIds),
-      healthSourceIds: arr(v.healthSourceIds),
     };
     for (const [, cfg] of Object.entries(recordConfigs())) {
+      if (cfg.overview) {
+        x[cfg.overview.field] = str(
+          v[cfg.overview.field],
+          cfg.overview.maximumLength,
+        );
+        x[cfg.overview.sourceIds] = arr(v[cfg.overview.sourceIds]);
+      }
       const records = v[cfg.key] || [];
-      if (!Array.isArray(records) || records.length > 200)
+      if (
+        !Array.isArray(records) ||
+        records.length > (cfg.maximumRecords || 200)
+      )
         throw Error(translate("ui.tooManyProfileRecords"));
       const seen = new Set();
       x[cfg.key] = records.map((r) => {
@@ -379,8 +389,8 @@ export function validateImport(raw) {
   for (const purpose of Object.keys(defaultScopes)) {
     const value = raw.scopePreferences?.[purpose];
     if (Array.isArray(value))
-      p.scopePreferences[purpose] = value.filter((k) =>
-        Object.hasOwn(sectionInfo(), k),
+      p.scopePreferences[purpose] = migrateProfileSectionKeys(value).filter(
+        (k) => Object.hasOwn(sectionInfo(), k),
       );
   }
   if (!peopleIds.has(p.subjectId)) p.subjectId = "";
@@ -416,8 +426,9 @@ export function chronologyError(p) {
 export function profileFormError(form, p) {
   const data = collectProfile(form, p);
   for (const [section, cfg] of Object.entries(recordConfigs())) {
-    if (form.getAll(section + "-id").length > 200)
-      return translate("ui.eachSectionSupportsUpTo200Records");
+    const limit = cfg.maximumRecords || 200;
+    if (form.getAll(section + "-id").length > limit)
+      return translate("ui.profileSectionRecordLimit", { limit });
     for (const record of data[cfg.key] || []) {
       const error = profileRecordError(cfg, record);
       if (error) return sectionInfo()[section][0] + ": " + error;
