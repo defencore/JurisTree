@@ -3,7 +3,7 @@ import { isDirectedRelationship } from "../core/professional-relationships.js";
 import { relationshipConfig } from "../core/relationships.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
-import { years } from "../model/dates.js";
+import { personDisplayName, personLifeDates } from "../model/person-display.js";
 import { edgeState, linkedDocs, requirements } from "../model/evidence.js";
 import { relationShown } from "../model/graph-view.js";
 import { doc, group, person, relation } from "../model/lookup.js";
@@ -37,7 +37,7 @@ export function renderInspector() {
     const req = requirements(p),
       done = req.filter((t) => t.done).length,
       ds = linkedDocs("person", p.id);
-    html += `<div class="profile"><div class="profile-top">${avatar(p)}<div><h2>${esc(p.name)}</h2><p>${esc(years(p))}${p.place ? "<br>" + esc(p.place) : ""}</p></div></div>${personStatusMarkup(p)}<div class="pills"><span class="pill ${done === req.length ? "teal" : "amber"}">${icon(done === req.length ? "fileCheck" : "fileMissing")}${done} / ${req.length} ${translate("ui.documentsAvailable")}</span>${(
+    html += `<div class="profile"><div class="profile-top">${avatar(p)}<div><h2>${esc(personDisplayName(p))}</h2><p>${esc(personLifeDates(p))}${p.place ? "<br>" + esc(p.place) : ""}</p></div></div>${personStatusMarkup(p)}<div class="pills"><span class="pill ${done === req.length ? "teal" : "amber"}">${icon(done === req.length ? "fileCheck" : "fileMissing")}${done} / ${req.length} ${translate("ui.documentsAvailable")}</span>${(
       p.groupIds || []
     )
       .map(group)

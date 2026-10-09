@@ -2,7 +2,10 @@ import { types } from "../../core/config.js";
 import { $, esc } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
 import { translate } from "../../i18n/index.js";
-import { years } from "../../model/dates.js";
+import {
+  personDisplayName,
+  personLifeDates,
+} from "../../model/person-display.js";
 import {
   edgeState,
   gaps,
@@ -30,7 +33,7 @@ export function renderGaps() {
       .map((p) => {
         const req = requirements(p);
         if (!req.length) return "";
-        return `<section class="gap-group"><div class="gap-head"><button class="kin-person gap-person-title" data-person="${p.id}">${avatar(p)}<span><h3>${esc(p.name)}</h3><small>${esc(years(p))}</small></span></button><span class="pill ${req.every((t) => t.done) ? "teal" : "amber"}">${req.filter((t) => t.done).length} / ${req.length} ${translate("ui.available2")}</span></div>${req.map((t) => requirementCard(p, t)).join("")}</section>`;
+        return `<section class="gap-group"><div class="gap-head"><button class="kin-person gap-person-title" data-person="${p.id}">${avatar(p)}<span><h3>${esc(personDisplayName(p))}</h3><small>${esc(personLifeDates(p))}</small></span></button><span class="pill ${req.every((t) => t.done) ? "teal" : "amber"}">${req.filter((t) => t.done).length} / ${req.length} ${translate("ui.available2")}</span></div>${req.map((t) => requirementCard(p, t)).join("")}</section>`;
       })
       .join(
         "",

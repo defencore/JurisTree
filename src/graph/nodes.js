@@ -3,7 +3,7 @@ import { esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { theme } from "../core/theme.js";
 import { getLocale, translate } from "../i18n/index.js";
-import { years } from "../model/dates.js";
+import { personDisplayName, personLifeDates } from "../model/person-display.js";
 import { hasFile, requirements } from "../model/evidence.js";
 import { fullDiagram } from "../model/graph-view.js";
 import { person } from "../model/lookup.js";
@@ -79,9 +79,9 @@ export function nodeSVG(n, images = null, exporting = false) {
   const label =
     n.kind === "person"
       ? [
-          n.name,
+          personDisplayName(n),
           role?.description || role?.label,
-          years(n),
+          personLifeDates(n),
           ...personStatusBadges(n).map((b) => b.label),
         ]
           .filter(Boolean)

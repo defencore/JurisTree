@@ -1,3 +1,4 @@
+import { personDisplayName } from "../model/person-display.js";
 import { esc } from "../core/dom.js";
 import { propertyRecordConfigs } from "../core/property-records.js";
 import { state } from "../core/state.js";
@@ -16,7 +17,7 @@ import { icon } from "./icons.js";
 import { fields, recordValues } from "./profile-fields.js";
 
 function party(id, external) {
-  return person(id)?.name || external || t("ui.notSpecified");
+  return personDisplayName(person(id)) || external || t("ui.notSpecified");
 }
 function period(record) {
   return `${displayDate(record.from) || t("ui.dateUnknown")} — ${displayDate(record.to) || (record.status === "current" ? t("ui.propertyRightCurrent") : t("ui.dateUnknown"))}`;
@@ -29,7 +30,7 @@ export function propertyRecordTitle(
   const cfg = propertyRecordConfigs()[kind],
     options = cfg.fields.find(([key]) => key === "kind")[3];
   const name = (id, external) =>
-    person(id)?.name ||
+    personDisplayName(person(id)) ||
     external ||
     (includeUnknown ? t("ui.notSpecified") : "");
   const parties =
@@ -120,7 +121,7 @@ export function propertyHistoryView(asset, date) {
         propertyRecordCard(asset, kind, record, true, issues),
       )
       .join("") || `<p class="hint">${t("ui.propertyNoHistory")}</p>`
-  }</section><section class="property-claims"><h3>${t("ui.propertyClaims")} <span class="pill">${snapshot.claims.length} ${t("ui.propertyOpen")}</span></h3>${(asset.claims || []).map((record) => propertyRecordCard(asset, "claims", record, true, issues)).join("") || `<p class="hint">${t("ui.propertyNoClaims")}</p>`}</section><details class="property-family"><summary>${t("ui.propertyFamilyConnections")}</summary><p class="hint">${t("ui.propertyFamilyHint")}</p>${participants.map((p) => `<div><button class="text-person" data-biography="${p.id}">${esc(p.name)}</button>${asset.ownerId && asset.ownerId !== p.id ? `<span>${esc(party(asset.ownerId))}: ${esc(kinshipBetween(asset.ownerId, p.id).label)}</span>` : asset.ownerId === p.id ? `<span>${t("ui.propertyReferenceOwner")}</span>` : ""}</div>`).join("")}</details>`;
+  }</section><section class="property-claims"><h3>${t("ui.propertyClaims")} <span class="pill">${snapshot.claims.length} ${t("ui.propertyOpen")}</span></h3>${(asset.claims || []).map((record) => propertyRecordCard(asset, "claims", record, true, issues)).join("") || `<p class="hint">${t("ui.propertyNoClaims")}</p>`}</section><details class="property-family"><summary>${t("ui.propertyFamilyConnections")}</summary><p class="hint">${t("ui.propertyFamilyHint")}</p>${participants.map((p) => `<div><button class="text-person" data-biography="${p.id}">${esc(personDisplayName(p))}</button>${asset.ownerId && asset.ownerId !== p.id ? `<span>${esc(party(asset.ownerId))}: ${esc(kinshipBetween(asset.ownerId, p.id).label)}</span>` : asset.ownerId === p.id ? `<span>${t("ui.propertyReferenceOwner")}</span>` : ""}</div>`).join("")}</details>`;
 }
 
 export function propertyHistoryReport(asset) {

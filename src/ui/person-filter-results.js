@@ -1,3 +1,4 @@
+import { personDisplayName } from "../model/person-display.js";
 import { esc } from "../core/dom.js";
 import { getLocale, translate as t } from "../i18n/index.js";
 import { displayDate } from "../model/dates.js";
@@ -39,7 +40,7 @@ export function renderPersonFilterResults(report, limit = 30) {
       .slice(0, limit)
       .map(
         (f) =>
-          `<button type="button" class="filter-person-result" data-filter-command="person" data-id="${f.id}"><b>${esc(f.person.name)}</b><span>${t("ui.filterAge")}: ${formatFilterAge(f)} · ${t("ui.filterRecordedChildren")}: ${f.children} · ${t("ui.filterAvailableDocuments")}: ${f.documents}</span>${formatFilterAssets(f) ? `<small>${t("ui.filterAssetValue")}: ${esc(formatFilterAssets(f))}</small>` : ""}${f.birthdayDate ? `<small>${t("ui.birthday")}: ${displayDate(f.birthdayDate)}</small>` : ""}${f.anniversaryDate ? `<small>${t("ui.filterNextAnniversary")}: ${displayDate(f.anniversaryDate)}</small>` : ""}</button>`,
+          `<button type="button" class="filter-person-result" data-filter-command="person" data-id="${f.id}"><b>${esc(personDisplayName(f.person))}</b><span>${t("ui.filterAge")}: ${formatFilterAge(f)} · ${t("ui.filterRecordedChildren")}: ${f.children} · ${t("ui.filterAvailableDocuments")}: ${f.documents}</span>${formatFilterAssets(f) ? `<small>${t("ui.filterAssetValue")}: ${esc(formatFilterAssets(f))}</small>` : ""}${f.birthdayDate ? `<small>${t("ui.birthday")}: ${displayDate(f.birthdayDate)}</small>` : ""}${f.anniversaryDate ? `<small>${t("ui.filterNextAnniversary")}: ${displayDate(f.anniversaryDate)}</small>` : ""}</button>`,
       )
       .join("") || `<p class="hint">${t("ui.filterNoMatches")}</p>`
   }</div>${report.matches.length > limit ? `<button type="button" class="btn" data-filter-command="more">${t("ui.moreSearchResults")} · ${Math.min(limit, report.matches.length)}/${report.matches.length}</button>` : ""}`;

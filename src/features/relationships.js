@@ -1,3 +1,4 @@
+import { personDisplayName } from "../model/person-display.js";
 import { $, esc } from "../core/dom.js";
 import { collectRelationship } from "../core/relationships.js";
 import { state as appState } from "../core/state.js";
@@ -81,7 +82,7 @@ export function kinPathMarkup(path) {
   return path.people
     .map(
       (id, i) =>
-        `<div class="kin-path-item">${avatar(person(id))}<span><b>${esc(person(id)?.name)}</b><small>${i === 0 ? translate("ui.selectedPerson") : i + ` ${translate("ui.generationsAbove")}`}</small></span></div>`,
+        `<div class="kin-path-item">${avatar(person(id))}<span><b>${esc(personDisplayName(person(id)))}</b><small>${i === 0 ? translate("ui.selectedPerson") : i + ` ${translate("ui.generationsAbove")}`}</small></span></div>`,
     )
     .join("");
 }
@@ -96,12 +97,12 @@ export function renderKinResult() {
   };
   const source = "https://www.familysearch.org/en/blog/cousin-chart";
   $("#kinResult").innerHTML =
-    `<section class="kin-result"><span class="result-symbol">${icon(k.found ? "network" : "help")}</span><p class="eyebrow">${esc(person(b)?.name || translate("ui.secondPerson"))} ${translate("ui.for")} ${esc(person(a)?.name || translate("ui.theFirstPerson"))}</p><h3>${esc(k.label)}</h3>${k.detail ? `<p>${esc(k.detail)}</p>` : ""}${k.ancestorId ? `<div class="pills"><span class="pill blue">${icon("user")}${translate("ui.commonAncestor")} ${esc(person(k.ancestorId)?.name)}</span></div>` : k.virtualAncestor ? `<p class="hint">${translate("ui.commonParentsAreNotRecordedTheCalculationUses")}</p>` : ""}${k.found ? `<div class="pills"><span class="pill ${k.verified ? "teal" : "amber"}">${icon(k.verified ? "fileCheck" : "fileMissing")}${k.verified ? translate("ui.allRelationshipsHaveOfficialSources") : translate("ui.someRelationshipsLackOfficialSources")}</span>${k.adopted ? `<span class="pill review">${translate("ui.pathIncludesAdoption")}</span>` : ""}${k.disputed ? `<span class="pill red">${translate("ui.pathIncludesDisputedRelationships")}</span>` : ""}</div><button type="button" class="btn primary" data-show-kin-path style="margin-top:17px">${icon("route")}${translate("ui.showPathOnMap")}</button>` : ""}</section>${
+    `<section class="kin-result"><span class="result-symbol">${icon(k.found ? "network" : "help")}</span><p class="eyebrow">${esc(personDisplayName(person(b)) || translate("ui.secondPerson"))} ${translate("ui.for")} ${esc(personDisplayName(person(a)) || translate("ui.theFirstPerson"))}</p><h3>${esc(k.label)}</h3>${k.detail ? `<p>${esc(k.detail)}</p>` : ""}${k.ancestorId ? `<div class="pills"><span class="pill blue">${icon("user")}${translate("ui.commonAncestor")} ${esc(personDisplayName(person(k.ancestorId)))}</span></div>` : k.virtualAncestor ? `<p class="hint">${translate("ui.commonParentsAreNotRecordedTheCalculationUses")}</p>` : ""}${k.found ? `<div class="pills"><span class="pill ${k.verified ? "teal" : "amber"}">${icon(k.verified ? "fileCheck" : "fileMissing")}${k.verified ? translate("ui.allRelationshipsHaveOfficialSources") : translate("ui.someRelationshipsLackOfficialSources")}</span>${k.adopted ? `<span class="pill review">${translate("ui.pathIncludesAdoption")}</span>` : ""}${k.disputed ? `<span class="pill red">${translate("ui.pathIncludesDisputedRelationships")}</span>` : ""}</div><button type="button" class="btn primary" data-show-kin-path style="margin-top:17px">${icon("route")}${translate("ui.showPathOnMap")}</button>` : ""}</section>${
       k.pathVia
         ? `<div class="kin-paths single"><div><p class="field-caption">${translate("ui.pathThroughFamilyRelationships")}</p>${k.pathVia.people
             .map(
               (id, i) =>
-                `<div class="kin-path-item">${avatar(person(id))}<span><b>${esc(person(id)?.name)}</b><small>${
+                `<div class="kin-path-item">${avatar(person(id))}<span><b>${esc(personDisplayName(person(id)))}</b><small>${
                   i === 0
                     ? translate("ui.firstPerson")
                     : esc(
@@ -116,7 +117,7 @@ export function renderKinResult() {
             )
             .join("")}</div></div>`
         : ""
-    }${k.pathFrom && k.pathTo ? `<div class="kin-paths"><div><p class="field-caption">${esc(person(a)?.name)}</p>${kinPathMarkup(k.pathFrom)}</div><div><p class="field-caption">${esc(person(b)?.name)}</p>${kinPathMarkup(k.pathTo)}</div></div>` : ""}<p class="hint">${translate("ui.resultsUseRecordedRelationshipsNotSurnamesOrFamily")}${k.kind === "cousin" ? ` <a href="${source}" target="_blank" rel="noopener noreferrer">${translate("ui.howGenerationsAreCounted")}</a>` : ""}</p>`;
+    }${k.pathFrom && k.pathTo ? `<div class="kin-paths"><div><p class="field-caption">${esc(personDisplayName(person(a)))}</p>${kinPathMarkup(k.pathFrom)}</div><div><p class="field-caption">${esc(personDisplayName(person(b)))}</p>${kinPathMarkup(k.pathTo)}</div></div>` : ""}<p class="hint">${translate("ui.resultsUseRecordedRelationshipsNotSurnamesOrFamily")}${k.kind === "cousin" ? ` <a href="${source}" target="_blank" rel="noopener noreferrer">${translate("ui.howGenerationsAreCounted")}</a>` : ""}</p>`;
 }
 export function comparePeople(to = null) {
   if (appState.project.people.length < 2) {

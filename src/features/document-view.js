@@ -1,3 +1,4 @@
+import { personDisplayName } from "../model/person-display.js";
 import { evidenceTypes, types } from "../core/config.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -45,17 +46,17 @@ export async function viewDocument(id) {
         .filter(Boolean)
         .map(
           (p) =>
-            `<button type="button" data-source-person="${p.id}">${esc(p.name)}</button>`,
+            `<button type="button" data-source-person="${p.id}">${esc(personDisplayName(p))}</button>`,
         )
         .join("") ||
       `<span class="hint">${translate("ui.theDocumentSubjectHasNotBeenSpecified")}</span>`
-    }</div>${records.length ? `<h3>${icon("paperclip")}${translate("ui.linkedProfileRecords")}</h3><div class="source-binds">${records.map(({ profile, record, config, section }) => `<button type="button" data-open-profile-section="${section}" data-profile-person="${profile.id}">${esc(profile.name)} · ${esc(config.label)}${record.title || record.awardName ? ` · ${esc(record.title || record.awardName)}` : ""}</button>`).join("")}</div>` : ""}<h3>${icon("users")}${translate("ui.allRelatedPeople")}</h3><div class="source-binds">${
+    }</div>${records.length ? `<h3>${icon("paperclip")}${translate("ui.linkedProfileRecords")}</h3><div class="source-binds">${records.map(({ profile, record, config, section }) => `<button type="button" data-open-profile-section="${section}" data-profile-person="${profile.id}">${esc(personDisplayName(profile))} · ${esc(config.label)}${record.title || record.awardName ? ` · ${esc(record.title || record.awardName)}` : ""}</button>`).join("")}</div>` : ""}<h3>${icon("users")}${translate("ui.allRelatedPeople")}</h3><div class="source-binds">${
       d.people
         .map((pid) => person(pid))
         .filter(Boolean)
         .map(
           (p) =>
-            `<button type="button" data-source-person="${p.id}">${esc(p.name)}</button>`,
+            `<button type="button" data-source-person="${p.id}">${esc(personDisplayName(p))}</button>`,
         )
         .join("") ||
       `<span class="hint">${translate("ui.noPeopleSelected")}</span>`
@@ -66,7 +67,7 @@ export async function viewDocument(id) {
             .filter(Boolean)
             .map(
               (r) =>
-                `<button type="button" data-source-relation="${r.id}">${esc(person(r.from)?.name)} · ${esc(person(r.to)?.name)}</button>`,
+                `<button type="button" data-source-relation="${r.id}">${esc(personDisplayName(person(r.from)))} · ${esc(personDisplayName(person(r.to)))}</button>`,
             )
             .join("")}</div>`
         : ""

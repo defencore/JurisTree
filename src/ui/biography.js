@@ -11,7 +11,12 @@ import { sourceVerificationConfig } from "../core/sources.js";
 import { state as appState } from "../core/state.js";
 import { bytes } from "../core/utils.js";
 import { getLocale, translate } from "../i18n/index.js";
-import { displayDate, years } from "../model/dates.js";
+import { displayDate } from "../model/dates.js";
+import {
+  personDisplayName,
+  personLifeDates,
+  personLifeDetail,
+} from "../model/person-display.js";
 import { hasFile } from "../model/evidence.js";
 import { person } from "../model/lookup.js";
 import { roleLabel } from "../model/relationship-labels.js";
@@ -84,8 +89,9 @@ export function renderBiography({
   groups,
   testimony = [],
 }) {
-  const dates = years(p, { includeUnknown: false });
-  let html = `<article class="biography"><header class="biography-header">${avatar(p)}<div><h2>${esc(p.name)}</h2>${dates ? `<p>${esc(dates)}</p>` : ""}<p class="hint">${translate("ui.autobiographyDescription")}</p></div></header>`;
+  const dates = personLifeDates(p, { includeUnknown: false });
+  const age = personLifeDetail(p, { includeUnknown: false });
+  let html = `<article class="biography"><header class="biography-header">${avatar(p)}<div><h2>${esc(personDisplayName(p))}</h2>${dates ? `<p>${esc(dates)}</p>` : ""}<p class="hint">${translate("ui.autobiographyDescription")}</p></div></header>`;
   html += personStatusMarkup(p, { includeUnknown: false });
   html += `<div class="biography-toolbar"><button type="button" class="btn" data-print-biography="${p.id}">${icon("printer")}${translate("ui.printBiography")}</button>${reviewButton(p.id)}<p class="hint">${translate("ui.printBiographyHint")}</p></div>`;
   html += section(
@@ -112,6 +118,7 @@ export function renderBiography({
       ],
       [translate("ui.birth"), displayDate(p.birth)],
       [translate("ui.deathIfKnown"), displayDate(p.death)],
+      [translate(age.ageKey), age.age],
       [translate("ui.placeOfOriginCountry"), p.place],
       [
         translate("ui.ownerDeceasedEstateOwner"),
@@ -180,8 +187,10 @@ export function renderBiography({
         const sources = documents.filter((d) =>
           (d.relations || []).includes(r.id),
         );
-        const otherDates = other ? years(other, { includeUnknown: false }) : "";
-        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(other?.name)}</h4>${otherDates ? `<p class="hint">${esc(otherDates)}</p>` : ""}${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
+        const otherDates = other
+          ? personLifeDates(other, { includeUnknown: false })
+          : "";
+        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(personDisplayName(other))}</h4>${otherDates ? `<p class="hint">${esc(otherDates)}</p>` : ""}${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
       })
       .join(""),
     "relationships",
@@ -193,7 +202,10 @@ export function renderBiography({
       .map(
         (a) =>
           `<article class="biography-record"><h4>${esc(a.title)}</h4>${fields([
-            [translate("ui.propertyReferenceOwner"), person(a.ownerId)?.name],
+            [
+              translate("ui.propertyReferenceOwner"),
+              personDisplayName(person(a.ownerId)),
+            ],
             [translate("ui.assetIdentifier"), a.identifier],
             [translate("ui.country"), a.country],
             [translate("ui.place"), a.location],
@@ -208,7 +220,7 @@ export function renderBiography({
               a.allocations
                 .map(
                   (share) =>
-                    `${person(share.personId)?.name || ""}: ${new Intl.NumberFormat(getLocale()).format(share.percent)}%`,
+                    `${personDisplayName(person(share.personId))}: ${new Intl.NumberFormat(getLocale()).format(share.percent)}%`,
                 )
                 .join("\n"),
             ],

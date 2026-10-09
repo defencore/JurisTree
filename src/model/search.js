@@ -13,7 +13,8 @@ import { propertyRecordConfigs } from "../core/property-records.js";
 import { propertyPeople, propertyRecords } from "./property-records.js";
 import { catalogs, translate } from "../i18n/index.js";
 import { personBiography } from "./biography.js";
-import { displayDate, years } from "./dates.js";
+import { displayDate } from "./dates.js";
+import { personDisplayName, personLifeDates } from "./person-display.js";
 
 export function normalizeSearch(value) {
   return String(value ?? "")
@@ -215,8 +216,8 @@ export function buildSearchIndex(project) {
     add(
       "person",
       p,
-      p.name,
-      years(p),
+      personDisplayName(p),
+      personLifeDates(p),
       [
         ...flat(p),
         ...records,

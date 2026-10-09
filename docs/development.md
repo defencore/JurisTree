@@ -53,6 +53,8 @@ Person creation uses `core/person-creation.js` for roles, `model/person-creation
 
 `model/person-selection.js` owns locale-aware surname ordering and token-based name matching, including aliases and name history. It prefers a structured surname linked to the displayed name (or a current legal-name record without a full name); otherwise it uses the last word of the basic given-name–surname field. Record the full name and surname together in **Names and surnames** for other naming orders or compound surnames. The shared `ui/person-picker.js` adds searches to native person selects and group checkboxes. Select values remain unchanged during filtering, and checked members stay in the form even when hidden. Call `bindPersonPickers(root)` after rendering new rows; binding is idempotent. Searching does not change project data or history.
 
+`model/person-display.js` supplies display names and lifespan summaries for cards, profiles, selectors and reports. Explicit maiden records append a parenthesized surname without modifying the basic current name or its sorting key. Prefer structured surname fields; full-name-only records can reuse unchanged name components to isolate the former surname. `model/dates.js` computes completed-year age bounds from exact or partial dates, while `model/person-status.js` resolves the life status and age reference date. Living ages use today; deceased ages use the death date and remain fixed. Missing dates yield no age, partial dates yield a range and unknown life status does not imply a current age. Search summaries invalidate their cache when the local date changes.
+
 ```text
 index.html                 Static document and relative asset entry points
 src/

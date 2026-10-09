@@ -85,7 +85,7 @@ test("opens a complete autobiography from every person entry point and language"
   await page.locator('#personList [data-person="p5"]').click();
   await page.locator('#inspector [data-biography="p5"]').click();
   await page.locator('.biography [data-biography="p3"]').click();
-  await expect(page.locator(".biography-header h2")).toHaveText("Jamie Roe");
+  await expect(page.locator(".biography-header h2")).toHaveText("Jamie Roe (Doe)");
   await page.locator("[data-close]").first().click();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#graph [data-biography="p5"]').focus();

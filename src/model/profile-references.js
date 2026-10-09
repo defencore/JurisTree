@@ -1,16 +1,18 @@
+import { personDisplayName } from "./person-display.js";
 import { recordConfigs } from "../core/config.js";
 import { relationshipLabel } from "./relationship-labels.js";
 
 export function profileReferenceLabel(project, type, id) {
   if (!id) return "";
   if (type === "person")
-    return project.people.find((p) => p.id === id)?.name || "";
+    return personDisplayName(project.people.find((p) => p.id === id));
   if (type === "source")
     return project.documents.find((d) => d.id === id)?.title || "";
   if (type === "relationship") {
     const r = project.relations.find((r) => r.id === id);
     if (!r) return "";
-    const name = (id) => project.people.find((p) => p.id === id)?.name || "";
+    const name = (id) =>
+      personDisplayName(project.people.find((p) => p.id === id));
     return `${name(r.from)} — ${name(r.to)} (${relationshipLabel(r)})`;
   }
   return "";

@@ -1,3 +1,4 @@
+import { personDisplayName } from "../model/person-display.js";
 import { familyEventTypes } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import { eventTypesInDomain } from "../core/event-domains.js";
@@ -58,7 +59,7 @@ export function monthGrid(month, occurrences, selected = "", mini = false) {
         .slice(0, 3)
         .map(
           (e) =>
-            `<span class="calendar-entry ${e.jubilee ? "jubilee" : ""}">${icon(familyEventTypes()[e.type]?.[1] || "calendarClock")}${esc(e.type === "birth" ? person(e.personId)?.name : e.title)}</span>`,
+            `<span class="calendar-entry ${e.jubilee ? "jubilee" : ""}">${icon(familyEventTypes()[e.type]?.[1] || "calendarClock")}${esc(e.type === "birth" ? personDisplayName(person(e.personId)) : e.title)}</span>`,
         )
         .join(
           "",

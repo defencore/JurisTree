@@ -1675,6 +1675,8 @@ export default {
     "Combine words; quote phrases; use name:, gender:, document:, country:, type:. Separate alternatives with | and exclude a word with -.",
   "ui.lifeStatusUnknown": "Life status unknown",
   "ui.under18": "Under 18",
+  "ui.currentAge": "Current age",
+  "ui.ageAtDeath": "Age at death",
   "ui.ageNeedsClarification": "Age needs clarification",
   "ui.birthDateLabel": "Birth date",
   "ui.deathDateLabel": "Death date",

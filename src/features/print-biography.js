@@ -2,6 +2,7 @@ import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { personBiography } from "../model/biography.js";
+import { personDisplayName } from "../model/person-display.js";
 import { renderBiography } from "../ui/biography.js";
 
 /** Prepare a standalone report from the same complete profile used by the on-screen biography. */
@@ -35,7 +36,8 @@ export async function printBiography(id) {
   );
   const title = document.title;
   document.title =
-    appState.project.people.find((p) => p.id === id).name + " — JurisTree";
+    personDisplayName(appState.project.people.find((p) => p.id === id)) +
+    " — JurisTree";
   window.addEventListener(
     "afterprint",
     () => {

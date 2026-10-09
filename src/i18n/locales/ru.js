@@ -1684,6 +1684,8 @@ export default {
     "Комбинируйте слова; заключайте фразы в кавычки; используйте name:, gender:, document:, country:, type:. Разделяйте варианты знаком |, исключайте слово знаком -.",
   "ui.lifeStatusUnknown": "Статус жизни неизвестен",
   "ui.under18": "До 18 лет",
+  "ui.currentAge": "Возраст",
+  "ui.ageAtDeath": "Возраст на момент смерти",
   "ui.ageNeedsClarification": "Возраст требует уточнения",
   "ui.birthDateLabel": "Дата рождения",
   "ui.deathDateLabel": "Дата смерти",

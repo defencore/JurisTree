@@ -1,3 +1,4 @@
+import { personDisplayName } from "../../model/person-display.js";
 import { $, esc } from "../../core/dom.js";
 import { eventDomain } from "../../core/event-domains.js";
 import { state as appState } from "../../core/state.js";
@@ -40,7 +41,7 @@ export function renderCalendar() {
       [
         e.title,
         e.notes,
-        person(e.personId)?.name,
+        personDisplayName(person(e.personId)),
         ...(person(e.personId)?.groupIds || []).map((id) => group(id)?.name),
       ]
         .join(" ")
@@ -84,7 +85,7 @@ export function renderCalendar() {
           .slice(0, appState.calendarUndatedLimit)
           .map(
             (e) =>
-              `<p><button type="button" class="text-person" data-edit-person="${e.personId}">${esc(person(e.personId)?.name)}</button> · ${esc(e.title)} · ${esc(e.date)}</p>`,
+              `<p><button type="button" class="text-person" data-edit-person="${e.personId}">${esc(personDisplayName(person(e.personId)))}</button> · ${esc(e.title)} · ${esc(e.date)}</p>`,
           )
           .join(
             "",

@@ -1677,6 +1677,8 @@ export default {
     "Комбінуйте слова; беріть фрази в лапки; використовуйте name:, gender:, document:, country:, type:. Розділяйте варіанти знаком |, виключайте слово знаком -.",
   "ui.lifeStatusUnknown": "Статус життя невідомий",
   "ui.under18": "До 18 років",
+  "ui.currentAge": "Вік",
+  "ui.ageAtDeath": "Вік на момент смерті",
   "ui.ageNeedsClarification": "Вік потребує уточнення",
   "ui.birthDateLabel": "Дата народження",
   "ui.deathDateLabel": "Дата смерті",

@@ -2,7 +2,7 @@ import { workspaceModes } from "../core/workspace-modes.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
-import { years } from "../model/dates.js";
+import { personDisplayName, personLifeDates } from "../model/person-display.js";
 import { edgeState } from "../model/evidence.js";
 import { person } from "../model/lookup.js";
 import { roleGroup, roleLabel } from "../model/relationship-labels.js";
@@ -30,7 +30,7 @@ export function kinGroups(p, { profiles = false } = {}) {
           .map((r) => {
             const o = person(r.from === p.id ? r.to : r.from),
               s = edgeState(r);
-            return `<div class="kin-row"><button class="kin-person" data-${profiles ? "full-profile" : "person"}="${o.id}">${avatar(o)}<span><b>${esc(o.name)}</b><small>${esc(roleLabel(r, p.id))} · ${esc(years(o))}</small></span></button><button class="iconbtn small" data-relation="${r.id}" aria-label="${translate("ui.relationshipDocuments2")} ${esc(o.name)}" title="${s === "official" ? translate("ui.officialSourceAvailable") : s === "missing" ? translate("ui.evidenceMissing") : s === "review" ? translate("ui.needsReview2") : translate("ui.reviewEvidence")}">${icon(s === "official" ? "fileCheck" : s === "missing" ? "fileMissing" : "book")}</button></div>`;
+            return `<div class="kin-row"><button class="kin-person" data-${profiles ? "full-profile" : "person"}="${o.id}">${avatar(o)}<span><b>${esc(personDisplayName(o))}</b><small>${esc(roleLabel(r, p.id))} · ${esc(personLifeDates(o))}</small></span></button><button class="iconbtn small" data-relation="${r.id}" aria-label="${translate("ui.relationshipDocuments2")} ${esc(personDisplayName(o))}" title="${s === "official" ? translate("ui.officialSourceAvailable") : s === "missing" ? translate("ui.evidenceMissing") : s === "review" ? translate("ui.needsReview2") : translate("ui.reviewEvidence")}">${icon(s === "official" ? "fileCheck" : s === "missing" ? "fileMissing" : "book")}</button></div>`;
           })
           .join("") ||
         `<p class="kin-empty">${key === "parents" ? translate("ui.noParentsAddedYet") : translate("ui.noChildrenAddedYet")}</p>`

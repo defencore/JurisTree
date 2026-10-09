@@ -86,7 +86,7 @@ test("full profiles retain all sections across purpose changes and keep family n
   await profile.locator('[data-profile-target="relationships"]').click();
   await profile.locator('.kin-person[data-full-profile="p3"]').click();
   await expect(page.locator(".full-profile-overview h2")).toHaveText(
-    "Jamie Roe",
+    "Jamie Roe (Doe)",
   );
   await page.locator("#purpose").selectOption("family");
   await expect(profile.locator('[data-profile-panel="accounts"]')).toHaveCount(

@@ -1,3 +1,4 @@
+import { personDisplayName } from "../../model/person-display.js";
 import { $ } from "../../core/dom.js";
 import { eventDomain } from "../../core/event-domains.js";
 import { state as appState } from "../../core/state.js";
@@ -22,7 +23,7 @@ export function renderEvents() {
         [
           e.title,
           e.notes,
-          person(e.personId)?.name,
+          personDisplayName(person(e.personId)),
           ...(person(e.personId)?.groupIds || []).map((id) => group(id)?.name),
         ]
           .join(" ")

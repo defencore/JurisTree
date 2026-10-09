@@ -108,7 +108,7 @@ test("mobile map gives space to the graph and supports real pan, pinch and tap g
   await page.locator('[data-action="fit"]').tap();
   await page.locator('[data-action="menu"]').tap();
   await page.locator('#personList [data-person="p8"]').tap();
-  await expect(page.locator("#inspector h2")).toHaveText("Casey Roe");
+  await expect(page.locator("#inspector h2")).toHaveText("Casey Roe (Ward)");
   expect(
     parseInt(await page.locator("#zoomLabel").textContent()),
   ).toBeGreaterThanOrEqual(80);

@@ -1,7 +1,7 @@
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { getLocale, translate } from "../i18n/index.js";
-import { years } from "../model/dates.js";
+import { personDisplayName, personLifeDates } from "../model/person-display.js";
 import { requirements } from "../model/evidence.js";
 import { personPassesFilter } from "../model/person-filter-state.js";
 import { withProjectIndex } from "../model/project.js";
@@ -34,11 +34,11 @@ export function renderPeopleAll() {
     ps
       .map((p) => {
         const missing = requirements(p).filter((t) => !t.done).length,
-          dates = years(p),
+          dates = personLifeDates(p),
           status = missing
             ? `${translate("ui.missingDocuments")} ` + missing
             : translate("ui.documentsCollected");
-        return `<div class="person-row ${appState.selected?.kind === "person" && appState.selected.id === p.id ? "selected" : ""}"><button type="button" class="person-select" data-person="${p.id}" aria-label="${esc(p.name + (dates ? ", " + dates : "") + ". " + status)}" ${appState.selected?.kind === "person" && appState.selected.id === p.id ? 'aria-current="true"' : ""}>${avatar(p)}<span class="person-row-text"><b>${esc(p.name)}</b><small>${esc(dates)}</small>${personStatusMarkup(p)}</span><span class="row-state ${missing ? "" : "ready"}" title="${status}">${icon(missing ? "fileMissing" : "fileCheck")}${missing ? `<span>${missing}</span>` : ""}</span></button>${biographyButton(p, true)}</div>`;
+        return `<div class="person-row ${appState.selected?.kind === "person" && appState.selected.id === p.id ? "selected" : ""}"><button type="button" class="person-select" data-person="${p.id}" aria-label="${esc(personDisplayName(p) + (dates ? ", " + dates : "") + ". " + status)}" ${appState.selected?.kind === "person" && appState.selected.id === p.id ? 'aria-current="true"' : ""}>${avatar(p)}<span class="person-row-text"><b>${esc(personDisplayName(p))}</b><small>${esc(dates)}</small>${personStatusMarkup(p)}</span><span class="row-state ${missing ? "" : "ready"}" title="${status}">${icon(missing ? "fileMissing" : "fileCheck")}${missing ? `<span>${missing}</span>` : ""}</span></button>${biographyButton(p, true)}</div>`;
       })
       .join("") ||
     `<p class="hint">${q || appState.personFilter.rules.length ? translate("ui.noPeopleMatchThisSearch") : translate("ui.noPeopleYetAddTheFirstPerson")}</p>`;

@@ -5,6 +5,10 @@ import { theme } from "../../core/theme.js";
 import { initials } from "../../core/utils.js";
 import { translate } from "../../i18n/index.js";
 import { displayDate } from "../../model/dates.js";
+import {
+  personDisplayName,
+  personLifeDetail,
+} from "../../model/person-display.js";
 import { requirements } from "../../model/evidence.js";
 import { objectUrl } from "../../services/blobs.js";
 import { svgIcon } from "../../ui/icons.js";
@@ -40,9 +44,14 @@ function statusRow(person) {
     })
     .join("");
 }
-function dateRow(key, value, y, symbol) {
+function dateRow(key, value, y, symbol, detail = "") {
   const label = translate(key);
-  return `<g class="person-card-date" data-date="${key}"><title>${esc(label + ": " + value)}</title>${svgIcon(symbol, 16, y - 14, theme.muted, 0.7)}${svgText(value, 40, y, 100, 1, 14, theme.muted, 400)}</g>`;
+  const width = PERSON_CARD_WIDTH - 56;
+  const size = Math.min(
+    14,
+    (14 * width) / Math.max(width, graphTextWidth(value, 14, 400)),
+  );
+  return `<g class="person-card-date" data-date="${key}"><title>${esc(label + ": " + value + (detail ? " · " + detail : ""))}</title>${svgIcon(symbol, 16, y - 14, theme.muted, 0.7)}${svgText(value, 40, y, 100, 1, size, theme.muted, 400, width)}</g>`;
 }
 export function personCard(person, images, role) {
   const avatar =
@@ -78,11 +87,12 @@ export function personCard(person, images, role) {
     })
     .join("");
   const scale = Math.min(1, (PERSON_CARD_WIDTH - 32) / (x - 4));
-  const death = person.death || person.lifeStatus === "deceased";
+  const name = personDisplayName(person),
+    detail = personLifeDetail(person);
   return `<circle cx="42" cy="30" r="22" fill="${theme["blue-soft"]}"/>${avatar ? `<defs><clipPath id="c-${person.id}"><circle cx="42" cy="30" r="22"/></clipPath></defs><image href="${esc(avatar)}" x="20" y="8" width="44" height="44" preserveAspectRatio="xMidYMid slice" clip-path="url(#c-${person.id})"/>` : `<text x="42" y="36" text-anchor="middle" font-family="${GRAPH_FONT}" fill="${theme.muted}" font-size="17" font-weight="700">${esc(initials(person.name))}</text>`}
-  ${svgText(person.name, 80, 23, 100, 2, 16, theme.ink, 700, PERSON_CARD_WIDTH - 100)}${statusRow(person)}
+  <g class="person-card-name"><title>${esc(name)}</title>${svgText(name, 80, 23, 100, 2, 16, theme.ink, 700, PERSON_CARD_WIDTH - 100)}</g>${statusRow(person)}
   ${dateRow("ui.birthDateLabel", displayDate(person.birth) || "?", 100, "cake")}
-  ${death ? dateRow("ui.deathDateLabel", displayDate(person.death) || translate("ui.deathDateUnknown"), 122, "candle") : ""}
+  ${detail.value ? dateRow(detail.key, detail.value, 122, detail.icon, detail.age ? translate(detail.ageKey) + ": " + detail.age : "") : ""}
   <path d="M16 132H${PERSON_CARD_WIDTH - 16}" stroke="${theme.line}"/>
   ${svgText(translate("ui.documents"), 16, 152, 40, 1, 13, theme.muted, 400, PERSON_CARD_WIDTH - 116)}
   <g transform="translate(16 181) scale(${scale})">${evidence}</g>
@@ -98,14 +108,14 @@ export function personCardActions(person, dim) {
       PERSON_CARD_WIDTH - 82,
       translate(person.favorite ? "ui.removeFavorite" : "ui.addFavorite") +
         ": " +
-        person.name,
+        personDisplayName(person),
       "star",
       !!person.favorite,
     ) +
     action(
       "biography",
       PERSON_CARD_WIDTH - 38,
-      translate("ui.viewAutobiographyOf", { name: person.name }),
+      translate("ui.viewAutobiographyOf", { name: personDisplayName(person) }),
       "book",
     )
   );

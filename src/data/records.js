@@ -53,6 +53,8 @@ export function formerName(
     id: `name-${person.id}-${kind}`,
     kind,
     fullName: `${person.name.split(" ")[0]} ${surname}`,
+    surname,
+    givenName: person.name.split(" ")[0],
     from: person.birth,
     to: until,
     reason,

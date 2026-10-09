@@ -1,13 +1,4 @@
 import { getLocale, translate } from "../i18n/index.js";
-export function years(p, { includeUnknown = true } = {}) {
-  if (!includeUnknown)
-    return [displayDate(p.birth), displayDate(p.death)]
-      .filter(Boolean)
-      .join(" — ");
-  return p.birth || p.death
-    ? `${displayDate(p.birth) || "?"}${p.death ? " — " + displayDate(p.death) : p.lifeStatus === "deceased" ? ` ${translate("ui.deathDateUnknown")}` : ""}`
-    : translate("ui.datesNotSpecified");
-}
 export function dateExact(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) return "";
   const [y, m, d] = value.split("-").map(Number);
@@ -56,6 +47,25 @@ export function localDateString(date = new Date()) {
     String(date.getMonth() + 1).padStart(2, "0"),
     String(date.getDate()).padStart(2, "0"),
   ].join("-");
+}
+
+function completedYears(birth, at) {
+  const year = Number(at.slice(0, 4)),
+    start = Number(birth.slice(0, 4));
+  let birthday = birth.slice(5);
+  if (birthday === "02-29" && !dateExact(year + "-02-29")) birthday = "02-28";
+  return year - start - (at.slice(5) < birthday ? 1 : 0);
+}
+
+/** Partial dates produce an age range rather than an invented birthday. */
+export function ageBounds(birthValue, atValue) {
+  const birth = partialDate(birthValue),
+    at = partialDate(atValue);
+  if (!birth || !at || birth.min > at.max) return null;
+  return {
+    min: Math.max(0, completedYears(birth.max, at.min)),
+    max: completedYears(birth.min, at.max),
+  };
 }
 export function utcDay(value) {
   const date = new Date(0);

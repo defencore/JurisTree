@@ -78,7 +78,7 @@ test("favorites remain accessible across filters, center the card and survive ZI
   await page.locator('[data-group-filter="g1"]').click();
   await expect(page.locator('.node[data-node="p8"]')).toHaveCount(0);
   await page.locator('#favoriteRail [data-fast-person="p8"]').click();
-  await expect(page.locator("#inspector h2")).toHaveText("Casey Roe");
+  await expect(page.locator("#inspector h2")).toHaveText("Casey Roe (Ward)");
   await expect(page.locator('.node[data-node="p8"]')).toHaveCount(1);
   expect(
     (await page.locator('.node[data-node="p8"] .card').boundingBox()).width,

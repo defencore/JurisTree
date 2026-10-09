@@ -5,7 +5,11 @@ import { state } from "../../core/state.js";
 import { getLocale, translate as t } from "../../i18n/index.js";
 import { orderedPeople } from "../../model/person-selection.js";
 import { personBiography } from "../../model/biography.js";
-import { displayDate, years } from "../../model/dates.js";
+import { displayDate } from "../../model/dates.js";
+import {
+  personDisplayName,
+  personLifeDates,
+} from "../../model/person-display.js";
 import { person } from "../../model/lookup.js";
 import { personPassesFilter } from "../../model/person-filter-state.js";
 import { avatar, biographyButton, miniDoc } from "../components.js";
@@ -51,7 +55,7 @@ function directory() {
         const sections = orderedProfileSections().filter((key) =>
           profileSectionCount(p, key),
         ).length;
-        return `<article class="profile-directory-card"><button type="button" class="profile-directory-open" data-full-profile="${p.id}">${avatar(p)}<span><b>${esc(p.name)}</b><small>${esc(years(p))}</small>${personStatusMarkup(p)}</span>${icon("arrowRight")}</button><div class="profile-directory-meta"><span>${icon("link")}${biography.relations.length} ${t("ui.relationships2")}</span><span>${icon("file")}${biography.documents.length} ${t("ui.sources")}</span><span>${icon("clipboard")}${sections} ${t("ui.profileSectionsCount")}</span></div><div class="profile-directory-actions">${favoriteButton(p, true)}<button type="button" class="btn small ghost" data-edit-person="${p.id}">${icon("edit")}${t("ui.edit")}</button></div></article>`;
+        return `<article class="profile-directory-card"><button type="button" class="profile-directory-open" data-full-profile="${p.id}">${avatar(p)}<span><b>${esc(personDisplayName(p))}</b><small>${esc(personLifeDates(p))}</small>${personStatusMarkup(p)}</span>${icon("arrowRight")}</button><div class="profile-directory-meta"><span>${icon("link")}${biography.relations.length} ${t("ui.relationships2")}</span><span>${icon("file")}${biography.documents.length} ${t("ui.sources")}</span><span>${icon("clipboard")}${sections} ${t("ui.profileSectionsCount")}</span></div><div class="profile-directory-actions">${favoriteButton(p, true)}<button type="button" class="btn small ghost" data-edit-person="${p.id}">${icon("edit")}${t("ui.edit")}</button></div></article>`;
       })
       .join("") ||
     `<div class="empty"><h2>${t(state.project.people.length ? "ui.noPeopleMatchThisSearch" : "ui.noPeopleYetAddTheFirstPerson")}</h2><button class="btn primary" data-action="add-person">${icon("addPerson")}${t("ui.addPerson")}</button></div>`
@@ -70,7 +74,7 @@ function fullProfile(p) {
     { key: "documents", label: t("ui.documentsAndSources"), icon: "files" },
     { key: "property", label: t("ui.propertyAndShares"), icon: "home" },
   ];
-  return `<div class="full-profile" data-profile-browser>${profileNavigation(p, extra)}<div class="full-profile-content"><p class="empty-search" data-profile-no-results hidden>${t("ui.noProfileSections")}</p><section class="full-profile-overview" data-profile-panel="overview"><button type="button" class="btn small ghost" data-profile-back>${icon("chevronLeft")}${t("ui.allProfiles")}</button><header>${avatar(p)}<div><h2>${esc(p.name)}</h2><p>${esc(years(p))}${p.place ? ` · ${esc(p.place)}` : ""}</p>${personStatusMarkup(p)}${p.aliases ? `<p class="hint">${t("ui.otherNames")}: ${esc(p.aliases)}</p>` : ""}</div>${favoriteButton(p, true)}</header><div class="full-profile-actions"><button class="btn primary" data-edit-person="${p.id}">${icon("edit")}${t("ui.editProfile")}</button><button class="btn" data-portrait="${p.id}">${icon("photo")}${t("ui.photo")}</button><button class="btn" data-profile-map="${p.id}">${icon("tree")}${t("ui.showOnMap")}</button>${biographyButton(p)}<button class="btn" data-print-biography="${p.id}" aria-label="${t("ui.printBiography")}" title="${t("ui.printBiography")}">${icon("printer")}PDF</button></div>${fields(
+  return `<div class="full-profile" data-profile-browser>${profileNavigation(p, extra)}<div class="full-profile-content"><p class="empty-search" data-profile-no-results hidden>${t("ui.noProfileSections")}</p><section class="full-profile-overview" data-profile-panel="overview"><button type="button" class="btn small ghost" data-profile-back>${icon("chevronLeft")}${t("ui.allProfiles")}</button><header>${avatar(p)}<div><h2>${esc(personDisplayName(p))}</h2><p>${esc(personLifeDates(p))}${p.place ? ` · ${esc(p.place)}` : ""}</p>${personStatusMarkup(p)}${p.aliases ? `<p class="hint">${t("ui.otherNames")}: ${esc(p.aliases)}</p>` : ""}</div>${favoriteButton(p, true)}</header><div class="full-profile-actions"><button class="btn primary" data-edit-person="${p.id}">${icon("edit")}${t("ui.editProfile")}</button><button class="btn" data-portrait="${p.id}">${icon("photo")}${t("ui.photo")}</button><button class="btn" data-profile-map="${p.id}">${icon("tree")}${t("ui.showOnMap")}</button>${biographyButton(p)}<button class="btn" data-print-biography="${p.id}" aria-label="${t("ui.printBiography")}" title="${t("ui.printBiography")}">${icon("printer")}PDF</button></div>${fields(
     [
       [
         t("ui.gender"),

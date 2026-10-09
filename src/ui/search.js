@@ -1,6 +1,7 @@
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { getLanguage, translate } from "../i18n/index.js";
+import { localDateString } from "../model/dates.js";
 import { buildSearchIndex, searchIndex } from "../model/search.js";
 import { icon, icons } from "./icons.js";
 
@@ -18,17 +19,20 @@ export function renderSearch() {
     return;
   }
   const project = appState.project,
-    language = getLanguage();
+    language = getLanguage(),
+    today = localDateString();
   if (
     !cache ||
     cache.project !== project ||
     cache.updatedAt !== project.updatedAt ||
-    cache.language !== language
+    cache.language !== language ||
+    cache.today !== today
   )
     cache = {
       project,
       updatedAt: project.updatedAt,
       language,
+      today,
       index: buildSearchIndex(project),
     };
   const matches = searchIndex(cache.index, query),

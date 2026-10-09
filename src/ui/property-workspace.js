@@ -1,3 +1,4 @@
+import { personDisplayName } from "../model/person-display.js";
 import { esc } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { getLocale, translate as t } from "../i18n/index.js";
@@ -17,7 +18,7 @@ export function allocationSummary(asset) {
     (sum, row) => sum + Number(row.percent),
     0,
   );
-  return `<details class="property-allocation"><summary>${t("ui.allocationPlan")}</summary><p class="hint">${t("ui.enterThePlannedSharesTheyDoNotEstablish")}</p>${(asset.allocations || []).map((row) => `<div class="allocation"><span>${esc(person(row.personId)?.name || t("ui.personDeleted"))}</span><b>${esc(row.percent)}%</b></div>`).join("")}<div class="asset-total ${Math.abs(total - 100) > 0.001 ? "bad" : ""}"><span>${total > 100 ? t("ui.overallocated") : total < 100 ? t("ui.unallocated") : t("ui.allocated")}</span><b>${Math.abs(total - 100) > 0.001 ? Math.abs(100 - total).toFixed(2) + "%" : "100%"}</b></div></details>`;
+  return `<details class="property-allocation"><summary>${t("ui.allocationPlan")}</summary><p class="hint">${t("ui.enterThePlannedSharesTheyDoNotEstablish")}</p>${(asset.allocations || []).map((row) => `<div class="allocation"><span>${esc(personDisplayName(person(row.personId)) || t("ui.personDeleted"))}</span><b>${esc(row.percent)}%</b></div>`).join("")}<div class="asset-total ${Math.abs(total - 100) > 0.001 ? "bad" : ""}"><span>${total > 100 ? t("ui.overallocated") : total < 100 ? t("ui.unallocated") : t("ui.allocated")}</span><b>${Math.abs(total - 100) > 0.001 ? Math.abs(100 - total).toFixed(2) + "%" : "100%"}</b></div></details>`;
 }
 export function propertySearchText(asset) {
   return [

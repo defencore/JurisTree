@@ -2,7 +2,7 @@ import { esc } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate as t } from "../i18n/index.js";
-import { years } from "../model/dates.js";
+import { personDisplayName, personLifeDates } from "../model/person-display.js";
 import {
   matchesPersonName,
   orderedPeople,
@@ -27,7 +27,7 @@ export function renderPersonPicker(
 }
 
 export function renderPersonChecks(name, selectedIds, label) {
-  return `<div class="person-members" data-person-members>${searchField(label)}<small data-person-results role="status"></small>${checks(orderedPeople(state.project.people), name, selectedIds, (p) => [p.name, years(p)].filter(Boolean).join(" · "))}<p class="hint" data-person-empty hidden>${t("ui.noPeopleMatchThisSearch")}</p></div>`;
+  return `<div class="person-members" data-person-members>${searchField(label)}<small data-person-results role="status"></small>${checks(orderedPeople(state.project.people), name, selectedIds, (p) => [personDisplayName(p), personLifeDates(p)].filter(Boolean).join(" · "))}<p class="hint" data-person-empty hidden>${t("ui.noPeopleMatchThisSearch")}</p></div>`;
 }
 
 /** Filter choices without changing the current value or removing checked members. */

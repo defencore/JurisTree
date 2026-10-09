@@ -1,3 +1,4 @@
+import { personDisplayName } from "../model/person-display.js";
 import { docStates } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -15,7 +16,9 @@ export function avatar(p) {
   return `<span class="avatar ${p.gender === "f" ? "" : "alt"}">${p.avatarId && appState.blobs.has(p.avatarId) ? `<img alt="" src="${objectUrl(p.avatarId)}">` : esc(initials(p.name))}</span>`;
 }
 export function biographyButton(p, compact = false) {
-  const label = esc(translate("ui.viewAutobiographyOf", { name: p.name }));
+  const label = esc(
+    translate("ui.viewAutobiographyOf", { name: personDisplayName(p) }),
+  );
   return `<button type="button" class="${compact ? "iconbtn small person-biography" : "btn biography-profile"}" data-biography="${p.id}" aria-label="${label}" title="${label}">${icon("book")}${compact ? "" : translate("ui.autobiography")}</button>`;
 }
 export function documentIcon(d) {
@@ -47,7 +50,7 @@ export function personOptions(id, empty = false) {
   );
 }
 export function personOption(person, selectedId) {
-  return `<option value="${esc(person.id)}" ${selectedId === person.id ? "selected" : ""}>${esc(person.name)}</option>`;
+  return `<option value="${esc(person.id)}" ${selectedId === person.id ? "selected" : ""}>${esc(personDisplayName(person))}</option>`;
 }
 export function typeOptions(list, current) {
   return Object.entries(list)
