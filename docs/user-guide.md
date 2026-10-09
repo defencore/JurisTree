@@ -264,6 +264,8 @@ name:Doe -document:expired
 
 Press **Ctrl/Cmd + K** to focus search, use arrow keys and Enter to open a result, or Escape to close results. Workspace visibility and family-group filters do not restrict global search.
 
+Selecting a person from search, the person list or working people opens the map, centers the card in the available space and zooms to a readable scale. Map settings and the legend collapse so they do not hide the result. On phones and tablets the person panel closes; tap the card to reopen it. Floating desktop panels keep their position, and the camera avoids them. Selecting a card directly on the map keeps the current position and zoom.
+
 Open a person's **Autobiography**, then choose **Print / Save as PDF**. In the browser print dialog select a printer or **Save as PDF**. The A4 report includes all populated sections, relationship details, property and linked source metadata, with no workspace controls. It uses the selected interface language. File attachments remain in the editable ZIP backup; the report includes their references rather than embedding their contents. Cancelling or finishing print returns to the unchanged on-screen profile.
 
 ## Person status and residence periods

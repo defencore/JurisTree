@@ -126,6 +126,7 @@ test("desktop, tablet and narrow phone layouts keep navigation, search, graph an
     expect(overflow).toBe(false);
     if (width === 820) {
       await page.locator('#personList [data-person="p6"]').click();
+      await page.locator('.node[data-node="p6"] .card').click();
       const panel = await page.locator("#inspector").boundingBox();
       expect(panel.y).toBeGreaterThanOrEqual(search.y + search.height);
       await page.locator('#inspector [data-action="close-panel"]').click();

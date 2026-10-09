@@ -1,17 +1,17 @@
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { fit, focusPerson } from "../graph/camera.js";
+import { fit } from "../graph/camera.js";
 import { resetAnalysis } from "../model/graph-view.js";
 import { render, select } from "../ui/render.js";
 import { closeSearch, renderSearch } from "../ui/search.js";
 import { viewDocument } from "./documents.js";
+import { showPersonOnMap } from "./person-navigation.js";
 import { openPropertyHistory } from "./property-history.js";
 
 export async function openSearchResult(kind, id) {
   closeSearch();
   if (kind === "person") {
-    select("person", id);
-    focusPerson(id);
+    showPersonOnMap(id);
   } else if (kind === "document") await viewDocument(id);
   else if (kind === "relation") {
     appState.groupFilter = "";

@@ -273,6 +273,8 @@ test.describe("phone global search", () => {
     await page.locator("#globalSearch").tap();
     await page.locator("#globalSearch").fill("name:Robin Guitar");
     await page.locator('[data-search-kind="person"]').tap();
+    await expect(page.locator("#inspector")).not.toHaveClass(/open/);
+    await page.locator('.node[data-node="p6"] .card').tap();
     await expect(page.locator("#inspector h2")).toHaveText("Robin Roe");
     await page.locator('#inspector [data-biography="p6"]').tap();
     await expect(page.locator("#modal .biography")).toContainText("Judo");

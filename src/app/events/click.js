@@ -21,6 +21,7 @@ import {
 import { graphAnalysisDialog } from "../../features/graph-tools.js";
 import { deleteGroup, editGroup, toggleGroup } from "../../features/groups.js";
 import { selectStartTemplate } from "../../features/launcher.js";
+import { showPersonOnMap } from "../../features/person-navigation.js";
 import { printBiography } from "../../features/print-biography.js";
 import { addProfileRecord } from "../../features/profile-record-entry.js";
 import {
@@ -88,8 +89,7 @@ export function bindClickEvents() {
         return;
       }
       if (b.dataset.profileMap) {
-        select("person", b.dataset.profileMap);
-        focusPerson(b.dataset.profileMap);
+        showPersonOnMap(b.dataset.profileMap);
         return;
       }
       if (b.dataset.profileRelation) {
@@ -179,8 +179,7 @@ export function bindClickEvents() {
           openFullProfile(b.dataset.fastPerson);
           return;
         }
-        select("person", b.dataset.fastPerson);
-        focusPerson(b.dataset.fastPerson);
+        showPersonOnMap(b.dataset.fastPerson);
         return;
       }
       if (b.dataset.favorite) {
@@ -350,8 +349,7 @@ export function bindClickEvents() {
       if (b.dataset.sourcePerson) {
         closeModal();
         appState.groupFilter = "";
-        select("person", b.dataset.sourcePerson);
-        isMobileLayout() ? focusPerson() : fit();
+        showPersonOnMap(b.dataset.sourcePerson);
         return;
       }
       if (b.dataset.sourceRelation) {
@@ -409,8 +407,7 @@ export function bindClickEvents() {
           if (!e.detail) toggleGraphSelection(b.dataset.person);
           return;
         }
-        select("person", b.dataset.person);
-        focusPerson();
+        showPersonOnMap(b.dataset.person);
         return;
       }
       if (b.dataset.document) {

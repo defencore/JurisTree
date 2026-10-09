@@ -281,6 +281,9 @@ test.describe("native phone working tools", () => {
   }) => {
     await page.locator('#favoriteRail [data-fast-person="p4"]').tap();
     const inspector = page.locator("#inspector");
+    await expect(inspector).not.toHaveClass(/open/);
+    await page.locator('.node[data-node="p4"] .card').tap();
+    await expect(inspector).toHaveClass(/open/);
     await expect(inspector.locator("h2")).toHaveText("Jordan Roe");
     const original = await inspector.boundingBox();
     const header = await inspector.locator(".inspector-header").boundingBox();

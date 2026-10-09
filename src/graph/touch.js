@@ -40,7 +40,28 @@ function tap(node) {
 
 export function bindTouchInteractions(graph) {
   const points = new Map();
-  let gesture = null;
+  let gesture = null,
+    completedTouch = null;
+  document.addEventListener(
+    "pointerdown",
+    () => {
+      completedTouch = null;
+    },
+    true,
+  );
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (event.pointerType !== "touch" || event.pointerId !== completedTouch)
+        return;
+      // A newly opened panel can put a button under the finger before this click.
+      // Graph gestures already handle taps, so their synthetic click is consumed.
+      completedTouch = null;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    },
+    true,
+  );
   function point(event) {
     const rect = graph.getBoundingClientRect();
     return { x: event.clientX - rect.left, y: event.clientY - rect.top };
@@ -148,6 +169,7 @@ export function bindTouchInteractions(graph) {
       return;
     }
     if (points.size) return;
+    completedTouch = event.pointerId;
     if (gesture?.mode === "node" && gesture.moved) {
       const p = person(gesture.node.id),
         position = { x: p.x, y: p.y };

@@ -5,7 +5,7 @@ import {
 } from "../core/person-filter-fields.js";
 import { state } from "../core/state.js";
 import { clone, download, safeName, uid } from "../core/utils.js";
-import { fit, focusPerson } from "../graph/camera.js";
+import { fit } from "../graph/camera.js";
 import { translate as t } from "../i18n/index.js";
 import { localDateString } from "../model/dates.js";
 import { resetAnalysis } from "../model/graph-view.js";
@@ -29,7 +29,8 @@ import {
 } from "../ui/forms/person-filters.js";
 import { icons } from "../ui/icons.js";
 import { renderPersonFilterResults } from "../ui/person-filter-results.js";
-import { render, select } from "../ui/render.js";
+import { render } from "../ui/render.js";
+import { showPersonOnMap } from "./person-navigation.js";
 
 function apply(query) {
   state.personFilter = query;
@@ -209,8 +210,7 @@ export async function editPersonFilters() {
             const query = report.query;
             closeModal();
             apply(query);
-            select("person", button.dataset.id);
-            focusPerson(button.dataset.id);
+            showPersonOnMap(button.dataset.id);
           } else if (command === "save") {
             preview();
             const name = $("#personFilterName").value.trim();

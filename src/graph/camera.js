@@ -2,66 +2,32 @@ import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { filteredGraphNodes } from "./node-data.js";
+import { personFocusCamera } from "./person-focus.js";
 
 export function focusPerson(
   id = appState.selected?.kind === "person" ? appState.selected.id : "",
 ) {
   const nodes = filteredGraphNodes();
   const node =
-    nodes.find((n) => n.id === id) ||
+    nodes.find((n) => n.kind === "person" && n.id === id) ||
     nodes.find((n) => n.kind === "person") ||
     nodes[0];
   if (!node) return fit();
   const rect = $("#graph").getBoundingClientRect();
   if (!rect.width || !rect.height) return;
-  const overlays = [$(".graph-tools"), $(".legend")]
+  const overlays = [$(".graph-tools"), $(".legend"), $("#inspector")]
     .filter(Boolean)
     .map((el) => el.getBoundingClientRect())
-    .filter((box) => box.width && box.height);
-  let z = Math.max(
-    0.15,
-    Math.min(
-      1.1,
-      (rect.width - 48) / node.w,
-      (rect.height - 76) / (node.h + 24),
-    ),
-  );
-  let centerX = rect.width / 2,
-    bottom = 64;
-  if (z < 0.85) {
-    const right = Math.max(0, ...overlays.map((box) => box.right - rect.left));
-    const larger = Math.min(
-      1.1,
-      (rect.width - 48) / node.w,
-      (rect.height - 24) / (node.h + 24),
-    );
-    if (larger > z && rect.width - right - 48 >= node.w * larger) {
-      z = larger;
-      centerX = (right + rect.width) / 2;
-      bottom = 12;
-    }
-  }
-  const overlapping = overlays.filter(
-    (box) =>
-      box.right > rect.left + centerX - (node.w * z) / 2 &&
-      box.left < rect.left + centerX + (node.w * z) / 2,
-  );
-  if (overlapping.length) {
-    bottom = Math.max(
-      bottom,
-      rect.bottom - Math.min(...overlapping.map((box) => box.top)) + 12,
-    );
-    z = Math.max(
-      0.15,
-      Math.min(z, (rect.height - bottom - 12) / (node.h + 24)),
-    );
-  }
-  const top = 12 + 24 * z;
-  appState.camera = {
-    z,
-    x: centerX - (node.x + node.w / 2) * z,
-    y: top + (rect.height - top - bottom) / 2 - (node.y + node.h / 2) * z,
-  };
+    .filter((box) => box.width && box.height)
+    .map((box) => ({
+      left: box.left - rect.left,
+      right: box.right - rect.left,
+      top: box.top - rect.top,
+      bottom: box.bottom - rect.top,
+    }));
+  const camera = personFocusCamera(node, rect, overlays);
+  if (!camera) return;
+  appState.camera = camera;
   applyCamera();
 }
 export function applyCamera() {
