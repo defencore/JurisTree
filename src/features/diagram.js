@@ -1,3 +1,7 @@
+import {
+  nodePlacementLocked,
+  connectorPlacementLocked,
+} from "../model/placement-locks.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { clone } from "../core/utils.js";
@@ -129,6 +133,7 @@ export function changeRouteStyle(style) {
   const key = state.diagramConnectionKey;
   if (
     !key ||
+    connectorPlacementLocked(state.project, key) ||
     key.startsWith("g:") ||
     !["auto", "orthogonal", "polyline"].includes(style)
   )
@@ -141,6 +146,7 @@ export function changeRouteStyle(style) {
 }
 export function beginRoutePoint() {
   const key = state.diagramConnectionKey;
+  if (connectorPlacementLocked(state.project, key)) return;
   if (!key || key.startsWith("g:") || !connectorElement(key)) {
     toast(t("ui.selectDiagramLine"));
     return;
@@ -158,6 +164,7 @@ export function removeRoutePoint(index = state.diagramPointIndex) {
     route = clone(diagramRoute(state.project, key));
   if (
     !key ||
+    connectorPlacementLocked(state.project, key) ||
     !Number.isInteger(index) ||
     index < 0 ||
     index >= route.points.length
@@ -171,9 +178,12 @@ export function resetDiagramLabels() {
   const keys = state.diagramLabelSelection.size
     ? [...state.diagramLabelSelection]
     : [state.diagramConnectionKey];
-  if (!keys.some((key) => diagramRoute(state.project, key).label)) return;
+  const movable = keys.filter(
+    (key) => !connectorPlacementLocked(state.project, key),
+  );
+  if (!movable.some((key) => diagramRoute(state.project, key).label)) return;
   commit(() => {
-    for (const key of keys) {
+    for (const key of movable) {
       const route = clone(diagramRoute(state.project, key));
       route.label = null;
       storeRoute(key, route);
@@ -196,7 +206,12 @@ export function diagramSelectionItems() {
         ? ids.has(n.id)
         : state.diagramNodeSelection.has(n.kind + ":" + n.id),
     )
-    .map((n) => ({ ...n, id: n.kind + ":" + n.id, idValue: n.id }));
+    .map((n) => ({
+      ...n,
+      id: n.kind + ":" + n.id,
+      idValue: n.id,
+      locked: nodePlacementLocked(state.project, n.kind, n.id),
+    }));
   for (const key of state.diagramLabelSelection) {
     const el = labelElement(key);
     if (!el) continue;
@@ -205,6 +220,7 @@ export function diagramSelectionItems() {
     items.push({
       id: key,
       kind: "label",
+      locked: connectorPlacementLocked(state.project, key),
       x: Number(el.dataset.labelX) - w / 2,
       y: Number(el.dataset.labelY) - 10,
       w,
@@ -226,8 +242,18 @@ export function alignDiagramSelection(mode) {
     return;
   commit(() => {
     for (const item of items) {
+      if (item.locked) continue;
       const next = positions.get(item.id);
-      if (item.kind !== "label")
+      if (item.kind === "group") {
+        const group = nodeItem("group", item.idValue);
+        for (const person of state.project.people.filter((p) =>
+          p.groupIds?.includes(item.idValue),
+        )) {
+          person.x += next.x - item.x;
+          person.y += next.y - item.y;
+        }
+        Object.assign(group, next);
+      } else if (item.kind !== "label")
         Object.assign(nodeItem(item.kind, item.idValue), next);
       else {
         const route = clone(diagramRoute(state.project, item.id));

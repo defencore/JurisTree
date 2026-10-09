@@ -124,7 +124,7 @@ export function renderMain() {
   else renderProperty();
 }
 
-export function select(kind, id) {
+export function select(kind, id, { openPanel = true } = {}) {
   const before = appState.diagramEditing
     ? $("#graph").getBoundingClientRect()
     : null;
@@ -188,7 +188,7 @@ export function select(kind, id) {
     icons();
   }
   renderFavorites();
-  $("#inspector").classList.add("open");
+  $("#inspector").classList.toggle("open", openPanel);
   if (innerWidth <= 760) $("#sidebar").classList.remove("open");
   if (before?.width && before.height) {
     const after = $("#graph").getBoundingClientRect();

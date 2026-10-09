@@ -1,3 +1,4 @@
+import { nodePlacementLocked } from "../model/placement-locks.js";
 import { docStates } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -65,7 +66,7 @@ export function nodeSVG(n, images = null, exporting = false) {
             : s.tone === "requested"
               ? "#3e516c"
               : "#8d6b2c";
-    inside = `<rect x="15" y="17" width="34" height="40" rx="8" fill="#e7eef6"/>${svgIcon(documentIcon(n), 21, 24, "#3e516c", 0.75)}${svgText(n.title, 59, 32, 22, 2, 14, "#081f3c", 700, n.w - 72)}<path d="M15 80H${n.w - 15}" stroke="#e7eef6"/>${svgIcon(s.icon, 15, 93, c, 0.65)}${svgText(s.label, 37, 106, 23, 1, 14, c, 400, n.w - 50)}${svgText(hasFile(n) ? translate("ui.fileAttached2") : translate("ui.noDigitalCopy2"), 15, 70, 35, 1, 12.5, "#3e516c", 400)}`;
+    inside = `<rect x="15" y="17" width="34" height="40" rx="8" fill="#e7eef6"/>${svgIcon(documentIcon(n), 21, 24, "#3e516c", 0.75)}${svgText(n.title, 59, 32, 22, 2, 14, "#081f3c", 700, n.w - 72)}<path d="M15 80H${n.w - 15}" stroke="#e7eef6"/>${svgIcon(s.icon, 15, 93, c, 0.65)}${svgText(s.label, 37, 106, 23, 1, 14, c, 400, n.w - 76)}${svgText(hasFile(n) ? translate("ui.fileAttached2") : translate("ui.noDigitalCopy2"), 15, 70, 35, 1, 12.5, "#3e516c", 400)}`;
   } else if (n.kind === "group") {
     inside = `<rect x="16" y="17" width="43" height="43" rx="12" fill="${n.color}" fill-opacity=".1"/>${svgIcon("users", 26, 27, n.color, 0.9)}${svgText(n.name, 73, 38, 20, 2, 16, "#081f3c", 700, n.w - 85)}${svgText(
       n.members.length +
@@ -84,8 +85,11 @@ export function nodeSVG(n, images = null, exporting = false) {
     )}${svgText(translate("ui.clickToExpand"), 16, 111, 34, 1, 12.5, "#3e516c", 400)}`;
     if (!multi && !focus && !active) stroke = n.color;
   } else {
-    inside = `<rect x="16" y="17" width="38" height="42" rx="10" fill="#edf6f0"/>${svgIcon("home", 24, 27, "#28644a", 0.9)}${svgText(n.title, 66, 35, 22, 2, 15)}${svgText(n.value ? new Intl.NumberFormat(getLocale()).format(Number(n.value)) + " " + n.currency : translate("ui.valueNotSpecified"), 16, 94, 31, 1, 13, "#3e516c", 400)}`;
+    inside = `<rect x="16" y="17" width="38" height="42" rx="10" fill="#edf6f0"/>${svgIcon("home", 24, 27, "#28644a", 0.9)}${svgText(n.title, 66, 35, 22, 2, 15)}${svgText(n.value ? new Intl.NumberFormat(getLocale()).format(Number(n.value)) + " " + n.currency : translate("ui.valueNotSpecified"), 16, 94, 31, 1, 13, "#3e516c", 400, n.w - 60)}`;
   }
+  const locked = nodePlacementLocked(appState.project, n.kind, n.id);
+  if (locked && !exporting)
+    inside += `<g class="placement-lock-indicator"><title>${esc(translate("ui.placementLocked"))}</title>${svgIcon("lock", n.kind === "person" ? n.w - 128 : n.w - 32, n.kind === "person" ? 141 : n.h - 30, "#3e516c", 0.65)}</g>`;
   const actions =
     n.kind === "person" && !exporting ? personCardActions(n, dim) : "";
   const label =
@@ -99,5 +103,5 @@ export function nodeSVG(n, images = null, exporting = false) {
           .filter(Boolean)
           .join(" · ")
       : n.name || n.title;
-  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" ${role ? `data-kinship-role="${role.kind}" data-kinship-group="${role.group}"` : ""} transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(label)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="${role?.bg || theme.paper}" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${actions}`;
+  return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-placement-locked="${locked}" data-node="${n.id}" data-kind="${n.kind}" ${role ? `data-kinship-role="${role.kind}" data-kinship-group="${role.group}"` : ""} transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(label)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="${role?.bg || theme.paper}" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${actions}`;
 }

@@ -1,3 +1,4 @@
+import { layoutProject } from "./layouts/apply.js";
 import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
@@ -7,7 +8,6 @@ import {
   relationShown,
   visiblePeople,
 } from "../model/graph-view.js";
-import { group, person } from "../model/lookup.js";
 import { withProjectIndex } from "../model/project.js";
 import { commit } from "../services/history.js";
 import { toast } from "../ui/dialog.js";
@@ -118,86 +118,15 @@ export async function arrangeGraph(style = graphView().layout) {
     }
     if (scope)
       positions.people = positionScopedLayout(positions.people, start, scope);
+    const next = layoutProject(start, positions, {
+      cfg,
+      style,
+      scope,
+      groupFilter: appState.groupFilter,
+      direct,
+    });
     commit(() => {
-      appState.project.graphView = {
-        ...cfg,
-        layout: style,
-      };
-      for (const [id, pos] of positions.people) {
-        const p = person(id);
-        if (p) Object.assign(p, pos);
-        else {
-          const g = group(id);
-          if (g) {
-            const members = appState.project.people.filter((p) =>
-                (p.groupIds || []).includes(id),
-              ),
-              dx =
-                pos.x -
-                (Number.isFinite(g.x)
-                  ? g.x
-                  : Math.min(...members.map((p) => p.x))),
-              dy =
-                pos.y -
-                (Number.isFinite(g.y)
-                  ? g.y
-                  : Math.min(...members.map((p) => p.y)));
-            members.forEach((p) => {
-              p.x += dx;
-              p.y += dy;
-            });
-            Object.assign(g, pos);
-          }
-        }
-      }
-      if (scope) {
-        if (appState.groupFilter && !direct) {
-          const selectedGroup = group(appState.groupFilter);
-          if (selectedGroup) {
-            selectedGroup.x = null;
-            selectedGroup.y = null;
-          }
-        }
-        return;
-      }
-      if (style === "generations") {
-        appState.project.groups.forEach((g) => {
-          g.x = null;
-          g.y = null;
-        });
-        appState.project.documents.forEach((d) =>
-          Object.assign(d, positions.documents.get(d.id)),
-        );
-        appState.project.property.forEach((a) =>
-          Object.assign(a, positions.property.get(a.id)),
-        );
-      } else {
-        const right = Math.max(
-            1100,
-            ...appState.project.people.map((p) => p.x + PERSON_CARD_WIDTH),
-          ),
-          bottom = Math.max(
-            0,
-            ...appState.project.people.map((p) => p.y + PERSON_CARD_HEIGHT),
-          ),
-          cols = Math.max(1, Math.min(20, Math.floor(right / 265)));
-        appState.project.documents.forEach((d, i) =>
-          Object.assign(d, {
-            x: 55 + (i % cols) * 265,
-            y: bottom + 100 + Math.floor(i / cols) * 170,
-          }),
-        );
-        appState.project.property.forEach((a, i) =>
-          Object.assign(a, {
-            x: 55 + (i % cols) * 265,
-            y:
-              bottom +
-              100 +
-              Math.ceil(appState.project.documents.length / cols) * 170 +
-              Math.floor(i / cols) * 170,
-          }),
-        );
-      }
+      appState.project = next;
     });
     fit(
       scope

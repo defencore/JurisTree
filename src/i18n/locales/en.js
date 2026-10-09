@@ -1073,7 +1073,6 @@ export default {
   "ui.adoptiveParent2": "adoptive parent",
   "ui.parent2": "parent",
   "ui.partner4": "partner",
-  "ui.sibling2": "sibling",
   "ui.acquaintance2": "acquaintance",
   "ui.possibleConnection": "possible connection",
   "ui.steps": "steps",
@@ -2546,6 +2545,16 @@ export default {
   "ui.awardSource": "Award / award document",
   "ui.journalEntrySource": "Journal / log entry",
   "ui.deathNoticeSource": "Death notice / obituary",
+  "ui.lockPlacement": "Lock position",
+  "ui.unlockPlacement": "Unlock position",
+  "ui.placementLocked": "Position locked",
+  "ui.lockPlacementHint":
+    "Keep selected cards, routes and labels in place during dragging, alignment and automatic layout. Line ends stay attached to cards.",
+  "ui.lockedByGroup":
+    "Expand the group to move unlocked members, or select the locked group to unlock it.",
+  "ui.noSpaceForLayout":
+    "There is no space for this layout within the diagram limits. Unlock or move cards near the boundary.",
+  "ui.invalidPlacementLocks": "Invalid placement locks.",
   "ui.diagramTools": "Placement",
   "ui.diagramEditing": "Diagram editing",
   "ui.diagramHint":

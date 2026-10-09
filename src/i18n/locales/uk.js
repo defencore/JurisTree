@@ -1073,7 +1073,6 @@ export default {
   "ui.adoptiveParent2": "усиновлювач",
   "ui.parent2": "батько / мати",
   "ui.partner4": "партнер / партнерка",
-  "ui.sibling2": "брат / сестра",
   "ui.acquaintance2": "знайомство",
   "ui.possibleConnection": "ймовірний зв’язок",
   "ui.steps": "кроків",
@@ -2548,6 +2547,16 @@ export default {
   "ui.awardSource": "Нагорода / документ про нагородження",
   "ui.journalEntrySource": "Запис із журналу",
   "ui.deathNoticeSource": "Повідомлення про смерть / некролог",
+  "ui.lockPlacement": "Зафіксувати",
+  "ui.unlockPlacement": "Зняти фіксацію",
+  "ui.placementLocked": "Положення зафіксовано",
+  "ui.lockPlacementHint":
+    "Зафіксувати вибрані картки, маршрути й підписи під час переміщення, вирівнювання та розстановки. Кінці ліній залишаються прикріпленими до карток.",
+  "ui.lockedByGroup":
+    "Розгорніть групу, щоб перемістити незаблоковані картки, або виберіть зафіксовану групу, щоб зняти фіксацію.",
+  "ui.noSpaceForLayout":
+    "Для розстановки бракує місця в межах схеми. Зніміть фіксацію або перемістіть картки біля межі.",
+  "ui.invalidPlacementLocks": "Некоректні дані блокування розміщення.",
   "ui.diagramTools": "Розстановка",
   "ui.diagramEditing": "Редагування схеми",
   "ui.diagramHint":

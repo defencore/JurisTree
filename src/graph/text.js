@@ -69,7 +69,7 @@ export function svgText(
     rows = maxWidth
       ? wrapMeasuredText(t, maxWidth, lines, size, fontWeight)
       : wrapText(t, max, lines);
-  return `<text x="${x}" y="${y}" fill="${color}" font-family="${GRAPH_FONT}" font-size="${size}" font-weight="${fontWeight}">${rows.map((s, i) => `<tspan x="${x}" dy="${i ? size * 1.3 : 0}">${esc(s)}</tspan>`).join("")}</text>`;
+  return `<text x="${x}" y="${y}" fill="${color}" text-rendering="geometricPrecision" font-family="${GRAPH_FONT}" font-size="${size}" font-weight="${fontWeight}">${rows.map((s, i) => `<tspan x="${x}" dy="${i ? size * 1.3 : 0}">${esc(s)}</tspan>`).join("")}</text>`;
 }
 
 export function svgPill(text, x, y, color, bg, size = 12, padding = 8) {

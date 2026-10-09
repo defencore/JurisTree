@@ -1,3 +1,4 @@
+import { normalizePlacementLocks } from "./placement-locks.js";
 import { normalizeDiagram } from "./diagram.js";
 import { MAX_ATTACHMENT_FILES } from "../core/attachments.js";
 import {
@@ -391,6 +392,11 @@ export function validateImport(raw) {
     p.diagram = normalizeDiagram(raw.diagram, p);
   } catch {
     throw Error(translate("ui.invalidDiagramRoutes"));
+  }
+  try {
+    p.placementLocks = normalizePlacementLocks(raw.placementLocks, p);
+  } catch {
+    throw Error(translate("ui.invalidPlacementLocks"));
   }
   try {
     p.mapViews = list("mapViews", MAP_VIEW_LIMIT, true).map((view) =>

@@ -230,6 +230,8 @@ A gap means that no eligible dated record covers that period. It is not proof of
 
 ## Selection-relative family roles
 
+Sibling connection captions use the recorded genders in relationship order: Brother, Sister, Brother / Sister or Sister / Brother. Unspecified genders retain a neutral sibling label. Roles on individual cards still describe each relative from the selected person’s perspective.
+
 Selecting a person colors and labels related cards using the complete recorded family graph: parents, children, spouses/partners, full/half siblings, grandparents, grandchildren, aunts/uncles, nieces/nephews, distant cousins and relatives through marriage. Cousins retain their degree and generation difference. Direct adoptive parents/children and stepfamily have explicit labels; adoption and disputed links in longer paths appear in the badge tooltip and accessible card description. Unverified/refuted links do not establish kinship, and social/professional links do not create family roles. Family groups and visible-map filters do not change the underlying calculation.
 
 The map key identifies the selected person and explains card colors separately from source-state line colors. Long role labels wrap above the card. Changing selection, language or relationship data refreshes the roles. A shared adjacency/ancestry index serves each calculation/render, and role results are cached across view redraws. SVG/PNG diagram exports omit temporary selection-relative highlights.
@@ -291,6 +293,12 @@ Drag a relationship caption to move its title and dates together. Group names, s
 Enable **Show grid** and **Snap to grid**, then set the spacing in map units. Card, waypoint and caption drags snap to that grid; hold Alt during a mouse drag for precise free movement. On phones, **Select items** allows multiple selections without a keyboard. Use **Move cards** for card dragging; waypoint and caption dragging works directly with one finger while Placement is open. Choose **Done** to resume ordinary map navigation. On a narrow screen, scroll the Placement controls to reach alignment and routing actions.
 
 Routes stay attached to moving cards and are included in the browser draft, ZIP backups and **Saved views**. SVG/PNG exports retain routes and moved captions, including parts outside the viewport, and omit editing handles and the grid. Routes are adjusted manually; moving a card can require moving its waypoints to avoid newly overlapping objects.
+
+Select a card or line and choose **Lock position** to fix its placement. Use Ctrl/Cmd/Shift or **Select items** in Placement to lock several cards and captions together. Padlocks identify fixed objects. **Unlock position** releases the explicit locks on the selected objects. You can still select a fixed card and edit its profile.
+
+Dragging, alignment, snapping and automatic layouts leave locked cards unchanged. Alignment uses selected fixed objects as anchors; distribution preserves fixed items between movable ones. Automatic layouts place movable cards around fixed cards. Locked connection waypoints and captions stay in map coordinates while the line ends follow their cards; automatic portions of a line continue to adapt to its endpoints. To keep both endpoints stationary, lock their cards as well.
+
+Locking a collapsed group fixes its card and all member cards. A collapsed group containing an individually locked member also cannot be dragged as a unit; expand it to move its other members. Group headings can be locked independently as captions. Locks remain active when restoring Saved views, and are preserved in browser drafts and ZIP/JSON backups. Locking and unlocking support undo/redo. Image exports omit padlock indicators.
 
 The interaction follows the waypoint and alignment concepts documented by [draw.io](https://www.drawio.com/docs/manual/connectors/waypoints-connectors/) and its [alignment tools](https://www.drawio.com/docs/manual/editor/alignment-tools/).
 

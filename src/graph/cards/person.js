@@ -94,7 +94,7 @@ export function personCard(person, images, role) {
   ${dateRow("ui.birthDateLabel", displayDate(person.birth) || "?", 100, "cake")}
   ${detail.value ? dateRow(detail.key, detail.value, 122, detail.icon, detail.age ? translate(detail.ageKey) + ": " + detail.age : "") : ""}
   <path d="M16 132H${PERSON_CARD_WIDTH - 16}" stroke="${theme.line}"/>
-  ${svgText(translate("ui.documents"), 16, 152, 40, 1, 13, theme.muted, 400, PERSON_CARD_WIDTH - 116)}
+  ${svgText(translate("ui.documents"), 16, 152, 40, 1, 13, theme.muted, 400, PERSON_CARD_WIDTH - 152)}
   <g transform="translate(16 181) scale(${scale})">${evidence}</g>
   ${roleBadge(role)}
   ${person.id === state.project.subjectId ? `<g><title>${esc(translate("ui.ownerDeceasedEstateOwner"))}</title><circle cx="64" cy="48" r="8" fill="${theme["accent-soft"]}"/>${svgIcon("fingerprint", 58, 42, theme.accent, 0.5)}</g>` : ""}`;

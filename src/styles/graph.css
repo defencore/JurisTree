@@ -907,3 +907,22 @@
   color: #fff;
   border-color: var(--blue);
 }
+
+.placement-lock-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.placement-lock-controls .hint {
+  flex-basis: 100%;
+  margin: 0;
+  max-width: 440px;
+}
+.node[data-placement-locked="true"],
+.diagram-editing [data-route-label][data-placement-locked="true"] {
+  cursor: default;
+}
+.placement-lock-indicator {
+  pointer-events: none;
+}

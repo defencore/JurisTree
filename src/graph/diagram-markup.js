@@ -1,3 +1,5 @@
+import { connectorPlacementLocked } from "../model/placement-locks.js";
+import { svgIcon } from "../ui/icons.js";
 import { esc } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { translate as t } from "../i18n/index.js";
@@ -5,7 +7,9 @@ import { diagramRoute } from "../model/diagram.js";
 
 export function connectorAttributes(key, a, b, caption) {
   return (
-    'data-connector="' +
+    'data-placement-locked="' +
+    connectorPlacementLocked(state.project, key) +
+    '" data-connector="' +
     key +
     '" data-from-node="' +
     a.id +
@@ -22,6 +26,8 @@ export function connectorLabel(key, box, content, exporting = false) {
   return (
     '<g class="connector-label' +
     (selected ? " diagram-label-selected" : "") +
+    '" data-placement-locked="' +
+    connectorPlacementLocked(state.project, key) +
     '" data-route-label="' +
     key +
     '" data-label-x="' +
@@ -44,6 +50,13 @@ export function connectorLabel(key, box, content, exporting = false) {
     box.h +
     '" rx="3" fill="#fff" fill-opacity=".95"/>' +
     content +
+    (!exporting && connectorPlacementLocked(state.project, key)
+      ? '<g class="placement-lock-indicator"><title>' +
+        esc(t("ui.placementLocked")) +
+        "</title>" +
+        svgIcon("lock", box.x + box.w + 3, box.y + 2, "#3e516c", 0.6) +
+        "</g>"
+      : "") +
     "</g>"
   );
 }
@@ -51,6 +64,7 @@ export function routeHandles() {
   if (
     !state.diagramEditing ||
     !state.diagramConnectionKey ||
+    connectorPlacementLocked(state.project, state.diagramConnectionKey) ||
     state.diagramConnectionKey.startsWith("g:")
   )
     return "";

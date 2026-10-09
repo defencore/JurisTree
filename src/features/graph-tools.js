@@ -137,7 +137,8 @@ export function analysisOptions() {
   };
 }
 export function graphStepLabel(r, from) {
-  if (isProfessionalRelationship(r.type)) return roleLabel(r, from);
+  if (isProfessionalRelationship(r.type) || r.type === "sibling")
+    return roleLabel(r, from);
   if (r.type === "step_parent")
     return translate(r.from === from ? "ui.stepChild" : "ui.stepParent");
   if (["parent", "adopted"].includes(r.type))
@@ -151,7 +152,6 @@ export function graphStepLabel(r, from) {
   return {
     spouse: translate("ui.partner4"),
     partner: translate("ui.personalPartnership"),
-    sibling: translate("ui.sibling2"),
     acquaintance: translate("ui.acquaintance2"),
     unconfirmed: translate("ui.possibleConnection"),
   }[r.type];

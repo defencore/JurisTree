@@ -1,3 +1,4 @@
+import { nodePlacementLocked } from "../model/placement-locks.js";
 import { bindDiagramInteractions } from "./diagram-interaction.js";
 import { snapPoint } from "../model/diagram.js";
 import { graphView } from "../model/graph-view.js";
@@ -66,6 +67,7 @@ export function bindGraphInteractions() {
               .filter(
                 (p) =>
                   appState.multiSelection.has(p.id) &&
+                  !nodePlacementLocked(appState.project, "person", p.id) &&
                   (!direct || direct.people.has(p.id)),
               )
               .map((p) => ({
@@ -86,6 +88,7 @@ export function bindGraphInteractions() {
       appState.drag = {
         kind: "node",
         nodeKind: n.dataset.kind,
+        locked: nodePlacementLocked(appState.project, n.dataset.kind, item.id),
         id: item.id,
         x: displayed.x,
         y: displayed.y,
@@ -149,6 +152,7 @@ export function bindGraphInteractions() {
       box.setAttribute("width", Math.abs(dx));
       box.setAttribute("height", Math.abs(dy));
     } else {
+      if (appState.drag.locked) return;
       const item = nodeItem(appState.drag.nodeKind, appState.drag.id);
       const next = snapPoint(
           {
@@ -230,6 +234,7 @@ export function finishGraphDrag(e) {
       render();
       return;
     }
+    if (d.locked && d.moved) return;
     if (d.moved) {
       appState.history.push(d.before);
       if (appState.history.length > 45) appState.history.shift();
@@ -237,7 +242,8 @@ export function finishGraphDrag(e) {
       appState.project.updatedAt = new Date().toISOString();
       scheduleSave();
       renderGraph();
-    } else if (d.nodeKind === "person") select("person", d.id);
+    } else if (d.nodeKind === "person")
+      select("person", d.id, { openPanel: !appState.diagramEditing });
     else if (d.nodeKind === "document") viewDocument(d.id);
     else if (d.nodeKind === "group") toggleGroup(d.id);
     else editProperty(d.id);

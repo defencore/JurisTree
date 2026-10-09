@@ -1,3 +1,4 @@
+import { connectorPlacementLocked } from "../model/placement-locks.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { clone } from "../core/utils.js";
@@ -66,7 +67,9 @@ export function bindDiagramInteractions(graph) {
       if (
         !adding &&
         node &&
-        ["person", "document", "property"].includes(node.dataset.kind) &&
+        ["person", "document", "property", "group"].includes(
+          node.dataset.kind,
+        ) &&
         (state.diagramSelecting ||
           event.ctrlKey ||
           event.metaKey ||
@@ -114,6 +117,10 @@ export function bindDiagramInteractions(graph) {
         )
           return;
       }
+      if (connectorPlacementLocked(state.project, key)) {
+        consumedClick = true;
+        return;
+      }
       if (!adding && !label && !handle) return;
       const route = clone(diagramRoute(state.project, key));
       let index = handle ? Number(handle.dataset.routePoint) : -1;
@@ -121,7 +128,8 @@ export function bindDiagramInteractions(graph) {
       if (label && !adding)
         for (const selected of state.diagramLabelSelection) {
           const position = labelPosition(selected);
-          if (position) labels.set(selected, position);
+          if (position && !connectorPlacementLocked(state.project, selected))
+            labels.set(selected, position);
         }
       const before = clone(state.project);
       if (adding) {
@@ -235,7 +243,9 @@ export function bindDiagramInteractions(graph) {
       const node = event.target.closest("[data-node]");
       if (
         node &&
-        ["person", "document", "property"].includes(node.dataset.kind) &&
+        ["person", "document", "property", "group"].includes(
+          node.dataset.kind,
+        ) &&
         event.key === "Enter" &&
         (state.diagramSelecting ||
           event.ctrlKey ||
@@ -305,7 +315,7 @@ export function bindDiagramInteractions(graph) {
         index = handle ? Number(handle.dataset.routePoint) : -1,
         route = clone(diagramRoute(state.project, key)),
         original = index >= 0 ? route.points[index] : labelPosition(key);
-      if (!original) return;
+      if (!original || connectorPlacementLocked(state.project, key)) return;
       const step =
           (graphView().snapToGrid ? graphView().gridSize : 5) *
           (event.shiftKey ? 5 : 1),

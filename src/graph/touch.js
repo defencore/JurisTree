@@ -1,3 +1,4 @@
+import { nodePlacementLocked } from "../model/placement-locks.js";
 import { snapPoint } from "../model/diagram.js";
 import { graphView } from "../model/graph-view.js";
 import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
@@ -34,7 +35,8 @@ export function pinchCamera(camera, start, current) {
 
 function tap(node) {
   if (!node) return;
-  if (node.kind === "person") select("person", node.id);
+  if (node.kind === "person")
+    select("person", node.id, { openPanel: !appState.diagramEditing });
   else if (node.kind === "document") viewDocument(node.id);
   else if (node.kind === "group") toggleGroup(node.id);
   else if (node.kind === "relation") select("relation", node.id);
@@ -103,7 +105,12 @@ export function bindTouchInteractions(graph) {
           : null;
         const p = node?.kind === "person" ? person(node.id) : null;
         gesture = {
-          mode: appState.touchMove && p ? "node" : "pan",
+          mode:
+            appState.touchMove &&
+            p &&
+            !nodePlacementLocked(appState.project, "person", p.id)
+              ? "node"
+              : "pan",
           start: point(event),
           camera: { ...appState.camera },
           node,

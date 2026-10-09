@@ -78,14 +78,18 @@ export function arrangeItems(items, mode, gridSize = 20) {
   if (!items.length) return result;
   if (mode === "grid") {
     for (const item of items)
-      result.set(item.id, snapPoint(item, { snapToGrid: true, gridSize }));
+      if (!item.locked)
+        result.set(item.id, snapPoint(item, { snapToGrid: true, gridSize }));
     return result;
   }
   if (items.length < 2) return result;
-  const left = Math.min(...items.map((i) => i.x)),
-    right = Math.max(...items.map((i) => i.x + i.w)),
-    top = Math.min(...items.map((i) => i.y)),
-    bottom = Math.max(...items.map((i) => i.y + i.h));
+  const anchors = items.some((i) => i.locked)
+    ? items.filter((i) => i.locked)
+    : items;
+  const left = Math.min(...anchors.map((i) => i.x)),
+    right = Math.max(...anchors.map((i) => i.x + i.w)),
+    top = Math.min(...anchors.map((i) => i.y)),
+    bottom = Math.max(...anchors.map((i) => i.y + i.h));
   const positions = {
     left: (i) => ({ x: left, y: i.y }),
     right: (i) => ({ x: right - i.w, y: i.y }),
@@ -94,24 +98,38 @@ export function arrangeItems(items, mode, gridSize = 20) {
     bottom: (i) => ({ x: i.x, y: bottom - i.h }),
     centerY: (i) => ({ x: i.x, y: (top + bottom - i.h) / 2 }),
   };
-  if (positions[mode])
-    for (const item of items) result.set(item.id, positions[mode](item));
-  else if (["distributeX", "distributeY"].includes(mode) && items.length >= 3) {
+  if (positions[mode]) {
+    for (const item of items)
+      if (!item.locked) result.set(item.id, positions[mode](item));
+  } else if (
+    ["distributeX", "distributeY"].includes(mode) &&
+    items.length >= 3
+  ) {
     const axis = mode === "distributeX" ? "x" : "y",
       size = axis === "x" ? "w" : "h",
       sorted = [...items].sort((a, b) => a[axis] - b[axis]);
-    const first = sorted[0],
-      last = sorted.at(-1),
-      gap =
-        (last[axis] +
-          last[size] -
-          first[axis] -
-          sorted.reduce((sum, i) => sum + i[size], 0)) /
-        (sorted.length - 1);
-    let cursor = first[axis];
-    for (const item of sorted) {
-      result.get(item.id)[axis] = cursor;
-      cursor += item[size] + gap;
+    const anchors = sorted
+      .map((item, index) =>
+        item.locked || index === 0 || index === sorted.length - 1 ? index : -1,
+      )
+      .filter((i) => i >= 0);
+    for (let segment = 1; segment < anchors.length; segment++) {
+      const firstIndex = anchors[segment - 1],
+        lastIndex = anchors[segment],
+        first = sorted[firstIndex],
+        last = sorted[lastIndex],
+        middle = sorted.slice(firstIndex + 1, lastIndex),
+        gap =
+          (last[axis] -
+            first[axis] -
+            first[size] -
+            middle.reduce((sum, item) => sum + item[size], 0)) /
+          (lastIndex - firstIndex);
+      let cursor = first[axis] + first[size] + gap;
+      for (const item of middle) {
+        result.get(item.id)[axis] = cursor;
+        cursor += item[size] + gap;
+      }
     }
   }
   return result;

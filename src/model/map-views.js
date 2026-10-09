@@ -1,3 +1,8 @@
+import {
+  nodePlacementLocked,
+  connectorPlacementLocked,
+  pinLockedGroupAnchors,
+} from "./placement-locks.js";
 import { normalizeDiagram } from "./diagram.js";
 import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { normalizeGraphView } from "../core/graph-view.js";
@@ -182,6 +187,7 @@ export function captureMapView(project, runtime, viewport, { id, name }) {
 /** Apply only placement and display settings, leaving people and relationships intact. */
 export function restoreMapView(project, raw) {
   const view = normalizeMapView(raw, project);
+  pinLockedGroupAnchors(project);
   for (const key of Object.keys(nodeLists)) {
     const positions = new Map(
       view.positions[key].map((item) => [item.id, item]),
@@ -189,12 +195,32 @@ export function restoreMapView(project, raw) {
     for (const item of project[key]) {
       const position = positions.get(item.id);
       if (!position) continue;
-      item.x = position.x;
-      item.y = position.y;
+      const kind = {
+        people: "person",
+        groups: "group",
+        documents: "document",
+        property: "property",
+      }[key];
+      if (!nodePlacementLocked(project, kind, item.id)) {
+        item.x = position.x;
+        item.y = position.y;
+      }
       if (key === "groups") item.collapsed = position.collapsed;
     }
   }
   project.graphView = clone(view.graphView);
-  project.diagram = clone(view.diagram);
+  const fixed = Object.fromEntries(
+    Object.entries(project.diagram || {}).filter(([key]) =>
+      connectorPlacementLocked(project, key),
+    ),
+  );
+  project.diagram = {
+    ...Object.fromEntries(
+      Object.entries(clone(view.diagram)).filter(
+        ([key]) => !connectorPlacementLocked(project, key),
+      ),
+    ),
+    ...clone(fixed),
+  };
   return clone(view);
 }

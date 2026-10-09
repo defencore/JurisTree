@@ -1,3 +1,4 @@
+import { connectorPlacementLocked } from "../model/placement-locks.js";
 import { diagramRoute } from "../model/diagram.js";
 import { esc } from "../core/dom.js";
 import { state } from "../core/state.js";
@@ -47,8 +48,9 @@ export function groupBackdrop(frames) {
 export function groupHeadings(frames, exporting = false) {
   return frames
     .map(({ group, count, header: { x, y, w, h } }) => {
-      const label = `${group.name} · ${count}`;
-      return `<g class="group-heading ${!exporting && state.diagramEditing && state.diagramLabelSelection.has("g:" + group.id) ? "diagram-label-selected" : ""}" data-route-label="g:${group.id}" data-label-x="${x + w / 2}" data-label-y="${y + 10}" data-label-width="${w}" data-label-height="${h}" opacity="${groupOpacity(group)}" data-toggle-group="${group.id}" tabindex="0" role="button" aria-label="${esc(translate("ui.collapseGroup") + " " + group.name)}"><title>${esc(label)}</title><rect class="group-heading-background" x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="${theme.bg}" stroke="${group.color}" stroke-opacity=".18"/>${svgIcon("users", x + 8, y + 8, group.color, 0.7)}${svgText(label, x + 32, y + 21, 150, 1, 13, group.color, 700, w - 64)}${svgIcon("fold", x + w - 24, y + 8, group.color, 0.65)}</g>`;
+      const label = `${group.name} · ${count}`,
+        locked = connectorPlacementLocked(state.project, "g:" + group.id);
+      return `<g class="group-heading ${!exporting && state.diagramEditing && state.diagramLabelSelection.has("g:" + group.id) ? "diagram-label-selected" : ""}" data-placement-locked="${locked}" data-route-label="g:${group.id}" data-label-x="${x + w / 2}" data-label-y="${y + 10}" data-label-width="${w}" data-label-height="${h}" opacity="${groupOpacity(group)}" data-toggle-group="${group.id}" tabindex="0" role="button" aria-label="${esc(translate("ui.collapseGroup") + " " + group.name)}"><title>${esc(label)}</title><rect class="group-heading-background" x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="${theme.bg}" stroke="${group.color}" stroke-opacity=".18"/>${svgIcon(locked && !exporting ? "lock" : "users", x + 8, y + 8, group.color, 0.7)}${svgText(label, x + 32, y + 21, 150, 1, 13, group.color, 700, w - 64)}${svgIcon("fold", x + w - 24, y + 8, group.color, 0.65)}</g>`;
     })
     .join("");
 }

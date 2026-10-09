@@ -99,7 +99,7 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
               : ["spouse", "partner"].includes(r.type)
                 ? relationshipLabel(r)
                 : r.type === "sibling"
-                  ? translate("ui.sibling2")
+                  ? relationshipLabel(r).toLocaleLowerCase()
                   : r.type === "adopted"
                     ? translate("ui.adoption2")
                     : r.type === "acquaintance"
@@ -109,7 +109,7 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
         a.kind === "group" || b.kind === "group" ? "" : relationshipPeriod(r),
       heights = episodes.map((episode) =>
         a.kind !== "group" && b.kind !== "group" && relationshipPeriod(episode)
-          ? 42
+          ? 46
           : 22,
       ),
       index = episodes.indexOf(r),
@@ -147,7 +147,7 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
         x: lx - width / 2,
         y: labelY - 10,
         w: width,
-        h: period ? 42 : 22,
+        h: period ? 46 : 22,
       },
       showLabel =
         full ||
@@ -160,7 +160,7 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
     if (showLabel && boxes) boxes.push(box);
     const caption =
       person(r.from)?.name + " — " + label + " — " + person(r.to)?.name;
-    edges += `<g class="edge" data-edge="${r.id}" ${connectorAttributes(key, a, b, caption)} ${direct && onpath ? 'data-direct-connection="true"' : ""} role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(caption + (period ? " · " + period : ""))}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18" vector-effect="non-scaling-stroke"/>${onpath || active || (!exporting && appState.diagramEditing && appState.diagramConnectionKey === key) ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path class="connector-path" d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${showLabel ? connectorLabel(key, box, `<g class="relationship-title">${svgText(label, lx - width / 2 + 8, labelY + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}</g>${period ? `<g class="relationship-period">${svgText(period, lx - width / 2 + 8, labelY + 23, 60, 1, 12, "#3e516c", 400, width - 16)}</g>` : ""}`, exporting) : ""}</g>`;
+    edges += `<g class="edge" data-edge="${r.id}" ${connectorAttributes(key, a, b, caption)} ${direct && onpath ? 'data-direct-connection="true"' : ""} role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(caption + (period ? " · " + period : ""))}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18" vector-effect="non-scaling-stroke"/>${onpath || active || (!exporting && appState.diagramEditing && appState.diagramConnectionKey === key) ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path class="connector-path" d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${showLabel ? connectorLabel(key, box, `<g class="relationship-title">${svgText(label, lx - width / 2 + 8, labelY + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}</g>${period ? `<g class="relationship-period">${svgText(period, lx - width / 2 + 8, labelY + 27, 60, 1, 12, "#3e516c", 400, width - 16)}</g>` : ""}`, exporting) : ""}</g>`;
   }
   if (appState.showDocs && (full || cfg.documentLinks))
     for (const d of appState.project.documents) {

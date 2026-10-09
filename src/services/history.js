@@ -34,6 +34,7 @@ export function redo() {
 export function repairSelection() {
   const keys = validDiagramKeys(appState.project);
   const nodeKeys = new Set([
+    ...appState.project.groups.map((g) => "group:" + g.id),
     ...appState.project.documents.map((d) => "document:" + d.id),
     ...appState.project.property.map((a) => "property:" + a.id),
   ]);

@@ -1,3 +1,7 @@
+import {
+  nodePlacementLocked,
+  pinLockedGroupAnchors,
+} from "../model/placement-locks.js";
 import { groupColors } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
@@ -86,11 +90,12 @@ export function setGroupsCollapsed(ids, collapsed) {
   commit(() => {
     for (const g of groups) {
       g.collapsed = collapsed;
-      if (collapsed) {
+      if (collapsed && !nodePlacementLocked(appState.project, "group", g.id)) {
         g.x = null;
         g.y = null;
       }
     }
+    pinLockedGroupAnchors(appState.project);
   });
 }
 

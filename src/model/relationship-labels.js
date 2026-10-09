@@ -5,7 +5,18 @@ import { relationshipConfig } from "../core/relationships.js";
 import { translate } from "../i18n/index.js";
 import { person } from "./lookup.js";
 
+export function siblingRelationshipLabel(r) {
+  const genders = [person(r.from)?.gender, person(r.to)?.gender];
+  if (genders.some((gender) => !["m", "f"].includes(gender)))
+    return translate("ui.sibling");
+  const labels = genders.map((gender) =>
+    translate(gender === "m" ? "ui.brother" : "ui.sister"),
+  );
+  return labels[0] === labels[1] ? labels[0] : labels.join(" / ");
+}
+
 export function relationshipLabel(r) {
+  if (r.type === "sibling") return siblingRelationshipLabel(r);
   if (!["spouse", "partner"].includes(r.type)) return relTypes()[r.type];
   if (r.status === "divorced") return translate("ui.divorced");
   const fields = relationshipConfig().fields;

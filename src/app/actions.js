@@ -1,3 +1,4 @@
+import { setPlacementLocked } from "../features/placement-locks.js";
 import {
   toggleDiagramTools,
   toggleDiagramSelecting,
@@ -112,6 +113,8 @@ export async function handleAction(action) {
     compare: comparePeople,
     "add-group": () => editGroup(),
     "group-visibility": openGroupVisibility,
+    "lock-placement": () => setPlacementLocked(true),
+    "unlock-placement": () => setPlacementLocked(false),
     "diagram-tools": toggleDiagramTools,
     "diagram-select-items": toggleDiagramSelecting,
     "diagram-add-point": beginRoutePoint,

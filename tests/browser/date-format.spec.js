@@ -191,3 +191,31 @@ test("multiple dated episodes between the same people have separate title and pe
   });
   expect(overlap).toBe(false);
 });
+
+test("relationship titles and dates remain separate throughout the zoom range in every language", async ({
+  page,
+}) => {
+  await page.goto("./");
+  await page.locator("#startDemo").click();
+  for (const language of ["en", "uk", "ru"]) {
+    await page.locator(".topbar [data-language]").selectOption(language);
+    const overlaps = await page.evaluate(async () => {
+      const base = document.querySelector('script[type="module"]').src,
+        { state } = await import(new URL("core/state.js", base).href),
+        { applyCamera } = await import(new URL("graph/camera.js", base).href);
+      const failures = [];
+      for (const z of [0.025, 0.04, 0.0627, 0.1, 0.5, 1, 2.5]) {
+        state.camera.z = z;
+        applyCamera();
+        for (const id of ["r11", "r16"]) {
+          const edge = document.querySelector('[data-edge="' + id + '"]'),
+            title = edge.querySelector(".relationship-title").getBBox(),
+            dates = edge.querySelector(".relationship-period").getBBox();
+          if (title.y + title.height > dates.y) failures.push({ id, z });
+        }
+      }
+      return failures;
+    });
+    expect(overlaps).toEqual([]);
+  }
+});

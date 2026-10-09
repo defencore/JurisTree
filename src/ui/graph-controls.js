@@ -1,3 +1,4 @@
+import { placementLockControls } from "./placement-lock-controls.js";
 import { renderDiagramTools } from "./diagram-tools.js";
 import { graphStateInfo, relTypes } from "../core/config.js";
 import { $, esc } from "../core/dom.js";
@@ -60,7 +61,7 @@ export function renderGraphControls() {
       circle: translate("ui.circle"),
     },
     cfg.layout,
-  )}</select></label><button class="btn small" data-action="group-visibility" ${!appState.project.groups.length || appState.analysisBusy ? "disabled" : ""}>${icon("groups")}${translate("ui.manageGroups")}</button><button class="btn small" data-action="saved-map-views" ${appState.analysisBusy ? "disabled" : ""}>${icon("archive")}${translate("ui.savedMapViews")}</button><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span>`;
+  )}</select></label><button class="btn small" data-action="group-visibility" ${!appState.project.groups.length || appState.analysisBusy ? "disabled" : ""}>${icon("groups")}${translate("ui.manageGroups")}</button><button class="btn small" data-action="saved-map-views" ${appState.analysisBusy ? "disabled" : ""}>${icon("archive")}${translate("ui.savedMapViews")}</button><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div>${!appState.diagramEditing ? placementLockControls() : ""}<span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span>`;
   $("#graph").classList.toggle("selection-mode", appState.selectionMode);
   if (appState.diagramEditing) {
     context.hidden = true;

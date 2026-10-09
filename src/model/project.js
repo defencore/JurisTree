@@ -25,6 +25,7 @@ export function fresh() {
     personFilterViews: [],
     mapViews: [],
     diagram: {},
+    placementLocks: { nodes: [], connectors: [] },
     scopePreferences: {},
     graphView: defaultGraphView(),
     subjectId: "",
