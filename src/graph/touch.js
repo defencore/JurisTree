@@ -35,6 +35,7 @@ function tap(node) {
   if (node.kind === "person") select("person", node.id);
   else if (node.kind === "document") viewDocument(node.id);
   else if (node.kind === "group") toggleGroup(node.id);
+  else if (node.kind === "relation") select("relation", node.id);
   else editProperty(node.id);
 }
 
@@ -88,9 +89,15 @@ export function bindTouchInteractions(graph) {
       points.set(event.pointerId, point(event));
       graph.setPointerCapture(event.pointerId);
       if (points.size === 1) {
-        const element = event.target.closest("[data-node]");
+        const element = event.target.closest(
+          "[data-node],[data-toggle-group],[data-edge]",
+        );
         const node = element
-          ? { kind: element.dataset.kind, id: element.dataset.node }
+          ? element.dataset.node
+            ? { kind: element.dataset.kind, id: element.dataset.node }
+            : element.dataset.toggleGroup
+              ? { kind: "group", id: element.dataset.toggleGroup }
+              : { kind: "relation", id: element.dataset.edge }
           : null;
         const p = node?.kind === "person" ? person(node.id) : null;
         gesture = {

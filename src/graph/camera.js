@@ -26,7 +26,23 @@ export function focusPerson(
       top: box.top - rect.top,
       bottom: box.bottom - rect.top,
     }));
-  const camera = personFocusCamera(node, rect, overlays);
+  let camera = personFocusCamera(node, rect, overlays);
+  const headers = visibleGroupFrames(nodes)
+    .filter(
+      ({ group, header }) =>
+        (node.groupIds || []).includes(group.id) &&
+        header.y >= node.y - 200 &&
+        header.x >= node.x - 19 &&
+        header.x + header.w <= node.x + node.w + 19,
+    )
+    .map(({ header }) => header);
+  if (headers.length) {
+    const framed = personFocusCamera(node, rect, overlays, {
+      topSpace: node.y - Math.min(...headers.map((header) => header.y)),
+      sideSpace: 19,
+    });
+    if (framed?.z * node.w > 180) camera = framed;
+  }
   if (!camera) return;
   appState.camera = camera;
   applyCamera();

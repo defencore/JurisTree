@@ -23,6 +23,42 @@ async function drag(session, start, end, cancel = false) {
   await touch(session, cancel ? "touchCancel" : "touchEnd", []);
 }
 
+test("native touch opens a relationship once while dragging its label still pans the map", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.evaluate(async () => {
+    const base = document.querySelector('script[type="module"]').src;
+    const { state } = await import(new URL("core/state.js", base).href);
+    const { render } = await import(new URL("ui/render.js", base).href);
+    const { fit } = await import(new URL("graph/camera.js", base).href);
+    state.graphFocus = { people: ["p1", "p2"], relations: ["r1"] };
+    state.selected = null;
+    render();
+    fit();
+  });
+  const label = page.locator('.edge[data-edge="r1"] rect'),
+    box = await label.boundingBox(),
+    scene = page.locator("#scene"),
+    transform = await scene.getAttribute("transform"),
+    session = await page.context().newCDPSession(page);
+  await drag(
+    session,
+    [box.x + box.width / 2, box.y + box.height / 2],
+    [box.x + box.width / 2 + 24, box.y + box.height / 2 + 24],
+  );
+  await expect(scene).not.toHaveAttribute("transform", transform);
+  await expect(page.locator("#inspector")).not.toHaveClass(/open/);
+  await label.tap();
+  await expect(page.locator("#inspector")).toHaveClass(/open/);
+  await expect(
+    page.locator('#inspector [data-edit-relation="r1"]'),
+  ).toBeVisible();
+  await expect(page.locator("#modal")).not.toBeVisible();
+  expect(errors).toEqual([]);
+});
+
 test("mobile map gives space to the graph and supports real pan, pinch and tap gestures", async ({
   page,
 }) => {

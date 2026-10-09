@@ -1,4 +1,9 @@
-export function personFocusCamera(node, viewport, overlays) {
+export function personFocusCamera(
+  node,
+  viewport,
+  overlays,
+  { topSpace = 24, sideSpace = 0 } = {},
+) {
   const margin = 12;
   const obstacles = overlays
     .map((box) => ({
@@ -47,8 +52,8 @@ export function personFocusCamera(node, viewport, overlays) {
             continue;
           const z = Math.min(
             1.4,
-            (frame.right - frame.left) / node.w,
-            (frame.bottom - frame.top) / (node.h + 24),
+            (frame.right - frame.left) / (node.w + sideSpace * 2),
+            (frame.bottom - frame.top) / (node.h + topSpace),
           );
           const cx = (frame.left + frame.right) / 2,
             cy = (frame.top + frame.bottom) / 2,
@@ -63,6 +68,6 @@ export function personFocusCamera(node, viewport, overlays) {
   return {
     z: best.z,
     x: best.cx - (node.x + node.w / 2) * best.z,
-    y: best.cy - (node.y + (node.h - 24) / 2) * best.z,
+    y: best.cy - (node.y + (node.h - topSpace) / 2) * best.z,
   };
 }
