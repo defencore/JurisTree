@@ -1,3 +1,4 @@
+import { beginRoutePoint, toggleDiagramTools } from "../../features/diagram.js";
 import { $ } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
 import { exportArchive } from "../../features/archive.js";
@@ -59,6 +60,10 @@ export function bindKeyboardEvents() {
       exportArchive();
     }
     if (e.key === "Escape") {
+      if (appState.diagramEditing) {
+        appState.diagramAddPoint ? beginRoutePoint() : toggleDiagramTools();
+        return;
+      }
       if (appState.directConnectionRoot) restoreConnectionMap();
       else if (appState.graphFocus || appState.analysisHighlight) {
         resetAnalysis();

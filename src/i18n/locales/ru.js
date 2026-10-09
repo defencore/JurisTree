@@ -579,10 +579,6 @@ export default {
   "ui.imageTooLargeToProcess": "Изображение слишком большое для обработки.",
   "ui.personProfilePhoto": "Фото для карточки человека",
   "ui.prepareDocumentImage": "Подготовить изображение документа",
-  "ui.selectASquareAreaForThePortrait":
-    "Выделите квадратную область для портрета.",
-  "ui.selectAnAreaKeepAllRequiredStampsSignatures":
-    "Выделите область. Сохраните все нужные печати, подписи и текст.",
   "ui.original2": "Оригинал:",
   "ui.selection": "· Выделение:",
   "ui.portraitUpTo640Px": "Портрет до 640 px",
@@ -1320,8 +1316,6 @@ export default {
   "ui.fullImage": "Всё изображение",
   "ui.longEdge": "Длинная сторона",
   "ui.quality": "Качество",
-  "ui.selectTheRequiredAreaKeepAllDocumentText":
-    "Выделите нужную область. Оставьте весь текст, печати и подписи документа.",
   "ui.saveImage": "Сохранить изображение",
   "ui.undo": "Отменить",
   "ui.nameHistory": "Имена и фамилии",
@@ -1683,14 +1677,27 @@ export default {
     "Комбинируйте слова; заключайте фразы в кавычки; используйте name:, gender:, document:, country:, type:. Разделяйте варианты знаком |, исключайте слово знаком -.",
   "ui.lifeStatusUnknown": "Статус жизни неизвестен",
   "ui.under18": "До 18 лет",
+  "ui.manageGroups": "Группы",
+  "ui.expandAllGroups": "Развернуть все",
+  "ui.collapseAllGroups": "Свернуть все",
+  "ui.groupVisibilityHint":
+    "Отмеченные группы развёрнуты на схеме. Изменения применяются сразу с сохранением расположения карточек.",
+  "ui.findGroup": "Найти группу",
+  "ui.noMatchingGroups": "Группы не найдены",
+  "ui.photoScale": "Масштаб фото",
+  "ui.portraitCropHint":
+    "Перетаскивайте середину квадрата, чтобы переместить его, или угол, чтобы изменить размер. Уменьшите масштаб, чтобы вместить всё фото с белыми краями.",
+  "ui.documentCropHint":
+    "Перетаскивайте середину области, чтобы переместить её, или угол, чтобы изменить размер. Перетаскивание вне области создаёт новую рамку.",
+  "ui.cropSelectionLabel":
+    "Область кадрирования. Стрелки перемещают рамку; Shift увеличивает шаг.",
   "ui.directConnections": "Прямые связи",
   "ui.directConnectionsOf": "Прямые связи: {name}",
   "ui.directConnectionsHint":
-    "Временно показать только этого человека и его прямые связи. Расставьте карточки и вернитесь к схеме.",
+    "Подсветить этого человека и его прямые связи на текущей схеме. Остальные карточки будут затенены.",
   "ui.chooseDirectPerson": "Сначала выберите человека",
-  "ui.directConnectionsCount":
-    "Связанных людей: {count} · Временно скрыто: {hidden}",
-  "ui.restoreConnectionMap": "Вернуть схему",
+  "ui.directConnectionsCount": "Связанные люди: {count} · Затенено: {dimmed}",
+  "ui.restoreConnectionMap": "Снять подсветку",
   "ui.chooseDate": "Выбрать дату",
   "ui.currentAge": "Возраст",
   "ui.ageAtDeath": "Возраст на момент смерти",
@@ -2553,4 +2560,44 @@ export default {
   "ui.awardSource": "Награда / документ о награждении",
   "ui.journalEntrySource": "Запись из журнала",
   "ui.deathNoticeSource": "Сообщение о смерти / некролог",
+  "ui.diagramTools": "Расстановка",
+  "ui.diagramEditing": "Редактирование схемы",
+  "ui.diagramHint":
+    "Выберите линию или перетащите подпись. Ctrl / ⌘ + клик выбирает карточки и подписи для выравнивания.",
+  "ui.selectDiagramLine": "Выберите линию или название группы на схеме",
+  "ui.routeStyle": "Маршрут",
+  "ui.routeAuto": "Автоматический",
+  "ui.routeOrthogonal": "Прямоугольные повороты",
+  "ui.routePolyline": "Произвольные отрезки",
+  "ui.addRoutePoint": "Добавить поворот",
+  "ui.addRoutePointHint":
+    "Нажмите на схему, чтобы разместить поворот. Escape отменяет.",
+  "ui.resetRoute": "Автоматический маршрут",
+  "ui.resetDiagramLabel": "Вернуть подпись на место",
+  "ui.finishDiagramEditing": "Завершить",
+  "ui.diagramGrid": "Сетка",
+  "ui.diagramSnap": "Привязка к сетке",
+  "ui.diagramGridStep": "Шаг сетки",
+  "ui.diagramAlignment": "Выровнять выбранное…",
+  "ui.alignLeft": "По левому краю",
+  "ui.alignRight": "По правому краю",
+  "ui.alignTop": "По верхнему краю",
+  "ui.alignBottom": "По нижнему краю",
+  "ui.alignCenterX": "По вертикальной оси",
+  "ui.alignCenterY": "По горизонтальной оси",
+  "ui.distributeX": "Равные промежутки по горизонтали",
+  "ui.distributeY": "Равные промежутки по вертикали",
+  "ui.snapSelected": "Разместить по сетке",
+  "ui.selectedDiagramItems": "Выбрано элементов: {count}",
+  "ui.routePointHint":
+    "Поворот {number}. Перетащите или двигайте стрелками; Delete удаляет.",
+  "ui.diagramLabelHint":
+    "Перетащите подпись; Ctrl / ⌘ + клик добавляет её к выбранным.",
+  "ui.waypointLimit": "Линия может иметь до 32 поворотов.",
+  "ui.invalidDiagramRoutes":
+    "Некорректные маршруты линий или положения подписей.",
+  "ui.chooseAnyColor": "Выбрать произвольный цвет",
+  "ui.cancelRoutePoint": "Отменить добавление",
+  "ui.diagramRemovePoint": "Удалить выбранный поворот",
+  "ui.diagramSelectItems": "Выбрать элементы",
 };

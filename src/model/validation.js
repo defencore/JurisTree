@@ -1,3 +1,4 @@
+import { normalizeDiagram } from "./diagram.js";
 import { MAX_ATTACHMENT_FILES } from "../core/attachments.js";
 import {
   normalizeSourceAttachments,
@@ -91,7 +92,7 @@ export function validateImport(raw) {
   p.groups = list("groups", 150, true).map((g) => ({
     id: g.id,
     name: str(g.name, 150) || translate("ui.familyGroup"),
-    color: groupColors.includes(g.color) ? g.color : groupColors[0],
+    color: /^#[0-9a-f]{6}$/i.test(g.color) ? g.color : groupColors[0],
     notes: str(g.notes, 5000),
     collapsed: !!g.collapsed,
     x: Number.isFinite(g.x) ? pos(g.x) : null,
@@ -386,6 +387,11 @@ export function validateImport(raw) {
   }
   if (!peopleIds.has(p.subjectId)) p.subjectId = "";
   if (!peopleIds.has(p.claimantId)) p.claimantId = "";
+  try {
+    p.diagram = normalizeDiagram(raw.diagram, p);
+  } catch {
+    throw Error(translate("ui.invalidDiagramRoutes"));
+  }
   try {
     p.mapViews = list("mapViews", MAP_VIEW_LIMIT, true).map((view) =>
       normalizeMapView(view, p),

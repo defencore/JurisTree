@@ -1,3 +1,5 @@
+import { snapPoint } from "../model/diagram.js";
+import { graphView } from "../model/graph-view.js";
 import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { viewDocument } from "../features/document-view.js";
@@ -142,8 +144,16 @@ export function bindTouchInteractions(graph) {
       if (!gesture.moved) return;
       if (gesture.mode === "node") {
         const p = person(gesture.node.id);
-        p.x = gesture.position.x + dx / appState.camera.z;
-        p.y = gesture.position.y + dy / appState.camera.z;
+        Object.assign(
+          p,
+          snapPoint(
+            {
+              x: gesture.position.x + dx / appState.camera.z,
+              y: gesture.position.y + dy / appState.camera.z,
+            },
+            graphView(),
+          ),
+        );
         renderGraph();
       } else {
         appState.camera.x = gesture.camera.x + dx;

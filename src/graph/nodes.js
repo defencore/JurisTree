@@ -17,25 +17,31 @@ import { svgText } from "./text.js";
 export function nodeSVG(n, images = null, exporting = false) {
   const multi =
       !exporting &&
-      (appState.multiSelection.has(n.id) ||
+      ((appState.diagramEditing &&
+        appState.diagramNodeSelection.has(n.kind + ":" + n.id)) ||
+        appState.multiSelection.has(n.id) ||
         (n.kind === "group" &&
           n.members.some((id) => appState.multiSelection.has(id)))),
     direct = !fullDiagram() && directConnectionScope(),
     focus =
       !fullDiagram() &&
       (direct
-        ? direct.people.has(n.id)
+        ? n.kind === "group"
+          ? n.members.some((id) => direct.people.has(id))
+          : n.kind === "person" && direct.people.has(n.id)
         : appState.analysisHighlight?.people.includes(n.id)),
     dim =
       !fullDiagram() &&
-      !direct &&
-      appState.analysisHighlight &&
-      n.kind === "person" &&
-      !focus &&
-      !(
-        appState.selected?.kind === "person" && appState.selected.id === n.id
-      ) &&
-      !multi,
+      (direct
+        ? !focus
+        : appState.analysisHighlight &&
+          n.kind === "person" &&
+          !focus &&
+          !(
+            appState.selected?.kind === "person" &&
+            appState.selected.id === n.id
+          ) &&
+          !multi),
     active =
       !exporting &&
       appState.selected?.kind === n.kind &&

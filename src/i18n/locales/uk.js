@@ -578,10 +578,6 @@ export default {
   "ui.imageTooLargeToProcess": "Зображення завелике для обробки.",
   "ui.personProfilePhoto": "Фото для картки особи",
   "ui.prepareDocumentImage": "Підготувати зображення документа",
-  "ui.selectASquareAreaForThePortrait":
-    "Виділіть квадратну ділянку для портрета.",
-  "ui.selectAnAreaKeepAllRequiredStampsSignatures":
-    "Виділіть ділянку. Збережіть усі потрібні печатки, підписи та текст.",
   "ui.original2": "Оригінал:",
   "ui.selection": "· Виділення:",
   "ui.portraitUpTo640Px": "Портрет до 640 px",
@@ -1313,8 +1309,6 @@ export default {
   "ui.fullImage": "Усе зображення",
   "ui.longEdge": "Довга сторона",
   "ui.quality": "Якість",
-  "ui.selectTheRequiredAreaKeepAllDocumentText":
-    "Виділіть потрібну ділянку. Залиште весь текст, печатки та підписи документа.",
   "ui.saveImage": "Зберегти зображення",
   "ui.undo": "Скасувати",
   "ui.nameHistory": "Імена та прізвища",
@@ -1676,14 +1670,27 @@ export default {
     "Комбінуйте слова; беріть фрази в лапки; використовуйте name:, gender:, document:, country:, type:. Розділяйте варіанти знаком |, виключайте слово знаком -.",
   "ui.lifeStatusUnknown": "Статус життя невідомий",
   "ui.under18": "До 18 років",
+  "ui.manageGroups": "Групи",
+  "ui.expandAllGroups": "Розгорнути всі",
+  "ui.collapseAllGroups": "Згорнути всі",
+  "ui.groupVisibilityHint":
+    "Позначені групи розгорнуті на схемі. Зміни застосовуються одразу зі збереженням розстановки карток.",
+  "ui.findGroup": "Знайти групу",
+  "ui.noMatchingGroups": "Груп не знайдено",
+  "ui.photoScale": "Масштаб фото",
+  "ui.portraitCropHint":
+    "Перетягуйте середину квадрата, щоб перемістити його, або кут, щоб змінити розмір. Зменшіть масштаб, щоб умістити все фото з білими краями.",
+  "ui.documentCropHint":
+    "Перетягуйте середину області, щоб перемістити її, або кут, щоб змінити розмір. Перетягування поза областю створює нову рамку.",
+  "ui.cropSelectionLabel":
+    "Область кадрування. Стрілки переміщують рамку; Shift збільшує крок.",
   "ui.directConnections": "Прямі зв’язки",
   "ui.directConnectionsOf": "Прямі зв’язки: {name}",
   "ui.directConnectionsHint":
-    "Тимчасово показати лише цю особу та її прямі зв’язки. Розставте картки й поверніть схему.",
+    "Підсвітити цю особу та її прямі зв’язки на поточній схемі. Інші картки будуть затінені.",
   "ui.chooseDirectPerson": "Спочатку виберіть особу",
-  "ui.directConnectionsCount":
-    "Пов’язаних осіб: {count} · Тимчасово приховано: {hidden}",
-  "ui.restoreConnectionMap": "Повернути схему",
+  "ui.directConnectionsCount": "Пов’язані особи: {count} · Затінено: {dimmed}",
+  "ui.restoreConnectionMap": "Зняти підсвічування",
   "ui.chooseDate": "Вибрати дату",
   "ui.currentAge": "Вік",
   "ui.ageAtDeath": "Вік на момент смерті",
@@ -2541,4 +2548,44 @@ export default {
   "ui.awardSource": "Нагорода / документ про нагородження",
   "ui.journalEntrySource": "Запис із журналу",
   "ui.deathNoticeSource": "Повідомлення про смерть / некролог",
+  "ui.diagramTools": "Розстановка",
+  "ui.diagramEditing": "Редагування схеми",
+  "ui.diagramHint":
+    "Оберіть лінію або перетягніть підпис. Ctrl / ⌘ + клік вибирає картки й підписи для вирівнювання.",
+  "ui.selectDiagramLine": "Оберіть лінію або назву групи на схемі",
+  "ui.routeStyle": "Маршрут",
+  "ui.routeAuto": "Автоматичний",
+  "ui.routeOrthogonal": "Прямокутні повороти",
+  "ui.routePolyline": "Довільні відрізки",
+  "ui.addRoutePoint": "Додати поворот",
+  "ui.addRoutePointHint":
+    "Натисніть на схему, щоб розмістити поворот. Escape скасовує.",
+  "ui.resetRoute": "Автоматичний маршрут",
+  "ui.resetDiagramLabel": "Повернути підпис на місце",
+  "ui.finishDiagramEditing": "Завершити",
+  "ui.diagramGrid": "Сітка",
+  "ui.diagramSnap": "Прив’язка до сітки",
+  "ui.diagramGridStep": "Крок сітки",
+  "ui.diagramAlignment": "Вирівняти вибране…",
+  "ui.alignLeft": "По лівому краю",
+  "ui.alignRight": "По правому краю",
+  "ui.alignTop": "По верхньому краю",
+  "ui.alignBottom": "По нижньому краю",
+  "ui.alignCenterX": "По вертикальній осі",
+  "ui.alignCenterY": "По горизонтальній осі",
+  "ui.distributeX": "Рівні проміжки по горизонталі",
+  "ui.distributeY": "Рівні проміжки по вертикалі",
+  "ui.snapSelected": "Розмістити по сітці",
+  "ui.selectedDiagramItems": "Вибрано елементів: {count}",
+  "ui.routePointHint":
+    "Поворот {number}. Перетягніть або рухайте стрілками; Delete видаляє.",
+  "ui.diagramLabelHint":
+    "Перетягніть підпис; Ctrl / ⌘ + клік додає його до вибраних.",
+  "ui.waypointLimit": "Лінія може мати до 32 поворотів.",
+  "ui.invalidDiagramRoutes":
+    "Некоректні маршрути ліній або положення підписів.",
+  "ui.chooseAnyColor": "Вибрати довільний колір",
+  "ui.cancelRoutePoint": "Скасувати додавання",
+  "ui.diagramRemovePoint": "Видалити вибраний поворот",
+  "ui.diagramSelectItems": "Вибрати елементи",
 };

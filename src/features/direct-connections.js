@@ -1,12 +1,16 @@
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
-import { fit } from "../graph/camera.js";
+import { applyCamera } from "../graph/camera.js";
 import { directConnectionScope } from "../model/graph-view.js";
 import { render } from "../ui/render.js";
 
-/** Override visibility temporarily without editing filters or stored group collapse states. */
+/** Highlight one-hop connections on the current map without moving its viewport. */
 export function focusDirectConnections() {
   if (state.analysisBusy || state.selected?.kind !== "person") return;
+  if (state.directConnectionRoot === state.selected.id) {
+    restoreConnectionMap();
+    return;
+  }
   state.directConnectionRoot = state.selected.id;
   if (!directConnectionScope()) {
     state.directConnectionRoot = "";
@@ -15,16 +19,21 @@ export function focusDirectConnections() {
   state.multiSelection.clear();
   state.graphSelectionAnchor = "";
   state.view = "tree";
-  $("#sidebar").classList.remove("open");
-  $("#inspector").classList.remove("open");
-  document.body.classList.remove("mobile-tools-open");
-  $(".legend").open = false;
-  render();
-  fit();
+  redrawHighlight();
 }
 
 export function restoreConnectionMap() {
   state.directConnectionRoot = "";
+  redrawHighlight();
+}
+
+function redrawHighlight() {
+  const before = $("#graph").getBoundingClientRect();
   render();
-  fit();
+  const after = $("#graph").getBoundingClientRect();
+  if (before.width && before.height) {
+    state.camera.x += before.left - after.left;
+    state.camera.y += before.top - after.top;
+  }
+  applyCamera();
 }

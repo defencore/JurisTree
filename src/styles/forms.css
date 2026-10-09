@@ -236,6 +236,32 @@
   display: flex;
   gap: 6px;
 }
+.crop-zoom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0;
+  color: var(--muted);
+}
+.crop-zoom input {
+  grid-row: 2;
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 100px;
+  accent-color: var(--ink);
+}
+.crop-zoom output {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 48px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+#cropCanvas:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
 .toast {
   bottom: 25px;
   color: var(--paper);
@@ -268,4 +294,10 @@
 .check-grid label,
 .field-caption {
   font-size: 0.875rem;
+}
+
+#cropDialog .modal-foot .btn {
+  white-space: normal;
+  min-width: 0;
+  flex: 1;
 }

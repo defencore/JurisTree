@@ -48,6 +48,17 @@ test("demo data round-trips through the validated archive model", () => {
   assert.equal(model.documents.length, 102);
 });
 
+test("group colors and collapse positions survive reload while invalid CSS colors are removed", () => {
+  const original = project();
+  original.groups[0].collapsed = true;
+  original.groups[0].x = 320;
+  original.groups[0].y = 240;
+  const restored = validateImport(JSON.parse(JSON.stringify(original)));
+  assert.deepEqual(restored.groups, original.groups);
+  original.groups[0].color = 'red" onclick="alert(1)';
+  assert.match(validateImport(original).groups[0].color, /^#[0-9a-f]{6}$/i);
+});
+
 test("rejects duplicate identifiers and unsupported schemas", () => {
   const model = project();
   model.people[1].id = model.people[0].id;

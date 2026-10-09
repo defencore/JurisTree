@@ -5,6 +5,7 @@ import {
   directConnectionScope,
   graphView,
   relationShown,
+  visiblePeople,
 } from "../model/graph-view.js";
 import { group, person } from "../model/lookup.js";
 import { withProjectIndex } from "../model/project.js";
@@ -22,6 +23,7 @@ const layoutScopeKey = () =>
     appState.groupFilter,
     appState.graphFocus?.people || [],
     appState.directConnectionRoot,
+    visiblePeople().map((person) => person.id),
   ]);
 
 export async function arrangeGraph(style = graphView().layout) {
@@ -31,18 +33,42 @@ export async function arrangeGraph(style = graphView().layout) {
     scopeKey = layoutScopeKey(),
     direct = directConnectionScope(),
     cfg = graphView();
+  const shown = visiblePeople().filter(
+      (person) => !direct || direct.people.has(person.id),
+    ),
+    ids = new Set(shown.map((person) => person.id)),
+    partial =
+      direct || appState.groupFilter || shown.length !== start.people.length,
+    scope =
+      partial && shown.length
+        ? {
+            people: ids,
+            rootId: ids.has(direct?.rootId)
+              ? direct.rootId
+              : ids.has(appState.selected?.id)
+                ? appState.selected.id
+                : shown[0].id,
+          }
+        : null;
+  if (!shown.length) {
+    toast(translate("ui.noPeopleToArrange"));
+    return;
+  }
   appState.analysisBusy = true;
   renderGraphControls();
   try {
     let positions;
     if (style === "generations")
       positions = familyLayout(
-        direct
+        scope
           ? {
               ...start,
-              people: start.people.filter((p) => direct.people.has(p.id)),
-              relations: start.relations.filter((r) =>
-                direct.relations.has(r.id),
+              people: shown,
+              relations: start.relations.filter(
+                (r) =>
+                  ids.has(r.from) &&
+                  ids.has(r.to) &&
+                  (!direct || direct.relations.has(r.id)),
               ),
               documents: [],
               property: [],
@@ -50,15 +76,27 @@ export async function arrangeGraph(style = graphView().layout) {
           : start,
       );
     else {
-      const nodes = filteredGraphNodes().filter((n) =>
-        ["person", "group"].includes(n.kind),
-      );
+      const nodes = (
+        scope
+          ? shown.map((person) => ({
+              ...person,
+              kind: "person",
+              w: PERSON_CARD_WIDTH,
+              h: PERSON_CARD_HEIGHT,
+            }))
+          : filteredGraphNodes()
+      ).filter((n) => ["person", "group"].includes(n.kind));
       if (!nodes.length) {
         toast(translate("ui.noPeopleToArrange"));
         return;
       }
       const rs = withProjectIndex(() =>
-        appState.project.relations.filter((r) => relationShown(r)),
+        appState.project.relations.filter(
+          (r) =>
+            relationShown(r) &&
+            (!scope || (ids.has(r.from) && ids.has(r.to))) &&
+            (!direct || direct.relations.has(r.id)),
+        ),
       );
       const ps =
         style === "circle"
@@ -78,8 +116,8 @@ export async function arrangeGraph(style = graphView().layout) {
       toast(translate("ui.treeChangedDuringLayoutTryAgain"));
       return;
     }
-    if (direct)
-      positions.people = positionScopedLayout(positions.people, start, direct);
+    if (scope)
+      positions.people = positionScopedLayout(positions.people, start, scope);
     commit(() => {
       appState.project.graphView = {
         ...cfg,
@@ -112,7 +150,16 @@ export async function arrangeGraph(style = graphView().layout) {
           }
         }
       }
-      if (direct) return;
+      if (scope) {
+        if (appState.groupFilter && !direct) {
+          const selectedGroup = group(appState.groupFilter);
+          if (selectedGroup) {
+            selectedGroup.x = null;
+            selectedGroup.y = null;
+          }
+        }
+        return;
+      }
       if (style === "generations") {
         appState.project.groups.forEach((g) => {
           g.x = null;
@@ -152,7 +199,16 @@ export async function arrangeGraph(style = graphView().layout) {
         );
       }
     });
-    fit();
+    fit(
+      scope
+        ? filteredGraphNodes().filter((node) =>
+            node.kind === "person"
+              ? scope.people.has(node.id)
+              : node.kind === "group" &&
+                node.members.some((id) => scope.people.has(id)),
+          )
+        : undefined,
+    );
   } catch (error) {
     toast(error.message, true);
   } finally {

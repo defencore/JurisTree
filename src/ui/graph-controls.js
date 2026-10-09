@@ -1,3 +1,4 @@
+import { renderDiagramTools } from "./diagram-tools.js";
 import { graphStateInfo, relTypes } from "../core/config.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -18,6 +19,7 @@ export function renderGraphControls() {
   const toolbar = $("#graphToolbar"),
     context = $("#graphContext");
   if (!toolbar || !context) return;
+  renderDiagramTools();
   const toolsButton = $('[data-action="mobile-tools"]');
   toolsButton?.setAttribute(
     "aria-expanded",
@@ -51,18 +53,22 @@ export function renderGraphControls() {
   const direct = directConnectionScope(),
     selected =
       appState.selected?.kind === "person" && person(appState.selected.id);
-  toolbar.innerHTML = `<div class="graph-toolbar-group"><button class="btn small ${direct ? "active" : ""}" data-action="direct-connections" ${!selected || appState.analysisBusy ? "disabled" : ""} aria-pressed="${!!direct}" title="${translate(selected ? "ui.directConnectionsHint" : "ui.chooseDirectPerson")}">${icon("network")}${translate("ui.directConnections")}</button><button class="btn small graph-search-btn" data-action="graph-search">${icon("route")}${translate("ui.connectionSearch")}</button><button class="btn small ${changed ? "active" : ""}" data-action="graph-filters">${icon("sliders")}${translate("ui.display")}${changed ? `<span class="filter-mark">${translate("ui.changed")}</span>` : ""}</button><button class="iconbtn small ${appState.selectionMode ? "active" : ""}" data-action="selection-mode" aria-label="${translate("ui.boxSelectPeople")}" title="${translate("ui.boxSelectionShiftDrag")}" aria-pressed="${appState.selectionMode}">${icon("selectBox")}</button><button class="iconbtn small" data-action="graph-help" aria-label="${translate("ui.workingWithTheMap")}" title="${translate("ui.workingWithTheMap")}">${icon("help")}</button></div><div class="graph-toolbar-group"><label class="layout-control"><span>${translate("ui.layout")}</span><select id="graphLayout" aria-label="${translate("ui.mapLayout")}" ${appState.analysisBusy ? "disabled" : ""}>${typeOptions(
+  toolbar.innerHTML = `<div class="graph-toolbar-group"><button class="btn small ${direct ? "active" : ""}" data-action="direct-connections" ${!selected || appState.analysisBusy ? "disabled" : ""} aria-pressed="${!!direct}" title="${translate(selected ? "ui.directConnectionsHint" : "ui.chooseDirectPerson")}">${icon("network")}${translate("ui.directConnections")}</button><button class="btn small graph-search-btn" data-action="graph-search">${icon("route")}${translate("ui.connectionSearch")}</button><button class="btn small ${changed ? "active" : ""}" data-action="graph-filters">${icon("sliders")}${translate("ui.display")}${changed ? `<span class="filter-mark">${translate("ui.changed")}</span>` : ""}</button><button class="iconbtn small ${appState.selectionMode ? "active" : ""}" data-action="selection-mode" aria-label="${translate("ui.boxSelectPeople")}" title="${translate("ui.boxSelectionShiftDrag")}" aria-pressed="${appState.selectionMode}">${icon("selectBox")}</button><button class="iconbtn small" data-action="graph-help" aria-label="${translate("ui.workingWithTheMap")}" title="${translate("ui.workingWithTheMap")}">${icon("help")}</button></div><div class="graph-toolbar-group"><button class="btn small ${appState.diagramEditing ? "active" : ""}" data-action="diagram-tools" aria-pressed="${appState.diagramEditing}">${icon("route")}${translate("ui.diagramTools")}</button><label class="layout-control"><span>${translate("ui.layout")}</span><select id="graphLayout" aria-label="${translate("ui.mapLayout")}" ${appState.analysisBusy ? "disabled" : ""}>${typeOptions(
     {
       generations: translate("ui.generations3"),
       network: translate("ui.network"),
       circle: translate("ui.circle"),
     },
     cfg.layout,
-  )}</select></label><button class="btn small" data-action="saved-map-views" ${appState.analysisBusy ? "disabled" : ""}>${icon("archive")}${translate("ui.savedMapViews")}</button><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span>`;
+  )}</select></label><button class="btn small" data-action="group-visibility" ${!appState.project.groups.length || appState.analysisBusy ? "disabled" : ""}>${icon("groups")}${translate("ui.manageGroups")}</button><button class="btn small" data-action="saved-map-views" ${appState.analysisBusy ? "disabled" : ""}>${icon("archive")}${translate("ui.savedMapViews")}</button><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span>`;
   $("#graph").classList.toggle("selection-mode", appState.selectionMode);
+  if (appState.diagramEditing) {
+    context.hidden = true;
+    return;
+  }
   if (direct) {
     context.hidden = false;
-    context.innerHTML = `<div><b>${esc(translate("ui.directConnectionsOf", { name: personDisplayName(person(direct.rootId)) }))}</b><span>${esc(translate("ui.directConnectionsCount", { count: direct.people.size - 1, hidden: appState.project.people.length - direct.people.size }))}</span></div><div class="graph-context-actions"><button class="btn small primary" data-action="restore-connection-map">${icon("eye")}${translate("ui.restoreConnectionMap")}</button></div>`;
+    context.innerHTML = `<div><b>${esc(translate("ui.directConnectionsOf", { name: personDisplayName(person(direct.rootId)) }))}</b><span>${esc(translate("ui.directConnectionsCount", { count: Math.max(0, ps.filter((p) => direct.people.has(p.id)).length - 1), dimmed: ps.filter((p) => !direct.people.has(p.id)).length }))}</span></div><div class="graph-context-actions"><button class="btn small primary" data-action="restore-connection-map">${icon("eye")}${translate("ui.restoreConnectionMap")}</button></div>`;
     return;
   }
   context.hidden =

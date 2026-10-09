@@ -24,6 +24,7 @@ export function fresh() {
     groups: [],
     personFilterViews: [],
     mapViews: [],
+    diagram: {},
     scopePreferences: {},
     graphView: defaultGraphView(),
     subjectId: "",

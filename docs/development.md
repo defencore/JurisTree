@@ -47,6 +47,14 @@ The repository's `CNAME` file configures `juristree.global.agency` and is includ
 
 To use another static host, upload the contents of `dist/` while preserving its directory structure. No server rewrite rules or environment secrets are required.
 
+## Diagram editing
+
+`model/diagram.js` owns route validation, bounded coordinates, alignment and snapping. `model/connector-path.js` calculates card ports and manual polyline/orthogonal paths. `project.diagram` stores routes by relationship, source-person, property-allocation or group-caption key; it contains no profile facts. `model/map-views.js` captures an independent copy of routes and display settings. Missing or deleted connections are discarded during import and view restoration.
+
+`features/diagram.js` coordinates editing actions and history. `graph/diagram-interaction.js` captures mouse, pen, touch and keyboard gestures on the stable SVG root, previews mutations, and commits one history entry on completion. Cancellation restores the preceding project. `graph/diagram-markup.js` owns caption plates and editing handles; `ui/diagram-tools.js` renders progressive controls. Diagram bounds include waypoints and captions. Export rendering suppresses handles, grid and temporary selection strokes.
+
+Portrait selection math lives in `model/crop-geometry.js`; `ui/cropper.js` owns gestures, preview and encoding. Portrait frames can extend beyond the image for reduction with white padding; document crops remain within the page. Group colors accept validated six-digit hex values from the native color picker.
+
 ## Architecture
 
 Person creation uses `core/person-creation.js` for roles, `model/person-creation.js` for form collection and batch validation, and `features/person-creation.js` for one atomic project/history update. `ui/forms/person-links.js` owns progressive relationship rows. `model/relationship-draft.js` supplies ordered selection defaults and shared validation for both creation batches and the standalone editor. Placement calculations live in `model/person-placement.js`, with the current graph viewport and obstacles supplied by `graph/person-placement.js`. Adding a person never moves existing cards or fits the entire graph.
@@ -236,4 +244,6 @@ Source records use `attachments: [{ assetId, filename, caption, mime, size }]`. 
 
 Profile record attachments reuse the source model: `sourceId` links the saved record to its source, which can contain several photos/files. Sources link back to profile records by deriving these references, avoiding duplicate attachment ownership. Book/publication metadata (`collectionTitle`, `volume`, `pages`) and per-file captions remain optional.
 
-Direct-connection visibility is a runtime overlay in `model/graph-view.js`, using the one-hop scope from `model/direct-connections.js`. It preserves display filters, prior analysis and stored group collapse states. `features/direct-connections.js` handles entry/return, and `graph/layouts/scoped.js` translates partial layouts to avoid hidden cards without changing their coordinates. The reference person stays fixed while selecting or moving visible neighbors; project edits refresh the scope. Full-diagram exports bypass the overlay.
+Direct-connection highlighting is a runtime overlay in `model/graph-view.js`, using the one-hop scope from `model/direct-connections.js`. It preserves display filters, prior analysis and stored group collapse states. `features/direct-connections.js` handles highlighting/clearing without fitting the camera, and `graph/layouts/scoped.js` translates partial layouts to avoid other cards without changing their coordinates. The reference person stays fixed while selecting or moving visible neighbors; project edits refresh the scope. Full-diagram exports bypass the overlay.
+
+Group collapse controls use `groupIsCollapsed()` for effective visibility, including temporary analysis expansion. Bulk changes commit once and preserve person coordinates. Group layouts use the same scoped positioning as direct-connection layouts. Crop geometry is isolated in `model/crop-geometry.js`; `ui/cropper.js` applies pointer capture, corner resizing, keyboard movement and portrait scaling. The preview includes out-of-image crop areas, which export with a white fill. Document crops stay inside the original image.

@@ -3,6 +3,7 @@ import { $, $$, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { workspaceView } from "../core/workspace-views.js";
 import { renderGraph } from "../graph/render.js";
+import { applyCamera } from "../graph/camera.js";
 import { translate } from "../i18n/index.js";
 import { familyEvents } from "../model/events.js";
 import { gaps, route, sourceInScope } from "../model/evidence.js";
@@ -19,6 +20,7 @@ import { eventRecordActions } from "./event-domains.js";
 import { renderFavorites } from "./favorites.js";
 import { renderGraphControls } from "./graph-controls.js";
 import { renderGroups } from "./groups.js";
+import { syncGroupVisibility } from "./forms/group-visibility.js";
 import { icon, icons } from "./icons.js";
 import { renderInspector } from "./inspector.js";
 import { renderPeople } from "./people.js";
@@ -64,6 +66,7 @@ export function renderAll() {
   document.body.classList.toggle("view-full", appState.view !== "tree");
   renderPersonFilterBar();
   renderGroups();
+  syncGroupVisibility();
   renderPeople();
   renderMain();
   renderFavorites();
@@ -122,6 +125,19 @@ export function renderMain() {
 }
 
 export function select(kind, id) {
+  const before = appState.diagramEditing
+    ? $("#graph").getBoundingClientRect()
+    : null;
+  if (appState.diagramEditing) {
+    appState.diagramSelecting = false;
+    appState.diagramAddPoint = false;
+    appState.diagramPointIndex = -1;
+    appState.diagramNodeSelection.clear();
+    appState.diagramConnectionKey = kind === "relation" ? "r:" + id : "";
+    appState.diagramLabelSelection = new Set(
+      appState.diagramConnectionKey ? [appState.diagramConnectionKey] : [],
+    );
+  }
   let direct = directConnectionScope();
   if (direct && kind === "person" && !direct.people.has(id)) {
     appState.directConnectionRoot = "";
@@ -174,4 +190,10 @@ export function select(kind, id) {
   renderFavorites();
   $("#inspector").classList.add("open");
   if (innerWidth <= 760) $("#sidebar").classList.remove("open");
+  if (before?.width && before.height) {
+    const after = $("#graph").getBoundingClientRect();
+    appState.camera.x += before.left - after.left;
+    appState.camera.y += before.top - after.top;
+    applyCamera();
+  }
 }

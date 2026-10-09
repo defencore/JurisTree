@@ -825,3 +825,85 @@
   flex-basis: 36px;
   width: 36px;
 }
+
+.diagram-tools {
+  padding: 10px 14px;
+  background: var(--blue-soft);
+  border-bottom: 1px solid var(--line);
+}
+.diagram-tools-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.diagram-tools-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.diagram-tools-row input[type="number"] {
+  width: 64px;
+  min-width: 0;
+  padding: 6px;
+}
+.diagram-tools select {
+  max-width: 100%;
+  min-width: 0;
+  padding: 7px;
+}
+.diagram-caption {
+  margin: 8px 0;
+  color: var(--ink);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.diagram-tools .hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+.diagram-editing [data-route-label] {
+  cursor: grab;
+}
+.diagram-editing [data-connector] .connector-path {
+  cursor: pointer;
+}
+.diagram-label-selected > rect {
+  stroke: var(--blue);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.route-point {
+  cursor: move;
+  touch-action: none;
+}
+.route-point:focus > circle:last-child {
+  stroke: var(--gold);
+  stroke-width: 3;
+}
+.graph.placing-waypoint {
+  cursor: crosshair;
+}
+@media (max-width: 760px) {
+  .diagram-tools {
+    max-height: 35dvh;
+    overflow: auto;
+    padding: 8px;
+  }
+  .diagram-tools-row > b {
+    flex: 1 0 100%;
+  }
+  .diagram-tools-row select {
+    width: 100%;
+  }
+}
+
+.group-heading {
+  cursor: pointer;
+}
+.diagram-tools .btn.active {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}

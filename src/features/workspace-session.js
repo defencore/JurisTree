@@ -41,6 +41,13 @@ export function activateTree(
     appState.future = [];
   }
   resetAnalysis(false);
+  appState.diagramEditing = false;
+  appState.diagramSelecting = false;
+  appState.diagramNodeSelection.clear();
+  appState.diagramConnectionKey = "";
+  appState.diagramAddPoint = false;
+  appState.diagramPointIndex = -1;
+  appState.diagramLabelSelection.clear();
   appState.multiSelection.clear();
   appState.graphSelectionAnchor = "";
   appState.selectionMode = false;

@@ -82,7 +82,7 @@ Search members by surname or name instead of scrolling through the entire map. C
 
 Jamie and Taylor each belong to their parents' group and their own household. Use the same profiles in both groups. Groups can also represent a family branch or a research collection; they organize the workspace and do not create marriages or parenthood.
 
-Select a group to focus the map and lists. **Whole family** returns to all people. Edit a group to change its members or collapse and expand it on the map.
+Select a group to focus the map and lists. **Whole family** returns to all people. Edit a group to change its members. Use its sidebar fold button or **Groups** beside **Layout** to expand or collapse individual groups or all groups. Card arrangements are shared between group and whole-family views; arranging a selected group moves only its members.
 
 ## 5. Complete profiles gradually
 
@@ -126,3 +126,9 @@ Open a person's **Autobiography**, then **Print / Save as PDF**. Choose a printe
 Autosave stores a draft in this browser on this device. Export ZIP regularly and before opening another project; drafts do not synchronize between browsers or devices.
 
 See the [user guide](user-guide.md) for the complete feature reference.
+
+## Refine the arrangement
+
+Open **Groups** to expand or collapse individual families or all of them. The arrangement inside a family is also used on the whole map. Group colors are chosen in the group editor.
+
+Open **Placement** to route crowded connections: select a line, add waypoints, and drag its turns or caption. Enable the grid for consistent spacing. Ctrl/Cmd-click several cards or captions and use the alignment menu. **Saved views** keeps the resulting positions and routes so you can return to them after another layout.

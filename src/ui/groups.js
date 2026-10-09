@@ -3,6 +3,7 @@ import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { personDisplayName, personLifeDates } from "../model/person-display.js";
+import { groupIsCollapsed } from "../model/graph-view.js";
 import { edgeState } from "../model/evidence.js";
 import { person } from "../model/lookup.js";
 import { roleGroup, roleLabel } from "../model/relationship-labels.js";
@@ -51,7 +52,7 @@ export function renderGroups() {
     appState.project.groups
       .map(
         (g) =>
-          `<div class="group-list-row"><button class="family-filter ${appState.groupFilter === g.id ? "active" : ""}" data-group-filter="${g.id}"><span class="group-dot" style="background:${g.color}"></span><b>${esc(g.name)}</b><small>${appState.project.people.filter((p) => (p.groupIds || []).includes(g.id)).length}</small></button><button class="iconbtn small ghost" data-edit-group="${g.id}" title="${translate("ui.editGroup")}" aria-label="${translate("ui.editGroup")} ${esc(g.name)}">${icon("settings")}</button></div>`,
+          `<div class="group-list-row"><button class="family-filter ${appState.groupFilter === g.id ? "active" : ""}" data-group-filter="${g.id}"><span class="group-dot" style="background:${g.color}"></span><b>${esc(g.name)}</b><small>${appState.project.people.filter((p) => (p.groupIds || []).includes(g.id)).length}</small></button><button class="iconbtn small ghost" data-toggle-group="${g.id}" aria-expanded="${!groupIsCollapsed(g)}" title="${translate(groupIsCollapsed(g) ? "ui.expandOnMap" : "ui.collapseOnMap")}" aria-label="${translate(groupIsCollapsed(g) ? "ui.expandOnMap" : "ui.collapseOnMap")} ${esc(g.name)}">${icon(groupIsCollapsed(g) ? "unfold" : "fold")}</button><button class="iconbtn small ghost" data-edit-group="${g.id}" title="${translate("ui.editGroup")}" aria-label="${translate("ui.editGroup")} ${esc(g.name)}">${icon("settings")}</button></div>`,
       )
       .join("");
 }

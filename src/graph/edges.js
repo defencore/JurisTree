@@ -1,3 +1,10 @@
+import { diagramKey, diagramRoute } from "../model/diagram.js";
+import { routedConnector } from "../model/connector-path.js";
+import {
+  connectorAttributes,
+  connectorLabel,
+  reportRouteBounds,
+} from "./diagram-markup.js";
 import { workspaceModes } from "../core/workspace-modes.js";
 import { relTypes } from "../core/config.js";
 import { esc } from "../core/dom.js";
@@ -23,7 +30,7 @@ import { graphLine } from "./geometry.js";
 import { graphStrokeAttributes } from "./legend.js";
 import { graphTextWidth, svgText } from "./text.js";
 
-export function renderGraphEdges(ns, exporting = false) {
+export function renderGraphEdges(ns, exporting = false, boxes = null) {
   const map = new Map(ns.map((n) => [n.id, n]));
   ns.filter((n) => n.kind === "group").forEach((n) =>
     n.members.forEach((id) => map.set(id, n)),
@@ -53,16 +60,19 @@ export function renderGraphEdges(ns, exporting = false) {
     const a = map.get(r.from),
       b = map.get(r.to);
     if (!a || !b || a.id === b.id) continue;
-    const key = a.id + "|" + b.id + "|" + r.type;
-    if ((a.kind === "group" || b.kind === "group") && seen.has(key)) continue;
-    seen.add(key);
+    const pairKey = a.id + "|" + b.id + "|" + r.type;
+    if ((a.kind === "group" || b.kind === "group") && seen.has(pairKey))
+      continue;
+    seen.add(pairKey);
     const episodes = pairs.get([a.id, b.id].sort().join("|")) || [r];
     const offset = Math.max(
       -60,
       Math.min(60, (episodes.indexOf(r) - (episodes.length - 1) / 2) * 28),
     );
     const direction = isDirectedRelationship(r.type),
-      c = graphLine(a, b, !direction, offset),
+      key = diagramKey("r", r.id),
+      route = diagramRoute(appState.project, key),
+      c = routedConnector(a, b, route, graphLine(a, b, !direction, offset)),
       state = edgeState(r),
       onpath = (path.relations || []).includes(r.id),
       active =
@@ -131,7 +141,26 @@ export function renderGraphEdges(ns, exporting = false) {
                   : 0
               : 0),
       opacity = highlight && !onpath ? 0.22 : 1;
-    edges += `<g class="edge" data-edge="${r.id}" ${direct ? 'data-direct-connection="true"' : ""} role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(person(r.from)?.name + " — " + label + (period ? " · " + period : "") + " — " + person(r.to)?.name)}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18"/>${onpath || active ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${full || direct || cfg.showLabels ? `<rect x="${c.x - width / 2}" y="${ly - 10}" width="${width}" height="${period ? 42 : 22}" rx="3" fill="#fff" fill-opacity=".95"/><g class="relationship-title">${svgText(label, c.x - width / 2 + 8, ly + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}</g>${period ? `<g class="relationship-period">${svgText(period, c.x - width / 2 + 8, ly + 23, 60, 1, 12, "#3e516c", 400, width - 16)}</g>` : ""}` : ""}</g>`;
+    const lx = route.label?.x ?? c.x,
+      labelY = route.label?.y ?? ly,
+      box = {
+        x: lx - width / 2,
+        y: labelY - 10,
+        w: width,
+        h: period ? 42 : 22,
+      },
+      showLabel =
+        full ||
+        direct ||
+        cfg.showLabels ||
+        (!exporting &&
+          appState.diagramEditing &&
+          appState.diagramConnectionKey === key);
+    reportRouteBounds(route, boxes);
+    if (showLabel && boxes) boxes.push(box);
+    const caption =
+      person(r.from)?.name + " — " + label + " — " + person(r.to)?.name;
+    edges += `<g class="edge" data-edge="${r.id}" ${connectorAttributes(key, a, b, caption)} ${direct && onpath ? 'data-direct-connection="true"' : ""} role="button" tabindex="0" opacity="${opacity}" aria-label="${esc(caption + (period ? " · " + period : ""))}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18" vector-effect="non-scaling-stroke"/>${onpath || active || (!exporting && appState.diagramEditing && appState.diagramConnectionKey === key) ? `<path d="${c.path}" fill="none" stroke="#d5deea" stroke-width="8" stroke-linecap="round"/>` : ""}<path class="connector-path" d="${c.path}" fill="none" ${graphStrokeAttributes(state, near || onpath || active ? 2.6 : 1.7)} ${direction ? `marker-end="url(#arrow-${state})"` : ""}/>${showLabel ? connectorLabel(key, box, `<g class="relationship-title">${svgText(label, lx - width / 2 + 8, labelY + 5, 38, 1, 14, near ? "#081f3c" : "#3e516c", 400, width - 16)}</g>${period ? `<g class="relationship-period">${svgText(period, lx - width / 2 + 8, labelY + 23, 60, 1, 12, "#3e516c", 400, width - 16)}</g>` : ""}`, exporting) : ""}</g>`;
   }
   if (appState.showDocs && (full || cfg.documentLinks))
     for (const d of appState.project.documents) {
@@ -142,8 +171,21 @@ export function renderGraphEdges(ns, exporting = false) {
         const p = map.get(id);
         if (!p || linked.has(p.id)) continue;
         linked.add(p.id);
-        const c = graphLine(n, p);
-        edges += `<path d="${c.path}" fill="none" ${graphStrokeAttributes("source")} opacity="${highlight ? 0.3 : 1}"/>`;
+        const key = diagramKey("d", d.id, id),
+          route = diagramRoute(appState.project, key),
+          c = routedConnector(n, p, route, graphLine(n, p));
+        reportRouteBounds(route, boxes);
+        const showLabel =
+            route.label ||
+            (!exporting &&
+              appState.diagramEditing &&
+              appState.diagramConnectionKey === key),
+          width = Math.min(340, graphTextWidth(d.title, 12, 400) + 16),
+          lx = route.label?.x ?? c.x,
+          ly = route.label?.y ?? c.y,
+          box = { x: lx - width / 2, y: ly - 10, w: width, h: 22 };
+        if (showLabel && boxes) boxes.push(box);
+        edges += `<g class="connector" ${connectorAttributes(key, n, p, d.title)} opacity="${highlight ? 0.3 : 1}"><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18" vector-effect="non-scaling-stroke"/><path class="connector-path" d="${c.path}" fill="none" ${graphStrokeAttributes("source")}/>${showLabel ? connectorLabel(key, box, svgText(d.title, lx - width / 2 + 8, ly + 5, 40, 1, 12, "#3e516c", 400, width - 16), exporting) : ""}</g>`;
       }
     }
   if (
@@ -156,8 +198,17 @@ export function renderGraphEdges(ns, exporting = false) {
       for (const al of a.allocations || []) {
         const p = map.get(al.personId);
         if (!p) continue;
-        const c = graphLine(n, p);
-        edges += `<path d="${c.path}" fill="none" ${graphStrokeAttributes("property")}/>${svgText(al.percent + "%", c.x, c.y, 12, 1, 13, "#28644a", 600)}`;
+        const key = diagramKey("p", a.id, al.personId),
+          route = diagramRoute(appState.project, key),
+          c = routedConnector(n, p, route, graphLine(n, p)),
+          lx = route.label?.x ?? c.x,
+          ly = route.label?.y ?? c.y,
+          label = al.percent + "%",
+          width = graphTextWidth(label, 13, 600) + 16,
+          box = { x: lx - width / 2, y: ly - 10, w: width, h: 22 };
+        reportRouteBounds(route, boxes);
+        if (boxes) boxes.push(box);
+        edges += `<g class="connector" ${connectorAttributes(key, n, p, a.title || label)}><path d="${c.path}" fill="none" stroke="transparent" stroke-width="18" vector-effect="non-scaling-stroke"/><path class="connector-path" d="${c.path}" fill="none" ${graphStrokeAttributes("property")}/>${connectorLabel(key, box, svgText(label, lx - width / 2 + 8, ly + 5, 12, 1, 13, "#28644a", 600, width - 16), exporting)}</g>`;
       }
     }
   return edges;

@@ -1,6 +1,7 @@
 import { emitSignal } from "../core/signals.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
+import { validDiagramKeys } from "../model/diagram.js";
 import { resetAnalysis } from "../model/graph-view.js";
 import { doc, person, relation } from "../model/lookup.js";
 
@@ -31,6 +32,22 @@ export function redo() {
   emitSignal("project:changed");
 }
 export function repairSelection() {
+  const keys = validDiagramKeys(appState.project);
+  const nodeKeys = new Set([
+    ...appState.project.documents.map((d) => "document:" + d.id),
+    ...appState.project.property.map((a) => "property:" + a.id),
+  ]);
+  appState.diagramNodeSelection = new Set(
+    [...appState.diagramNodeSelection].filter((key) => nodeKeys.has(key)),
+  );
+  appState.diagramLabelSelection = new Set(
+    [...appState.diagramLabelSelection].filter((key) => keys.has(key)),
+  );
+  if (!keys.has(appState.diagramConnectionKey)) {
+    appState.diagramConnectionKey = "";
+    appState.diagramAddPoint = false;
+    appState.diagramPointIndex = -1;
+  }
   if (appState.directConnectionRoot && !person(appState.directConnectionRoot))
     appState.directConnectionRoot = "";
   if (!person(appState.graphSelectionAnchor))

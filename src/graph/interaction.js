@@ -1,3 +1,6 @@
+import { bindDiagramInteractions } from "./diagram-interaction.js";
+import { snapPoint } from "../model/diagram.js";
+import { graphView } from "../model/graph-view.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { directConnectionScope } from "../model/graph-view.js";
@@ -19,6 +22,7 @@ import { bindTouchInteractions } from "./touch.js";
 
 export function bindGraphInteractions() {
   const graph = $("#graph");
+  bindDiagramInteractions(graph);
   bindTouchInteractions(graph);
   graph.addEventListener("pointerdown", (e) => {
     if (
@@ -146,13 +150,23 @@ export function bindGraphInteractions() {
       box.setAttribute("height", Math.abs(dy));
     } else {
       const item = nodeItem(appState.drag.nodeKind, appState.drag.id);
-      item.x = appState.drag.x + dx / appState.camera.z;
-      item.y = appState.drag.y + dy / appState.camera.z;
+      const next = snapPoint(
+          {
+            x: appState.drag.x + dx / appState.camera.z,
+            y: appState.drag.y + dy / appState.camera.z,
+          },
+          graphView(),
+          e.altKey,
+        ),
+        moveX = next.x - appState.drag.x,
+        moveY = next.y - appState.drag.y;
+      item.x = next.x;
+      item.y = next.y;
       for (const old of appState.drag.items) {
         const p = person(old.id);
         if (p) {
-          p.x = old.x + dx / appState.camera.z;
-          p.y = old.y + dy / appState.camera.z;
+          p.x = old.x + moveX;
+          p.y = old.y + moveY;
         }
       }
       renderGraph();

@@ -141,6 +141,7 @@ export const workspaceTemplate = `
         hidden
         aria-label="@@ui.currentAnalysisResult@@"
       ></section>
+      <section class="diagram-tools" id="diagramTools" hidden aria-label="@@ui.diagramEditing@@"></section>
       <div class="canvas-wrap" id="canvasWrap">
         <div class="canvas-top">
           <div class="map-key" id="graphRoleContext" hidden></div>

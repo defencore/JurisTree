@@ -13,7 +13,12 @@ function intersects(a, b) {
 }
 
 /** Keep group headings clear of cards, kinship badges and other headings. */
-export function groupFrames(groups, nodes, labelWidth = () => 280) {
+export function groupFrames(
+  groups,
+  nodes,
+  labelWidth = () => 280,
+  labelPosition = () => null,
+) {
   const obstacles = nodes.map((node) => {
     const space = node.kind === "person" ? PERSON_BADGE_SPACE : 0;
     return { x: node.x, y: node.y - space, w: node.w, h: node.h + space };
@@ -44,8 +49,13 @@ export function groupFrames(groups, nodes, labelWidth = () => 280) {
         header.y - 1,
         collision.y - HEADER_GAP - HEADER_HEIGHT,
       );
+    const y = header.y - HEADER_GAP,
+      manual = labelPosition(group);
+    if (manual) {
+      header.x = manual.x - header.w / 2;
+      header.y = manual.y - 10;
+    }
     obstacles.push(header);
-    const y = header.y - HEADER_GAP;
     frames.push({
       group,
       count: members.length,

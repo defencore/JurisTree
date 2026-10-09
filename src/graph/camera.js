@@ -1,3 +1,4 @@
+import { renderGraphEdges } from "./edges.js";
 import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -52,10 +53,14 @@ export function applyCamera() {
     "transform",
     `translate(${appState.camera.x} ${appState.camera.y}) scale(${appState.camera.z})`,
   );
+  for (const handle of document.querySelectorAll("[data-diagram-radius]"))
+    handle.setAttribute(
+      "r",
+      Number(handle.dataset.diagramRadius) / appState.camera.z,
+    );
   $("#zoomLabel").textContent = Math.round(appState.camera.z * 100) + "%";
 }
-export function bounds() {
-  const ns = filteredGraphNodes();
+export function bounds(ns = filteredGraphNodes()) {
   if (!ns.length)
     return {
       x: 0,
@@ -63,8 +68,10 @@ export function bounds() {
       w: 600,
       h: 400,
     };
-  const boxes = [...ns, ...visibleGroupFrames(ns)],
-    x = Math.min(...boxes.map((n) => n.x)) - 55,
+  const frames = visibleGroupFrames(ns),
+    boxes = [...ns, ...frames, ...frames.map((frame) => frame.header)];
+  renderGraphEdges(ns, true, boxes);
+  const x = Math.min(...boxes.map((n) => n.x)) - 55,
     y = Math.min(...boxes.map((n) => n.y)) - 55;
   return {
     x,
@@ -73,11 +80,11 @@ export function bounds() {
     h: Math.max(...boxes.map((n) => n.y + n.h)) - y + 55,
   };
 }
-export function fit() {
+export function fit(ns = filteredGraphNodes()) {
   const el = $("#graph"),
     rect = el.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
-  const b = bounds();
+  const b = bounds(ns);
   appState.camera.z = Math.min(
     1.1,
     Math.max(

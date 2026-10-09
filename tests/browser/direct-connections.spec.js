@@ -36,7 +36,14 @@ function expectedScope(project, root) {
 }
 async function focus(page, id = "p6") {
   await page.locator(`#personList [data-person="${id}"]`).click();
+  const card = page.locator('#graph .node[data-node="' + id + '"] .card'),
+    before = await card.boundingBox(),
+    zoom = await page.locator("#zoomLabel").textContent();
   await page.locator('#inspector [data-action="direct-connections"]').click();
+  const after = await card.boundingBox();
+  for (const key of ["x", "y", "width", "height"])
+    expect(after[key]).toBeCloseTo(before[key], 1);
+  await expect(page.locator("#zoomLabel")).toHaveText(zoom);
 }
 async function dragCard(page, id) {
   const box = await page
@@ -61,28 +68,35 @@ test.beforeEach(async ({ page }) => {
 });
 test.afterEach(() => expect(errors).toEqual([]));
 
-test("direct connections highlight one hop, keep the reference while moving neighbors, and return without losing positions", async ({
+test("direct connections highlight one hop, keep the reference while moving neighbors, and clear highlighting without losing positions", async ({
   page,
 }) => {
   const before = await snapshot(page),
     expected = expectedScope(before.project, "p6");
   await focus(page);
-  await expect.poll(() => visibleIds(page)).toEqual(expected.people);
+  await expect(page.locator('#graph .node[data-kind="person"]')).toHaveCount(
+    before.project.people.length,
+  );
   expect(
     await page
       .locator("#graph [data-direct-connection]")
       .evaluateAll((edges) => edges.map((e) => e.dataset.edge).sort()),
   ).toEqual(expected.edges);
-  await expect(
-    page.locator(
-      '#graph .node:not([data-kind="person"]), #graph .group-heading',
-    ),
-  ).toHaveCount(0);
+  for (const person of before.project.people) {
+    await expect(
+      page.locator('#graph .node[data-node="' + person.id + '"]'),
+    ).toHaveAttribute(
+      "opacity",
+      expected.people.includes(person.id) ? "1" : "0.3",
+    );
+  }
+  await expect(page.locator("#graph .group-heading")).not.toHaveCount(0);
   expect((await snapshot(page)).history).toBe(before.history);
   await expect(page.locator('#graph .node[data-node="p6"]')).toHaveAttribute(
     "data-kinship-role",
     "self",
   );
+  await page.locator('#personList [data-person="p8"]').click();
   await dragCard(page, "p8");
   const moved = await snapshot(page);
   expect(moved.root).toBe("p6");
@@ -109,7 +123,7 @@ test("direct connections highlight one hop, keep the reference while moving neig
   expect((await snapshot(page)).history).toBe(moved.history);
 });
 
-test("temporary view preserves previous analysis, display filters and collapsed groups; full SVG and reload keep the entire tree", async ({
+test("highlight preserves previous analysis, display filters and collapsed groups; full SVG and reload keep the entire tree", async ({
   page,
 }) => {
   await page.evaluate(async () => {
@@ -130,8 +144,7 @@ test("temporary view preserves previous analysis, display filters and collapsed 
   await page
     .locator('#graphToolbar [data-action="direct-connections"]')
     .click();
-  const expected = expectedScope(before.project, "p6");
-  await expect.poll(() => visibleIds(page)).toEqual(expected.people);
+  expect(await visibleIds(page)).toEqual(previousIds);
   const counts = await page.evaluate(async () => {
     const { fullSVG } = await import(
       new URL(
@@ -149,7 +162,7 @@ test("temporary view preserves previous analysis, display filters and collapsed 
     };
   });
   expect(counts).toEqual({
-    current: expected.people.length,
+    current: previousIds.length,
     full: before.project.people.length,
   });
   await page.keyboard.press("Escape");
@@ -161,6 +174,7 @@ test("temporary view preserves previous analysis, display filters and collapsed 
   await page
     .locator('#graphToolbar [data-action="direct-connections"]')
     .click();
+  await page.keyboard.press("Escape");
   await page.locator("#graphLayout").selectOption("circle");
   await expect
     .poll(async () => (await snapshot(page)).history)
@@ -182,7 +196,7 @@ test("temporary view preserves previous analysis, display filters and collapsed 
   ).toHaveCount(0);
 });
 
-test("all automatic layouts move only direct connections and preserve hidden people, sources, property and group positions", async ({
+test("all automatic layouts move only direct connections and preserve other people, sources, property and group positions", async ({
   page,
 }) => {
   await focus(page);
@@ -204,7 +218,9 @@ test("all automatic layouts move only direct connections and preserve hidden peo
     ).toEqual(coordinates(hidden));
     for (const key of ["documents", "property", "groups"])
       expect(after.project[key]).toEqual(before.project[key]);
-    await expect.poll(() => visibleIds(page)).toEqual(expected.people);
+    await expect(page.locator('#graph .node[data-kind="person"]')).toHaveCount(
+      before.project.people.length,
+    );
     expect(coordinates(after.project.people)).not.toEqual(
       coordinates(before.project.people),
     );
@@ -230,18 +246,24 @@ test("relationship edits refresh the view, an isolated person stays visible, and
         id: "new-link",
         from: "p6",
         to: "p1",
-        type: "possible",
+        type: "unconfirmed",
         notes: "Reported connection",
       });
     });
   });
-  await expect(page.locator('#graph .node[data-node="p1"]')).toHaveCount(1);
+  await expect(page.locator('#graph .node[data-node="p1"]')).toHaveAttribute(
+    "opacity",
+    "1",
+  );
   await expect(page.locator('#graph [data-edge="new-link"]')).toHaveAttribute(
     "data-direct-connection",
     "true",
   );
   await page.locator('[data-action="undo"]').click();
-  await expect(page.locator('#graph .node[data-node="p1"]')).toHaveCount(0);
+  await expect(page.locator('#graph .node[data-node="p1"]')).toHaveAttribute(
+    "opacity",
+    "0.3",
+  );
   await page.locator("#globalSearch").fill("John Doe");
   await page
     .locator('[data-search-kind="person"][data-search-id="p1"]')
@@ -258,7 +280,12 @@ test("relationship edits refresh the view, an isolated person stays visible, and
     });
   });
   await page.locator('#inspector [data-action="direct-connections"]').click();
-  await expect.poll(() => visibleIds(page)).toEqual(["p1"]);
+  await expect(
+    page.locator('#graph .node[data-kind="person"][opacity="1"]'),
+  ).toHaveCount(1);
+  await expect(page.locator('#graph .node[data-kind="person"]')).toHaveCount(
+    99,
+  );
   await expect(
     page.locator('#graphContext [data-action="restore-connection-map"]'),
   ).toBeVisible();
@@ -275,7 +302,7 @@ for (const [language, width] of [
       isMobile: true,
       hasTouch: true,
     });
-    test("opens from the person panel, supports native touch rearranging and keeps return accessible", async ({
+    test("highlights in the existing map, supports native touch rearranging and keeps return accessible", async ({
       page,
     }) => {
       await page.locator("#appShell [data-language]").selectOption(language);
@@ -285,10 +312,12 @@ for (const [language, width] of [
         .tap();
       await page.locator('#graph .node[data-node="p6"] .card').tap();
       await page.locator('#inspector [data-action="direct-connections"]').tap();
-      const before = await snapshot(page),
-        expected = expectedScope(before.project, "p6");
-      await expect.poll(() => visibleIds(page)).toEqual(expected.people);
-      await expect(page.locator("#inspector")).not.toHaveClass(/open/);
+      const before = await snapshot(page);
+      await expect(
+        page.locator('#graph .node[data-kind="person"]'),
+      ).toHaveCount(before.project.people.length);
+      await expect(page.locator("#inspector")).toHaveClass(/open/);
+      await page.locator('#inspector [data-action="close-panel"]').tap();
       await expect(page.locator("body")).not.toHaveClass(/mobile-tools-open/);
       const returnButton = page.locator(
         '#graphContext [data-action="restore-connection-map"]',

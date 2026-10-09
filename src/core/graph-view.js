@@ -6,6 +6,9 @@ export function defaultGraphView() {
     states: Object.keys(graphStateInfo()),
     hiddenRelations: [],
     showLabels: true,
+    showGrid: false,
+    snapToGrid: false,
+    gridSize: 20,
     showIsolated: true,
     documentLinks: true,
     propertyLinks: true,
@@ -39,6 +42,8 @@ export function normalizeGraphView(raw = {}, validIds = null) {
     ].slice(0, 2500);
   for (const key of [
     "showLabels",
+    "showGrid",
+    "snapToGrid",
     "showIsolated",
     "documentLinks",
     "propertyLinks",
@@ -48,5 +53,11 @@ export function normalizeGraphView(raw = {}, validIds = null) {
     out.lineStyle = raw.lineStyle;
   if (["generations", "network", "circle"].includes(raw.layout))
     out.layout = raw.layout;
+  if (
+    Number.isInteger(raw.gridSize) &&
+    raw.gridSize >= 5 &&
+    raw.gridSize <= 200
+  )
+    out.gridSize = raw.gridSize;
   return out;
 }

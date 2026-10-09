@@ -33,7 +33,7 @@ export const dialogsTemplate = `
       <button class="btn small" id="cropRotate">
         <i data-icon="rotate"></i>@@ui.rotate@@</button
       ><button class="btn small" id="cropReset">@@ui.fullImage@@</button
-      ><label
+      ><label id="cropSizeControl"
         >@@ui.longEdge@@
         <select id="cropSize">
           <option value="1600">1600 px</option>
@@ -49,9 +49,10 @@ export const dialogsTemplate = `
         </select></label
       >
     </div>
-    <div class="crop-stage"><canvas id="cropCanvas"></canvas></div>
+    <label class="crop-zoom" id="cropZoomControl" hidden><span>@@ui.photoScale@@</span> <input type="range" id="cropZoom" min="-100" max="100" step="1" value="0"><output id="cropZoomValue">100%</output></label>
+    <div class="crop-stage"><canvas id="cropCanvas" tabindex="0" aria-label="@@ui.cropSelectionLabel@@"></canvas></div>
     <p class="hint" id="cropHint">
-      @@ui.selectTheRequiredAreaKeepAllDocumentText@@
+      @@ui.documentCropHint@@
     </p>
     <div class="upload-info" id="cropInfo"></div>
   </div>

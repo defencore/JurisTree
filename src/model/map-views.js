@@ -1,3 +1,4 @@
+import { normalizeDiagram } from "./diagram.js";
 import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { normalizeGraphView } from "../core/graph-view.js";
 import { normalizePersonFilter } from "../core/person-filter-fields.js";
@@ -124,6 +125,7 @@ export function normalizeMapView(raw, project) {
     camera: { x: camera.x, y: camera.y, z: camera.z },
     positions,
     graphView: normalizeGraphView(raw.graphView, ids.relations),
+    diagram: normalizeDiagram(raw.diagram, project),
     visibility: {
       groupId: ids.groups.has(visibility.groupId) ? visibility.groupId : "",
       personFilter: normalizePersonFilter(visibility.personFilter),
@@ -160,6 +162,7 @@ export function captureMapView(project, runtime, viewport, { id, name }) {
         ]),
       ),
       graphView: project.graphView,
+      diagram: project.diagram,
       visibility: {
         groupId: runtime.groupFilter,
         personFilter: runtime.personFilter,
@@ -192,5 +195,6 @@ export function restoreMapView(project, raw) {
     }
   }
   project.graphView = clone(view.graphView);
+  project.diagram = clone(view.diagram);
   return clone(view);
 }

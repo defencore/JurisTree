@@ -28,6 +28,9 @@ export function directConnectionScope() {
 export function graphView() {
   return normalizeGraphView(appState.project.graphView);
 }
+export function groupIsCollapsed(group) {
+  return group.collapsed && !appState.analysisExpandedGroups.has(group.id);
+}
 export function fullDiagram() {
   return (
     appState.exportingDiagram === true || appState.exportingDiagram === "full"
@@ -35,8 +38,6 @@ export function fullDiagram() {
 }
 export function relationShown(r, full = fullDiagram(), ignoreFocus = false) {
   if (full) return true;
-  const direct = directConnectionScope();
-  if (direct) return direct.relations.has(r.id);
   const cfg = graphView();
   if (
     !appState.analysisReveal.has(r.id) &&
@@ -52,9 +53,6 @@ export function relationShown(r, full = fullDiagram(), ignoreFocus = false) {
   );
 }
 export function visiblePeople(full = fullDiagram()) {
-  const direct = !full && directConnectionScope();
-  if (direct)
-    return appState.project.people.filter((p) => direct.people.has(p.id));
   const cfg = graphView();
   let ps =
     full || !appState.groupFilter

@@ -1,8 +1,14 @@
+import {
+  alignDiagramSelection,
+  changeDiagramSetting,
+  changeRouteStyle,
+} from "../../features/diagram.js";
 import { defaultScopes } from "../../core/workspace-modes.js";
 import { eventDomains } from "../../core/event-domains.js";
 import { state as appState } from "../../core/state.js";
 import { clone } from "../../core/utils.js";
 import { importFile } from "../../features/archive.js";
+import { setGroupsCollapsed } from "../../features/groups.js";
 import { processFiles } from "../../features/attachments.js";
 import {
   changeCalendarMonth,
@@ -23,6 +29,25 @@ import { renderProperty } from "../../ui/workspaces/property.js";
 export function bindChangeEvents() {
   document.addEventListener("change", (e) => {
     const t = e.target;
+    if (t.hasAttribute("data-diagram-setting")) {
+      changeDiagramSetting(
+        t.dataset.diagramSetting,
+        t.type === "checkbox" ? t.checked : t.value,
+      );
+      return;
+    }
+    if (t.hasAttribute("data-diagram-style")) {
+      changeRouteStyle(t.value);
+      return;
+    }
+    if (t.hasAttribute("data-diagram-align")) {
+      alignDiagramSelection(t.value);
+      return;
+    }
+    if (t.hasAttribute("data-group-expanded")) {
+      setGroupsCollapsed([t.dataset.groupExpanded], !t.checked);
+      return;
+    }
     if (t.id === "propertyDate") {
       const date = dateInputValue(t.value);
       if (!date) {

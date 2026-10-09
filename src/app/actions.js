@@ -1,3 +1,11 @@
+import {
+  toggleDiagramTools,
+  toggleDiagramSelecting,
+  beginRoutePoint,
+  removeRoutePoint,
+  changeRouteStyle,
+  resetDiagramLabels,
+} from "../features/diagram.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { exportDialog } from "../features/archive.js";
@@ -20,7 +28,11 @@ import {
   graphHelp,
   runGraphAnalysis,
 } from "../features/graph-tools.js";
-import { editGroup } from "../features/groups.js";
+import {
+  editGroup,
+  openGroupVisibility,
+  setGroupsCollapsed,
+} from "../features/groups.js";
 import { openSavedMapViews } from "../features/map-views.js";
 import {
   backupLaunchDraft,
@@ -99,6 +111,23 @@ export async function handleAction(action) {
     },
     compare: comparePeople,
     "add-group": () => editGroup(),
+    "group-visibility": openGroupVisibility,
+    "diagram-tools": toggleDiagramTools,
+    "diagram-select-items": toggleDiagramSelecting,
+    "diagram-add-point": beginRoutePoint,
+    "diagram-remove-point": () => removeRoutePoint(),
+    "diagram-reset-route": () => changeRouteStyle("auto"),
+    "diagram-reset-label": resetDiagramLabels,
+    "expand-all-groups": () =>
+      setGroupsCollapsed(
+        appState.project.groups.map((group) => group.id),
+        false,
+      ),
+    "collapse-all-groups": () =>
+      setGroupsCollapsed(
+        appState.project.groups.map((group) => group.id),
+        true,
+      ),
     "clear-comparison": () => {
       appState.comparisonPath = null;
       renderMain();

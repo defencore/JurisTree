@@ -4,10 +4,15 @@ import { uid } from "../core/utils.js";
 import { fit } from "../graph/camera.js";
 import { translate } from "../i18n/index.js";
 import { group } from "../model/lookup.js";
+import { groupIsCollapsed } from "../model/graph-view.js";
 import { commit } from "../services/history.js";
 import { closeModal, openDialog } from "../ui/dialog.js";
 import { renderGroupForm } from "../ui/forms/group.js";
 import { renderGroups } from "../ui/groups.js";
+import {
+  renderGroupVisibilityForm,
+  bindGroupVisibilityForm,
+} from "../ui/forms/group-visibility.js";
 import { bindPersonPickers } from "../ui/person-picker.js";
 
 export async function editGroup(id = null) {
@@ -64,12 +69,36 @@ export function toggleGroup(id) {
   const g = group(id);
   if (!g) return;
   closeModal();
-  const collapsed = g.collapsed && !appState.analysisExpandedGroups.has(id);
-  appState.analysisExpandedGroups.delete(id);
+  setGroupsCollapsed([id], !groupIsCollapsed(g));
+}
+
+export function setGroupsCollapsed(ids, collapsed) {
+  if (appState.analysisBusy) return;
+  const selected = new Set(ids),
+    groups = appState.project.groups.filter((g) => selected.has(g.id));
+  if (
+    !groups.some(
+      (g) => g.collapsed !== collapsed || groupIsCollapsed(g) !== collapsed,
+    )
+  )
+    return;
+  for (const g of groups) appState.analysisExpandedGroups.delete(g.id);
   commit(() => {
-    g.collapsed = !collapsed;
+    for (const g of groups) {
+      g.collapsed = collapsed;
+      if (collapsed) {
+        g.x = null;
+        g.y = null;
+      }
+    }
   });
-  fit();
+}
+
+export function openGroupVisibility() {
+  return openDialog(translate("ui.manageGroups"), renderGroupVisibilityForm(), {
+    footer: false,
+    onOpen: bindGroupVisibilityForm,
+  });
 }
 export async function deleteGroup(id) {
   closeModal();

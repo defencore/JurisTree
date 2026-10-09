@@ -1,6 +1,6 @@
 import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../../core/config.js";
 
-/** Translate a partial arrangement without moving or covering hidden cards. */
+/** Translate a partial arrangement without moving or covering other cards. */
 export function positionScopedLayout(positions, project, scope) {
   if (!positions.size) return positions;
   const root = project.people.find((p) => p.id === scope.rootId),
