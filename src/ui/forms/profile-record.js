@@ -1,3 +1,4 @@
+import { profileReferenceLabel } from "../../model/profile-references.js";
 import { recordConfigs } from "../../core/config.js";
 import { esc } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
@@ -23,6 +24,8 @@ function field(section, record, [key, label, type, options], cfg) {
     input = `<select name="${name}">${typeOptions(options, value || Object.keys(options)[0])}</select>`;
   else if (type === "person")
     input = `<select name="${name}">${personOptions(value, true)}</select>`;
+  else if (type === "relationship")
+    input = `<select name="${name}"><option value="">${translate("ui.notSpecified")}</option>${appState.project.relations.map((r) => `<option value="${r.id}" ${r.id === value ? "selected" : ""}>${esc(profileReferenceLabel(appState.project, type, r.id))}</option>`).join("")}</select>`;
   else if (type === "source")
     input = `<select name="${name}"><option value="">${translate("ui.noSource")}</option>${appState.project.documents.map((d) => `<option value="${d.id}" ${d.id === value ? "selected" : ""}>${esc(d.title)}</option>`).join("")}</select>`;
   else if (type === "textarea")

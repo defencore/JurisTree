@@ -1,4 +1,4 @@
-import { startTemplates } from "../core/config.js";
+import { startTemplates } from "../core/workspace-modes.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
@@ -47,9 +47,13 @@ export async function createFromTemplate() {
       purpose: t.purpose,
     };
   if (appState.startTemplate === "blank") model.scopePreferences.family = [];
-  if (appState.startTemplate === "research") model.graphView.layout = "network";
+  if (t.layout) model.graphView.layout = t.layout;
   if (!(await confirmStartReplacement())) return false;
-  activateTree(model);
+  activateTree(model, new Map(), {
+    view: t.view || "tree",
+    eventDomain: t.eventDomain || "family",
+    eventMode: t.eventMode || "upcoming",
+  });
   return true;
 }
 export async function openDemo() {

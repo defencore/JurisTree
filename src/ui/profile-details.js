@@ -9,12 +9,16 @@ import { displayDate } from "../model/dates.js";
 import { profileScope } from "../model/profile-scope.js";
 import { sourceChips } from "./components.js";
 import { icon } from "./icons.js";
-import { fields, recordValues } from "./profile-fields.js";
+import {
+  fields,
+  recordValues,
+  recordReferenceActions,
+} from "./profile-fields.js";
 
 export function recordDetails(section, r) {
   const cfg = recordConfigs()[section];
   if (cfg.extended)
-    return `<div class="biography-record">${fields(recordValues(cfg, r))}${r.sourceId ? sourceChips([r.sourceId]) : ""}</div>`;
+    return `<div class="biography-record">${fields(recordValues(cfg, r))}${r.sourceId ? sourceChips([r.sourceId]) : ""}${recordReferenceActions(cfg, r)}</div>`;
   const ic =
     section === "pets"
       ? {

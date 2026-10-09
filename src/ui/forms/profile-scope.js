@@ -1,3 +1,4 @@
+import { workspaceModes } from "../../core/workspace-modes.js";
 import { sectionInfo } from "../../core/config.js";
 import { esc } from "../../core/dom.js";
 import { profileGroups } from "../../core/profile-groups.js";
@@ -6,12 +7,7 @@ import { icon } from "../icons.js";
 
 export function renderProfileScopeForm(project, visible) {
   return `<div class="upload-info">${esc(
-    {
-      family: translate("ui.familyHistory"),
-      inheritance: translate("ui.inheritance"),
-      property: translate("ui.propertyAllocation"),
-      research: translate("ui.relationshipResearch"),
-    }[project.purpose],
+    workspaceModes()[project.purpose].title,
   )}</div><p class="hint">${translate("ui.peopleFamilyRelationshipsAndDocumentsAreAlwaysAvailable")}</p>${profileGroups()
     .map(
       (group) =>

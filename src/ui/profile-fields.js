@@ -2,7 +2,9 @@ import { esc } from "../core/dom.js";
 import { safeUrl } from "../core/utils.js";
 import { contactHref } from "../model/contacts.js";
 import { displayDate } from "../model/dates.js";
-import { person } from "../model/lookup.js";
+import { state } from "../core/state.js";
+import { profileReferenceLabel } from "../model/profile-references.js";
+import { translate } from "../i18n/index.js";
 
 export function fields(entries) {
   const rows = entries.filter(([, value]) => value !== "" && value != null);
@@ -22,8 +24,8 @@ export function recordValues(cfg, record) {
           ? ""
           : type === "select"
             ? options[value] || value
-            : type === "person"
-              ? person(value)?.name || ""
+            : ["person", "relationship"].includes(type)
+              ? profileReferenceLabel(state.project, type, value)
               : ["date", "period"].includes(type)
                 ? displayDate(value)
                 : value,
@@ -34,4 +36,38 @@ export function recordValues(cfg, record) {
             : "",
       ];
     });
+}
+
+export function recordReferenceActions(cfg, record) {
+  const people = [
+    ...new Set(
+      cfg.fields
+        .filter(([key, , type]) => type === "person" && record[key])
+        .map(([key]) => record[key]),
+    ),
+  ];
+  const participants = people
+    .map((id) => {
+      const name = profileReferenceLabel(state.project, "person", id);
+      return name
+        ? `<button type="button" class="btn small" data-source-person="${esc(id)}">${esc(name)}</button>`
+        : "";
+    })
+    .join("");
+  const relationships = cfg.fields
+    .filter(([key, , type]) => type === "relationship" && record[key])
+    .map(([key]) => {
+      const label = profileReferenceLabel(
+        state.project,
+        "relationship",
+        record[key],
+      );
+      return label
+        ? `<button type="button" class="btn small" data-source-relation="${esc(record[key])}" title="${esc(label)}">${translate("ui.openRelatedRelationship")}</button>`
+        : "";
+    })
+    .join("");
+  return participants || relationships
+    ? `<div class="biography-record-actions">${participants}${relationships}</div>`
+    : "";
 }

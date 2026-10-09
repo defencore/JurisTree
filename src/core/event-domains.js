@@ -11,6 +11,7 @@ const domains = {
     "pet",
   ],
   biography: [
+    "civil",
     "travel",
     "immigration",
     "medical",

@@ -1,4 +1,5 @@
 import { recordConfigs } from "../core/config.js";
+import { modeVisibilityVersion } from "../core/workspace-modes.js";
 import { defaultGraphView } from "../core/graph-view.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
@@ -11,6 +12,7 @@ export function fresh() {
   return {
     format: "juristree",
     version: 1,
+    modeVisibilityVersion,
     title: translate("ui.myFamily"),
     purpose: "family",
     jurisdiction: "",

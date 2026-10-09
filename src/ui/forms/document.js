@@ -1,9 +1,5 @@
-import {
-  defaultScopes,
-  evidenceTypes,
-  relTypes,
-  types,
-} from "../../core/config.js";
+import { defaultScopes, workspaceModes } from "../../core/workspace-modes.js";
+import { evidenceTypes, relTypes, types } from "../../core/config.js";
 import { $, esc } from "../../core/dom.js";
 import {
   sourceEvidence,
@@ -32,13 +28,8 @@ export function renderDocumentForm(file, old, chosenType, id, chosenEvidence) {
   )
     .map(
       (key) =>
-        `<label><input type="checkbox" name="purposes" value="${key}" ${(old.purposes || Object.keys(defaultScopes)).includes(key) ? "checked" : ""}>${
-          {
-            family: translate("ui.familyHistory"),
-            inheritance: translate("ui.inheritance"),
-            property: translate("ui.propertyAllocation"),
-            research: translate("ui.relationshipResearch"),
-          }[key]
+        `<label><input type="checkbox" name="purposes" value="${key}" ${!old.purposes?.length || old.purposes.includes(key) ? "checked" : ""}>${
+          workspaceModes()[key].title
         }</label>`,
     )
     .join(

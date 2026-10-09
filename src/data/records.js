@@ -35,7 +35,7 @@ export function sourceRecord(record) {
     reference: "",
     notes: "",
     verification: "corroborated",
-    purposes: ["family", "inheritance", "property", "research"],
+    purposes: [],
     x: 0,
     y: 0,
     ...record,

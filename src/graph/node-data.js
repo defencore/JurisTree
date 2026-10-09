@@ -1,3 +1,4 @@
+import { workspaceModes } from "../core/workspace-modes.js";
 import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { sourceInScope } from "../model/evidence.js";
@@ -64,7 +65,7 @@ export function filteredGraphNodes() {
           h: 128,
         })),
     );
-  if (appState.project.purpose === "property")
+  if (workspaceModes()[appState.project.purpose].propertyMap)
     ns.push(
       ...appState.project.property
         .filter(

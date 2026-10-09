@@ -127,6 +127,22 @@
   display: grid;
   gap: 8px;
 }
+@media (min-width: 1040px) {
+  .start-template-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .start-template {
+    align-items: flex-start;
+  }
+}
+@media (max-width: 760px) {
+  .start-template:not(.chosen) {
+    min-height: 50px;
+  }
+  .start-template:not(.chosen) small {
+    display: none;
+  }
+}
 .start-template {
   align-items: center;
   background: var(--paper);

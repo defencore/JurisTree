@@ -1,3 +1,4 @@
+import { profileReferenceLabel } from "./profile-references.js";
 import {
   evidenceTypes,
   recordConfigs,
@@ -132,8 +133,8 @@ export function buildSearchIndex(project) {
           value,
           type === "select"
             ? labels(options[value] || value)
-            : type === "person"
-              ? people.get(value)?.name || ""
+            : ["person", "source", "relationship"].includes(type)
+              ? profileReferenceLabel(project, type, value)
               : ["date", "period"].includes(type)
                 ? displayDate(value)
                 : "",

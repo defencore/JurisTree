@@ -1,4 +1,4 @@
-import { recordConfigs } from "../core/config.js";
+import { unlinkProfileReferences } from "../model/profile-references.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { unlinkPropertyReference } from "../model/property-records.js";
@@ -32,11 +32,8 @@ export async function confirmDelete(kind, id) {
       const rs = appState.project.relations
         .filter((r) => r.from === id || r.to === id)
         .map((r) => r.id);
-      for (const p of appState.project.people)
-        for (const cfg of Object.values(recordConfigs()))
-          for (const record of p[cfg.key] || [])
-            for (const [key, , type] of cfg.fields)
-              if (type === "person" && record[key] === id) record[key] = "";
+      unlinkProfileReferences(appState.project, "person", [id]);
+      unlinkProfileReferences(appState.project, "relationship", rs);
       appState.project.relations = appState.project.relations.filter(
         (r) => !rs.includes(r.id),
       );
@@ -54,6 +51,7 @@ export async function confirmDelete(kind, id) {
       if (appState.project.subjectId === id) appState.project.subjectId = "";
       if (appState.project.claimantId === id) appState.project.claimantId = "";
     } else if (kind === "relation") {
+      unlinkProfileReferences(appState.project, "relationship", [id]);
       appState.project.relations = appState.project.relations.filter(
         (r) => r.id !== id,
       );
@@ -61,6 +59,7 @@ export async function confirmDelete(kind, id) {
         (d) => (d.relations = d.relations.filter((r) => r !== id)),
       );
     } else if (kind === "document") {
+      unlinkProfileReferences(appState.project, "source", [id]);
       appState.project.property.forEach((a) =>
         unlinkPropertyReference(a, "source", id),
       );
@@ -70,9 +69,6 @@ export async function confirmDelete(kind, id) {
       appState.project.people.forEach((p) => {
         for (const key of ["bioSourceIds", "healthSourceIds"])
           p[key] = (p[key] || []).filter((x) => x !== id);
-        for (const cfg of Object.values(recordConfigs()))
-          for (const r of p[cfg.key] || [])
-            if (r.sourceId === id) r.sourceId = "";
       });
     } else {
       appState.project.property = appState.project.property.filter(

@@ -1,7 +1,7 @@
+import { startTemplates } from "./core/workspace-modes.js";
 import { init } from "./app/bootstrap.js";
 import { bindEvents } from "./app/events.js";
 import { bindRuntime } from "./app/runtime.js";
-import { startTemplates } from "./core/config.js";
 import { state as appState } from "./core/state.js";
 import { applyTheme } from "./core/theme.js";
 import { bindGraphInteractions } from "./graph/interaction.js";

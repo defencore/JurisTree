@@ -1,4 +1,4 @@
-import { startTemplates } from "../core/config.js";
+import { startTemplates } from "../core/workspace-modes.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { getLocale, translate } from "../i18n/index.js";

@@ -28,7 +28,12 @@ export async function confirmStartReplacement(summary = "") {
 export function activateTree(
   model,
   files = new Map(),
-  { persist = true } = {},
+  {
+    persist = true,
+    view = "tree",
+    eventDomain = "family",
+    eventMode = "upcoming",
+  } = {},
 ) {
   if (appState.editorActive) checkpoint();
   else {
@@ -44,7 +49,7 @@ export function activateTree(
   for (const [id, b] of files) appState.blobs.set(id, b);
   appState.editorActive = true;
   appState.savedDraft = null;
-  appState.view = "tree";
+  appState.view = view;
   appState.profileFocus = "";
   appState.profileSearch = "";
   appState.groupFilter = "";
@@ -62,7 +67,7 @@ export function activateTree(
   appState.propertySearch = "";
   appState.propertyReviewFilter = "all";
   appState.eventType = "";
-  appState.eventDomain = "family";
+  appState.eventDomain = eventDomain;
   appState.calendarMode = "month";
   appState.calendarUndatedLimit = 80;
   appState.calendarMonth = "";
@@ -70,7 +75,7 @@ export function activateTree(
   appState.calendarSearch = "";
   appState.calendarType = "";
   appState.calendarDomain = "family";
-  appState.eventMode = "upcoming";
+  appState.eventMode = eventMode;
   appState.eventLimit = 80;
   appState.camera = {
     x: 0,
@@ -94,7 +99,8 @@ export function activateTree(
   $("#appShell").hidden = false;
   $("#startError").textContent = "";
   render();
-  requestAnimationFrame(() => (isMobileLayout() ? focusPerson() : fit()));
+  if (view === "tree")
+    requestAnimationFrame(() => (isMobileLayout() ? focusPerson() : fit()));
   if (persist) scheduleSave();
   else updateSaveStatus("restored");
 }

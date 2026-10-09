@@ -9,6 +9,10 @@ export function types() {
   return {
     birth: translate("ui.birthCertificate"),
     marriage: translate("ui.marriageCertificate"),
+    divorce: translate("ui.marriageDissolutionCertificate"),
+    adoption: translate("ui.adoptionRecordDocument"),
+    parentage: translate("ui.parentageRecordDocument"),
+    civil_extract: translate("ui.civilExtract"),
     death: translate("ui.deathCertificate"),
     name_change: translate("ui.nameSurnameChange"),
     will: translate("ui.willAbsenceOfAWill"),
@@ -107,33 +111,6 @@ export function sectionInfo() {
     orderedProfileSections().map((key) => [key, sections[key]]),
   );
 }
-export const defaultScopes = {
-  family: [
-    "timeline",
-    "contacts",
-    "residences",
-    "biography",
-    "occupations",
-    "education",
-    "interests",
-    "skills",
-    "personal",
-    "health",
-    "pets",
-  ],
-  inheritance: [],
-  property: ["contacts"],
-  research: [
-    "timeline",
-    "residences",
-    "biography",
-    "education",
-    "occupations",
-    "legal",
-    "custody",
-    "claims",
-  ],
-};
 export function recordConfigs() {
   return {
     ...Object.fromEntries(
@@ -208,6 +185,7 @@ export function familyEventTypes() {
     professional: [translate("ui.professionalConnection"), "briefcase"],
     travel: [translate("ui.travelHistory"), "globe"],
     immigration: [translate("ui.citizenshipAndImmigration"), "landmark"],
+    civil: [translate("ui.civilRecords"), "landmark"],
     medical: [translate("ui.medicalHistory"), "heartPulse"],
     pregnancy: [translate("ui.pregnancyHistory"), "baby"],
     deathDetails: [translate("ui.deathCircumstances"), "heart"],
@@ -238,58 +216,6 @@ export function graphStateInfo() {
     requested: [translate("ui.requested"), theme.blue],
     indirect: [translate("ui.indirectEvidence"), theme.muted],
     conflict: [translate("ui.disputed"), theme.red],
-  };
-}
-export function startTemplates() {
-  return {
-    family: {
-      title: translate("ui.familyTree"),
-      icon: "tree",
-      purpose: "family",
-      name: translate("ui.myFamily"),
-      description: translate(
-        "ui.generationsFamilyGroupsBiographiesEventsAndAFamily",
-      ),
-      detail: translate("ui.emptyTreeWithAllProfileSectionsAddThe"),
-    },
-    inheritance: {
-      title: translate("ui.inheritance"),
-      icon: "landmark",
-      purpose: "inheritance",
-      name: translate("ui.inheritanceCase"),
-      description: translate("ui.routeFromDeceasedOwnerToClaimantDocumentsAnd"),
-      detail: translate("ui.emptyMapWithOwnerAndClaimantSelectionAnd"),
-    },
-    property: {
-      title: translate("ui.propertyAndShares"),
-      icon: "property",
-      purpose: "property",
-      name: translate("ui.familyProperty"),
-      description: translate(
-        "ui.ownersPropertySourcesAndPlannedShareAllocation",
-      ),
-      detail: translate("ui.emptyMapWithPropertyAndContactsSharesAre"),
-    },
-    research: {
-      title: translate("ui.relationshipResearch"),
-      icon: "route",
-      purpose: "research",
-      name: translate("ui.relationshipResearch"),
-      description: translate(
-        "ui.personGroupsAcquaintancesHypothesesAndPathsBetweenPeople",
-      ),
-      detail: translate("ui.emptyNetworkMapWithBiographiesAddressesEventsAnd"),
-    },
-    blank: {
-      title: translate("ui.blankMap"),
-      icon: "files",
-      purpose: "family",
-      name: translate("ui.newMap"),
-      description: translate(
-        "ui.onlyPeopleRelationshipsAndSourcesAddOtherSections",
-      ),
-      detail: translate("ui.emptyMapWithoutExtraProfileSectionsChangePurpose"),
-    },
   };
 }
 export const graphLineDashes = {

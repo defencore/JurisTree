@@ -19,7 +19,11 @@ import { reviewButton } from "./biography-review.js";
 import { avatar, sourceChips, sourceLink } from "./components.js";
 import { icon } from "./icons.js";
 import { personStatusMarkup } from "./person-status.js";
-import { fields, recordValues } from "./profile-fields.js";
+import {
+  fields,
+  recordValues,
+  recordReferenceActions,
+} from "./profile-fields.js";
 import { propertyHistoryReport } from "./property-history.js";
 
 function section(label, symbol, body, key) {
@@ -30,7 +34,7 @@ function section(label, symbol, body, key) {
 function record(sectionKey, item) {
   const cfg = recordConfigs()[sectionKey];
   const values = recordValues(cfg, item);
-  return `<article class="biography-record">${fields(values)}${sourceChips(item.sourceId ? [item.sourceId] : [])}</article>`;
+  return `<article class="biography-record">${fields(values)}${sourceChips(item.sourceId ? [item.sourceId] : [])}${recordReferenceActions(cfg, item)}</article>`;
 }
 
 function source(d) {

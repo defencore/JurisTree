@@ -1,3 +1,4 @@
+import { workspaceModes } from "../core/workspace-modes.js";
 import { relTypes } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import {
@@ -111,7 +112,10 @@ export function renderGraphEdges(ns, exporting = false) {
         edges += `<path d="${c.path}" fill="none" ${graphStrokeAttributes("source")} opacity="${highlight ? 0.3 : 1}"/>`;
       }
     }
-  if (appState.project.purpose === "property" && (full || cfg.propertyLinks))
+  if (
+    workspaceModes()[appState.project.purpose].propertyMap &&
+    (full || cfg.propertyLinks)
+  )
     for (const a of appState.project.property) {
       const n = map.get(a.id);
       if (!n) continue;

@@ -1,5 +1,6 @@
+import { normalizeModePurposes } from "../core/workspace-modes.js";
 import { isMedia } from "../core/attachments.js";
-import { defaultScopes, evidenceTypes, types } from "../core/config.js";
+import { evidenceTypes, types } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import { sourceEvidence, sourceVerificationConfig } from "../core/sources.js";
 import { state as appState } from "../core/state.js";
@@ -27,7 +28,7 @@ export async function editDocument(id = null, file = null, context = {}) {
         people: context.personId ? [context.personId] : [],
         relations: context.relationId ? [context.relationId] : [],
         propertyIds: context.propertyId ? [context.propertyId] : [],
-        purposes: Object.keys(defaultScopes),
+        purposes: [],
         subjectIds: context.personId ? [context.personId] : [],
         source: "",
         repository: "",
@@ -101,9 +102,7 @@ export async function editDocument(id = null, file = null, context = {}) {
     subjectIds: f.getAll("subjectIds"),
     relations: f.getAll("relations"),
     propertyIds: f.getAll("propertyIds"),
-    purposes: f.getAll("purposes").length
-      ? f.getAll("purposes")
-      : Object.keys(defaultScopes),
+    purposes: normalizeModePurposes(f.getAll("purposes")),
   };
   for (const k of [
     "date",

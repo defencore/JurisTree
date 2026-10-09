@@ -1,3 +1,4 @@
+import { workspaceModes } from "../core/workspace-modes.js";
 import {
   auxiliaryLineStyles,
   graphLineDashes,
@@ -68,7 +69,7 @@ export function graphLegendItems() {
       label: auxiliaryLineStyles().source.label,
       section: "role",
     });
-  if (appState.project.purpose === "property")
+  if (workspaceModes()[appState.project.purpose].propertyMap)
     items.push({
       key: "property",
       label: auxiliaryLineStyles().property.label,

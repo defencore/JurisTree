@@ -1,4 +1,5 @@
-import { $, $$ } from "../core/dom.js";
+import { workspaceModes } from "../core/workspace-modes.js";
+import { $, $$, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { workspaceView } from "../core/workspace-views.js";
 import { renderGraph } from "../graph/render.js";
@@ -41,7 +42,12 @@ export function renderAll() {
   renderSaveStatus();
   $("#projectTitle").textContent = appState.project.title;
   $("#demoTag").hidden = !appState.project.demo;
+  const modes = workspaceModes();
+  $("#purpose").innerHTML = Object.entries(modes)
+    .map(([key, mode]) => `<option value="${key}">${esc(mode.title)}</option>`)
+    .join("");
   $("#purpose").value = appState.project.purpose;
+  $("#purposeHint").textContent = modes[appState.project.purpose].description;
   $("#profileCount").textContent = appState.project.people.length;
   $("#peopleCount").textContent = appState.project.people.length;
   $("#docCount").textContent =

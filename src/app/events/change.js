@@ -1,3 +1,4 @@
+import { defaultScopes } from "../../core/workspace-modes.js";
 import { eventDomains } from "../../core/event-domains.js";
 import { state as appState } from "../../core/state.js";
 import { clone } from "../../core/utils.js";
@@ -89,7 +90,7 @@ export function bindChangeEvents() {
       renderDocuments();
       return;
     }
-    if (t.id === "purpose") {
+    if (t.id === "purpose" && Object.hasOwn(defaultScopes, t.value)) {
       appState.docShowAll = false;
       resetAnalysis();
       commit(() => (appState.project.purpose = t.value));

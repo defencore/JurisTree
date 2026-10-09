@@ -53,12 +53,8 @@ export const workspaceTemplate = `
       ${workspaceNavigation()}
       <div class="purpose">
         <p class="section-label">@@ui.workspaceMode@@</p>
-        <select id="purpose" aria-label="@@ui.treePurpose@@">
-          <option value="inheritance">@@ui.inheritance2@@</option>
-          <option value="family">@@ui.familyHistory2@@</option>
-          <option value="property">@@ui.propertyAllocation2@@</option>
-          <option value="research">@@ui.relationshipResearch2@@</option></select
-        ><button class="scope-button" data-action="scope">
+        <select id="purpose" aria-label="@@ui.workspaceMode@@" aria-describedby="purposeHint"></select>
+        <p class="hint mode-hint" id="purposeHint"></p><button class="scope-button" data-action="scope">
           <i data-icon="sliders"></i>@@ui.chooseVisibleData@@
         </button>
       </div>

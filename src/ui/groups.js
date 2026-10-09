@@ -1,3 +1,4 @@
+import { workspaceModes } from "../core/workspace-modes.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
@@ -40,12 +41,13 @@ export function kinGroups(p, { profiles = false } = {}) {
 export function renderGroups() {
   const root = $("#groupList");
   if (!root) return;
-  $("#groupSectionLabel").textContent =
-    appState.project.purpose === "research"
-      ? translate("ui.personGroups")
-      : translate("ui.familyGroups");
+  $("#groupSectionLabel").textContent = !workspaceModes()[
+    appState.project.purpose
+  ].familyGroups
+    ? translate("ui.personGroups")
+    : translate("ui.familyGroups");
   root.innerHTML =
-    `<button class="family-filter ${!appState.groupFilter ? "active" : ""}" data-group-filter=""><span class="group-dot" style="background:#9b96b1"></span>${icon("groups")}<b>${appState.project.purpose === "research" ? translate("ui.allPeople") : translate("ui.wholeFamily")}</b><small>${appState.project.people.length}</small></button>` +
+    `<button class="family-filter ${!appState.groupFilter ? "active" : ""}" data-group-filter=""><span class="group-dot" style="background:#9b96b1"></span>${icon("groups")}<b>${!workspaceModes()[appState.project.purpose].familyGroups ? translate("ui.allPeople") : translate("ui.wholeFamily")}</b><small>${appState.project.people.length}</small></button>` +
     appState.project.groups
       .map(
         (g) =>

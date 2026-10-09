@@ -25,6 +25,8 @@ export function namesSection() {
           ],
           ["fullName", "ui.fullName"],
           ["surname", "ui.surname"],
+          ["givenName", "ui.givenName"],
+          ["patronymic", "ui.patronymic"],
           ["from", "ui.from", "period"],
           ["to", "ui.to", "period"],
         ],

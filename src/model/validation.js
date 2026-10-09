@@ -1,5 +1,9 @@
+import { normalizeProfileReferences } from "./profile-references.js";
 import {
   defaultScopes,
+  normalizeModePurposes,
+} from "../core/workspace-modes.js";
+import {
   evidenceTypes,
   groupColors,
   recordConfigs,
@@ -189,12 +193,6 @@ export function validateImport(raw) {
     return x;
   });
   const peopleIds = new Set(p.people.map((x) => x.id));
-  for (const person of p.people)
-    for (const cfg of Object.values(recordConfigs()))
-      for (const record of person[cfg.key])
-        for (const [key, , type] of cfg.fields)
-          if (type === "person" && !peopleIds.has(record[key]))
-            record[key] = "";
   p.relations = list("relations", 2500).map((r) => {
     if (
       !peopleIds.has(r.from) ||
@@ -306,11 +304,9 @@ export function validateImport(raw) {
       type: d.type,
       status: d.status,
       evidence: sourceEvidence(d),
-      purposes:
-        Array.isArray(d.purposes) &&
-        d.purposes.some((k) => Object.hasOwn(defaultScopes, k))
-          ? d.purposes.filter((k) => Object.hasOwn(defaultScopes, k))
-          : Object.keys(defaultScopes),
+      purposes: normalizeModePurposes(d.purposes, {
+        legacyDefault: !Object.hasOwn(raw, "modeVisibilityVersion"),
+      }),
       people: [...new Set([...arr(d.people), ...arr(d.subjectIds)])].filter(
         (id) => peopleIds.has(id),
       ),
@@ -358,10 +354,8 @@ export function validateImport(raw) {
   for (const person of p.people) {
     for (const key of ["bioSourceIds", "healthSourceIds"])
       person[key] = person[key].filter((id) => docIds.has(id));
-    for (const cfg of Object.values(recordConfigs()))
-      for (const r of person[cfg.key])
-        if (r.sourceId && !docIds.has(r.sourceId)) r.sourceId = "";
   }
+  normalizeProfileReferences(p);
   const indegrees = new Map(p.people.map((x) => [x.id, 0])),
     children = new Map(p.people.map((x) => [x.id, []]));
   for (const r of p.relations)

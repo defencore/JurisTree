@@ -5,7 +5,7 @@ export function profileGroups() {
   return [
     [
       "ui.profileIdentityGroup",
-      ["names", "contacts", "identity", "immigration", "residences"],
+      ["names", "civil", "contacts", "identity", "immigration", "residences"],
     ],
     [
       "ui.profileLifeGroup",

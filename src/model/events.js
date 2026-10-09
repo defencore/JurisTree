@@ -197,6 +197,15 @@ export function collectProjectEvents(
     for (const [section, cfg] of Object.entries(configs)) {
       if (!cfg.calendar || !included(section)) continue;
       for (const r of p[cfg.key] || []) {
+        const title = (cfg.calendar.titleFields || [])
+          .map((key) => {
+            const [, , type, options] = cfg.fields.find(
+              ([field]) => field === key,
+            );
+            return type === "select" ? options[r[key]] : r[key];
+          })
+          .filter(Boolean)
+          .join(" · ");
         const seen = new Set();
         for (const [field, message] of cfg.calendar.dates) {
           if (!r[field] || seen.has(r[field])) continue;
@@ -206,7 +215,8 @@ export function collectProjectEvents(
             r.id + "-" + field,
             [
               message ? translate(message) : "",
-              r.title ||
+              title ||
+                r.title ||
                 r.name ||
                 r.company ||
                 r.party ||

@@ -1,3 +1,4 @@
+import { civilSection } from "./civil.js";
 import { pregnancySection } from "./pregnancy.js";
 import { deathSection } from "./death.js";
 import { militarySection } from "./military.js";
@@ -32,6 +33,7 @@ import { politicalSection } from "./political.js";
 
 export function extendedProfileSections() {
   return {
+    civil: civilSection(),
     pregnancy: pregnancySection(),
     death: deathSection(),
     military: militarySection(),
