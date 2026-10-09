@@ -1,4 +1,5 @@
 import { attachmentExtensions } from "../core/attachments.js";
+import { archiveFilename } from "../core/archive-filename.js";
 import {
   graphStateInfo,
   MAX_ATTACHMENT_BYTES,
@@ -35,9 +36,10 @@ export async function exportArchive(
   const btns = $$("[data-export]");
   btns.forEach((b) => (b.disabled = true));
   try {
-    const zip = new JSZip(),
+    const exportedAt = new Date(),
+      zip = new JSZip(),
       manifest = clone(model);
-    manifest.exportedAt = new Date().toISOString();
+    manifest.exportedAt = exportedAt.toISOString();
     manifest.attachments = {};
     for (const id of usedBlobs(model, files)) {
       const blob = files.get(id),
@@ -79,7 +81,7 @@ Property shares are a user plan, not a legal determination.
             `${translate("ui.archive")} ` + Math.round(m.percent) + "%";
       },
     );
-    download(blob, safeName(model.title) + ".zip");
+    download(blob, archiveFilename(model.title, exportedAt));
     toast(translate("ui.theArchiveContainsTheTreeAndAllAttachments"));
     if (model === appState.project && appState.editorActive) await saveNow();
   } catch (e) {

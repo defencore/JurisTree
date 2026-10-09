@@ -287,7 +287,11 @@ The navy, pale blue and gold palette follows the [Franciscans reference website]
 
 The current draft and its attachments are stored together in IndexedDB under `juristree-draft-v1`. The interface language is stored in localStorage. A saved draft belongs to that browser profile and origin; it does not sync between devices. Browser storage availability and capacity depend on the browser.
 
-Export ZIP for a portable, editable backup. An archive contains:
+Export ZIP for a portable, editable backup.
+
+Archive filenames include the map title and the export date and time, for example `Doe family_2026-10-09_18-35-42.zip`. The timestamp uses the device's local time with seconds and sorts chronologically for the same title. The filename and the archive's UTC `exportedAt` metadata refer to the same instant.
+
+An archive contains:
 
 ```text
 tree.json                  Complete project data and attachment manifest
