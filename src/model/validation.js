@@ -1,3 +1,8 @@
+import { MAX_ATTACHMENT_FILES } from "../core/attachments.js";
+import {
+  normalizeSourceAttachments,
+  projectAttachmentIds,
+} from "./source-attachments.js";
 import { normalizeProfileReferences } from "./profile-references.js";
 import {
   defaultScopes,
@@ -309,15 +314,15 @@ export function validateImport(raw) {
       propertyIds: arr(d.propertyIds).filter((id) => assetIds.has(id)),
       x: pos(d.x),
       y: pos(d.y),
-      size: Number(d.size) || 0,
+      attachments: normalizeSourceAttachments(d),
     };
     for (const k of [
       "title",
-      "assetId",
-      "filename",
-      "mime",
       "source",
       "repository",
+      "collectionTitle",
+      "volume",
+      "pages",
       "reference",
       "sourceUrl",
       "accessedAt",
@@ -339,6 +344,10 @@ export function validateImport(raw) {
       throw Error(translate("ui.unsupportedSourceLink"));
     return x;
   });
+  if (projectAttachmentIds(p).size > MAX_ATTACHMENT_FILES)
+    throw Error(
+      translate("ui.projectAttachmentLimit", { limit: MAX_ATTACHMENT_FILES }),
+    );
   const docIds = new Set(p.documents.map((d) => d.id));
   for (const asset of p.property)
     for (const { record } of propertyRecords(asset))

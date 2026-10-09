@@ -139,11 +139,11 @@ test("attaches, plays and restores an audio source without promoting it to offic
       Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0)),
     );
     const manifest = JSON.parse(await zip.file("tree.json").async("string"));
-    const d = manifest.documents.find(
-      (d) => d.filename === "fictional-recording.wav",
+    const d = manifest.documents.find((d) =>
+      d.attachments.some((file) => file.filename === "fictional-recording.wav"),
     );
     const bytes = await zip
-      .file(manifest.attachments[d.assetId].path)
+      .file(manifest.attachments[d.attachments[0].assetId].path)
       .async("uint8array");
     return { document: d, bytes: Array.from(bytes) };
   }, buffer.toString("base64"));

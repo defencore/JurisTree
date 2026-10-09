@@ -36,7 +36,12 @@ export function webTools() {
         relations: clone(appState.project.relations),
         documents: appState.project.documents
           .filter(sourceInScope)
-          .map(({ assetId: _assetId, ...d }) => d),
+          .map((d) => ({
+            ...d,
+            attachments: d.attachments.map(
+              ({ assetId: _assetId, ...file }) => file,
+            ),
+          })),
       }),
     },
     {

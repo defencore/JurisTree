@@ -1,19 +1,11 @@
 import { resetWindow } from "./floating-windows.js";
 import { $ } from "../core/dom.js";
+import { imageDimensions } from "../services/attachment-files.js";
 import { bytes } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { toast } from "./dialog.js";
 export async function cropImage(file, portrait) {
-  const img = new Image(),
-    url = URL.createObjectURL(file);
-  await new Promise((res, rej) => {
-    img.onload = res;
-    img.onerror = () => rej(Error(translate("ui.unsupportedOrDamagedImage")));
-    img.src = url;
-  });
-  URL.revokeObjectURL(url);
-  if (img.width * img.height > 90e6)
-    throw Error(translate("ui.imageTooLargeToProcess"));
+  const img = await imageDimensions(file);
   let rotation = 0,
     rect = null,
     pointerStart = null,

@@ -1,3 +1,4 @@
+import { projectAttachmentIds } from "../model/source-attachments.js";
 import { state as appState } from "../core/state.js";
 
 export function objectUrl(id) {
@@ -7,11 +8,7 @@ export function objectUrl(id) {
   return appState.urls.get(id);
 }
 export function usedBlobs(model = appState.project, files = appState.blobs) {
-  const ids = new Set(model.people.map((p) => p.avatarId).filter(Boolean));
-  model.documents.forEach((d) => {
-    if (d.assetId) ids.add(d.assetId);
-  });
-  return [...ids].filter((id) => files.has(id));
+  return [...projectAttachmentIds(model)].filter((id) => files.has(id));
 }
 export function pruneBlobs() {
   const keep = new Set();
@@ -20,12 +17,7 @@ export function pruneBlobs() {
     ...appState.history,
     ...appState.future,
   ]) {
-    model.people.forEach((p) => {
-      if (p.avatarId) keep.add(p.avatarId);
-    });
-    model.documents.forEach((d) => {
-      if (d.assetId) keep.add(d.assetId);
-    });
+    projectAttachmentIds(model).forEach((id) => keep.add(id));
   }
   for (const id of appState.blobs.keys())
     if (!keep.has(id)) {

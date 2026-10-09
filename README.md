@@ -33,7 +33,7 @@ Modes suggest visible sections and a starting view. Switching modes preserves al
 
 - Interactive relationship map with family roles, saved arrangements, layouts, connection analysis and touch navigation.
 - Optional profile sections for identity, civil status, education, employment, residence, travel, health, interests, finances and other records.
-- Sources with attachments, original text, citations, verification and configurable document checklists.
+- Sources with multiple files or photos, clipboard pasting, original text, citations, verification and configurable document checklists.
 - Combined search and advanced filters, saved queries and CSV export.
 - Separate family celebrations, life history, legal and financial dates, with month/year calendars.
 - Property history with dated rights, transfers and competing claims.

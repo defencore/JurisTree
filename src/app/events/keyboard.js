@@ -3,7 +3,7 @@ import { state as appState } from "../../core/state.js";
 import { exportArchive } from "../../features/archive.js";
 import { openFiles } from "../../features/attachments.js";
 import { viewBiography } from "../../features/biography.js";
-import { viewDocument } from "../../features/documents.js";
+import { viewDocument } from "../../features/document-view.js";
 import { toggleFavorite } from "../../features/favorites.js";
 import {
   clearGraphSelection,

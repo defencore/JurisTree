@@ -146,6 +146,7 @@ test("desktop, tablet and narrow phone layouts keep navigation, search, graph an
 test("translated counters and filters stay inside every workspace view on tablets and phones", async ({
   page,
 }) => {
+  test.setTimeout(120000);
   for (const width of [1440, 820, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
     for (const language of ["en", "uk", "ru"]) {

@@ -387,8 +387,6 @@ export default {
   "ui.aDocumentCanBeAvailableWithoutADigital":
     "Документ может быть в наличии без цифровой копии. Статус проверки и характер доказательства показаны отдельно.",
   "ui.addDocumentsOrPhotographs": "Добавьте документы или фотографии",
-  "ui.dropFilesPhotosAreCompressedPdfsUpTo":
-    "Перетащите файлы · фото сжимаются · PDF до 12 МБ",
   "ui.chooseFiles": "Выбрать файлы",
   "ui.nameArchiveRecordNumberOrText": "Имя, архив, номер записи или текст…",
   "ui.searchSources": "Поиск источников",
@@ -569,8 +567,8 @@ export default {
   "ui.crop": "Обрезать",
   "ui.fileExceeds50MbReduceItsSizeBefore":
     ": файл больше 50 МБ. Уменьшите его перед добавлением.",
-  "ui.pdfsMustBeUnder12MbAddLarge":
-    "PDF должен быть до 12 МБ. Большие сканы добавляйте постранично как фото — они будут сжаты.",
+  "ui.pdfAttachmentSizeLimit":
+    "PDF должен быть до 12 МБ. Выберите меньший файл или добавьте изображения его страниц.",
   "ui.textDocumentsMustBeUnder5Mb": "Текстовый документ должен быть до 5 МБ.",
   "ui.supportedJpgPngWebpPdfTxtAndDocx":
     "Поддерживаются JPG, PNG, WebP, PDF, TXT и DOCX.",
@@ -1402,7 +1400,7 @@ export default {
   "ui.sourceEvidenceHint":
     "Фото, письма, свидетельства и записи являются косвенными доказательствами. Слухи остаются неподтверждёнными.",
   "ui.attachmentUploadHint":
-    "Фото сжимаются; PDF до 12 МБ, текст до 5 МБ, аудио / видео до 20 МБ.",
+    "Оригиналы фото до 50 МБ; PDF до 12 МБ, текст до 5 МБ, аудио / видео до 20 МБ.",
   "ui.active": "Активный",
   "ui.addFavorite": "Закрепить для быстрого доступа",
   "ui.removeFavorite": "Открепить человека",
@@ -2511,4 +2509,38 @@ export default {
   "ui.mapViewRestored": "Восстановлен «{name}».",
   "ui.mapViewSaved": "Сохранён «{name}».",
   "ui.invalidMapViews": "Некорректные сохранённые виды схемы в архиве.",
+  "ui.sourceAttachments": "Файлы и фотографии",
+  "ui.pastePhotos": "Вставить фото",
+  "ui.pastePhotoHere": "Поле для вставки фото",
+  "ui.clipboardPasteHint":
+    "Нажмите здесь и Ctrl+V / ⌘V или «Вставить» на телефоне.",
+  "ui.clipboardPasteFallback":
+    "Используйте Ctrl+V / ⌘V в поле вставки или выберите файлы. На телефоне удерживайте поле и выберите «Вставить».",
+  "ui.clipboardNoImage":
+    "В буфере нет фото. Сначала скопируйте изображение или снимок экрана.",
+  "ui.portraitPasteHint":
+    "Выберите или вставьте портрет, затем выделите нужную область.",
+  "ui.sourceAttachmentsHint":
+    "Храните страницы одной книги, реестра или документа вместе. Перетащите сюда файлы или вставьте фото. Оригиналы сохраняются без изменений. Изменения применяются после сохранения.",
+  "ui.removeAttachment": "Убрать {name}",
+  "ui.sourceAttachmentLimit":
+    "Один источник может содержать до {limit} файлов.",
+  "ui.attachmentsProcessing": "Дождитесь завершения добавления файлов.",
+  "ui.openFullImage": "Открыть изображение в полном размере",
+  "ui.cropCopy": "Обрезать копию",
+  "ui.addFiles": "Добавить файлы",
+  "ui.attachedFilesCount": "Файлов: {count}",
+  "ui.ledgerSource": "Книга учёта",
+  "ui.registerSource": "Реестр / реестровая запись",
+  "ui.projectAttachmentLimit":
+    "Проект может содержать до {limit} вложенных файлов.",
+  "ui.recordPhotosDocuments": "Фото и документы",
+  "ui.linkedProfileRecords": "Связанные записи профиля",
+  "ui.sourceCollectionTitle": "Название книги, реестра или издания",
+  "ui.sourceVolume": "Том / выпуск",
+  "ui.sourcePages": "Страницы / листы",
+  "ui.attachmentCaption": "Номер страницы или описание фото",
+  "ui.awardSource": "Награда / документ о награждении",
+  "ui.journalEntrySource": "Запись из журнала",
+  "ui.deathNoticeSource": "Сообщение о смерти / некролог",
 };

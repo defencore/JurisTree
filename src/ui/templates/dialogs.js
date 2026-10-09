@@ -68,11 +68,6 @@ export const dialogsTemplate = `
   multiple
 /><input
   type="file"
-  id="portraitInput"
-  class="upload-hidden"
-  accept="image/jpeg,image/png,image/webp"
-/><input
-  type="file"
   id="importInput"
   class="upload-hidden"
   accept=".zip,.json"

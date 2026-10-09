@@ -5,6 +5,7 @@ import { initials, safeUrl } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { hasFile, isOfficial } from "../model/evidence.js";
 import { doc } from "../model/lookup.js";
+import { primaryAttachment } from "../model/source-attachments.js";
 import { orderedPeople } from "../model/person-selection.js";
 import { objectUrl } from "../services/blobs.js";
 import { openDialog, toast } from "./dialog.js";
@@ -78,7 +79,7 @@ export function requirementCard(p, t) {
 }
 export function miniDoc(d) {
   const s = docStates()[d.status] || docStates().needs_review;
-  return `<div class="doc-mini" data-document="${d.id}" role="button" tabindex="0"><span class="docicon">${d.mime?.startsWith("image/") && hasFile(d) ? `<img src="${objectUrl(d.assetId)}" alt="">` : icon(documentIcon(d))}</span><span><b>${esc(d.title)}</b><small>${s.label} · ${hasFile(d) ? translate("ui.fileAttached") : translate("ui.noDigitalCopy")}</small></span></div>`;
+  return `<div class="doc-mini" data-document="${d.id}" role="button" tabindex="0"><span class="docicon">${primaryAttachment(d)?.mime.startsWith("image/") && hasFile(d) ? `<img src="${objectUrl(primaryAttachment(d).assetId)}" alt="" loading="lazy" decoding="async">` : icon(documentIcon(d))}</span><span><b>${esc(d.title)}</b><small>${s.label} · ${hasFile(d) ? translate("ui.fileAttached") : translate("ui.noDigitalCopy")}</small></span></div>`;
 }
 export function checks(items, name, selectedIds, labels) {
   return `<div class="check-grid">${items.map((x) => `<label><input type="checkbox" name="${name}" value="${x.id}" ${selectedIds.includes(x.id) ? "checked" : ""}>${esc(labels(x))}</label>`).join("") || `<span class="hint">${translate("ui.noRecords")}</span>`}</div>`;

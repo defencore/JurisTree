@@ -385,8 +385,6 @@ export default {
   "ui.aDocumentCanBeAvailableWithoutADigital":
     "A document can be available without a digital copy. Review status and evidence type are shown separately.",
   "ui.addDocumentsOrPhotographs": "Add documents or photographs",
-  "ui.dropFilesPhotosAreCompressedPdfsUpTo":
-    "Drop files · photos are compressed · PDFs up to 12 MB",
   "ui.chooseFiles": "Choose files",
   "ui.nameArchiveRecordNumberOrText": "Name, archive, record number or text…",
   "ui.searchSources": "Search sources",
@@ -570,8 +568,8 @@ export default {
   "ui.crop": "Crop",
   "ui.fileExceeds50MbReduceItsSizeBefore":
     ": file exceeds 50 MB. Reduce its size before adding.",
-  "ui.pdfsMustBeUnder12MbAddLarge":
-    "PDFs must be under 12 MB. Add large scans as page images to compress them.",
+  "ui.pdfAttachmentSizeLimit":
+    "PDFs must be under 12 MB. Choose a smaller file or attach images of its pages.",
   "ui.textDocumentsMustBeUnder5Mb": "Text documents must be under 5 MB.",
   "ui.supportedJpgPngWebpPdfTxtAndDocx":
     "Supported: JPG, PNG, WebP, PDF, TXT and DOCX.",
@@ -1394,7 +1392,7 @@ export default {
   "ui.sourceEvidenceHint":
     "Photos, letters, testimony and recordings are indirect evidence. Rumors remain unverified.",
   "ui.attachmentUploadHint":
-    "Photos are compressed; PDF up to 12 MB, text up to 5 MB, audio / video up to 20 MB.",
+    "Original photos up to 50 MB; PDF up to 12 MB, text up to 5 MB, audio / video up to 20 MB.",
   "ui.active": "Active",
   "ui.addFavorite": "Pin for quick access",
   "ui.removeFavorite": "Unpin person",
@@ -2498,4 +2496,37 @@ export default {
   "ui.mapViewRestored": "Restored “{name}”.",
   "ui.mapViewSaved": "Saved “{name}”.",
   "ui.invalidMapViews": "Invalid saved map views in the archive.",
+  "ui.sourceAttachments": "Files and photographs",
+  "ui.pastePhotos": "Paste photos",
+  "ui.pastePhotoHere": "Photo paste area",
+  "ui.clipboardPasteHint":
+    "Click here and press Ctrl+V / ⌘V, or use Paste on your phone.",
+  "ui.clipboardPasteFallback":
+    "Use Ctrl+V / ⌘V in the paste area, or choose files. On a phone, touch and hold the area and choose Paste.",
+  "ui.clipboardNoImage":
+    "No photo in the clipboard. Copy an image or screenshot first.",
+  "ui.portraitPasteHint":
+    "Choose or paste a portrait, then select the area to use.",
+  "ui.sourceAttachmentsHint":
+    "Keep pages of one book, register or document together. Drop files here or paste images. Originals are kept unchanged. Changes are applied only when you save.",
+  "ui.removeAttachment": "Remove {name}",
+  "ui.sourceAttachmentLimit": "A source can contain up to {limit} files.",
+  "ui.attachmentsProcessing": "Wait for the files to finish loading.",
+  "ui.openFullImage": "Open image at full size",
+  "ui.cropCopy": "Crop a copy",
+  "ui.addFiles": "Add files",
+  "ui.attachedFilesCount": "Files: {count}",
+  "ui.ledgerSource": "Record book / ledger",
+  "ui.registerSource": "Register / record entry",
+  "ui.projectAttachmentLimit":
+    "A project can contain up to {limit} attached files.",
+  "ui.recordPhotosDocuments": "Photos and documents",
+  "ui.linkedProfileRecords": "Linked profile records",
+  "ui.sourceCollectionTitle": "Book, register or publication title",
+  "ui.sourceVolume": "Volume / issue",
+  "ui.sourcePages": "Pages / folios",
+  "ui.attachmentCaption": "Page number or photo description",
+  "ui.awardSource": "Award / award document",
+  "ui.journalEntrySource": "Journal / log entry",
+  "ui.deathNoticeSource": "Death notice / obituary",
 };

@@ -1,29 +1,29 @@
 import { normalizeModePurposes } from "../core/workspace-modes.js";
 import { isMedia } from "../core/attachments.js";
-import { evidenceTypes, types } from "../core/config.js";
-import { esc } from "../core/dom.js";
+import { $ } from "../core/dom.js";
 import { sourceEvidence, sourceVerificationConfig } from "../core/sources.js";
 import { state as appState } from "../core/state.js";
-import { bytes, safeUrl, uid } from "../core/utils.js";
+import { safeUrl, uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
-import { documentSubjects, hasFile } from "../model/evidence.js";
-import { doc, person, relation } from "../model/lookup.js";
+import { doc, relation } from "../model/lookup.js";
+import { profileRecordTarget } from "../model/source-record-links.js";
 import { profileRecordError } from "../model/profile-records.js";
-import { objectUrl } from "../services/blobs.js";
 import { commit } from "../services/history.js";
-import { documentIcon, sourceLink, statusBadge } from "../ui/components.js";
 import { openDialog } from "../ui/dialog.js";
 import { bindDocumentForm, renderDocumentForm } from "../ui/forms/document.js";
-import { icon } from "../ui/icons.js";
-import { recordValues } from "../ui/profile-fields.js";
+import { attachmentMime } from "../services/attachment-files.js";
+import { bindSourceAttachments } from "./source-attachment-editor.js";
 
-export async function editDocument(id = null, file = null, context = {}) {
+export async function editDocument(id = null, files = [], context = {}) {
   const old = id
     ? doc(id)
     : {
-        title: file?.name || "",
+        title: context.title || files[0]?.name || "",
+        attachments: [],
         type: context.type || "other",
-        status: context.status || (file ? "needs_review" : "requested"),
+        status:
+          context.status ||
+          (files.length || context.paste ? "needs_review" : "requested"),
         evidence: "unverified",
         people: context.personId ? [context.personId] : [],
         relations: context.relationId ? [context.relationId] : [],
@@ -37,7 +37,7 @@ export async function editDocument(id = null, file = null, context = {}) {
         accessedAt: "",
         language: "",
         transcription: "",
-        date: "",
+        date: context.date || "",
         notes: "",
       };
   if (!old) return;
@@ -58,20 +58,31 @@ export async function editDocument(id = null, file = null, context = {}) {
       old.evidence = "indirect";
   }
   const chosenType =
-    !id && isMedia(file?.mime)
+    !id && isMedia(attachmentMime(files[0] || { name: "", type: "" }))
       ? "recording"
-      : file?.mime.startsWith("image/") && old.type === "other" && !id
+      : attachmentMime(files[0] || { name: "", type: "" })?.startsWith(
+            "image/",
+          ) &&
+          old.type === "other" &&
+          !id
         ? "photo"
         : old.type;
   const chosenEvidence = sourceEvidence({ ...old, type: chosenType });
+  let attachments;
   const f = await openDialog(
     id ? translate("ui.editSource") : translate("ui.addSource"),
-    renderDocumentForm(file, old, chosenType, id, chosenEvidence),
+    renderDocumentForm(old, chosenType, chosenEvidence),
     {
       wide: true,
-      onOpen: bindDocumentForm,
+      kind: "source-edit",
+      onOpen: () => {
+        bindDocumentForm();
+        attachments = bindSourceAttachments($("#modalForm"), old, files);
+        if (context.paste) attachments.paste();
+      },
       validate: (f) =>
-        !f.get("title").trim()
+        attachments.error() ||
+        (!f.get("title").trim()
           ? translate("ui.enterASourceTitle")
           : f.get("sourceUrl") && !safeUrl(f.get("sourceUrl"))
             ? translate("ui.theLinkMustStartWithHttpsOrHttp")
@@ -83,12 +94,14 @@ export async function editDocument(id = null, file = null, context = {}) {
                     f.get("source-" + key) || "",
                   ]),
                 ),
-              ),
+              )),
     },
   );
+  attachments.dispose();
   if (!f) return;
   const data = {
     title: f.get("title").trim(),
+    attachments: attachments.entries,
     type: f.get("type"),
     status: f.get("status"),
     evidence: f.get("evidence"),
@@ -106,6 +119,9 @@ export async function editDocument(id = null, file = null, context = {}) {
   };
   for (const k of [
     "date",
+    "collectionTitle",
+    "volume",
+    "pages",
     "source",
     "repository",
     "reference",
@@ -124,89 +140,19 @@ export async function editDocument(id = null, file = null, context = {}) {
       d = {
         ...data,
         id: uid(),
-        assetId: "",
-        filename: "",
-        mime: "",
-        size: 0,
         x: 55 + (appState.project.documents.length % 3) * 265,
         y: 810 + Math.floor(appState.project.documents.length / 3) * 160,
       };
       appState.project.documents.push(d);
     }
-    if (file) {
-      d.assetId = uid();
-      appState.blobs.set(d.assetId, file.blob);
-      d.filename = file.name;
-      d.mime = file.mime;
-      d.size = file.blob.size;
+    if (context.recordTarget) {
+      const target = profileRecordTarget(
+        appState.project,
+        context.recordTarget,
+      );
+      if (target) target.record.sourceId = d.id;
     }
+    for (const [assetId, blob] of attachments.blobs)
+      appState.blobs.set(assetId, blob);
   });
-}
-export async function viewDocument(id) {
-  const d = doc(id);
-  if (!d) return;
-  const url = objectUrl(d.assetId),
-    external = sourceLink(d);
-  const preview =
-    d.mime?.startsWith("image/") && url
-      ? `<img class="file-view" src="${url}" alt="${esc(d.title)}">`
-      : d.mime === "application/pdf" && url
-        ? `<iframe class="pdf-view" src="${url}" title="${esc(d.title)}"></iframe>`
-        : isMedia(d.mime) && url
-          ? `<${d.mime.startsWith("audio/") ? "audio" : "video"} class="media-view" controls preload="metadata" src="${url}" aria-label="${esc(d.title)}"></${d.mime.startsWith("audio/") ? "audio" : "video"}>`
-          : `<div class="file-placeholder">${icon(documentIcon(d))}<p>${url ? translate("ui.fileAvailableToDownload") : d.status === "available" ? `${translate("ui.documentMarkedAsAvailable")}<br>${translate("ui.noDigitalCopyAttachedYet")}` : d.status === "requested" ? `${translate("ui.documentRequested2")}<br>${translate("ui.attachTheFileWhenReceived")}` : d.status === "not_found" ? `${translate("ui.documentNotFound")}<br>${translate("ui.recordDetailsOfYourSearch")}` : `${translate("ui.sourceDetailsSaved")}<br>${translate("ui.addAFileOrAnExternalLink")}`}</p><button type="button" class="btn" data-attach-document="${id}">${icon("upload")}${url ? translate("ui.replaceFile") : translate("ui.addFile")}</button></div>`;
-  const details = [
-    [translate("ui.documentType"), types()[d.type]],
-    [translate("ui.receivedFromSource"), d.source],
-    [translate("ui.archiveOrCollection"), d.repository],
-    [translate("ui.recordReference"), d.reference],
-    [translate("ui.documentDate"), d.date],
-    [translate("ui.accessedRequested"), d.accessedAt],
-    [translate("ui.language"), d.language],
-    ...recordValues(sourceVerificationConfig(), d),
-  ];
-  await openDialog(
-    d.title,
-    `<div class="source-view"><div class="source-preview">${preview}</div><div class="source-detail"><div class="pills">${statusBadge(d)}<span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${icon(d.evidence === "official" ? "badge" : "help")}${esc(evidenceTypes()[d.evidence])}</span><span class="pill">${icon("paperclip")}${hasFile(d) ? bytes(d.size) + ` ${translate("ui.fileAttached3")}` : translate("ui.noDigitalCopy2")}</span></div><h3>${icon("landmark")}${translate("ui.sourceProvenance")}</h3><dl>${details
-      .filter(([, v]) => v)
-      .map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`)
-      .join(
-        "",
-      )}</dl><div class="source-actions">${external ? `<a class="btn small" href="${esc(external)}" target="_blank" rel="noopener noreferrer">${icon("external")}${translate("ui.openSource")}</a>` : ""}<button type="button" class="btn small" data-copy-citation="${id}">${icon("copy")}${translate("ui.copyCitation")}</button></div><h3>${icon("user")}${translate("ui.documentAbout")}</h3><div class="source-binds">${
-      documentSubjects(d)
-        .map(person)
-        .filter(Boolean)
-        .map(
-          (p) =>
-            `<button type="button" data-source-person="${p.id}">${esc(p.name)}</button>`,
-        )
-        .join("") ||
-      `<span class="hint">${translate("ui.theDocumentSubjectHasNotBeenSpecified")}</span>`
-    }</div><h3>${icon("users")}${translate("ui.allRelatedPeople")}</h3><div class="source-binds">${
-      d.people
-        .map((pid) => person(pid))
-        .filter(Boolean)
-        .map(
-          (p) =>
-            `<button type="button" data-source-person="${p.id}">${esc(p.name)}</button>`,
-        )
-        .join("") ||
-      `<span class="hint">${translate("ui.noPeopleSelected")}</span>`
-    }</div>${
-      d.relations.length
-        ? `<h3>${icon("link")}${translate("ui.supportsRelationships")}</h3><div class="source-binds">${d.relations
-            .map((rid) => relation(rid))
-            .filter(Boolean)
-            .map(
-              (r) =>
-                `<button type="button" data-source-relation="${r.id}">${esc(person(r.from)?.name)} · ${esc(person(r.to)?.name)}</button>`,
-            )
-            .join("")}</div>`
-        : ""
-    }</div></div>${d.transcription ? `<p class="field-caption">${icon("scan")}${translate("ui.documentText")}</p><div class="transcription">${esc(d.transcription)}</div>` : ""}${d.notes ? `<p class="field-caption">${icon("notebook")}${translate("ui.notes")}</p><div class="note-box">${esc(d.notes)}</div>` : ""}<div class="source-footer">${url ? `<button type="button" class="btn" data-download-doc="${id}">${icon("download")}${translate("ui.downloadFile")}</button><button type="button" class="btn" data-attach-document="${id}">${icon("upload")}${translate("ui.replaceFile")}</button>` : ""}<button type="button" class="btn primary" data-edit-document="${id}">${icon("edit")}${translate("ui.edit")}</button>${url && d.mime.startsWith("image/") ? `<button type="button" class="btn" data-recrop="${id}">${icon("photo")}${translate("ui.crop")}</button>` : ""}<button type="button" class="btn danger" data-delete-document="${id}">${icon("trash")}</button></div>`,
-    {
-      wide: true,
-      footer: false,
-    },
-  );
 }

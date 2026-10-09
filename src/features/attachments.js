@@ -1,14 +1,18 @@
-import { mediaMime } from "../core/attachments.js";
+import { MAX_ATTACHMENT_FILES } from "../core/attachments.js";
 import { MAX_ATTACHMENT_BYTES } from "../core/config.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { uid } from "../core/utils.js";
+import { download, uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { storageTotal } from "../model/evidence.js";
-import { doc, person } from "../model/lookup.js";
+import { doc } from "../model/lookup.js";
+import {
+  MAX_SOURCE_FILES,
+  projectAttachmentIds,
+} from "../model/source-attachments.js";
 import { commit } from "../services/history.js";
 import { cropImage } from "../ui/cropper.js";
-import { toast } from "../ui/dialog.js";
+import { viewDocument } from "./document-view.js";
 import { editDocument } from "./documents.js";
 
 export function openFiles(context = {}) {
@@ -16,96 +20,48 @@ export function openFiles(context = {}) {
   $("#fileInput").value = "";
   $("#fileInput").click();
 }
+
 export async function processFiles(files, context = {}) {
-  for (const file of files) {
-    if (file.size > 50 * 1024 * 1024) {
-      toast(
-        file.name + translate("ui.fileExceeds50MbReduceItsSizeBefore"),
-        true,
-      );
-      continue;
-    }
-    try {
-      let blob = file,
-        mime = file.type;
-      if (["image/jpeg", "image/png", "image/webp"].includes(mime)) {
-        blob = await cropImage(file, false);
-        if (!blob) continue;
-        mime = blob.type;
-      } else if (mime === "application/pdf" || /\.pdf$/i.test(file.name)) {
-        mime = "application/pdf";
-        if (file.size > 12 * 1024 * 1024) {
-          toast(translate("ui.pdfsMustBeUnder12MbAddLarge"), true);
-          continue;
-        }
-      } else if (/\.(txt|docx)$/i.test(file.name)) {
-        if (file.size > 5 * 1024 * 1024) {
-          toast(translate("ui.textDocumentsMustBeUnder5Mb"), true);
-          continue;
-        }
-        mime = /\.txt$/i.test(file.name)
-          ? "text/plain"
-          : "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-      } else if (mediaMime(file)) {
-        mime = mediaMime(file);
-        if (file.size > 20 * 1024 * 1024) {
-          toast(translate("ui.recordingLimit"), true);
-          continue;
-        }
-      } else {
-        toast(translate("ui.attachmentFormats"), true);
-        continue;
-      }
-      if (blob.type !== mime) blob = new Blob([blob], { type: mime });
-      const current = context.documentId ? doc(context.documentId) : null;
-      const reusable =
-        current?.assetId &&
-        !appState.project.documents.some(
-          (d) => d.id !== current.id && d.assetId === current.assetId,
-        ) &&
-        !appState.project.people.some((p) => p.avatarId === current.assetId)
-          ? appState.blobs.get(current.assetId)?.size || 0
-          : 0;
-      if (storageTotal() - reusable + blob.size > MAX_ATTACHMENT_BYTES) {
-        toast(
-          translate("ui.attachmentsAreApproaching100MbSaveAnArchive"),
-          true,
-        );
-        continue;
-      }
-      await editDocument(
-        context.documentId || null,
-        {
-          name: file.name.replace(
-            /\.(jpg|jpeg|png|webp)$/i,
-            blob.type === "image/webp" ? ".webp" : ".jpg",
-          ),
-          mime,
-          blob,
-          originalSize: file.size,
-        },
-        context,
-      );
-    } catch (e) {
-      toast(
-        `${translate("ui.couldNotRead")} ` + file.name + ". " + e.message,
-        true,
-      );
-    }
-  }
+  if (files.length)
+    await editDocument(context.documentId || null, files, context);
 }
-export async function setPortrait(id, file) {
-  try {
-    const blob = await cropImage(file, true);
-    if (!blob) return;
-    if (storageTotal() + blob.size > MAX_ATTACHMENT_BYTES)
-      throw Error(translate("ui.attachmentLimitExceeded"));
-    commit(() => {
-      const aid = uid();
-      appState.blobs.set(aid, blob);
-      person(id).avatarId = aid;
+
+export function downloadAttachment(sourceId, attachmentId) {
+  const source = doc(sourceId);
+  const file =
+    source?.attachments.find((file) => file.assetId === attachmentId) ||
+    source?.attachments[0];
+  if (file && appState.blobs.has(file.assetId))
+    download(appState.blobs.get(file.assetId), file.filename || source.title);
+}
+
+export async function cropSourceCopy(sourceId, attachmentId) {
+  const source = doc(sourceId),
+    original = source?.attachments.find(
+      (file) => file.assetId === attachmentId,
+    );
+  if (!original || !appState.blobs.has(original.assetId)) return;
+  if (source.attachments.length >= MAX_SOURCE_FILES)
+    throw Error(
+      translate("ui.sourceAttachmentLimit", { limit: MAX_SOURCE_FILES }),
+    );
+  if (projectAttachmentIds(appState.project).size >= MAX_ATTACHMENT_FILES)
+    throw Error(
+      translate("ui.projectAttachmentLimit", { limit: MAX_ATTACHMENT_FILES }),
+    );
+  const blob = await cropImage(appState.blobs.get(original.assetId), false);
+  if (!blob) return;
+  if (storageTotal() + blob.size > MAX_ATTACHMENT_BYTES)
+    throw Error(translate("ui.attachmentLimitExceeded"));
+  const assetId = uid();
+  commit(() => {
+    appState.blobs.set(assetId, blob);
+    source.attachments.push({
+      assetId,
+      filename: original.filename.replace(/\.[^.]*$/, "") + "-copy.webp",
+      mime: blob.type,
+      size: blob.size,
     });
-  } catch (e) {
-    toast(e.message, true);
-  }
+  });
+  await viewDocument(sourceId);
 }

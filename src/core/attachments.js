@@ -1,3 +1,4 @@
+export const MAX_ATTACHMENT_FILES = 2400;
 export const attachmentExtensions = {
   "image/jpeg": "jpg",
   "image/png": "png",

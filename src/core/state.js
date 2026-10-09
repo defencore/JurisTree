@@ -23,7 +23,6 @@ export const state = {
   saveStatus: "",
   saveSerial: Promise.resolve(),
   fileContext: {},
-  portraitPerson: null,
   toastTimer: undefined,
   modalResolve: null,
   docFilter: "",

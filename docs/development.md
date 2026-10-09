@@ -107,7 +107,10 @@ src/
   features/                Controllers for user workflows; import UI and model modules
     profile-workspace.js   Complete profile navigation
     workspace-session.js   Project activation and draft replacement
-    attachments.js         Upload, crop and portrait workflows
+    attachments.js         Batched source uploads, downloads and cropped copies
+    portrait.js            File/clipboard portrait workflow
+    source-attachment-editor.js  Staged multi-file source editing
+    document-view.js       Source metadata and attachment gallery
     archive.js             Archive and diagram import/export workflows
     delete.js              Entity deletion and reference cleanup
     graph-analysis.js      Apply analysis, visibility presets and selection commands
@@ -224,3 +227,7 @@ All catalogs must contain the same keys. Missing messages fail explicitly instea
 Translate interface messages before inserting user data. Names, notes, source titles and imported content are never machine-translated. Language selection is stored separately from project data; changing it re-renders the interface without replacing the project.
 
 Write documentation and code comments in English.
+
+Source records use `attachments: [{ assetId, filename, caption, mime, size }]`. Binary files live in the shared blob store and ZIP attachment manifest. Import normalization converts older single-file records once; runtime consumers use only the attachment list. Source edits stage binary additions and removals until Save. Clipboard reads are initiated by a user action; paste events provide images without reading unrelated clipboard text. Originals are stored unchanged and cropping creates an additional file.
+
+Profile record attachments reuse the source model: `sourceId` links the saved record to its source, which can contain several photos/files. Sources link back to profile records by deriving these references, avoiding duplicate attachment ownership. Book/publication metadata (`collectionTitle`, `volume`, `pages`) and per-file captions remain optional.

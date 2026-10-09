@@ -99,7 +99,9 @@ export function buildPersonFilterFacts(project, today, files = new Map()) {
         (d) => d.status === "available" && d.verification !== "refuted",
       ).length,
       sources: sources.length,
-      files: sources.filter((d) => d.assetId && files.has(d.assetId)).length,
+      files: sources.filter((d) =>
+        d.attachments.some((file) => files.has(file.assetId)),
+      ).length,
       official: sources.filter(isOfficial).length,
       pending: records.filter(pending).length + sources.filter(pending).length,
       children: children.get(p.id).size,

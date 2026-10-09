@@ -307,7 +307,13 @@ README.txt                 English archive instructions
 
 The canonical archive model is `format: "juristree", version: 1`. This implementation accepts JurisTree archives and JSON with that schema; it does not include a migration adapter for the original prototype's `rodovid` format. JSON describes the model but cannot restore binary files on its own. PNG and SVG are image exports, not editable backups.
 
-Images are cropped and compressed locally; their untouched originals remain outside the application. PDFs, TXT, DOCX, audio and video attachments retain their original bytes. DOCX contents are not parsed. External source links support HTTP and HTTPS only.
+A source can contain up to 200 files, including pages of a book, ledger or register, evidence photos and document scans. Choose multiple files, drop them into the attachment area, or use **Paste photos**. **Ctrl+V / ⌘V** also inserts copied images in the source form; on a phone, touch and hold the paste area and choose Paste. Ordinary text pasting in notes and other fields remains unchanged. Portraits accept pasted images through the person's **Photo** button.
+
+In the complete profile or autobiography, each saved record has a **Photos and documents** button. It opens the linked source, or creates one linked to both the person and that exact record. For a service award this can hold photos of the medal, its reverse and the certificate; for a death record it can hold a notice or obituary. A source may also link to several people, relationships and profile records.
+
+Use **Record book / ledger**, **Register / record entry**, **Award / award document**, **Journal / log entry** or **Death notice / obituary** to categorize the material. Record the book or publication title, volume or issue and pages separately from the archive reference. Each image can have an optional page number or description while retaining its original filename.
+
+Source attachments retain their original bytes. Use thumbnails to switch pages, open images at full size, download individual files or create an additional cropped copy. The original remains attached. Additions and removals in the source form are applied only after Save; Cancel discards them. All saved files are included in browser drafts and ZIP backups. Earlier single-file archives are normalized into a one-item attachment list on import. Portraits are cropped and compressed locally. DOCX contents are not parsed. External source links support HTTP and HTTPS only.
 
 At the draft/archive boundary, earlier detention/imprisonment/release entries move from legal records to custody; legal timeline entries become court records with one-time dates; study entries from the former combined work/study section become education records. IDs, periods, sources and attribution are retained. Additional work/study details are retained in notes. The canonical editor and collector then use only the dedicated sections; importing the same archive again does not duplicate entries.
 
@@ -321,6 +327,9 @@ Import validation checks IDs, collection limits, relationship endpoints, generat
 | Family groups               |    150 |
 | Property records            |    500 |
 | Records per profile section |    200 |
+| Files per source            |    200 |
+| Files per project           |  2,400 |
+| Original photo              |  50 MB |
 | Total attachments           | 100 MB |
 | PDF attachment              |  12 MB |
 | TXT or DOCX attachment      |   5 MB |

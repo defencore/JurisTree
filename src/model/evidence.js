@@ -174,7 +174,7 @@ export function storageTotal() {
   return usedBlobs().reduce((s, id) => s + appState.blobs.get(id).size, 0);
 }
 export function hasFile(d) {
-  return !!d.assetId && appState.blobs.has(d.assetId);
+  return d.attachments.some((file) => appState.blobs.has(file.assetId));
 }
 export function documentSubjects(d) {
   if (Array.isArray(d.subjectIds)) return d.subjectIds;

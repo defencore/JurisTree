@@ -386,8 +386,6 @@ export default {
   "ui.aDocumentCanBeAvailableWithoutADigital":
     "Документ може бути наявним без цифрової копії. Статус перевірки та характер доказу показані окремо.",
   "ui.addDocumentsOrPhotographs": "Додайте документи або фотографії",
-  "ui.dropFilesPhotosAreCompressedPdfsUpTo":
-    "Перетягніть файли · фото стискаються · PDF до 12 МБ",
   "ui.chooseFiles": "Вибрати файли",
   "ui.nameArchiveRecordNumberOrText": "Ім’я, архів, номер запису або текст…",
   "ui.searchSources": "Пошук джерел",
@@ -569,8 +567,8 @@ export default {
   "ui.crop": "Обрізати",
   "ui.fileExceeds50MbReduceItsSizeBefore":
     ": файл більший за 50 МБ. Зменште його перед додаванням.",
-  "ui.pdfsMustBeUnder12MbAddLarge":
-    "PDF має бути до 12 МБ. Для великих сканів додайте сторінки як фото — вони будуть стиснуті.",
+  "ui.pdfAttachmentSizeLimit":
+    "PDF має бути до 12 МБ. Виберіть менший файл або додайте зображення його сторінок.",
   "ui.textDocumentsMustBeUnder5Mb": "Текстовий документ має бути до 5 МБ.",
   "ui.supportedJpgPngWebpPdfTxtAndDocx":
     "Підтримуються JPG, PNG, WebP, PDF, TXT та DOCX.",
@@ -1395,7 +1393,7 @@ export default {
   "ui.sourceEvidenceHint":
     "Фото, листи, свідчення й записи є непрямими доказами. Чутки залишаються непідтвердженими.",
   "ui.attachmentUploadHint":
-    "Фото стискаються; PDF до 12 МБ, текст до 5 МБ, аудіо / відео до 20 МБ.",
+    "Оригінали фото до 50 МБ; PDF до 12 МБ, текст до 5 МБ, аудіо / відео до 20 МБ.",
   "ui.active": "Активний",
   "ui.addFavorite": "Закріпити для швидкого доступу",
   "ui.removeFavorite": "Відкріпити особу",
@@ -2500,4 +2498,37 @@ export default {
   "ui.mapViewRestored": "Відновлено «{name}».",
   "ui.mapViewSaved": "Збережено «{name}».",
   "ui.invalidMapViews": "Некоректні збережені вигляди схеми в архіві.",
+  "ui.sourceAttachments": "Файли та фотографії",
+  "ui.pastePhotos": "Вставити фото",
+  "ui.pastePhotoHere": "Поле для вставлення фото",
+  "ui.clipboardPasteHint":
+    "Натисніть тут і Ctrl+V / ⌘V або «Вставити» на телефоні.",
+  "ui.clipboardPasteFallback":
+    "Скористайтеся Ctrl+V / ⌘V у полі вставлення або виберіть файли. На телефоні затисніть поле й оберіть «Вставити».",
+  "ui.clipboardNoImage":
+    "У буфері немає фото. Спочатку скопіюйте зображення або знімок екрана.",
+  "ui.portraitPasteHint":
+    "Виберіть або вставте портрет, потім виділіть потрібну область.",
+  "ui.sourceAttachmentsHint":
+    "Зберігайте сторінки однієї книги, реєстру чи документа разом. Перетягніть сюди файли або вставте фото. Оригінали зберігаються без змін. Зміни застосовуються після збереження.",
+  "ui.removeAttachment": "Прибрати {name}",
+  "ui.sourceAttachmentLimit": "Одне джерело може містити до {limit} файлів.",
+  "ui.attachmentsProcessing": "Дочекайтеся завершення додавання файлів.",
+  "ui.openFullImage": "Відкрити зображення у повному розмірі",
+  "ui.cropCopy": "Обрізати копію",
+  "ui.addFiles": "Додати файли",
+  "ui.attachedFilesCount": "Файлів: {count}",
+  "ui.ledgerSource": "Книга обліку",
+  "ui.registerSource": "Реєстр / реєстровий запис",
+  "ui.projectAttachmentLimit":
+    "Проєкт може містити до {limit} вкладених файлів.",
+  "ui.recordPhotosDocuments": "Фото та документи",
+  "ui.linkedProfileRecords": "Пов’язані записи профілю",
+  "ui.sourceCollectionTitle": "Назва книги, реєстру чи видання",
+  "ui.sourceVolume": "Том / випуск",
+  "ui.sourcePages": "Сторінки / аркуші",
+  "ui.attachmentCaption": "Номер сторінки або опис фото",
+  "ui.awardSource": "Нагорода / документ про нагородження",
+  "ui.journalEntrySource": "Запис із журналу",
+  "ui.deathNoticeSource": "Повідомлення про смерть / некролог",
 };

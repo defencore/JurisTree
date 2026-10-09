@@ -62,7 +62,8 @@ export async function exportArchive(
 
 Open JurisTree, choose Import and select this ZIP file.
 The archive contains tree.json and all attached files.
-Photos are prepared copies; other documents retain their original contents.
+Source attachments retain their original contents. Cropped images are additional copies.
+Portraits are prepared copies.
 Property shares are a user plan, not a legal determination.
 `,
     );
@@ -166,7 +167,7 @@ export function checkZip(buffer) {
       nl = v.getUint16(at + 28, true),
       el = v.getUint16(at + 30, true),
       cl = v.getUint16(at + 32, true);
-    if (size > 20 * 1048576)
+    if (size > 50 * 1048576)
       throw Error(translate("ui.anArchiveEntryIsTooLarge"));
     if (v.getUint16(at + 8, true) & 1)
       throw Error(translate("ui.encryptedZipArchivesAreNotSupported"));
@@ -248,11 +249,11 @@ export async function importFile(file, { fromStart = false } = {}) {
       )
         throw Error(translate("ui.personPhotoMissing"));
     for (const d of imported.documents)
-      if (d.assetId) {
-        if (!files.has(d.assetId))
+      for (const file of d.attachments) {
+        if (!files.has(file.assetId))
           throw Error(translate("ui.documentAttachmentMissing"));
-        d.mime = files.get(d.assetId).type;
-        d.size = files.get(d.assetId).size;
+        file.mime = files.get(file.assetId).type;
+        file.size = files.get(file.assetId).size;
       }
     for (const [id, blob] of [...files])
       if (appState.blobs.has(id)) {
@@ -263,7 +264,9 @@ export async function importFile(file, { fromStart = false } = {}) {
           if (p.avatarId === id) p.avatarId = newId;
         });
         imported.documents.forEach((d) => {
-          if (d.assetId === id) d.assetId = newId;
+          d.attachments.forEach((file) => {
+            if (file.assetId === id) file.assetId = newId;
+          });
         });
       }
     const summary = `<div class="upload-info"><b>${esc(imported.title)}</b><br>${imported.people.length} ${translate("ui.people")} ${imported.relations.length} ${translate("ui.relationships2")} ${imported.documents.length} ${translate("ui.sources")}</div>`;

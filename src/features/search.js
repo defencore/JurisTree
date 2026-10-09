@@ -4,7 +4,7 @@ import { fit } from "../graph/camera.js";
 import { resetAnalysis } from "../model/graph-view.js";
 import { render, select } from "../ui/render.js";
 import { closeSearch, renderSearch } from "../ui/search.js";
-import { viewDocument } from "./documents.js";
+import { viewDocument } from "./document-view.js";
 import { showPersonOnMap } from "./person-navigation.js";
 import { openPropertyHistory } from "./property-history.js";
 

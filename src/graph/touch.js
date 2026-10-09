@@ -1,6 +1,6 @@
 import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { state as appState } from "../core/state.js";
-import { viewDocument } from "../features/documents.js";
+import { viewDocument } from "../features/document-view.js";
 import { toggleGroup } from "../features/groups.js";
 import { editProperty } from "../features/property.js";
 import { person } from "../model/lookup.js";

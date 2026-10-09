@@ -2,7 +2,7 @@ import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { isMobileLayout } from "../core/viewport.js";
-import { viewDocument } from "../features/documents.js";
+import { viewDocument } from "../features/document-view.js";
 import { toggleGraphSelection } from "../features/graph-analysis.js";
 import { toggleGroup } from "../features/groups.js";
 import { editProperty } from "../features/property.js";

@@ -7,6 +7,7 @@ import {
 import { translate } from "../i18n/index.js";
 import { displayDate } from "../model/dates.js";
 import { profileScope } from "../model/profile-scope.js";
+import { recordAttachmentsButton } from "./record-attachments.js";
 import { profileOverviewDetails } from "./profile-overview.js";
 import { sourceChips } from "./components.js";
 import { icon } from "./icons.js";
@@ -16,10 +17,11 @@ import {
   recordReferenceActions,
 } from "./profile-fields.js";
 
-export function recordDetails(section, r) {
+export function recordDetails(section, r, personId) {
+  const attachments = recordAttachmentsButton(personId, section, r);
   const cfg = recordConfigs()[section];
   if (cfg.extended)
-    return `<div class="biography-record">${fields(recordValues(cfg, r))}${r.sourceId ? sourceChips([r.sourceId]) : ""}${recordReferenceActions(cfg, r)}</div>`;
+    return `<div class="biography-record">${fields(recordValues(cfg, r))}${r.sourceId ? sourceChips([r.sourceId]) : ""}${recordReferenceActions(cfg, r)}${attachments}</div>`;
   const ic =
     section === "pets"
       ? {
@@ -63,7 +65,7 @@ export function recordDetails(section, r) {
     .map((l) => `<small>${section === "contacts" ? l : esc(l)}</small>`)
     .join(
       "",
-    )}${r.notes ? `<p>${esc(r.notes)}</p>` : ""}${r.sourceId ? sourceChips([r.sourceId]) : ""}</div></div>`;
+    )}${r.notes ? `<p>${esc(r.notes)}</p>` : ""}${r.sourceId ? sourceChips([r.sourceId]) : ""}${attachments}</div></div>`;
 }
 export function renderPersonDetails(p, { complete = false } = {}) {
   const renderSection = ({ key: section, search }) => {
@@ -73,7 +75,7 @@ export function renderPersonDetails(p, { complete = false } = {}) {
       const cfg = recordConfigs()[section];
       body =
         profileOverviewDetails(cfg, p) +
-        (p[cfg.key] || []).map((r) => recordDetails(section, r)).join("");
+        (p[cfg.key] || []).map((r) => recordDetails(section, r, p.id)).join("");
     } else if (section === "biography")
       body =
         (p.biography ? `<div class="note-box">${esc(p.biography)}</div>` : "") +

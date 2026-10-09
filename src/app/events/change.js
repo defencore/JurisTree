@@ -3,7 +3,7 @@ import { eventDomains } from "../../core/event-domains.js";
 import { state as appState } from "../../core/state.js";
 import { clone } from "../../core/utils.js";
 import { importFile } from "../../features/archive.js";
-import { processFiles, setPortrait } from "../../features/attachments.js";
+import { processFiles } from "../../features/attachments.js";
 import {
   changeCalendarMonth,
   changeCalendarYear,
@@ -105,8 +105,6 @@ export function bindChangeEvents() {
     }
     if (t.id === "fileInput")
       processFiles([...t.files], clone(appState.fileContext));
-    if (t.id === "portraitInput" && t.files[0])
-      setPortrait(appState.portraitPerson, t.files[0]);
     if (t.id === "importInput" && t.files[0]) {
       const fromStart = appState.pendingStartImport;
       appState.pendingStartImport = false;

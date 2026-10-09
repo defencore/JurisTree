@@ -20,10 +20,7 @@ export function personRecord([id, name, birth, death, gender], group) {
 
 export function sourceRecord(record) {
   return {
-    assetId: "",
-    filename: "",
-    mime: "",
-    size: 0,
+    attachments: [],
     sourceUrl: "",
     accessedAt: "",
     language: "English",
@@ -33,6 +30,9 @@ export function sourceRecord(record) {
     source: "Civil register extract",
     repository: "Brookfield County Archives",
     reference: "",
+    collectionTitle: "",
+    volume: "",
+    pages: "",
     notes: "",
     verification: "corroborated",
     purposes: [],

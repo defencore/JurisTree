@@ -7,7 +7,9 @@ import { bindChangeEvents } from "./events/change.js";
 import { bindInputEvents } from "./events/input.js";
 import { bindResizeEvents } from "../graph/interaction.js";
 import { bindLauncherEvents } from "../features/launcher.js";
+import { bindClipboardEvents } from "./events/clipboard.js";
 export function bindEvents() {
+  bindClipboardEvents();
   bindUploadsEvents();
   bindDialogEvents();
   bindClickEvents();

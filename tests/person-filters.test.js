@@ -84,7 +84,8 @@ function fixture() {
           from: "2027",
         },
         {
-          id: "refuted",
+          attachments: [],
+      id: "refuted",
           value: "9000",
           sharePercent: "100",
           currency: "USD",
@@ -161,15 +162,19 @@ function fixture() {
       status: "available",
       evidence: "official",
       verification: "corroborated",
-      assetId: "scan",
+      attachments: [
+        { assetId: "scan", filename: "scan.png", mime: "image/png", size: 1 },
+      ],
     },
     {
+      attachments: [],
       id: "requested",
       people: ["young"],
       status: "requested",
       evidence: "official",
     },
     {
+      attachments: [],
       id: "refuted",
       people: ["young"],
       status: "available",
@@ -177,6 +182,7 @@ function fixture() {
       verification: "refuted",
     },
     {
+      attachments: [],
       id: "review",
       people: ["adult"],
       status: "needs_review",

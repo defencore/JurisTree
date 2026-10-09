@@ -25,6 +25,7 @@ import {
   recordReferenceActions,
 } from "./profile-fields.js";
 import { propertyHistoryReport } from "./property-history.js";
+import { recordAttachmentsButton } from "./record-attachments.js";
 import { profileOverviewDetails } from "./profile-overview.js";
 
 function section(label, symbol, body, key) {
@@ -32,14 +33,16 @@ function section(label, symbol, body, key) {
   return `<section class="biography-section" data-biography-section="${key}"><h3>${icon(symbol)}${esc(label)}</h3>${body}</section>`;
 }
 
-function record(sectionKey, item) {
+function record(sectionKey, item, personId) {
   const cfg = recordConfigs()[sectionKey];
   const values = recordValues(cfg, item);
   const body =
     fields(values) +
     sourceChips(item.sourceId ? [item.sourceId] : []) +
     recordReferenceActions(cfg, item);
-  return body ? `<article class="biography-record">${body}</article>` : "";
+  return body
+    ? `<article class="biography-record">${body}${recordAttachmentsButton(personId, sectionKey, item)}</article>`
+    : "";
 }
 
 function source(d) {
@@ -53,11 +56,19 @@ function source(d) {
       [translate("ui.receivedFromSource"), d.source],
       [translate("ui.archiveOrCollection"), d.repository],
       [translate("ui.recordReference"), d.reference],
+      [translate("ui.sourceCollectionTitle"), d.collectionTitle],
+      [translate("ui.sourceVolume"), d.volume],
+      [translate("ui.sourcePages"), d.pages],
       [translate("ui.accessedRequested"), displayDate(d.accessedAt)],
       [translate("ui.language"), d.language],
       [
         translate("ui.file"),
-        d.filename ? `${d.filename}${d.size ? ` · ${bytes(d.size)}` : ""}` : "",
+        d.attachments
+          .map(
+            (file) =>
+              `${file.caption ? file.caption + " · " : ""}${file.filename}${file.size ? ` · ${bytes(file.size)}` : ""}`,
+          )
+          .join("\n"),
       ],
       [translate("ui.documentText"), d.transcription],
       [translate("ui.notes"), d.notes],
@@ -134,7 +145,7 @@ export function renderBiography({
         label,
         symbol,
         profileOverviewDetails(cfg, p) +
-          (p[cfg.key] || []).map((item) => record(key, item)).join(""),
+          (p[cfg.key] || []).map((item) => record(key, item, p.id)).join(""),
         key,
       );
   }
@@ -144,7 +155,7 @@ export function renderBiography({
     testimony
       .map(
         ({ personId, personName, record: item }) =>
-          `<div class="biography-record"><h4>${esc(personName)}</h4>${record("witnesses", item)}<button type="button" class="btn small" data-biography="${personId}">${icon("book")}${translate("ui.autobiography")}</button></div>`,
+          `<div class="biography-record"><h4>${esc(personName)}</h4>${record("witnesses", item, personId)}<button type="button" class="btn small" data-biography="${personId}">${icon("book")}${translate("ui.autobiography")}</button></div>`,
       )
       .join(""),
     "testimony",

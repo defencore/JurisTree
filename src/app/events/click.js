@@ -1,14 +1,18 @@
 import { $ } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
-import { download, uid } from "../../core/utils.js";
 import { isMobileLayout } from "../../core/viewport.js";
 import { exportArchive, exportImage } from "../../features/archive.js";
-import { openFiles } from "../../features/attachments.js";
+import {
+  openFiles,
+  downloadAttachment,
+  cropSourceCopy,
+} from "../../features/attachments.js";
 import { openBiographyReview } from "../../features/biography-review.js";
 import { viewBiography } from "../../features/biography.js";
 import { changeCalendarMonth } from "../../features/calendar.js";
 import { confirmDelete } from "../../features/delete.js";
-import { editDocument, viewDocument } from "../../features/documents.js";
+import { editDocument } from "../../features/documents.js";
+import { viewDocument } from "../../features/document-view.js";
 import { deleteFamilyEvent, editFamilyEvent } from "../../features/events.js";
 import { toggleFavorite } from "../../features/favorites.js";
 import {
@@ -28,6 +32,7 @@ import {
   closeFullProfile,
   openFullProfile,
 } from "../../features/profile-workspace.js";
+import { editRecordAttachments } from "../../features/record-attachments.js";
 import { editPerson } from "../../features/profiles.js";
 import {
   closePropertyHistory,
@@ -41,10 +46,10 @@ import { openSearchResult } from "../../features/search.js";
 import { fit, focusPerson } from "../../graph/camera.js";
 import { translate } from "../../i18n/index.js";
 import { isOfficial, linkedDocs } from "../../model/evidence.js";
-import { doc } from "../../model/lookup.js";
 import { commit } from "../../services/history.js";
 import { copyCitation } from "../../ui/components.js";
-import { cropImage } from "../../ui/cropper.js";
+import { openPortraitPicker } from "../../features/portrait.js";
+import { selectedSourceContext } from "./clipboard.js";
 import { closeModal, toast } from "../../ui/dialog.js";
 import { renderProfileRecord } from "../../ui/forms/profile-record.js";
 import { allocationRow } from "../../ui/forms/property.js";
@@ -72,7 +77,7 @@ export function bindClickEvents() {
   });
   document.addEventListener("click", async (e) => {
     const b = e.target.closest(
-      "button,[data-favorite],[data-person],[data-biography],[data-document],[data-relation],[data-edge],[data-gap-kind],[data-required],[data-toggle-group]",
+      "button,#dropZone,[data-favorite],[data-person],[data-biography],[data-document],[data-relation],[data-edge],[data-gap-kind],[data-required],[data-toggle-group]",
     );
     if (!b) return;
     try {
@@ -97,7 +102,7 @@ export function bindClickEvents() {
         return;
       }
       if (b.dataset.profileReference) {
-        await editDocument(null, null, {
+        await editDocument(null, [], {
           personId: b.dataset.profileReference,
         });
         return;
@@ -436,10 +441,28 @@ export function bindClickEvents() {
           await confirmDelete(k.toLowerCase(), b.dataset["delete" + k]);
           return;
         }
+      if (b.dataset.recordAttachments) {
+        await editRecordAttachments({
+          personId: b.dataset.attachmentPerson,
+          section: b.dataset.attachmentSection,
+          recordId: b.dataset.recordAttachments,
+        });
+        return;
+      }
+      if (b.hasAttribute("data-paste-source")) {
+        await editDocument(b.dataset.pasteSource || null, [], {
+          ...selectedSourceContext(),
+          type: "photo",
+          paste: true,
+        });
+        return;
+      }
+      if (b.dataset.addSourceFiles) {
+        await editDocument(b.dataset.addSourceFiles);
+        return;
+      }
       if (b.dataset.portrait) {
-        appState.portraitPerson = b.dataset.portrait;
-        $("#portraitInput").value = "";
-        $("#portraitInput").click();
+        await openPortraitPicker(b.dataset.portrait);
         return;
       }
       if (b.dataset.addFor) {
@@ -499,23 +522,11 @@ export function bindClickEvents() {
         return;
       }
       if (b.dataset.downloadDoc) {
-        const d = doc(b.dataset.downloadDoc);
-        download(appState.blobs.get(d.assetId), d.filename || d.title);
+        downloadAttachment(b.dataset.downloadDoc, b.dataset.attachmentId);
         return;
       }
-      if (b.dataset.recrop) {
-        const d = doc(b.dataset.recrop);
-        closeModal();
-        const blob = await cropImage(appState.blobs.get(d.assetId), false);
-        if (blob)
-          commit(() => {
-            const id = uid();
-            appState.blobs.set(id, blob);
-            d.assetId = id;
-            d.mime = blob.type;
-            d.size = blob.size;
-            d.filename = d.filename.replace(/\.[^.]*$/, ".webp");
-          });
+      if (b.dataset.cropSource) {
+        await cropSourceCopy(b.dataset.cropSource, b.dataset.attachmentId);
         return;
       }
       if (b.id === "dropZone") openFiles();
