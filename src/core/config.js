@@ -147,6 +147,7 @@ export function recordConfigs() {
           translate("ui.species"),
           "select",
           {
+            unspecified: translate("ui.notSpecified"),
             dog: translate("ui.dog"),
             cat: translate("ui.cat"),
             bird: translate("ui.bird"),
@@ -186,7 +187,7 @@ export function familyEventTypes() {
     civil: [translate("ui.civilRecords"), "landmark"],
     medical: [translate("ui.medicalHistory"), "heartPulse"],
     pregnancy: [translate("ui.pregnancyHistory"), "baby"],
-    deathDetails: [translate("ui.deathCircumstances"), "heart"],
+    deathDetails: [translate("ui.deathAndBurial"), "heart"],
     military: [translate("ui.militaryHistory"), "shield"],
     testimony: [translate("ui.witnessesAndTestimony"), "users"],
     weapon: [translate("ui.weaponOwnership"), "shield"],

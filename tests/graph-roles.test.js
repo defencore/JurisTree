@@ -158,11 +158,10 @@ test("all five demo cousin degrees and adoption qualifiers follow the interface 
   assert.equal(graphRole("p8").label, "Wife");
 });
 
-test("unverified, refuted and former links do not establish family roles", () => {
+test("unverified, refuted and ended social links do not establish family roles", () => {
   for (const properties of [
     { type: "parent", verification: "unverified" },
     { type: "parent", verification: "refuted" },
-    { type: "spouse", status: "divorced" },
     { type: "partner", status: "ended" },
   ]) {
     family();

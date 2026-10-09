@@ -1,4 +1,5 @@
 import { profileReferenceLabel } from "./profile-references.js";
+import { relationshipLabel } from "./relationship-labels.js";
 import {
   evidenceTypes,
   recordConfigs,
@@ -255,7 +256,7 @@ export function buildSearchIndex(project) {
       "relation",
       r,
       [people.get(r.from)?.name, people.get(r.to)?.name].join(" ↔ "),
-      relTypes()[r.type],
+      relationshipLabel(r),
       describeRelation(r),
       { type: "relation " + r.type + " " + labels(relTypes()[r.type]) },
     );

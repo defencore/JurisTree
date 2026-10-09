@@ -17,6 +17,7 @@ import {
   runGraphAnalysis,
 } from "../features/graph-tools.js";
 import { editGroup } from "../features/groups.js";
+import { openSavedMapViews } from "../features/map-views.js";
 import {
   backupLaunchDraft,
   continueDraft,
@@ -126,6 +127,7 @@ export async function handleAction(action) {
     "focus-person": () => focusPerson(),
     "mobile-tools": () => {
       const open = document.body.classList.toggle("mobile-tools-open");
+      if (open) $("#inspector").classList.remove("open");
       $('[data-action="mobile-tools"]').setAttribute(
         "aria-expanded",
         String(open),
@@ -139,6 +141,7 @@ export async function handleAction(action) {
     "graph-search": () => graphAnalysisDialog(),
     "graph-help": graphHelp,
     "graph-filters": editGraphFilters,
+    "saved-map-views": openSavedMapViews,
     "run-graph-analysis": runGraphAnalysis,
     "selection-mode": () => {
       appState.selectionMode = !appState.selectionMode;

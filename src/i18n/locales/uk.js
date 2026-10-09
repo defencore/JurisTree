@@ -1352,7 +1352,7 @@ export default {
   "ui.recording": "Аудіо / відеозапис",
   "ui.reportedStatement": "Зміст повідомлення",
   "ui.verificationStatus": "Стан перевірки",
-  "ui.pendingVerification": "Не підтверджено — потребує перевірки",
+  "ui.pendingVerification": "Не підтверджено",
   "ui.corroborated": "Підтверджено",
   "ui.refuted": "Спростовано",
   "ui.inconclusive": "Недостатньо даних",
@@ -1377,6 +1377,9 @@ export default {
   "ui.endedRelationship": "Завершені",
   "ui.separated": "Живуть окремо",
   "ui.divorced": "Розлучені",
+  "ui.formerWife": "Колишня дружина",
+  "ui.formerHusband": "Колишній чоловік",
+  "ui.formerSpouse": "Колишнє подружжя",
   "ui.widowed": "Овдовілий / овдовіла",
   "ui.relationshipDuration": "Характер тривалості",
   "ui.longTerm": "Тривалі",
@@ -1717,8 +1720,6 @@ export default {
   "ui.circumstances": "Обставини",
   "ui.ongoingPregnancyEndError":
     "Для вагітності, що триває, не можна вказати дату завершення.",
-  "ui.deathCircumstances": "Обставини смерті",
-  "ui.deathRecord": "Запис про обставини смерті",
   "ui.deathCategory": "Зазначена категорія смерті",
   "ui.naturalDeath": "Природна смерть",
   "ui.deathFromIllness": "Хвороба / стан здоров’я",
@@ -1727,12 +1728,20 @@ export default {
   "ui.combatDeath": "Загибель внаслідок бойових дій",
   "ui.undeterminedDeath": "Обставини не встановлено",
   "ui.recordedCauseOfDeath": "Зазначена причина смерті",
-  "ui.deathInvestigation": "Офіційні записи, розслідування та поховання",
+  "ui.deathInvestigation": "Офіційні записи та розслідування",
   "ui.officialConclusion": "Офіційний висновок / встановлені обставини",
   "ui.deathCertificateNumber": "Номер свідоцтва про смерть",
   "ui.certificateDate": "Дата видачі свідоцтва",
   "ui.burialDate": "Дата поховання",
-  "ui.burialPlace": "Місце поховання / кладовище",
+  "ui.burialPlace": "Адреса / опис місця поховання",
+  "ui.deathAndBurial": "Смерть і поховання",
+  "ui.deathAndBurialRecord": "Відомості про смерть і поховання",
+  "ui.burialDetails": "Поховання",
+  "ui.burialCity": "Населений пункт",
+  "ui.burialCemetery": "Кладовище / меморіальне місце",
+  "ui.burialPlot": "Сектор / ділянка",
+  "ui.burialGrave": "Номер могили / ніші",
+  "ui.burialMapUrl": "Розташування на мапі (URL)",
   "ui.militaryHistory": "Військова служба та облік",
   "ui.militaryRecord": "Військова служба / облік",
   "ui.militaryRecordType": "Тип військового запису",
@@ -1796,7 +1805,7 @@ export default {
   "ui.supervisor": "Керівник / підпорядкування",
   "ui.reportedInfidelity": "Повідомлення про зраду",
   "ui.biographyClarification": "Уточнення біографії",
-  "ui.affairLovers": "Коханці / позашлюбний зв’язок",
+  "ui.extramaritalRelationship": "Позашлюбний зв’язок",
   "ui.biographyReview": "Перевірка біографії",
   "ui.reviewPeriod": "Період перевірки",
   "ui.reviewFrom": "Перевіряти від",
@@ -2426,7 +2435,7 @@ export default {
     "Джерело підтверджує внесену відомість чи зв’язок. Реквізити паспорта належать до документів особи, а його скан — до пов’язаного джерела. Актові записи не змінюють імена чи батьківство автоматично.",
   "ui.guideMap": "Впорядкуйте та досліджуйте схему",
   "ui.guideMapOne":
-    "На схемі оберіть «{generations}» у полі «{layout}», потім «{fit}». Після додавання гілки можна повторити розташування; окремі картки переміщуйте вручну.",
+    "На схемі оберіть «{generations}» у полі «{layout}», потім «{fit}». Після додавання гілки можна повторити розташування; окремі картки переміщуйте вручну. Перед зміною розміщення збережіть власну розстановку через «{savedViews}» → «{saveView}».",
   "ui.guideMapTwo":
     "Оберіть особу, щоб побачити підсвічені родинні ролі. «{kinship}» порівнює двох осіб, «{search}» знаходить шляхи; верхній пошук і фільтри допомагають знайти внесені відомості.",
   "ui.guideMapThree":
@@ -2468,4 +2477,27 @@ export default {
   "ui.creationLinksDetailsHint":
     "Особа та ці зв’язки збережуться разом. Джерела й інші подробиці можна додати пізніше, відкривши зв’язок.",
   "ui.invalidQuickRelationship": "Оберіть особу та роль у зв’язку.",
+  "ui.savedMapViews": "Збережені вигляди",
+  "ui.savedMapViewsHint":
+    "Розставте картки, виберіть видимі зв’язки й масштаб, потім збережіть вигляд із назвою. Його можна відновити після автоматичного розміщення.",
+  "ui.savedMapViewsArchiveHint":
+    "Вигляди зберігаються разом зі схемою та входять до ZIP-архіву. Відновлення вигляду зберігає зміни в даних осіб і зв’язках.",
+  "ui.mapViewName": "Назва вигляду",
+  "ui.mapViewNameExample": "Наприклад, гілка родини Доу",
+  "ui.noSavedMapViews":
+    "Збережених виглядів ще немає. Збережіть поточну розстановку вище.",
+  "ui.restoreNamedMapView": "Відновити «{name}»",
+  "ui.manageNamedMapView": "Керувати виглядом «{name}»",
+  "ui.saveCurrentMapView": "Зберегти поточний вигляд",
+  "ui.updateMapView": "Замінити поточним виглядом",
+  "ui.updateMapViewHint":
+    "«Зберегти» змінює назву. «Замінити поточним виглядом» також оновлює розстановку карток, масштаб і налаштування відображення. Видалення можна скасувати.",
+  "ui.mapViewNameRequired": "Введіть назву вигляду.",
+  "ui.mapViewNameExists":
+    "Вигляд із такою назвою вже є. Виберіть іншу назву або оновіть його.",
+  "ui.mapViewLimit":
+    "Можна зберегти до {limit} виглядів. Оновіть або видаліть наявний вигляд.",
+  "ui.mapViewRestored": "Відновлено «{name}».",
+  "ui.mapViewSaved": "Збережено «{name}».",
+  "ui.invalidMapViews": "Некоректні збережені вигляди схеми в архіві.",
 };

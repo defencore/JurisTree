@@ -12,16 +12,17 @@ export function defineSection(
 ) {
   const translated = groups.map(([label, fields]) => ({
     label: label ? translate(label) : "",
-    fields: fields.map(([name, caption, type = "text", options]) => [
+    fields: fields.map(([name, caption, type = "text", choices]) => [
       name,
       translate(caption),
       type,
-      options
+      choices
         ? Object.fromEntries(
-            Object.entries(options).map(([value, message]) => [
-              value,
-              translate(message),
-            ]),
+            Object.entries(
+              type === "select" && !options.requiredChoices?.includes(name)
+                ? { unspecified: "ui.notSpecified", ...choices }
+                : choices,
+            ).map(([value, message]) => [value, translate(message)]),
           )
         : undefined,
     ]),

@@ -40,9 +40,7 @@ test("records separate partnership episodes, validates dates and displays their 
   await page.locator('#modal button[type="submit"]').click();
   await expect(page.locator("#inspector")).toContainText("2022");
   await expect(page.locator("#inspector")).toContainText("Fictional witness");
-  await expect(page.locator("#inspector")).toContainText(
-    "Unverified — needs checking",
-  );
+  await expect(page.locator("#inspector")).toContainText("Unverified");
   await openEpisode();
   await page.locator('[name="relationship-fromDate"]').fill("2024");
   await page.locator('[name="relationship-toDate"]').fill("2025");

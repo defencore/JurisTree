@@ -29,7 +29,7 @@ export function relationshipConfig() {
               cohabitation: "ui.cohabitation",
               dating: "ui.dating",
               romantic: "ui.romanticRelationship",
-              affair: "ui.affairLovers",
+              affair: "ui.extramaritalRelationship",
               other: "ui.other",
             },
           ],

@@ -89,25 +89,3 @@ export function nodeSVG(n, images = null, exporting = false) {
       : n.name || n.title;
   return `<g class="node${multi ? " multi" : ""}" opacity="${dim ? 0.3 : 1}" data-node="${n.id}" data-kind="${n.kind}" ${role ? `data-kinship-role="${role.kind}" data-kinship-group="${role.group}"` : ""} transform="translate(${n.x} ${n.y})" tabindex="0" role="button" aria-label="${esc(label)}"><rect class="card" width="${n.w}" height="${n.h}" rx="6" fill="${role?.bg || theme.paper}" stroke="${stroke}" stroke-opacity="${active || multi || focus || role ? 1 : 0.6}" stroke-width="${active || multi || focus ? 2.3 : role ? 1.7 : 1}" />${inside}</g>${actions}`;
 }
-
-export function groupBackdrop(nodes) {
-  return appState.project.groups
-    .filter(
-      (g) =>
-        fullDiagram() ||
-        !g.collapsed ||
-        appState.analysisExpandedGroups.has(g.id),
-    )
-    .map((g) => {
-      const ps = nodes.filter(
-        (n) => n.kind === "person" && (n.groupIds || []).includes(g.id),
-      );
-      if (!ps.length) return "";
-      const x = Math.min(...ps.map((p) => p.x)) - 19,
-        y = Math.min(...ps.map((p) => p.y)) - 43,
-        w = Math.max(...ps.map((p) => p.x + p.w)) - x + 19,
-        h = Math.max(...ps.map((p) => p.y + p.h)) - y + 20;
-      return `<g class="group-background"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#f4f7fb" fill-opacity=".6" stroke="${g.color}" stroke-opacity=".18" stroke-dasharray="6 5"/><g data-toggle-group="${g.id}" tabindex="0" role="button" aria-label="${translate("ui.collapseGroup")} ${esc(g.name)}" style="cursor:pointer">${svgIcon("users", x + 16, y + 10, g.color, 0.7)}${svgText(g.name + " · " + ps.length, x + 40, y + 25, 55, 1, 13, g.color, 600)}${svgIcon("fold", x + w - 33, y + 10, g.color, 0.65)}</g></g>`;
-    })
-    .join("");
-}

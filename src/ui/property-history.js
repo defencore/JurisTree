@@ -21,10 +21,29 @@ function party(id, external) {
 function period(record) {
   return `${displayDate(record.from) || t("ui.dateUnknown")} — ${displayDate(record.to) || (record.status === "current" ? t("ui.propertyRightCurrent") : t("ui.dateUnknown"))}`;
 }
-export function propertyRecordTitle(kind, record) {
+export function propertyRecordTitle(
+  kind,
+  record,
+  { includeUnknown = true } = {},
+) {
   const cfg = propertyRecordConfigs()[kind],
     options = cfg.fields.find(([key]) => key === "kind")[3];
-  return `${options[record.kind] || cfg.label} · ${kind === "transfers" ? `${party(record.fromId, record.fromExternal)} → ${party(record.toId, record.toExternal)}` : party(record.personId, record.externalPerson)}`;
+  const name = (id, external) =>
+    person(id)?.name ||
+    external ||
+    (includeUnknown ? t("ui.notSpecified") : "");
+  const parties =
+    kind === "transfers"
+      ? [
+          name(record.fromId, record.fromExternal),
+          name(record.toId, record.toExternal),
+        ]
+          .filter(Boolean)
+          .join(" → ")
+      : name(record.personId, record.externalPerson);
+  return [options[record.kind] || cfg.label, parties]
+    .filter(Boolean)
+    .join(" · ");
 }
 export function propertyRecordCard(
   asset,
@@ -34,8 +53,13 @@ export function propertyRecordCard(
   issues = [],
 ) {
   const cfg = propertyRecordConfigs()[kind];
-  const status =
-    kind === "rights"
+  const status = !editable
+    ? kind === "rights"
+      ? [displayDate(record.from), displayDate(record.to)]
+          .filter(Boolean)
+          .join(" — ")
+      : displayDate(record.date)
+    : kind === "rights"
       ? period(record)
       : displayDate(record.date) || t("ui.dateUnknown");
   const relatedClaim =
@@ -50,7 +74,15 @@ export function propertyRecordCard(
   const findings = issues.filter(
     (issue) => issue.kind === kind && issue.id === record.id,
   );
-  return `<article class="property-history-record" data-estate-record="${record.id}"><div class="property-record-head"><div><h4>${esc(propertyRecordTitle(kind, record))}</h4><p>${esc(status)}${record.sharePercent ? ` · ${esc(record.sharePercent)}%` : ""}</p></div>${editable ? `<button class="iconbtn ghost" data-edit-property-record="${record.id}" data-property-id="${asset.id}" data-property-record-kind="${kind}" aria-label="${esc(t("ui.edit") + " " + cfg.label)}">${icon("edit")}</button>` : ""}</div>${record.verification !== "corroborated" ? `<span class="pill review">${esc(t(record.verification === "refuted" ? "ui.refuted" : record.verification === "inconclusive" ? "ui.inconclusive" : "ui.pendingVerification"))}</span>` : `<span class="pill">${t("ui.corroborated")}</span>`}${
+  const verification = cfg.fields.find(([key]) => key === "verification")[3];
+  const verificationLabel =
+    record.verification && record.verification !== "unspecified"
+      ? verification[record.verification]
+      : "";
+  const summary = [status, record.sharePercent ? `${record.sharePercent}%` : ""]
+    .filter(Boolean)
+    .join(" · ");
+  return `<article class="property-history-record" data-estate-record="${record.id}"><div class="property-record-head"><div><h4>${esc(propertyRecordTitle(kind, record, { includeUnknown: editable }))}</h4>${summary ? `<p>${esc(summary)}</p>` : ""}</div>${editable ? `<button class="iconbtn ghost" data-edit-property-record="${record.id}" data-property-id="${asset.id}" data-property-record-kind="${kind}" aria-label="${esc(t("ui.edit") + " " + cfg.label)}">${icon("edit")}</button>` : ""}</div>${verificationLabel ? `<span class="pill ${record.verification === "corroborated" ? "" : "review"}">${esc(verificationLabel)}</span>` : ""}${
     kind === "claims" && editable
       ? fields([
           [

@@ -1351,7 +1351,7 @@ export default {
   "ui.recording": "Audio / video recording",
   "ui.reportedStatement": "Reported statement",
   "ui.verificationStatus": "Verification status",
-  "ui.pendingVerification": "Unverified — needs checking",
+  "ui.pendingVerification": "Unverified",
   "ui.corroborated": "Corroborated",
   "ui.refuted": "Refuted",
   "ui.inconclusive": "Inconclusive",
@@ -1376,6 +1376,9 @@ export default {
   "ui.endedRelationship": "Ended",
   "ui.separated": "Separated",
   "ui.divorced": "Divorced",
+  "ui.formerWife": "Former wife",
+  "ui.formerHusband": "Former husband",
+  "ui.formerSpouse": "Former spouse",
   "ui.widowed": "Widowed",
   "ui.relationshipDuration": "Duration pattern",
   "ui.longTerm": "Long-term",
@@ -1715,8 +1718,6 @@ export default {
   "ui.circumstances": "Circumstances",
   "ui.ongoingPregnancyEndError":
     "An ongoing pregnancy cannot have an end date.",
-  "ui.deathCircumstances": "Death circumstances",
-  "ui.deathRecord": "Death circumstances record",
   "ui.deathCategory": "Recorded category of death",
   "ui.naturalDeath": "Natural death",
   "ui.deathFromIllness": "Illness / health condition",
@@ -1725,12 +1726,20 @@ export default {
   "ui.combatDeath": "Death related to hostilities",
   "ui.undeterminedDeath": "Undetermined circumstances",
   "ui.recordedCauseOfDeath": "Recorded cause of death",
-  "ui.deathInvestigation": "Official records, investigation and burial",
+  "ui.deathInvestigation": "Official records and investigation",
   "ui.officialConclusion": "Official conclusion / findings",
   "ui.deathCertificateNumber": "Death certificate reference",
   "ui.certificateDate": "Certificate issue date",
   "ui.burialDate": "Burial date",
-  "ui.burialPlace": "Burial place / cemetery",
+  "ui.burialPlace": "Address / description of burial location",
+  "ui.deathAndBurial": "Death and burial",
+  "ui.deathAndBurialRecord": "Death and burial record",
+  "ui.burialDetails": "Burial",
+  "ui.burialCity": "City / locality",
+  "ui.burialCemetery": "Cemetery / memorial site",
+  "ui.burialPlot": "Section / plot",
+  "ui.burialGrave": "Grave / niche number",
+  "ui.burialMapUrl": "Location on a map (URL)",
   "ui.militaryHistory": "Military service and records",
   "ui.militaryRecord": "Military service / registration",
   "ui.militaryRecordType": "Military record type",
@@ -1794,7 +1803,7 @@ export default {
   "ui.supervisor": "Supervisor / reporting line",
   "ui.reportedInfidelity": "Report of infidelity",
   "ui.biographyClarification": "Biography clarification",
-  "ui.affairLovers": "Affair / lovers",
+  "ui.extramaritalRelationship": "Extramarital relationship",
   "ui.biographyReview": "Biography review",
   "ui.reviewPeriod": "Review period",
   "ui.reviewFrom": "Review from",
@@ -2424,7 +2433,7 @@ export default {
     "A source supports a recorded fact or relationship. Passport details belong in Identity documents; a linked source can hold its scan. Civil records do not automatically change names or parenthood.",
   "ui.guideMap": "Arrange and explore the map",
   "ui.guideMapOne":
-    "On the map, choose “{generations}” under “{layout}”, then “{fit}”. Reapply the layout after adding a branch; drag individual cards to adjust their placement.",
+    "On the map, choose “{generations}” under “{layout}”, then “{fit}”. Reapply the layout after adding a branch; drag individual cards to adjust their placement. Save your manual arrangement under “{savedViews}” with “{saveView}” before trying another layout.",
   "ui.guideMapTwo":
     "Select a person to see relatives highlighted around them. Use “{kinship}” to compare two people, “{search}” for paths, and the top search or filters to find recorded details.",
   "ui.guideMapThree":
@@ -2466,4 +2475,27 @@ export default {
   "ui.creationLinksDetailsHint":
     "The person and these relationships save together. You can add sources and further details later by opening a relationship.",
   "ui.invalidQuickRelationship": "Choose a person and a relationship role.",
+  "ui.savedMapViews": "Saved views",
+  "ui.savedMapViewsHint":
+    "Arrange the cards, choose the visible connections and zoom, then save a named view. Restore it after using automatic layout.",
+  "ui.savedMapViewsArchiveHint":
+    "Views are saved with the tree and included in its ZIP archive. Restoring a view keeps changes to people and relationships.",
+  "ui.mapViewName": "View name",
+  "ui.mapViewNameExample": "For example, the Doe family branch",
+  "ui.noSavedMapViews":
+    "No saved views yet. Save your current arrangement above.",
+  "ui.restoreNamedMapView": "Restore “{name}”",
+  "ui.manageNamedMapView": "Manage “{name}”",
+  "ui.saveCurrentMapView": "Save current view",
+  "ui.updateMapView": "Replace with current view",
+  "ui.updateMapViewHint":
+    "Save changes the name. Replace with current view also updates the saved card positions, zoom and display settings. Deletion can be undone.",
+  "ui.mapViewNameRequired": "Enter a view name.",
+  "ui.mapViewNameExists":
+    "A view with this name already exists. Choose another name or update it.",
+  "ui.mapViewLimit":
+    "You can save up to {limit} views. Update or delete an existing view.",
+  "ui.mapViewRestored": "Restored “{name}”.",
+  "ui.mapViewSaved": "Saved “{name}”.",
+  "ui.invalidMapViews": "Invalid saved map views in the archive.",
 };

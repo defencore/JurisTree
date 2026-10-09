@@ -22,7 +22,13 @@ export function collectProfile(form) {
         .filter((r) =>
           cfg.fields.some(
             ([key, , type]) =>
-              !["select", "source"].includes(type) && r[key].trim(),
+              type !== "source" &&
+              r[key].trim() &&
+              (type !== "select" ||
+                ![
+                  "unspecified",
+                  ...(section === "timeline" ? ["custom", "none"] : []),
+                ].includes(r[key])),
           ),
         );
     } else if (section === "biography") {

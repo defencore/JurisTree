@@ -36,8 +36,9 @@ test("edits detailed optional profiles, reports and name history and restores th
     .locator('[name="claims-statement"]')
     .fill("An unverified fictional report");
   await expect(claims.locator('[name="claims-verification"]')).toHaveValue(
-    "pending",
+    "unspecified",
   );
+  await claims.locator('[name="claims-verification"]').selectOption("pending");
   await claims.getByText("Sources and verification", { exact: true }).click();
   await claims.locator('[name="claims-reportedBy"]').fill("Fictional witness");
   const identity = await add("identity");
@@ -90,7 +91,7 @@ test("edits detailed optional profiles, reports and name history and restores th
     "Example University",
     "Fictional diploma",
     "An unverified fictional report",
-    "Unverified — needs checking",
+    "Unverified",
     "Fictional witness",
     "DEMO-PASSPORT-ONLY",
     "Fictional authority",

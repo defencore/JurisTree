@@ -90,6 +90,7 @@ src/
     profile-scope.js       Compact workspace visibility preferences
     person-filter-state.js Shared cached analytical query results
     graph-view.js          Visibility and runtime analysis state
+    map-views.js           Named placement snapshots, validation and responsive camera restoration
     graph-analysis.js      Paths, neighborhoods and connection calculations
     workspace.js           Current or saved draft selection
     property-history.js    Dated rights, open claims and evidence consistency checks

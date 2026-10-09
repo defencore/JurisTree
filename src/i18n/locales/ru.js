@@ -1359,7 +1359,7 @@ export default {
   "ui.recording": "Аудио / видеозапись",
   "ui.reportedStatement": "Содержание сообщения",
   "ui.verificationStatus": "Статус проверки",
-  "ui.pendingVerification": "Не подтверждено — требует проверки",
+  "ui.pendingVerification": "Не подтверждено",
   "ui.corroborated": "Подтверждено",
   "ui.refuted": "Опровергнуто",
   "ui.inconclusive": "Недостаточно данных",
@@ -1384,6 +1384,9 @@ export default {
   "ui.endedRelationship": "Завершены",
   "ui.separated": "Живут отдельно",
   "ui.divorced": "Разведены",
+  "ui.formerWife": "Бывшая жена",
+  "ui.formerHusband": "Бывший муж",
+  "ui.formerSpouse": "Бывший супруг / супруга",
   "ui.widowed": "Вдовец / вдова",
   "ui.relationshipDuration": "Характер длительности",
   "ui.longTerm": "Длительные",
@@ -1724,8 +1727,6 @@ export default {
   "ui.circumstances": "Обстоятельства",
   "ui.ongoingPregnancyEndError":
     "Для продолжающейся беременности нельзя указать дату завершения.",
-  "ui.deathCircumstances": "Обстоятельства смерти",
-  "ui.deathRecord": "Запись об обстоятельствах смерти",
   "ui.deathCategory": "Указанная категория смерти",
   "ui.naturalDeath": "Естественная смерть",
   "ui.deathFromIllness": "Болезнь / состояние здоровья",
@@ -1734,13 +1735,21 @@ export default {
   "ui.combatDeath": "Гибель в результате боевых действий",
   "ui.undeterminedDeath": "Обстоятельства не установлены",
   "ui.recordedCauseOfDeath": "Указанная причина смерти",
-  "ui.deathInvestigation": "Официальные записи, расследование и погребение",
+  "ui.deathInvestigation": "Официальные записи и расследование",
   "ui.officialConclusion":
     "Официальное заключение / установленные обстоятельства",
   "ui.deathCertificateNumber": "Номер свидетельства о смерти",
   "ui.certificateDate": "Дата выдачи свидетельства",
   "ui.burialDate": "Дата погребения",
-  "ui.burialPlace": "Место погребения / кладбище",
+  "ui.burialPlace": "Адрес / описание места погребения",
+  "ui.deathAndBurial": "Смерть и погребение",
+  "ui.deathAndBurialRecord": "Сведения о смерти и погребении",
+  "ui.burialDetails": "Погребение",
+  "ui.burialCity": "Населённый пункт",
+  "ui.burialCemetery": "Кладбище / мемориальное место",
+  "ui.burialPlot": "Сектор / участок",
+  "ui.burialGrave": "Номер могилы / ниши",
+  "ui.burialMapUrl": "Расположение на карте (URL)",
   "ui.militaryHistory": "Военная служба и учёт",
   "ui.militaryRecord": "Военная служба / учёт",
   "ui.militaryRecordType": "Тип военной записи",
@@ -1804,7 +1813,7 @@ export default {
   "ui.supervisor": "Руководитель / подчинение",
   "ui.reportedInfidelity": "Сообщение об измене",
   "ui.biographyClarification": "Уточнение биографии",
-  "ui.affairLovers": "Любовники / внебрачная связь",
+  "ui.extramaritalRelationship": "Внебрачная связь",
   "ui.biographyReview": "Проверка биографии",
   "ui.reviewPeriod": "Период проверки",
   "ui.reviewFrom": "Проверять с",
@@ -2437,7 +2446,7 @@ export default {
     "Источник подтверждает внесённое сведение или связь. Реквизиты паспорта относятся к документам человека, а скан — к связанному источнику. Актовые записи не меняют имена или родительство автоматически.",
   "ui.guideMap": "Упорядочите и исследуйте схему",
   "ui.guideMapOne":
-    "На схеме выберите «{generations}» в поле «{layout}», затем «{fit}». После добавления ветви можно повторить расположение; отдельные карточки перемещайте вручную.",
+    "На схеме выберите «{generations}» в поле «{layout}», затем «{fit}». После добавления ветви можно повторить расположение; отдельные карточки перемещайте вручную. Перед изменением размещения сохраните свою расстановку через «{savedViews}» → «{saveView}».",
   "ui.guideMapTwo":
     "Выберите человека, чтобы увидеть подсвеченные семейные роли. «{kinship}» сравнивает двух людей, «{search}» находит пути; верхний поиск и фильтры помогают найти внесённые сведения.",
   "ui.guideMapThree":
@@ -2479,4 +2488,27 @@ export default {
   "ui.creationLinksDetailsHint":
     "Персона и эти связи сохранятся вместе. Источники и другие подробности можно добавить позже, открыв связь.",
   "ui.invalidQuickRelationship": "Выберите персону и роль в связи.",
+  "ui.savedMapViews": "Сохранённые виды",
+  "ui.savedMapViewsHint":
+    "Расставьте карточки, выберите видимые связи и масштаб, затем сохраните вид с названием. Его можно восстановить после автоматического размещения.",
+  "ui.savedMapViewsArchiveHint":
+    "Виды сохраняются вместе со схемой и входят в ZIP-архив. Восстановление вида сохраняет изменения в данных людей и связях.",
+  "ui.mapViewName": "Название вида",
+  "ui.mapViewNameExample": "Например, ветвь семьи Доу",
+  "ui.noSavedMapViews":
+    "Сохранённых видов пока нет. Сохраните текущую расстановку выше.",
+  "ui.restoreNamedMapView": "Восстановить «{name}»",
+  "ui.manageNamedMapView": "Управлять видом «{name}»",
+  "ui.saveCurrentMapView": "Сохранить текущий вид",
+  "ui.updateMapView": "Заменить текущим видом",
+  "ui.updateMapViewHint":
+    "«Сохранить» меняет название. «Заменить текущим видом» также обновляет расстановку карточек, масштаб и настройки отображения. Удаление можно отменить.",
+  "ui.mapViewNameRequired": "Введите название вида.",
+  "ui.mapViewNameExists":
+    "Вид с таким названием уже есть. Выберите другое название или обновите его.",
+  "ui.mapViewLimit":
+    "Можно сохранить до {limit} видов. Обновите или удалите существующий вид.",
+  "ui.mapViewRestored": "Восстановлен «{name}».",
+  "ui.mapViewSaved": "Сохранён «{name}».",
+  "ui.invalidMapViews": "Некорректные сохранённые виды схемы в архиве.",
 };

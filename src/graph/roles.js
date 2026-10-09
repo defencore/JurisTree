@@ -110,6 +110,18 @@ function resolveRole(from, to) {
               : "step_child";
         label = roleLabel(direct, from);
       }
+      if (!direct) {
+        direct = links.find(
+          (r) =>
+            r.type === "spouse" &&
+            r.status === "divorced" &&
+            !["unverified", "refuted"].includes(r.verification),
+        );
+        if (direct) {
+          kind = "partner";
+          label = roleLabel(direct, from);
+        }
+      }
     }
   }
   const k = direct ? null : kinshipBetween(from, to);

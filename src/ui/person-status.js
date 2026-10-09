@@ -52,8 +52,12 @@ export function personStatusBadges(person, today) {
       : []),
   ];
 }
-export function personStatusMarkup(person) {
+export function personStatusMarkup(person, { includeUnknown = true } = {}) {
   return `<span class="person-status">${personStatusBadges(person)
+    .filter(
+      (badge) =>
+        includeUnknown || !["unknown", "uncertain-age"].includes(badge.key),
+    )
     .map(
       (b) =>
         `<span class="person-status-badge" data-person-status="${b.key}">${icon(b.icon)}${esc(b.label)}</span>`,

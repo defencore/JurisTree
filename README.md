@@ -31,7 +31,7 @@ Modes suggest visible sections and a starting view. Switching modes preserves al
 
 ## Main tools
 
-- Interactive relationship map with family roles, layouts, connection analysis and touch navigation.
+- Interactive relationship map with family roles, saved arrangements, layouts, connection analysis and touch navigation.
 - Optional profile sections for identity, civil status, education, employment, residence, travel, health, interests, finances and other records.
 - Sources with attachments, original text, citations, verification and configurable document checklists.
 - Combined search and advanced filters, saved queries and CSV export.

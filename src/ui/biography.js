@@ -35,7 +35,11 @@ function section(label, symbol, body, key) {
 function record(sectionKey, item) {
   const cfg = recordConfigs()[sectionKey];
   const values = recordValues(cfg, item);
-  return `<article class="biography-record">${fields(values)}${sourceChips(item.sourceId ? [item.sourceId] : [])}${recordReferenceActions(cfg, item)}</article>`;
+  const body =
+    fields(values) +
+    sourceChips(item.sourceId ? [item.sourceId] : []) +
+    recordReferenceActions(cfg, item);
+  return body ? `<article class="biography-record">${body}</article>` : "";
 }
 
 function source(d) {
@@ -58,7 +62,7 @@ function source(d) {
       [translate("ui.documentText"), d.transcription],
       [translate("ui.notes"), d.notes],
     ].concat(recordValues(sourceVerificationConfig(), d)),
-  )}${url ? `<a class="biography-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>` : ""}<div class="biography-record-actions"><button type="button" class="btn small" data-document="${d.id}">${icon("eye")}${translate("ui.openSource")}</button>${hasFile(d) ? `<button type="button" class="btn small" data-download-doc="${d.id}">${icon("download")}${translate("ui.downloadFile")}</button>` : `<span class="hint">${translate("ui.noDigitalCopyAttachedYet")}</span>`}</div></article>`;
+  )}${url ? `<a class="biography-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>` : ""}<div class="biography-record-actions"><button type="button" class="btn small" data-document="${d.id}">${icon("eye")}${translate("ui.openSource")}</button>${hasFile(d) ? `<button type="button" class="btn small" data-download-doc="${d.id}">${icon("download")}${translate("ui.downloadFile")}</button>` : ""}</div></article>`;
 }
 
 export function renderBiography({
@@ -69,8 +73,9 @@ export function renderBiography({
   groups,
   testimony = [],
 }) {
-  let html = `<article class="biography"><header class="biography-header">${avatar(p)}<div><h2>${esc(p.name)}</h2><p>${esc(years(p))}</p><p class="hint">${translate("ui.autobiographyDescription")}</p></div></header>`;
-  html += personStatusMarkup(p);
+  const dates = years(p, { includeUnknown: false });
+  let html = `<article class="biography"><header class="biography-header">${avatar(p)}<div><h2>${esc(p.name)}</h2>${dates ? `<p>${esc(dates)}</p>` : ""}<p class="hint">${translate("ui.autobiographyDescription")}</p></div></header>`;
+  html += personStatusMarkup(p, { includeUnknown: false });
   html += `<div class="biography-toolbar"><button type="button" class="btn" data-print-biography="${p.id}">${icon("printer")}${translate("ui.printBiography")}</button>${reviewButton(p.id)}<p class="hint">${translate("ui.printBiographyHint")}</p></div>`;
   html += section(
     translate("ui.basicInformation"),
@@ -83,7 +88,6 @@ export function renderBiography({
         {
           f: translate("ui.female"),
           m: translate("ui.male"),
-          u: translate("ui.notSpecified"),
           x: translate("ui.nonbinaryOther"),
         }[p.gender || "u"],
       ],
@@ -93,7 +97,7 @@ export function renderBiography({
           ? translate("ui.deceased")
           : p.lifeStatus === "living"
             ? translate("ui.living")
-            : translate("ui.unknown"),
+            : "",
       ],
       [translate("ui.birth"), displayDate(p.birth)],
       [translate("ui.deathIfKnown"), displayDate(p.death)],
@@ -118,7 +122,9 @@ export function renderBiography({
   html += section(
     translate("ui.biographyAndHistory"),
     "book",
-    `<div class="biography-prose">${esc(p.biography || translate("ui.noInformationYet"))}</div>${sourceChips(p.bioSourceIds)}`,
+    (p.biography?.trim()
+      ? `<div class="biography-prose">${esc(p.biography)}</div>`
+      : "") + sourceChips(p.bioSourceIds),
     "biography",
   );
   for (const [key, [label, symbol]] of Object.entries(sectionInfo())) {
@@ -163,7 +169,8 @@ export function renderBiography({
         const sources = documents.filter((d) =>
           (d.relations || []).includes(r.id),
         );
-        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(other?.name)}</h4><p class="hint">${esc(other ? years(other) : "")}</p>${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
+        const otherDates = other ? years(other, { includeUnknown: false }) : "";
+        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(other?.name)}</h4>${otherDates ? `<p class="hint">${esc(otherDates)}</p>` : ""}${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
       })
       .join(""),
     "relationships",

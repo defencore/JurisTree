@@ -7,7 +7,10 @@ import { profileReferenceLabel } from "../model/profile-references.js";
 import { translate } from "../i18n/index.js";
 
 export function fields(entries) {
-  const rows = entries.filter(([, value]) => value !== "" && value != null);
+  const rows = entries.filter(
+    ([, value]) =>
+      value != null && (typeof value !== "string" || value.trim() !== ""),
+  );
   return rows.length
     ? `<dl class="biography-fields">${rows.map(([label, value, href]) => `<div><dt>${esc(label)}</dt><dd>${href ? `<a href="${esc(href)}"${href.startsWith("http") ? ' target="_blank" rel="noopener noreferrer"' : ""}>${esc(value)}</a>` : esc(value)}</dd></div>`).join("")}</dl>`
     : "";

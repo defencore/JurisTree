@@ -237,8 +237,8 @@ test("records an attributed affair episode without replacing marriages or creati
   const relationships = page.locator(
     '[data-biography-section="relationships"]',
   );
-  await expect(relationships).toContainText("Affair / lovers");
+  await expect(relationships).toContainText("Extramarital relationship");
   await expect(relationships).toContainText("Interview account");
-  await expect(relationships).toContainText("Unverified — needs checking");
+  await expect(relationships).toContainText("Unverified");
   await expect(relationships).toContainText("Morgan Blake");
 });

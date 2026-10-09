@@ -1,4 +1,5 @@
-import { recordConfigs, relTypes } from "../core/config.js";
+import { recordConfigs } from "../core/config.js";
+import { relationshipLabel } from "./relationship-labels.js";
 
 export function profileReferenceLabel(project, type, id) {
   if (!id) return "";
@@ -10,7 +11,7 @@ export function profileReferenceLabel(project, type, id) {
     const r = project.relations.find((r) => r.id === id);
     if (!r) return "";
     const name = (id) => project.people.find((p) => p.id === id)?.name || "";
-    return `${name(r.from)} — ${name(r.to)} (${relTypes()[r.type]})`;
+    return `${name(r.from)} — ${name(r.to)} (${relationshipLabel(r)})`;
   }
   return "";
 }

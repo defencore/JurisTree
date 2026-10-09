@@ -35,6 +35,7 @@ import {
 } from "./profile-activities.js";
 import { profileRecordError } from "./profile-records.js";
 import { fresh } from "./project.js";
+import { MAP_VIEW_LIMIT, normalizeMapView } from "./map-views.js";
 import {
   normalizePropertyRecords,
   propertyRecords,
@@ -376,6 +377,13 @@ export function validateImport(raw) {
   }
   if (!peopleIds.has(p.subjectId)) p.subjectId = "";
   if (!peopleIds.has(p.claimantId)) p.claimantId = "";
+  try {
+    p.mapViews = list("mapViews", MAP_VIEW_LIMIT, true).map((view) =>
+      normalizeMapView(view, p),
+    );
+  } catch {
+    throw Error(translate("ui.invalidMapViews"));
+  }
   return p;
 }
 export function chronologyError(p) {

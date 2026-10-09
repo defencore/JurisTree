@@ -5,9 +5,9 @@ import { translate } from "../../i18n/index.js";
 export function deathSection() {
   return defineSection(
     "deathRecords",
-    "ui.deathCircumstances",
+    "ui.deathAndBurial",
     "heart",
-    "ui.deathRecord",
+    "ui.deathAndBurialRecord",
     [
       [
         null,
@@ -43,8 +43,19 @@ export function deathSection() {
           ["conclusion", "ui.officialConclusion", "textarea"],
           ["certificateNumber", "ui.deathCertificateNumber"],
           ["certificateDate", "ui.certificateDate", "date"],
+        ],
+      ],
+      [
+        "ui.burialDetails",
+        [
           ["burialDate", "ui.burialDate", "date"],
+          ["burialCountry", "ui.country"],
+          ["burialCity", "ui.burialCity"],
           ["burialPlace", "ui.burialPlace"],
+          ["burialCemetery", "ui.burialCemetery"],
+          ["burialPlot", "ui.burialPlot"],
+          ["burialGrave", "ui.burialGrave"],
+          ["burialMapUrl", "ui.burialMapUrl", "url"],
         ],
       ],
       attributionGroup,

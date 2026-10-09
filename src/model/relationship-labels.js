@@ -4,6 +4,21 @@ import { relationshipConfig } from "../core/relationships.js";
 import { translate } from "../i18n/index.js";
 import { person } from "./lookup.js";
 
+export function relationshipLabel(r) {
+  if (!["spouse", "partner"].includes(r.type)) return relTypes()[r.type];
+  if (r.status === "divorced") return translate("ui.divorced");
+  const fields = relationshipConfig().fields;
+  const kind = fields.find(([key]) => key === "unionKind")[3];
+  const label =
+    r.unionKind && r.unionKind !== "unspecified"
+      ? kind[r.unionKind] || relTypes()[r.type]
+      : relTypes()[r.type];
+  const status = fields.find(([key]) => key === "status")[3];
+  return ["ended", "separated", "widowed"].includes(r.status)
+    ? `${label} · ${status[r.status]}`
+    : label;
+}
+
 export function roleGroup(r, id) {
   if (isProfessionalRelationship(r.type)) return "professional";
   if (["parent", "adopted", "step_parent"].includes(r.type))
@@ -20,16 +35,16 @@ export function roleLabel(r, id) {
     return translate(
       id === r.from ? "ui.supervisorPerson" : "ui.subordinatePerson",
     );
+  if (r.type === "spouse" && r.status === "divorced")
+    return translate(
+      female ? "ui.formerWife" : male ? "ui.formerHusband" : "ui.formerSpouse",
+    );
   if (
     ["spouse", "partner"].includes(r.type) &&
     r.unionKind &&
     r.unionKind !== "unspecified"
   )
-    return (
-      relationshipConfig().fields.find((f) => f[0] === "unionKind")[3][
-        r.unionKind
-      ] || relTypes()[r.type]
-    );
+    return relationshipLabel(r);
   if (r.type === "step_parent")
     return translate(group === "parents" ? "ui.stepParent" : "ui.stepChild");
   if (r.type === "adopted")

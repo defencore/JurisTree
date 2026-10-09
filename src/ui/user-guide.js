@@ -37,6 +37,8 @@ function labels() {
     health: t("ui.medicalHistory"),
     scope: t("ui.chooseVisibleData"),
     layout: t("ui.layout"),
+    savedViews: t("ui.savedMapViews"),
+    saveView: t("ui.saveCurrentMapView"),
     generations: t("ui.generations3"),
     fit: t("ui.showEntireTree"),
     display: t("ui.display"),

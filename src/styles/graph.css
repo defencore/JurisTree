@@ -244,6 +244,72 @@
   flex-wrap: wrap;
   gap: 6px;
 }
+.saved-map-views {
+  border-top: 1px solid var(--line);
+  margin-top: 18px;
+  padding-top: 14px;
+}
+.saved-map-views h3 {
+  margin: 0 0 10px;
+}
+.saved-map-view {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 6px;
+}
+.map-view-restore {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: var(--ink);
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 8px;
+  text-align: left;
+}
+.map-view-restore:hover,
+.map-view-restore:focus-visible {
+  background: var(--bg);
+}
+.map-view-restore span {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.map-view-restore small {
+  color: var(--muted);
+}
+.map-view-restore .icon {
+  flex-shrink: 0;
+}
+.map-view-edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.map-view-edit-actions .btn {
+  max-width: 100%;
+  white-space: normal;
+}
+@media (max-width: 760px) {
+  .dialog[data-kind="map-views"] .modal-foot .btn {
+    min-width: 0;
+    white-space: normal;
+  }
+  .dialog[data-kind="map-views"] .modal-foot .primary {
+    flex: 1;
+  }
+}
 .graph-search-btn {
   background: var(--paper);
   border-color: var(--line);

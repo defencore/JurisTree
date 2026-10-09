@@ -6,9 +6,10 @@ import { withProjectIndex } from "../model/project.js";
 import { renderGraphControls } from "../ui/graph-controls.js";
 import { applyCamera } from "./camera.js";
 import { renderGraphEdges } from "./edges.js";
+import { groupBackdrop, groupHeadings, visibleGroupFrames } from "./groups.js";
 import { graphLineStyle, renderGraphLegend } from "./legend.js";
 import { filteredGraphNodes } from "./node-data.js";
-import { groupBackdrop, nodeSVG } from "./nodes.js";
+import { nodeSVG } from "./nodes.js";
 
 export function renderGraph() {
   if (!appState.project) return;
@@ -42,10 +43,12 @@ export function renderFilteredGraph(images = null, exporting = false) {
   return withKinshipIndex(() => renderIndexedGraph(images, exporting));
 }
 function renderIndexedGraph(images, exporting) {
-  const nodes = filteredGraphNodes();
+  const nodes = filteredGraphNodes(),
+    frames = visibleGroupFrames(nodes);
   return (
-    groupBackdrop(nodes) +
+    groupBackdrop(frames) +
     renderGraphEdges(nodes, exporting) +
-    nodes.map((n) => nodeSVG(n, images, exporting)).join("")
+    nodes.map((n) => nodeSVG(n, images, exporting)).join("") +
+    groupHeadings(frames)
   );
 }

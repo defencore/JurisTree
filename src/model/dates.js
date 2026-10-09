@@ -1,5 +1,9 @@
 import { getLocale, translate } from "../i18n/index.js";
-export function years(p) {
+export function years(p, { includeUnknown = true } = {}) {
+  if (!includeUnknown)
+    return [displayDate(p.birth), displayDate(p.death)]
+      .filter(Boolean)
+      .join(" — ");
   return p.birth || p.death
     ? `${displayDate(p.birth) || "?"}${p.death ? " — " + displayDate(p.death) : p.lifeStatus === "deceased" ? ` ${translate("ui.deathDateUnknown")}` : ""}`
     : translate("ui.datesNotSpecified");

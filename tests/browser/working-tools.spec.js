@@ -81,8 +81,8 @@ test("favorites remain accessible across filters, center the card and survive ZI
   await expect(page.locator("#inspector h2")).toHaveText("Casey Roe");
   await expect(page.locator('.node[data-node="p8"]')).toHaveCount(1);
   expect(
-    parseInt(await page.locator("#zoomLabel").textContent()),
-  ).toBeGreaterThanOrEqual(80);
+    (await page.locator('.node[data-node="p8"] .card').boundingBox()).width,
+  ).toBeGreaterThan(180);
   await expect(page.locator("#saveState")).toContainText("Draft saved");
   await page.reload();
   await page.locator("#startContinue").click();
@@ -242,7 +242,7 @@ test("edits court, financial, public office and self-described identity records 
     "Example self-description",
     "Northbridge Health Centre",
     "Self-reported",
-    "Unverified — needs checking",
+    "Unverified",
   ])
     await expect(page.locator(".biography")).toContainText(value);
 });

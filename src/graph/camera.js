@@ -1,6 +1,7 @@
 import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
+import { visibleGroupFrames } from "./groups.js";
 import { filteredGraphNodes } from "./node-data.js";
 import { personFocusCamera } from "./person-focus.js";
 
@@ -46,13 +47,14 @@ export function bounds() {
       w: 600,
       h: 400,
     };
-  const x = Math.min(...ns.map((n) => n.x)) - 55,
-    y = Math.min(...ns.map((n) => n.y)) - 55;
+  const boxes = [...ns, ...visibleGroupFrames(ns)],
+    x = Math.min(...boxes.map((n) => n.x)) - 55,
+    y = Math.min(...boxes.map((n) => n.y)) - 55;
   return {
     x,
     y,
-    w: Math.max(...ns.map((n) => n.x + n.w)) - x + 55,
-    h: Math.max(...ns.map((n) => n.y + n.h)) - y + 55,
+    w: Math.max(...boxes.map((n) => n.x + n.w)) - x + 55,
+    h: Math.max(...boxes.map((n) => n.y + n.h)) - y + 55,
   };
 }
 export function fit() {

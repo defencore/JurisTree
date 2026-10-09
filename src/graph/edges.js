@@ -10,7 +10,7 @@ import { translate } from "../i18n/index.js";
 import { edgeState, route } from "../model/evidence.js";
 import { fullDiagram, graphView, relationShown } from "../model/graph-view.js";
 import { person } from "../model/lookup.js";
-import { roleLabel } from "../model/relationship-labels.js";
+import { relationshipLabel } from "../model/relationship-labels.js";
 import { graphLine } from "./geometry.js";
 import { graphStrokeAttributes } from "./legend.js";
 import { graphTextWidth, svgText } from "./text.js";
@@ -79,7 +79,7 @@ export function renderGraphEdges(ns, exporting = false) {
             : r.type === "step_parent"
               ? translate("ui.stepParenthood")
               : ["spouse", "partner"].includes(r.type)
-                ? roleLabel(r, r.from) +
+                ? relationshipLabel(r) +
                   (r.fromDate || r.toDate
                     ? ` · ${r.fromDate || "…"}–${r.toDate || "…"}`
                     : "")

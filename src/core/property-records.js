@@ -2,6 +2,7 @@ import { defineSection } from "./profile-sections/define.js";
 import { attributionGroup } from "./profile-sections/attribution.js";
 
 const shareBounds = {
+  requiredChoices: ["kind"],
   numericMinimums: { sharePercent: 0, amount: 0 },
   numericMaximums: { sharePercent: 100 },
 };

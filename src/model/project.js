@@ -23,6 +23,7 @@ export function fresh() {
     property: [],
     groups: [],
     personFilterViews: [],
+    mapViews: [],
     scopePreferences: {},
     graphView: defaultGraphView(),
     subjectId: "",

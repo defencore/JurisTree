@@ -53,7 +53,7 @@ export function renderGraphControls() {
       circle: translate("ui.circle"),
     },
     cfg.layout,
-  )}</select></label><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span>`;
+  )}</select></label><button class="btn small" data-action="saved-map-views" ${appState.analysisBusy ? "disabled" : ""}>${icon("archive")}${translate("ui.savedMapViews")}</button><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span>`;
   $("#graph").classList.toggle("selection-mode", appState.selectionMode);
   context.hidden =
     !appState.analysisHighlight &&
