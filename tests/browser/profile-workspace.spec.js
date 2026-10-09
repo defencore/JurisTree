@@ -133,13 +133,13 @@ test("profile document and property actions preselect their person and remain av
   await expect(page.locator(".biography")).toContainText("Northbank apartment");
 });
 
-test("language preferences and complete profile navigation fit phones, tablets and desktop in all languages", async ({
-  page,
-}) => {
-  await page.locator("#startDemo").click();
-  for (const width of [320, 390, 768, 1440]) {
-    await page.setViewportSize({ width, height: 900 });
-    for (const language of ["en", "uk", "ru"]) {
+for (const width of [320, 390, 768, 1440]) {
+  for (const language of ["en", "uk", "ru"]) {
+    test(`complete profile navigation and language preferences fit ${width}px in ${language}`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.locator("#startDemo").click();
       const languageControl = page.locator(
         ".topbar .header-preferences [data-language]",
       );
@@ -183,6 +183,6 @@ test("language preferences and complete profile navigation fit phones, tablets a
         ),
       ).toBe(true);
       await page.locator("#modal [data-close]").first().click();
-    }
+    });
   }
-});
+}
