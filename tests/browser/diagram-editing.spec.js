@@ -183,6 +183,30 @@ async function drag(page, locator, dx, dy) {
   });
   await page.mouse.up();
 }
+async function touchDrag(page, session, start, dx, dy, cancel = false) {
+  await session.send("Input.dispatchTouchEvent", {
+    type: "touchStart",
+    touchPoints: [start],
+  });
+  // Separate moves by frames to model a finger drag rather than an instant fling.
+  for (let step = 1; step <= 5; step++) {
+    await session.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: [
+        {
+          ...start,
+          x: start.x + (dx * step) / 5,
+          y: start.y + (dy * step) / 5,
+        },
+      ],
+    });
+    await page.evaluate(() => new Promise(requestAnimationFrame));
+  }
+  await session.send("Input.dispatchTouchEvent", {
+    type: cancel ? "touchCancel" : "touchEnd",
+    touchPoints: [],
+  });
+}
 let errors;
 test.beforeEach(async ({ page }) => {
   errors = [];
@@ -451,18 +475,7 @@ for (const [language, width] of [
       const handle = page.locator('[data-route-point="0"]');
       const box = await handle.boundingBox(),
         start = { x: box.x + box.width / 2, y: box.y + box.height / 2, id: 0 };
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [start],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [{ ...start, x: start.x + 16, y: start.y + 12 }],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchEnd",
-        touchPoints: [],
-      });
+      await touchDrag(page, session, start, 16, 12);
       const moved = await stateOf(page);
       expect(moved.project.diagram["r:r1"].points[0].x).toBeGreaterThan(
         before.project.diagram["r:r1"].points[0].x,
@@ -474,20 +487,7 @@ for (const [language, width] of [
           y: newBox.y + newBox.height / 2,
           id: 0,
         };
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [cancelStart],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [
-          { ...cancelStart, x: cancelStart.x - 15, y: cancelStart.y - 12 },
-        ],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchCancel",
-        touchPoints: [],
-      });
+      await touchDrag(page, session, cancelStart, -15, -12, true);
       expect((await stateOf(page)).project.diagram).toEqual(
         moved.project.diagram,
       );
@@ -499,20 +499,7 @@ for (const [language, width] of [
           y: labelBox.y + labelBox.height / 2,
           id: 0,
         };
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchStart",
-        touchPoints: [labelStart],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchMove",
-        touchPoints: [
-          { ...labelStart, x: labelStart.x - 15, y: labelStart.y + 20 },
-        ],
-      });
-      await session.send("Input.dispatchTouchEvent", {
-        type: "touchEnd",
-        touchPoints: [],
-      });
+      await touchDrag(page, session, labelStart, -15, 20);
       expect((await stateOf(page)).project.diagram["r:r1"].label).toBeTruthy();
       expect(
         await page
