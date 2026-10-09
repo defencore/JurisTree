@@ -5,6 +5,7 @@ import { years } from "../model/dates.js";
 import { requirements } from "../model/evidence.js";
 import { personPassesFilter } from "../model/person-filter-state.js";
 import { withProjectIndex } from "../model/project.js";
+import { orderedPeople } from "../model/person-selection.js";
 import { avatar, biographyButton } from "./components.js";
 import { icon } from "./icons.js";
 import { personStatusMarkup } from "./person-status.js";
@@ -15,7 +16,7 @@ export function renderPeople() {
 }
 export function renderPeopleAll() {
   const q = $("#peopleSearch").value.toLocaleLowerCase(getLocale());
-  const ps = appState.project.people.filter(
+  const ps = orderedPeople(appState.project.people).filter(
     (p) =>
       personPassesFilter(p.id) &&
       (!appState.groupFilter ||

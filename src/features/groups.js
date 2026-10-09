@@ -8,6 +8,7 @@ import { commit } from "../services/history.js";
 import { closeModal, openDialog } from "../ui/dialog.js";
 import { renderGroupForm } from "../ui/forms/group.js";
 import { renderGroups } from "../ui/groups.js";
+import { bindPersonPickers } from "../ui/person-picker.js";
 
 export async function editGroup(id = null) {
   const g = id
@@ -26,6 +27,7 @@ export async function editGroup(id = null) {
     renderGroupForm(g, ids, id),
     {
       wide: true,
+      onOpen: () => bindPersonPickers(document.querySelector("#modalForm")),
       validate: (f) =>
         f.get("name").trim() ? "" : translate("ui.enterAGroupName"),
     },

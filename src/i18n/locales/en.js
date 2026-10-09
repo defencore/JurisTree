@@ -1,4 +1,10 @@
 export default {
+  "ui.findPersonByName": "Search surname or name",
+  "ui.peopleSortedBySurname": "By surname, A–Z",
+  "ui.currentSelection": "Current selection",
+  "ui.matchingPeopleCount": "Found: {count} / {total}",
+  "ui.selectedPeopleCount": "Selected: {count}",
+  "ui.personSelectionRetained": "Current selection kept",
   "ui.modeFamily": "Family and genealogy",
   "ui.modeCivil": "Civil status",
   "ui.modeInheritance": "Inheritance cases",
@@ -2357,7 +2363,7 @@ export default {
     "“{mode}” suggests visible sections and tools. Changing it preserves people, relationships and profile information.",
   "ui.guidePeople": "Add people",
   "ui.guidePeopleOne":
-    "Open “{profiles}” or the relationship map and choose “{addPerson}”. Enter the name. To connect this person immediately, enable “Add relationships now”, choose an existing person and the new person’s role relative to them. Add another row for a second parent or another connection, then save.",
+    "Open “{profiles}” or the relationship map and choose “{addPerson}”. Enter the name. To connect this person immediately, enable “Add relationships now”, choose an existing person and the new person’s role relative to them. Add another row for a second parent or another connection, then save. Search the existing-person list by surname or name when it is long.",
   "ui.guidePeopleTwo":
     "Add birth and death dates or years, gender and life status when known. These values support age badges, calendar dates and family role labels.",
   "ui.guidePeopleThree":
@@ -2369,7 +2375,7 @@ export default {
     "The numbers below are birth years. Every person is fictional.",
   "ui.guideRelationships": "Connect parents, children and partners",
   "ui.guideRelationshipsOne":
-    "Choose “{addRelationship}” on the map or in a complete profile. To prefill both people, select two cards with Ctrl / ⌘ or Shift + click, in the required order, then choose “{addRelationship}”. Review the type and direction before saving.",
+    "Choose “{addRelationship}” on the map or in a complete profile. To prefill both people, select two cards with Ctrl / ⌘ or Shift + click, in the required order, then choose “{addRelationship}”. Review the type and direction before saving. Each person list has its own surname/name search; maiden and previous names are included. Lists are ordered by surname.",
   "ui.guideRelationshipsTwo":
     "For “{parenthood}”, “{first}” is the parent and “{second}” is the child. Add a separate relationship from each known parent to each child.",
   "ui.guideRelationshipsThree":
@@ -2390,7 +2396,7 @@ export default {
     "Use “{adoption}” for adoptive parent–child links and retain separate “{parenthood}” links to biological parents when known. “{stepParent}” is a separate type. For an uncertain family connection choose “{possible}”; describe the report and its source. Mark unverified information for review rather than treating it as confirmed ancestry.",
   "ui.guideGroups": "Organize families and groups",
   "ui.guideGroupsOne":
-    "Use the button beside “{groups}”. Enter a group name, choose a color, check its members and save.",
+    "Use the button beside “{groups}”. Enter a group name, choose a color, check its members and save. Search members by surname or name; checked members stay selected as you search for others.",
   "ui.guideGroupsTwo":
     "A group can represent a household, family branch or research collection. The same person may belong to several groups; do not duplicate their profile.",
   "ui.guideGroupsThree":

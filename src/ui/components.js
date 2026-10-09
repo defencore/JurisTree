@@ -5,6 +5,7 @@ import { initials, safeUrl } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { hasFile, isOfficial } from "../model/evidence.js";
 import { doc } from "../model/lookup.js";
+import { orderedPeople } from "../model/person-selection.js";
 import { objectUrl } from "../services/blobs.js";
 import { openDialog, toast } from "./dialog.js";
 import { icon } from "./icons.js";
@@ -39,13 +40,13 @@ export function documentIcon(d) {
 export function personOptions(id, empty = false) {
   return (
     (empty ? `<option value="">${translate("ui.notSelected")}</option>` : "") +
-    appState.project.people
-      .map(
-        (p) =>
-          `<option value="${p.id}" ${id === p.id ? "selected" : ""}>${esc(p.name)}</option>`,
-      )
+    orderedPeople(appState.project.people)
+      .map((p) => personOption(p, id))
       .join("")
   );
+}
+export function personOption(person, selectedId) {
+  return `<option value="${esc(person.id)}" ${selectedId === person.id ? "selected" : ""}>${esc(person.name)}</option>`;
 }
 export function typeOptions(list, current) {
   return Object.entries(list)

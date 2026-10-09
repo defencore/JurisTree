@@ -37,6 +37,8 @@ Use the current name in the main field. Add maiden surnames and previous names i
 
 Choose **Add relationship**, select **First person**, **Second person** and the relationship type, then save. Add dates, status and supporting sources when known.
 
+Use the search above either person list to narrow it by surname, given name or a combination in any order. Maiden surnames, previous names and alternate spellings are included. Lists are ordered by surname, then full name. Searching preserves the current choice; a selection outside the results is kept under **Current selection** until you explicitly choose someone else. Press Enter or Down Arrow in the search to focus the list; Escape clears the search. The same search is available when connecting a person during creation.
+
 For faster entry, select exactly two cards with **Ctrl / ⌘ or Shift + click**, in the required order, then choose **Add relationship** on the selection strip or the map toolbar. Both people are filled in automatically. You can also click the first person normally, then Ctrl / ⌘ + click the second. Modified clicks work in the sidebar people list too. Review the relationship type and direction before saving. An explicit relationship action from a person's profile takes precedence over the map selection.
 
 Create these three **Registered marriage** relationships. Each marriage needs one entry; either partner may be selected first.
@@ -67,6 +69,8 @@ Use **Adoption** for an adoptive parent and retain separate biological links whe
 ## 4. Organize families into groups
 
 Use the add button beside **Family groups**. Enter a name, choose a color, check the members and save. Create these groups:
+
+Search members by surname or name instead of scrolling through the entire map. Checked members remain selected when a search hides them. The counter includes all selected members; clear the search to review everyone before saving.
 
 | Group                | Members                     |
 | -------------------- | --------------------------- |

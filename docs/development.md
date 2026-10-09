@@ -51,6 +51,8 @@ To use another static host, upload the contents of `dist/` while preserving its 
 
 Person creation uses `core/person-creation.js` for roles, `model/person-creation.js` for form collection and batch validation, and `features/person-creation.js` for one atomic project/history update. `ui/forms/person-links.js` owns progressive relationship rows. `model/relationship-draft.js` supplies ordered selection defaults and shared validation for both creation batches and the standalone editor. Placement calculations live in `model/person-placement.js`, with the current graph viewport and obstacles supplied by `graph/person-placement.js`. Adding a person never moves existing cards or fits the entire graph.
 
+`model/person-selection.js` owns locale-aware surname ordering and token-based name matching, including aliases and name history. It prefers a structured surname linked to the displayed name (or a current legal-name record without a full name); otherwise it uses the last word of the basic given-name–surname field. Record the full name and surname together in **Names and surnames** for other naming orders or compound surnames. The shared `ui/person-picker.js` adds searches to native person selects and group checkboxes. Select values remain unchanged during filtering, and checked members stay in the form even when hidden. Call `bindPersonPickers(root)` after rendering new rows; binding is idempotent. Searching does not change project data or history.
+
 ```text
 index.html                 Static document and relative asset entry points
 src/

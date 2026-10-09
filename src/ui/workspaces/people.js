@@ -3,6 +3,7 @@ import { profileSectionCount } from "../../core/profile-catalog.js";
 import { orderedProfileSections } from "../../core/profile-groups.js";
 import { state } from "../../core/state.js";
 import { getLocale, translate as t } from "../../i18n/index.js";
+import { orderedPeople } from "../../model/person-selection.js";
 import { personBiography } from "../../model/biography.js";
 import { displayDate, years } from "../../model/dates.js";
 import { person } from "../../model/lookup.js";
@@ -29,23 +30,20 @@ export function renderProfiles() {
 
 function directory() {
   const q = state.profileSearch.toLocaleLowerCase(getLocale()).trim();
-  const people = state.project.people
-    .filter(
-      (p) =>
-        personPassesFilter(p.id) &&
-        (!state.groupFilter ||
-          (p.groupIds || []).includes(state.groupFilter)) &&
-        [
-          p.name,
-          p.aliases,
-          p.place,
-          ...(p.nameHistory || []).flatMap((r) => [r.fullName, r.surname]),
-        ]
-          .join(" ")
-          .toLocaleLowerCase(getLocale())
-          .includes(q),
-    )
-    .sort((a, b) => a.name.localeCompare(b.name, getLocale()));
+  const people = orderedPeople(state.project.people).filter(
+    (p) =>
+      personPassesFilter(p.id) &&
+      (!state.groupFilter || (p.groupIds || []).includes(state.groupFilter)) &&
+      [
+        p.name,
+        p.aliases,
+        p.place,
+        ...(p.nameHistory || []).flatMap((r) => [r.fullName, r.surname]),
+      ]
+        .join(" ")
+        .toLocaleLowerCase(getLocale())
+        .includes(q),
+  );
   return `<section class="profile-directory"><div class="profile-directory-toolbar"><label class="search">${icon("search")}<input id="profileSearch" type="search" value="${esc(state.profileSearch)}" placeholder="${t("ui.findAPerson")}" aria-label="${t("ui.searchPeople")}"></label><span class="hint">${people.length} / ${state.project.people.length} ${t("ui.people")}</span></div><p class="hint">${t("ui.profileDirectoryHint")}</p><div class="profile-directory-grid">${
     people
       .map((p) => {
