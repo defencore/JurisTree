@@ -89,8 +89,9 @@ test("saved arrangement restores manual moves, zoom and filters after automatic 
     "aria-pressed",
     "true",
   );
-  await expect(page.locator('.node[data-node="p5"]')).toContainText(
-    "Jesse Ward Updated",
+  await expect(page.locator('.node[data-node="p5"]')).toHaveAttribute(
+    "aria-label",
+    /^Jesse Ward Updated ·/,
   );
   await page.locator('[data-action="export"]').click();
   const [download] = await Promise.all([

@@ -3,7 +3,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/browser",
   fullyParallel: false,
-  workers: 1,
+  workers: process.env.CI ? 2 : 1,
   use: {
     baseURL: process.env.JURISTREE_BASE_URL || "http://127.0.0.1:8080/",
     browserName: "chromium",
