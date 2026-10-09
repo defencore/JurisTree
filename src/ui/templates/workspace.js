@@ -35,9 +35,9 @@ export const workspaceTemplate = `
         id="saveState"
         title="@@ui.draftIsSavedOnlyInThisBrowser@@"
       ></span
-      ><button class="btn" data-action="import">
+      ><button class="btn" data-action="import" aria-label="@@ui.import2@@" title="@@ui.import2@@">
         <i data-icon="upload"></i><span>@@ui.import2@@</span></button
-      ><button class="btn primary" data-action="export">
+      ><button class="btn primary" data-action="export" aria-label="@@ui.exportTree@@" title="@@ui.exportTree@@">
         <i data-icon="download"></i><span>@@ui.exportTree@@</span>
       </button>
     </div>

@@ -150,6 +150,14 @@
     font-size: 0.75rem;
   }
 }
+@media (max-width: 900px) {
+  .topbar .top-actions .btn span {
+    display: none;
+  }
+  .topbar .top-actions .btn {
+    min-width: 44px;
+  }
+}
 @media (max-width: 760px) {
   .topbar {
     gap: 10px;
@@ -174,9 +182,6 @@
   }
   .top-actions {
     gap: 7px;
-  }
-  .top-actions .btn span {
-    display: none;
   }
   .top-actions .btn {
     padding: 9px 10px;

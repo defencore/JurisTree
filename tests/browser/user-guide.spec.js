@@ -149,7 +149,7 @@ test("a beginner can create a family, group, profile record and linked source us
   await expect(page.locator("#projectTitle")).toHaveText("Doe household");
 });
 
-for (const width of [320, 390, 1440]) {
+for (const width of [320, 390, 768, 1440]) {
   for (const [language, title] of [
     ["en", "Getting started"],
     ["uk", "Інструкція"],

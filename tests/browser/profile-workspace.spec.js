@@ -176,6 +176,7 @@ for (const width of [320, 390, 768, 1440]) {
             .evaluate(
               (element) => element.scrollWidth <= element.clientWidth + 1,
             ),
+          selector,
         ).toBe(true);
       expect(
         await page.evaluate(
