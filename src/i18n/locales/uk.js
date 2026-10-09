@@ -457,7 +457,6 @@ export default {
   "ui.ifTheExactDateIsUnknown": "Якщо точна дата невідома",
   "ui.exactDeathDate": "Точна дата смерті",
   "ui.orDeathYear": "Або рік смерті",
-  "ui.placeOfOriginCountry": "Місце походження / країна",
   "ui.otherNamesAndSpellings": "Інші імена й написання",
   "ui.maidenNameVariantsInOtherLanguages":
     "Дівоче прізвище, варіанти іншими мовами",

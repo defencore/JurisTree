@@ -457,7 +457,6 @@ export default {
   "ui.ifTheExactDateIsUnknown": "If the exact date is unknown",
   "ui.exactDeathDate": "Exact death date",
   "ui.orDeathYear": "Or death year",
-  "ui.placeOfOriginCountry": "Place of origin / country",
   "ui.otherNamesAndSpellings": "Other names and spellings",
   "ui.maidenNameVariantsInOtherLanguages":
     "Maiden name, variants in other languages",

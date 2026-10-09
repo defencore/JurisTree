@@ -119,7 +119,7 @@ export function renderBiography({
       [translate("ui.birth"), displayDate(p.birth)],
       [translate("ui.deathIfKnown"), displayDate(p.death)],
       [translate(age.ageKey), age.age],
-      [translate("ui.placeOfOriginCountry"), p.place],
+      [translate("ui.placeOfBirth"), p.place],
       [
         translate("ui.ownerDeceasedEstateOwner"),
         p.id === appState.project.subjectId ? translate("ui.yes") : "",
