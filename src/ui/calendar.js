@@ -6,6 +6,7 @@ import { displayDate, localDateString, utcDay } from "../model/dates.js";
 import { person } from "../model/project.js";
 import { typeOptions } from "./components.js";
 import { icon } from "./icons.js";
+import { eventTypesInDomain } from "../core/event-domains.js";
 
 function monthTitle(month) {
   return new Intl.DateTimeFormat(getLocale(), {
@@ -26,8 +27,8 @@ export function calendarToolbar(month, mode) {
   const year = mode === "year";
   return `<div class="calendar-toolbar"><div class="calendar-navigation"><button type="button" class="iconbtn" data-action="calendar-previous" aria-label="${translate(year ? "ui.previousYear" : "ui.previousMonth")}">${icon("chevronLeft")}</button><h2>${esc(year ? month.slice(0, 4) : monthTitle(month))}</h2><button type="button" class="iconbtn" data-action="calendar-next" aria-label="${translate(year ? "ui.nextYear" : "ui.nextMonth")}">${icon("chevronRight")}</button></div><div class="calendar-mode"><button type="button" class="btn ${!year ? "active" : ""}" data-calendar-mode="month" aria-pressed="${!year}">${translate("ui.monthView")}</button><button type="button" class="btn ${year ? "active" : ""}" data-calendar-mode="year" aria-pressed="${year}">${translate("ui.yearView")}</button></div><button type="button" class="btn" data-action="calendar-today">${translate("ui.today")}</button>${year ? `<input type="number" id="calendarYear" min="1" max="9999" step="1" value="${month.slice(0, 4)}" aria-label="${translate("ui.calendarYear")}">` : `<input type="month" id="calendarMonth" value="${month}" aria-label="${translate("ui.calendarMonth")}">`}</div>`;
 }
-export function calendarFilters(query, type) {
-  return `<div class="calendar-filters"><div class="search">${icon("search")}<input id="calendarSearch" value="${esc(query)}" placeholder="${translate("ui.personFamilyOrEvent")}" aria-label="${translate("ui.searchCalendar")}"></div><select id="calendarType" aria-label="${translate("ui.eventType")}"><option value="">${translate("ui.allEventTypes")}</option>${typeOptions(Object.fromEntries(Object.entries(familyEventTypes()).map(([key, [label]]) => [key, label])), type)}</select></div>`;
+export function calendarFilters(query, type, domain) {
+  return `<div class="calendar-filters"><div class="search">${icon("search")}<input id="calendarSearch" value="${esc(query)}" placeholder="${translate("ui.personFamilyOrEvent")}" aria-label="${translate("ui.searchCalendar")}"></div><select id="calendarType" aria-label="${translate("ui.eventType")}"><option value="">${translate("ui.allEventTypes")}</option>${typeOptions(Object.fromEntries(Object.entries(eventTypesInDomain(familyEventTypes(), domain)).map(([key, [label]]) => [key, label])), type)}</select></div>`;
 }
 export function monthGrid(month, occurrences, selected = "", mini = false) {
   const bounds = monthBounds(month),

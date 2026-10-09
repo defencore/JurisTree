@@ -1,3 +1,14 @@
+.profile-category {
+  margin: 22px 0;
+  min-width: 0;
+}
+.profile-category > h3 {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
 .profile {
   border-bottom: 1px solid var(--line);
   padding: 10px 0 19px;

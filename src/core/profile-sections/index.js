@@ -10,6 +10,7 @@ import { skillsSection } from "./skills.js";
 import { weaponsSection } from "./weapons.js";
 import { travelSection } from "./travel.js";
 import { legalSection } from "./legal.js";
+import { custodySection } from "./custody.js";
 import { financesSection } from "./finances.js";
 import { identityHistorySection } from "./identity-history.js";
 import { workSection } from "./work.js";
@@ -44,6 +45,7 @@ export function extendedProfileSections() {
     weapons: weaponsSection(),
     travel: travelSection(),
     legal: legalSection(),
+    custody: custodySection(),
     finances: financesSection(),
     assets: assetsSection(),
     encumbrances: encumbrancesSection(),

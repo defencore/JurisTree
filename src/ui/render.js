@@ -1,3 +1,4 @@
+import { eventRecordActions } from "./event-domains.js";
 import { renderPersonFilterBar } from "../features/person-filters.js";
 import {
   personPassesFilter,
@@ -15,7 +16,6 @@ import { renderCalendar } from "../features/calendar.js";
 import { renderEvents, familyEvents } from "../features/events.js";
 import { renderDocuments, renderGaps } from "../features/documents.js";
 import { renderProperty } from "../features/property.js";
-import { profileScope } from "../features/profiles.js";
 import { renderPeople } from "./people.js";
 import { renderInspector } from "./inspector.js";
 import { renderSaveStatus } from "./save-status.js";
@@ -86,15 +86,16 @@ export function renderMain() {
   $("#viewActions").innerHTML =
     appState.view === "tree"
       ? `<button class="btn" data-action="compare" title="${translate("ui.howAreWeRelated")}">${icon("compare")}<span>${translate("ui.kinship")}</span></button><button class="btn" data-action="add-relation" title="${translate("ui.addRelationship")}">${icon("link")}<span>${translate("ui.relationship")}</span></button><button class="btn primary" data-action="add-person" title="${translate("ui.addPerson")}">${icon("addPerson")}<span>${translate("ui.addPerson")}</span></button>${appState.comparisonPath ? `<button class="iconbtn" data-action="clear-comparison" title="${translate("ui.clearPathHighlight")}" aria-label="${translate("ui.clearPathHighlight")}">${icon("x")}</button>` : ""}`
-      : appState.view === "calendar"
-        ? `<button class="btn primary" data-action="add-calendar-event">${icon("plus")}${translate("ui.addEvent")}</button>`
-        : appState.view === "events"
-          ? profileScope().includes("timeline")
-            ? `<button class="btn primary" data-action="add-event">${icon("plus")}${translate("ui.addEvent")}</button>`
-            : `<button class="btn" data-action="scope">${icon("sliders")}${translate("ui.configureSections")}</button>`
-          : appState.view === "property"
-            ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
-            : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
+      : ["calendar", "events"].includes(appState.view)
+        ? eventRecordActions(
+            appState.view === "calendar"
+              ? appState.calendarDomain
+              : appState.eventDomain,
+            appState.view === "calendar",
+          )
+        : appState.view === "property"
+          ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
+          : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
   const path = route();
   $("#pathPanel").innerHTML =
     appState.view === "tree" && appState.project.purpose === "inheritance"

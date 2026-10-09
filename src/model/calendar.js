@@ -4,6 +4,7 @@ import {
   nextAnniversary,
   utcDay,
 } from "./dates.js";
+import { isMilestone } from "../core/event-domains.js";
 
 export function monthBounds(month) {
   if (!/^\d{4}-\d{2}$/.test(month) || !dateExact(month + "-01"))
@@ -52,9 +53,7 @@ function dateOccurrences(events, first, last) {
         {
           ...event,
           next,
-          jubilee:
-            event.type === "jubilee" ||
-            (event.annual && next.years > 0 && next.years % 5 === 0),
+          jubilee: isMilestone(event, next.years),
         },
       ];
     })

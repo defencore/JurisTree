@@ -209,6 +209,15 @@
   .form-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+  .profile-additional-sections > div {
+    padding: 0 6px 6px;
+  }
+  .profile-editor-section > div {
+    padding: 10px;
+  }
+  .profile-record {
+    padding: 10px;
+  }
   .field input,
   .field select,
   .field textarea,

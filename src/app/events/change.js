@@ -14,9 +14,22 @@ import { renderEvents } from "../../features/events.js";
 import { renderDocuments } from "../../features/documents.js";
 import { clone } from "../../core/utils.js";
 import { state as appState } from "../../core/state.js";
+import { eventDomains } from "../../core/event-domains.js";
+import { renderMain } from "../../ui/render.js";
 export function bindChangeEvents() {
   document.addEventListener("change", (e) => {
     const t = e.target;
+    if (
+      ["eventDomain", "calendarDomain"].includes(t.id) &&
+      Object.hasOwn(eventDomains(), t.value)
+    ) {
+      appState[t.id] = t.value;
+      appState[t.id === "eventDomain" ? "eventType" : "calendarType"] = "";
+      appState.eventLimit = 80;
+      appState.calendarUndatedLimit = 80;
+      renderMain();
+      return;
+    }
     if (t.id === "calendarYear") {
       changeCalendarYear(t.value);
       return;

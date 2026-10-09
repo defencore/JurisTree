@@ -29,6 +29,7 @@ import {
 import { editRelation } from "../../features/relationships.js";
 import { allocationRow, editProperty } from "../../features/property.js";
 import { editPerson } from "../../features/profiles.js";
+import { addProfileRecord } from "../../features/profile-record-entry.js";
 import { renderProfileRecord } from "../../ui/forms/profile-record.js";
 import { viewBiography } from "../../features/biography.js";
 import { selectStartTemplate } from "../../features/launcher.js";
@@ -54,6 +55,18 @@ export function bindClickEvents() {
     );
     if (!b) return;
     try {
+      if (b.dataset.addProfileDomain) {
+        await addProfileRecord(null, b.dataset.addProfileDomain);
+        return;
+      }
+      if (b.dataset.addProfileRecord) {
+        await addProfileRecord(b.dataset.addProfileRecord);
+        return;
+      }
+      if (b.dataset.openProfileSection) {
+        await editPerson(b.dataset.profilePerson, b.dataset.openProfileSection);
+        return;
+      }
       if (b.dataset.printBiography) {
         await printBiography(b.dataset.printBiography);
         return;

@@ -19,7 +19,6 @@ export function workSection() {
             "select",
             {
               work: "ui.work",
-              education: "ui.education",
               service: "ui.service",
               office: "ui.publicOffice",
               other: "ui.other",

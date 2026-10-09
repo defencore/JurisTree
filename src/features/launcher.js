@@ -123,12 +123,14 @@ export function activateTree(
   appState.showDocs = false;
   appState.eventSearch = "";
   appState.eventType = "";
+  appState.eventDomain = "family";
   appState.calendarMode = "month";
   appState.calendarUndatedLimit = 80;
   appState.calendarMonth = "";
   appState.calendarDay = "";
   appState.calendarSearch = "";
   appState.calendarType = "";
+  appState.calendarDomain = "family";
   appState.eventMode = "upcoming";
   appState.eventLimit = 80;
   appState.camera = {

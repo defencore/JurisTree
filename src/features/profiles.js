@@ -2,7 +2,11 @@ import { renderPersonForm } from "../ui/forms/person.js";
 import { renderProfileRecord } from "../ui/forms/profile-record.js";
 import { fields, recordValues } from "../ui/profile-fields.js";
 import { defaultScopes, recordConfigs, sectionInfo } from "../core/config.js";
-import { esc } from "../core/dom.js";
+import { $, esc } from "../core/dom.js";
+import {
+  profileGroups,
+  orderedProfileSections,
+} from "../core/profile-groups.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { bounds, fit, focusPerson } from "../graph/camera.js";
@@ -15,8 +19,8 @@ import { profileFormError } from "../model/validation.js";
 import { commit } from "../services/history.js";
 import { checks, sourceChips } from "../ui/components.js";
 import { openDialog } from "../ui/dialog.js";
-import { icon } from "../ui/icons.js";
-export async function editPerson(id = null) {
+import { icon, icons } from "../ui/icons.js";
+export async function editPerson(id = null, section = null, addRecord = false) {
   const p = id
     ? person(id)
     : {
@@ -42,6 +46,24 @@ export async function editPerson(id = null) {
     renderPersonForm(p, req, id),
     {
       wide: true,
+      onOpen: () => {
+        if (!section || !recordConfigs()[section]) return;
+        const target = $(`#records-${section}`);
+        if (addRecord)
+          target.insertAdjacentHTML("beforeend", renderProfileRecord(section));
+        for (
+          let element = target.parentElement;
+          element;
+          element = element.parentElement
+        )
+          if (element.tagName === "DETAILS") element.open = true;
+        const focus = addRecord ? target.lastElementChild : target;
+        icons();
+        focus.scrollIntoView({ block: "start" });
+        focus
+          .querySelector("input:not([type=hidden]),select,textarea")
+          ?.focus({ preventScroll: true });
+      },
       validate: (f) => {
         if (!f.get("name").trim()) return translate("ui.enterAName");
         const birth = f.get("birthDate") || f.get("birthYear"),
@@ -137,14 +159,17 @@ export async function editScope() {
         property: translate("ui.propertyAllocation"),
         research: translate("ui.relationshipResearch"),
       }[appState.project.purpose],
-    )}</div><p class="hint">${translate("ui.peopleFamilyRelationshipsAndDocumentsAreAlwaysAvailable")}</p><div class="check-grid">${Object.entries(
-      sectionInfo(),
-    )
+    )}</div><p class="hint">${translate("ui.peopleFamilyRelationshipsAndDocumentsAreAlwaysAvailable")}</p>${profileGroups()
       .map(
-        ([k, [l, ic]]) =>
-          `<label><input type="checkbox" name="sections" value="${k}" ${visible.includes(k) ? "checked" : ""}>${icon(ic)}${l}</label>`,
+        (group) =>
+          `<section class="profile-category"><h3>${esc(group.label)}</h3><div class="check-grid">${group.sections
+            .map((key) => {
+              const [label, symbol] = sectionInfo()[key];
+              return `<label><input type="checkbox" name="sections" value="${key}" ${visible.includes(key) ? "checked" : ""}>${icon(symbol)}${esc(label)}</label>`;
+            })
+            .join("")}</div></section>`,
       )
-      .join("")}</div>`,
+      .join("")}`,
   );
   if (f)
     commit(() => {
@@ -164,20 +189,30 @@ export function profileEditors(p) {
     } else if (section === "biography") {
       body = `<label class="field">${translate("ui.lifeStoryAndHistoricalInformation")}<textarea name="biography" rows="6" maxlength="30000">${esc(p.biography)}</textarea></label><p class="field-caption">${translate("ui.supportingSources")}</p>${checks(appState.project.documents, "bioSourceIds", p.bioSourceIds || [], (d) => d.title)}`;
     } else if (section === "interests") {
-      body = `<label class="field">${translate("ui.hobbies")}<textarea name="hobbies" maxlength="5000">${esc(p.hobbies)}</textarea></label><label class="field">${translate("ui.interests")}<textarea name="interests" maxlength="5000">${esc(p.interests)}</textarea></label>`;
+      body = `<p class="hint">${translate("ui.datedInterestsHint")}</p><label class="field">${translate("ui.hobbies")}<textarea name="hobbies" maxlength="5000">${esc(p.hobbies)}</textarea></label><label class="field">${translate("ui.interests")}<textarea name="interests" maxlength="5000">${esc(p.interests)}</textarea></label>`;
     } else
       body = `<label class="field">${translate("ui.healthDetails")}<textarea name="health" rows="4" maxlength="10000">${esc(p.health)}</textarea></label><p class="field-caption">${translate("ui.relatedSources")}</p>${checks(appState.project.documents, "healthSourceIds", p.healthSourceIds || [], (d) => d.title)}`;
-    return `<details class="profile-editor-section"><summary>${icon(ic)}${label}<span>${recordConfigs()[section] ? (p[recordConfigs()[section].key] || []).length : ""}</span>${icon("chevron")}</summary><div>${body}</div></details>`;
+    return `<details class="profile-editor-section" data-profile-section="${section}"><summary>${icon(ic)}${label}<span>${recordConfigs()[section] ? (p[recordConfigs()[section].key] || []).length : ""}</span>${icon("chevron")}</summary><div>${body}</div></details>`;
   };
-  const additional = Object.keys(sectionInfo()).filter(
+  const additional = orderedProfileSections().filter(
     (key) => !visible.includes(key),
   );
   return (
-    visible.map(renderSection).join("") +
+    renderProfileGroups(visible, renderSection) +
     (additional.length
-      ? `<details class="profile-additional-sections"><summary>${icon("plus")}${translate("ui.moreProfileSections")}${icon("chevron")}</summary><div><p class="hint">${translate("ui.moreProfileSectionsHint")}</p>${additional.map(renderSection).join("")}</div></details>`
+      ? `<details class="profile-additional-sections"><summary>${icon("plus")}${translate("ui.moreProfileSections")}${icon("chevron")}</summary><div><p class="hint">${translate("ui.moreProfileSectionsHint")}</p>${renderProfileGroups(additional, renderSection)}</div></details>`
       : "")
   );
+}
+function renderProfileGroups(sections, renderSection) {
+  return profileGroups()
+    .map((group) => {
+      const keys = group.sections.filter((key) => sections.includes(key));
+      return keys.length
+        ? `<section class="profile-category"><h3>${esc(group.label)}</h3>${keys.map(renderSection).join("")}</section>`
+        : "";
+    })
+    .join("");
 }
 export function collectProfile(form) {
   const data = {};

@@ -32,18 +32,34 @@ export function personalSection() {
           ],
           ["title", "ui.label"],
           ["description", "ui.description", "textarea"],
-        ],
-      ],
-      [
-        "ui.periodAndFrequency",
-        [
-          ["frequency", "ui.frequencyContext"],
           ["from", "ui.from", "period"],
           ["to", "ui.to", "period"],
+          [
+            "timeStatus",
+            "ui.activityPeriodStatus",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              current: "ui.currentActivity",
+              past: "ui.pastActivity",
+              paused: "ui.pausedActivity",
+              planned: "ui.plannedActivity",
+            },
+          ],
         ],
       ],
+      ["ui.periodAndFrequency", [["frequency", "ui.frequencyContext"]]],
       attributionGroup,
     ],
     [["from", "to"]],
+    {
+      calendar: {
+        type: "personal",
+        dates: [
+          ["from", "ui.started"],
+          ["to", "ui.ended"],
+        ],
+      },
+    },
   );
 }

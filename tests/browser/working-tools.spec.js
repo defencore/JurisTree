@@ -147,6 +147,7 @@ test("calendar shows hidden profile dates, jubilee birthdays and saved memorial 
   await expect(page.locator(".calendar-agenda")).toContainText(
     "Example remembrance day",
   );
+  await page.locator("#calendarDomain").selectOption("financial");
   await page.locator("#calendarType").selectOption("finance");
   await page.locator("#calendarMonth").fill("2026-11");
   await page.locator('[data-calendar-day="2026-11-01"]').click();

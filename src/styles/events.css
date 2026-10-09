@@ -1,3 +1,37 @@
+.event-domain-control {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  align-items: center;
+  gap: 16px 24px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--blue);
+  background: var(--paper);
+  border-radius: 5px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.event-domain-control .field {
+  margin: 0;
+  min-width: 0;
+}
+.event-domain-control select {
+  width: 100%;
+  min-width: 0;
+}
+.event-domain-control p {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 620px) {
+  .event-domain-control {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 12px;
+    gap: 12px;
+  }
+}
 .events-overview {
   display: grid;
   gap: 14px;
@@ -74,22 +108,6 @@
   max-width: 100%;
   min-height: 42px;
   padding: 9px 32px 9px 12px;
-}
-.event-scope-note {
-  align-items: center;
-  background: var(--blue-soft);
-  border: 1px solid var(--blue-soft);
-  border-radius: 12px;
-  color: var(--muted);
-  display: flex;
-  font-size: 0.875rem;
-  gap: 10px;
-  line-height: 1.5;
-  margin: 0 0 20px;
-  padding: 12px 14px;
-}
-.event-scope-note .btn {
-  margin-left: auto;
 }
 .family-event-list {
   display: grid;

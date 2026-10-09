@@ -2,6 +2,7 @@ import { recordConfigs } from "../core/config.js";
 import { translate } from "../i18n/index.js";
 import { sourceEvidence } from "../core/sources.js";
 import { isProfessionalRelationship } from "../core/professional-relationships.js";
+import { canRepeatAnnually } from "../core/event-domains.js";
 
 /** Collect dates from the project. Profile visibility is an optional view filter. */
 export function collectProjectEvents(
@@ -72,7 +73,7 @@ export function collectProjectEvents(
           section,
         });
     };
-    if (p.birth)
+    if (p.birth) {
       add(
         "birth",
         "birth",
@@ -85,6 +86,8 @@ export function collectProjectEvents(
         true,
         sourceFor("birth"),
       );
+      events.at(-1).memorial = !!p.death || p.lifeStatus === "deceased";
+    }
     if (p.death)
       add(
         "death",
@@ -101,7 +104,7 @@ export function collectProjectEvents(
           r.id,
           r.title || translate("ui.event"),
           r.date,
-          r.repeat === "annual",
+          r.repeat === "annual" && canRepeatAnnually(r.category || "custom"),
           r.sourceId,
           r.notes,
           r.id,

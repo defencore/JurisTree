@@ -85,6 +85,7 @@ test("year calendar jumps directly across years and opens months with travel and
   await page.locator("#calendarYear").press("Tab");
   await page.locator('[data-calendar-open-month="2026-10"]').click();
   await expect(page.locator("#calendarMonth")).toHaveValue("2026-10");
+  await page.locator("#calendarDomain").selectOption("biography");
   await page.locator("#calendarType").selectOption("travel");
   await page.locator('[data-calendar-day="2026-10-11"]').click();
   await expect(page.locator(".calendar-agenda")).toContainText(

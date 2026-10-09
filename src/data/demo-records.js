@@ -15,10 +15,25 @@ export function populateDemoRecords(project) {
     "Museum researcher specialising in local history and family archives. Born Jesse Ward to Jamie Doe and Taylor Ward. Retained the surname Ward after her mother married Jordan Roe. Works with historical collections and volunteers at a community history group.";
   p("p5").educationRecords = [
     {
+      id: "demo-school",
+      institution: "Willow Park Secondary School",
+      institutionType: "school",
+      level: "Secondary education",
+      qualification: "Secondary school diploma",
+      from: "1995",
+      to: "2006",
+      graduatedAt: "2006",
+      status: "completed",
+      location: "Ottawa, Canada",
+    },
+    {
       id: "demo-education",
       institution: "Riverside Arts College",
+      institutionType: "college",
       qualification: "Master's degree",
       field: "History",
+      faculty: "Humanities",
+      studyMode: "Full-time",
       from: "2006-09-01",
       to: "2011-06-30",
       graduatedAt: "2011-06-30",
@@ -101,6 +116,8 @@ export function populateDemoRecords(project) {
       basis: "self",
       reportedBy: "Jesse Ward",
       recordedAt: "2026-01-01",
+      from: "2010",
+      timeStatus: "current",
     },
   ];
   p("p5").events = [
@@ -139,13 +156,21 @@ export function populateDemoRecords(project) {
       sourceId: "d6",
     },
   ];
-  p("p11").legalRecords = [
+  p("p11").legalRecords = [];
+  p("p11").custodyRecords = [
     {
       id: "demo-custody",
       kind: "imprisonment",
       title: "Reported custody period",
       from: "2016-01-15",
       to: "2018-01-15",
+      facility: "Northbank Correctional Centre",
+      location: "Northbank, Ontario",
+      country: "Canada",
+      caseNumber: "CR-2015-0816",
+      legalProvision: "Charge provisions pending archive confirmation",
+      sentence: "Reported term of two years",
+      releasedAt: "2018-01-15",
       authority: "Regional correctional administration",
       role: "convicted",
       status: "completed",

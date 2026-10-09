@@ -18,6 +18,8 @@ import {
 } from "../ui/calendar.js";
 import { icons } from "../ui/icons.js";
 import { eventCard } from "./events.js";
+import { eventDomain } from "../core/event-domains.js";
+import { eventDomainControl } from "../ui/event-domains.js";
 
 export function changeCalendarMonth(month) {
   try {
@@ -61,17 +63,19 @@ export function renderCalendar() {
   const query = appState.calendarSearch.toLocaleLowerCase(getLocale());
   const all = collectProjectEvents(appState.project, {
     groupId: appState.groupFilter,
-  }).filter((e) =>
-    [
-      e.title,
-      e.notes,
-      person(e.personId)?.name,
-      ...(person(e.personId)?.groupIds || []).map((id) => group(id)?.name),
-    ]
-      .join(" ")
-      .toLocaleLowerCase(getLocale())
-      .includes(query),
-  );
+  })
+    .filter((e) => eventDomain(e.type) === appState.calendarDomain)
+    .filter((e) =>
+      [
+        e.title,
+        e.notes,
+        person(e.personId)?.name,
+        ...(person(e.personId)?.groupIds || []).map((id) => group(id)?.name),
+      ]
+        .join(" ")
+        .toLocaleLowerCase(getLocale())
+        .includes(query),
+    );
   const occurrences = (
     mode === "year"
       ? yearOccurrences(all, month.slice(0, 4))
@@ -86,10 +90,19 @@ export function renderCalendar() {
   const chosen = occurrences.filter(
       (e) => e.next.date === appState.calendarDay,
     ),
-    undated = all.filter((e) => !dateExact(e.date));
+    undated = all.filter(
+      (e) =>
+        !dateExact(e.date) &&
+        (!appState.calendarType || e.type === appState.calendarType),
+    );
   $("#otherView").innerHTML =
+    eventDomainControl("calendarDomain", appState.calendarDomain) +
     calendarToolbar(month, mode) +
-    calendarFilters(appState.calendarSearch, appState.calendarType) +
+    calendarFilters(
+      appState.calendarSearch,
+      appState.calendarType,
+      appState.calendarDomain,
+    ) +
     `<p class="hint">${translate("ui.calendarAllSectionsHint")}</p>` +
     (mode === "year"
       ? yearGrid(month.slice(0, 4), occurrences)

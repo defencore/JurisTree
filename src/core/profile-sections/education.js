@@ -12,10 +12,25 @@ export function educationSection() {
         null,
         [
           ["institution", "ui.educationalInstitution"],
+          [
+            "institutionType",
+            "ui.educationalInstitutionType",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              school: "ui.school",
+              vocational: "ui.vocationalInstitution",
+              college: "ui.college",
+              university: "ui.university",
+              course: "ui.courseTraining",
+              other: "ui.other",
+            },
+          ],
           ["qualification", "ui.qualificationDegree"],
           ["field", "ui.fieldOfStudy"],
-          ["from", "ui.from", "period"],
-          ["to", "ui.to", "period"],
+          ["from", "ui.enrollmentDateYear", "period"],
+          ["to", "ui.studyEndDateYear", "period"],
+          ["graduatedAt", "ui.graduationDateYear", "period"],
         ],
       ],
       [
@@ -23,6 +38,9 @@ export function educationSection() {
         [
           ["level", "ui.educationLevel"],
           ["faculty", "ui.facultyDepartment"],
+          ["specialtyCode", "ui.specialtyCode"],
+          ["studyMode", "ui.studyMode"],
+          ["admissionReference", "ui.admissionReference"],
           ["location", "ui.place"],
           [
             "status",
@@ -37,12 +55,16 @@ export function educationSection() {
             },
           ],
           ["diplomaNumber", "ui.diplomaNumber"],
-          ["graduatedAt", "ui.graduationDate", "date"],
+          ["diplomaSeries", "ui.diplomaSeries"],
+          ["issuedAt", "ui.educationDocumentIssued", "period"],
         ],
       ],
       attributionGroup,
     ],
-    [["from", "to"]],
+    [
+      ["from", "to"],
+      ["from", "graduatedAt"],
+    ],
     { coverage: { from: "from", to: "to", current: { status: ["current"] } } },
   );
 }

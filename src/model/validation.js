@@ -22,6 +22,7 @@ import { translate } from "../i18n/index.js";
 import { dateExact, partialDate } from "./dates.js";
 import { fresh } from "./project.js";
 import { profileRecordError } from "./profile-records.js";
+import { migrateProfileHistory } from "./profile-migrations.js";
 import {
   isProfessionalRelationship,
   professionalFieldKeys,
@@ -116,6 +117,7 @@ export function validateImport(raw) {
   });
   const groupIds = new Set(p.groups.map((g) => g.id));
   p.people = list("people", 600).map((v) => {
+    v = migrateProfileHistory(v);
     const x = {
       id: v.id,
       name: str(v.name, 150) || translate("ui.unnamed"),

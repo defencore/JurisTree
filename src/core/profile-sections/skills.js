@@ -18,6 +18,7 @@ export function skillsSection() {
             {
               skill: "ui.skill",
               hobby: "ui.hobbies",
+              interest: "ui.interests",
               sport: "ui.sport",
               martialArt: "ui.martialArt",
               weapons: "ui.weaponsProficiency",
@@ -43,6 +44,18 @@ export function skillsSection() {
           ],
           ["from", "ui.from", "period"],
           ["to", "ui.to", "period"],
+          [
+            "timeStatus",
+            "ui.activityPeriodStatus",
+            "select",
+            {
+              unspecified: "ui.notSpecified",
+              current: "ui.currentActivity",
+              past: "ui.pastActivity",
+              paused: "ui.pausedActivity",
+              planned: "ui.plannedActivity",
+            },
+          ],
           ["frequency", "ui.frequencyContext"],
           ["description", "ui.description", "textarea"],
         ],
@@ -59,6 +72,15 @@ export function skillsSection() {
       attributionGroup,
     ],
     [["from", "to"]],
-    { calendar: { type: "skill", dates: [["expiryDate", "ui.validUntil"]] } },
+    {
+      calendar: {
+        type: "skill",
+        dates: [
+          ["from", "ui.started"],
+          ["to", "ui.ended"],
+          ["expiryDate", "ui.validUntil"],
+        ],
+      },
+    },
   );
 }

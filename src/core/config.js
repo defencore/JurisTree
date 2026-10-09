@@ -1,6 +1,7 @@
 import { theme } from "./theme.js";
 import { translate } from "../i18n/index.js";
 import { extendedProfileSections } from "./profile-sections/index.js";
+import { orderedProfileSections } from "./profile-groups.js";
 export const GRAPH_FONT = "DejaVu Sans,Tahoma,Verdana,Arial,sans-serif";
 export const CAMERA_MIN_ZOOM = 0.025;
 export const CAMERA_MAX_ZOOM = 2.5;
@@ -89,8 +90,8 @@ export const groupColors = [
   theme.violet,
 ];
 export function sectionInfo() {
-  return {
-    timeline: [translate("ui.eventsAndAnniversaries"), "calendarClock"],
+  const sections = {
+    timeline: [translate("ui.familyDates"), "calendarClock"],
     biography: [translate("ui.biographyAndHistory"), "book"],
     interests: [translate("ui.hobbiesAndInterests"), "sparkles"],
     health: [translate("ui.healthInformation"), "heartPulse"],
@@ -102,6 +103,9 @@ export function sectionInfo() {
       ]),
     ),
   };
+  return Object.fromEntries(
+    orderedProfileSections().map((key) => [key, sections[key]]),
+  );
 }
 export const defaultScopes = {
   family: [
@@ -110,13 +114,25 @@ export const defaultScopes = {
     "residences",
     "biography",
     "occupations",
+    "education",
     "interests",
+    "skills",
+    "personal",
     "health",
     "pets",
   ],
   inheritance: [],
   property: ["contacts"],
-  research: ["timeline", "residences", "biography", "occupations"],
+  research: [
+    "timeline",
+    "residences",
+    "biography",
+    "education",
+    "occupations",
+    "legal",
+    "custody",
+    "claims",
+  ],
 };
 export function recordConfigs() {
   return {
@@ -175,11 +191,12 @@ export function familyEventTypes() {
   return {
     birth: [translate("ui.birth"), "baby"],
     death: [translate("ui.deathAnniversary"), "heart"],
-    custom: [translate("ui.eventsAndAnniversaries"), "calendarClock"],
+    custom: [translate("ui.familyDates"), "calendarClock"],
     anniversary: [translate("ui.anniversaries"), "heart"],
     jubilee: [translate("ui.jubilees"), "sparkles"],
     memorial: [translate("ui.memorialDates"), "heart"],
     legal: [translate("ui.legalHistory"), "landmark"],
+    custody: [translate("ui.custodyHistory"), "landmark"],
     finance: [translate("ui.financialHistory"), "property"],
     asset: [translate("ui.identifiedAssets"), "property"],
     encumbrance: [translate("ui.assetRestrictions"), "landmark"],
@@ -199,6 +216,7 @@ export function familyEventTypes() {
     weapon: [translate("ui.weaponOwnership"), "shield"],
     skill: [translate("ui.skillsHobbies"), "sparkles"],
     education: [translate("ui.education"), "book"],
+    personal: [translate("ui.personalPortrait"), "sparkles"],
     residence: [translate("ui.residence"), "mapPin"],
     occupation: [translate("ui.workAndEducation"), "briefcase"],
     pet: [translate("ui.pets"), "paw"],
@@ -206,7 +224,7 @@ export function familyEventTypes() {
 }
 export function eventCategories() {
   return Object.fromEntries(
-    ["custom", "anniversary", "jubilee", "memorial", "legal"].map((key) => [
+    ["custom", "anniversary", "jubilee", "memorial"].map((key) => [
       key,
       familyEventTypes()[key][0],
     ]),
