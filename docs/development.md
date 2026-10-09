@@ -1,5 +1,7 @@
 # Development guide
 
+The in-app walkthrough uses `src/core/user-guide.js` for its lesson sequence, `src/ui/user-guide.js` for rendering and navigation, and `src/features/user-guide.js` for opening and downloading. `src/data/guide-example.js` supplies the displayed example and downloadable project from the same people, relationship and group definitions. Keep the English [first-map tutorial](getting-started.md) aligned with these definitions when changing the exercise.
+
 ## Local development
 
 Use Node.js 22 or newer for development tools:

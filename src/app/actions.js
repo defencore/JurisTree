@@ -33,6 +33,7 @@ import {
 import { editPerson, editProject, editScope } from "../features/profiles.js";
 import { editProperty } from "../features/property.js";
 import { comparePeople, editRelation } from "../features/relationships.js";
+import { openUserGuide, downloadGuideExample } from "../features/user-guide.js";
 import { fit, focusPerson, zoom } from "../graph/camera.js";
 import { arrangeGraph } from "../graph/layout.js";
 import { translate } from "../i18n/index.js";
@@ -50,6 +51,8 @@ export async function newTree() {
 }
 export async function handleAction(action) {
   const handlers = {
+    "user-guide": openUserGuide,
+    "download-guide-example": downloadGuideExample,
     "person-filters": editPersonFilters,
     "clear-person-filters": clearPersonFilters,
     "update-biography-review": updateBiographyReview,

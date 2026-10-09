@@ -14,8 +14,8 @@ export const startTemplate = `
         <b>JurisTree</b><small>@@ui.peopleDocumentsRelationships@@</small>
       </div>
     </div>
-<button class="btn start-help" type="button" data-action="coverage">
-      <i data-icon="help"></i><span>@@ui.capabilitiesAndLimits@@</span>
+<button class="btn start-help" type="button" data-action="user-guide" aria-label="@@ui.userGuideTitle@@" title="@@ui.userGuideTitle@@">
+      <i data-icon="book"></i><span>@@ui.userGuideTitle@@</span>
     </button>
     <div class="header-preferences">${languageControl}</div>
   </header>

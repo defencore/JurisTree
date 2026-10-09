@@ -2336,4 +2336,102 @@ export default {
     "General health notes and individual medical records: conditions, allergies, treatment and dietary restrictions.",
   "ui.personalSectionHint":
     "Habits, preferences and beliefs, with their periods. Food tastes belong here; medical dietary restrictions belong in Health.",
+  "ui.userGuideTitle": "Getting started",
+  "ui.guideContents": "In this guide",
+  "ui.guideChooseStep": "Choose a step",
+  "ui.guideIntro":
+    "Build a map step by step: people first, then relationships, groups and supporting information. The same approach scales from one family to a large tree like the demonstration.",
+  "ui.guidePracticeTitle": "A small map for practice",
+  "ui.guidePracticeHint":
+    "8 people, 3 generations, 3 groups and 11 relationships. Download the JSON file and open it through “{import}”. Downloading leaves your current map unchanged.",
+  "ui.guideDownloadExample": "Example JSON",
+  "ui.guideExampleProjectTitle": "Learning example — three generations",
+  "ui.guideStart": "Create a map",
+  "ui.guideStartOne":
+    "On the home screen, enter a map title, choose “{family}” and select “{create}”.",
+  "ui.guideStartTwo":
+    "Start with one family branch. Add earlier generations and relatives as information becomes available; there is no need to enter everyone at once.",
+  "ui.guideStartThree":
+    "From an open map, choose “{new}” at the bottom of the sidebar to return to the home screen. On a phone, first open the navigation menu. Export the current project before creating another one.",
+  "ui.guideStartNote":
+    "“{mode}” suggests visible sections and tools. Changing it preserves people, relationships and profile information.",
+  "ui.guidePeople": "Add people",
+  "ui.guidePeopleOne":
+    "Open “{profiles}” or the relationship map and choose “{addPerson}”. Enter the name, then save. Repeat for each person.",
+  "ui.guidePeopleTwo":
+    "Add birth and death dates or years, gender and life status when known. These values support age badges, calendar dates and family role labels.",
+  "ui.guidePeopleThree":
+    "Keep one profile per person. Record maiden surnames and previous names in “{names}”; a name change does not require a second person.",
+  "ui.guidePeopleNote":
+    "For a first exercise, add the eight fictional people below. Enter each current name in the main name field and maiden names separately.",
+  "ui.guideExamplePeople": "People in the example",
+  "ui.guideExamplePeopleHint":
+    "The numbers below are birth years. Every person is fictional.",
+  "ui.guideRelationships": "Connect parents, children and partners",
+  "ui.guideRelationshipsOne":
+    "Choose “{addRelationship}” on the map or in a complete profile. Select the two people and the relationship type.",
+  "ui.guideRelationshipsTwo":
+    "For “{parenthood}”, “{first}” is the parent and “{second}” is the child. Add a separate relationship from each known parent to each child.",
+  "ui.guideRelationshipsThree":
+    "For “{marriage}”, add one relationship between the partners. Use “{partnership}” for dating or cohabitation, and record the kind, period and status where known.",
+  "ui.guideRelationshipsNote":
+    "Grouping people or uploading a certificate does not create a relationship. Siblings, grandparents, aunts, uncles and cousins are derived from recorded family links; extend both branches to their shared ancestors.",
+  "ui.guideExampleDiagram": "Three generations and two family branches",
+  "ui.guideExampleResult":
+    "Jamie and Taylor share parents Alex and Morgan. Their children Robin and Avery are first cousins. The map contains 8 people and 11 relationships.",
+  "ui.guideExampleMarriages": "Add these 3 marriages",
+  "ui.guideExampleMarriagesHint":
+    "Choose “{marriage}”. Each row is one relationship; its direction does not change the marriage.",
+  "ui.guideExampleParenthood": "Add these 8 parent–child relationships",
+  "ui.guideExampleParenthoodHint":
+    "Choose “{parenthood}”. Every arrow goes from the first person (parent) to the second person (child).",
+  "ui.guideOtherRelationships": "Adoption, step-parents and uncertain links",
+  "ui.guideOtherRelationshipsText":
+    "Use “{adoption}” for adoptive parent–child links and retain separate “{parenthood}” links to biological parents when known. “{stepParent}” is a separate type. For an uncertain family connection choose “{possible}”; describe the report and its source. Mark unverified information for review rather than treating it as confirmed ancestry.",
+  "ui.guideGroups": "Organize families and groups",
+  "ui.guideGroupsOne":
+    "Use the button beside “{groups}”. Enter a group name, choose a color, check its members and save.",
+  "ui.guideGroupsTwo":
+    "A group can represent a household, family branch or research collection. The same person may belong to several groups; do not duplicate their profile.",
+  "ui.guideGroupsThree":
+    "Select a group to focus the map and lists. Choose “{entireFamily}” to return to everyone. Edit a group to change its members, collapse it on the map or expand it again.",
+  "ui.guideGroupsNote":
+    "A group is an organizational container. A marriage, parenthood or professional relationship must still be entered separately.",
+  "ui.guideExampleGroups": "Create these 3 groups",
+  "ui.guideProfiles": "Complete a profile",
+  "ui.guideProfilesOne":
+    "In “{profiles}”, open a person and choose “{editProfile}”. Find the needed section using the contents, phone section picker or section search.",
+  "ui.guideProfilesTwo":
+    "Add separate records for education, residence, employment, travel, documents or other facts. Include dates or periods and sources when known; expand extra fields only as needed.",
+  "ui.guideProfilesThree":
+    "Use “{interests}” for hobbies and abilities, “{habits}” for routines and views, and “{health}” for general health information and medical records. Mark frequently used people with a star for quick access.",
+  "ui.guideProfilesNote":
+    "Only the person’s name is required. “{scope}” controls the compact panel; complete profiles and autobiographies still include all entered sections.",
+  "ui.guideSources": "Add documents and evidence",
+  "ui.guideSourcesOne":
+    "Open “{sources}” and add a file, or create a “{noFile}” entry for a source you have not digitized.",
+  "ui.guideSourcesTwo":
+    "Enter the title, document type, date, archive/reference and provenance. Link the relevant people and relationships so the source can be found from their profiles.",
+  "ui.guideSourcesThree":
+    "For a rumor, recording or statement, record who reported it, when, and what still needs checking. Set verification separately; an uploaded file is not automatically official proof.",
+  "ui.guideSourcesNote":
+    "A source supports a recorded fact or relationship. Passport details belong in Identity documents; a linked source can hold its scan. Civil records do not automatically change names or parenthood.",
+  "ui.guideMap": "Arrange and explore the map",
+  "ui.guideMapOne":
+    "On the map, choose “{generations}” under “{layout}”, then “{fit}”. Reapply the layout after adding a branch; drag individual cards to adjust their placement.",
+  "ui.guideMapTwo":
+    "Select a person to see relatives highlighted around them. Use “{kinship}” to compare two people, “{search}” for paths, and the top search or filters to find recorded details.",
+  "ui.guideMapThree":
+    "On a phone, pan with one finger and zoom with two. Enable “{move}” to drag cards. Open “{mapOptions}” for layouts, display settings and analysis tools.",
+  "ui.guideMapNote":
+    "If someone seems missing, check the selected group, collapsed groups, search/analysis results and “{display}” settings. Filters hide information from the current view; they do not delete it.",
+  "ui.guideBackup": "Save, restore and print",
+  "ui.guideBackupOne":
+    "Choose “{export}” → “{zip}” for an editable backup with attached files. Use “{import}” to restore it or open the practice JSON.",
+  "ui.guideBackupTwo":
+    "JSON stores project data without attachments. PNG and SVG are pictures of the map, not editable project backups.",
+  "ui.guideBackupThree":
+    "Open a person’s “{biography}” and select “{print}”. In the browser print dialog, choose Save as PDF or a printer.",
+  "ui.guideBackupNote":
+    "Autosave keeps a draft in this browser on this device. Export ZIP regularly and before opening another project; drafts do not synchronize automatically.",
 };

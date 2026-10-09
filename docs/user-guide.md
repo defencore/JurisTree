@@ -2,6 +2,8 @@
 
 JurisTree is a multilingual workspace for family relationships, personal profiles, documents, evidence, events and property history. It runs entirely in the browser and can be hosted on GitHub Pages.
 
+Start with the [first-map tutorial](getting-started.md) to create people, family links, groups and supporting records. The same walkthrough is available in all interface languages through the book button beside the language selector, with a downloadable eight-person example.
+
 The application uses native JavaScript ES modules and plain CSS. It has no backend, user accounts, remote database, production Node.js runtime or CDN dependency. JSZip and SVG icons are included locally.
 
 ## Features

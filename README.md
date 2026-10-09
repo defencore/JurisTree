@@ -6,6 +6,8 @@
 
 Create a project, import a JurisTree ZIP/JSON file, resume your browser draft or open the fictional demonstration.
 
+Use the book button beside the language selector for an in-app walkthrough in EN / UA / RU, including a downloadable three-generation example. The [first-map tutorial](docs/getting-started.md) explains the same exercise in English.
+
 1. Choose a workspace mode and add people.
 2. Open **People & profiles** to complete a profile. Find sections by name, field or category; only the person's name is required.
 3. Connect people and attach sources. Record dates, original names, attribution and verification where needed.

@@ -41,7 +41,7 @@ export const workspaceTemplate = `
         <i data-icon="download"></i><span>@@ui.exportTree@@</span>
       </button>
     </div>
-    <div class="header-preferences">${languageControl}</div>
+    <div class="header-preferences"><button type="button" class="iconbtn workspace-guide-button" data-action="user-guide" aria-label="@@ui.userGuideTitle@@" title="@@ui.userGuideTitle@@"><i data-icon="book"></i></button>${languageControl}</div>
   </header>
   <section class="global-search-bar" aria-label="@@ui.globalSearch@@">
     <div class="global-search-input"><i data-icon="search"></i><input id="globalSearch" type="search" autocomplete="off" placeholder="@@ui.globalSearchPlaceholder@@" aria-label="@@ui.globalSearch@@" aria-controls="globalSearchResults" aria-expanded="false"><button type="button" class="iconbtn small" data-action="clear-search" aria-label="@@ui.clearSearch@@"><i data-icon="x"></i></button></div>
