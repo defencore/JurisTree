@@ -1,0 +1,244 @@
+.property-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin: 18px 0;
+}
+.property-history-actions {
+  display: flex;
+  gap: 4px;
+}
+.property-analysis-help {
+  margin: 12px 0;
+  font-size: 0.875rem;
+}
+.property-analysis-help summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-weight: 600;
+}
+.property-controls .field {
+  margin: 0;
+  min-width: 0;
+}
+.property-controls .search {
+  flex: 1;
+  min-width: 200px;
+}
+.property-controls input,
+.property-controls select {
+  max-width: 100%;
+  min-width: 0;
+}
+.property-controls input[type="date"] {
+  width: 175px;
+}
+.asset-card,
+.property-ledger,
+.property-claims,
+.property-review,
+.property-family {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+  padding: 18px;
+  margin: 18px 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.asset-head > div {
+  flex: 1;
+  min-width: 0;
+}
+.asset-head h3,
+.asset-head p {
+  overflow-wrap: anywhere;
+}
+.asset-head p {
+  line-height: 1.65;
+}
+.property-snapshot {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+.property-snapshot section {
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--blue);
+  padding: 14px;
+  background: var(--paper);
+  min-width: 0;
+}
+.property-snapshot h3,
+.property-review h3,
+.property-ledger h3,
+.property-claims h3 {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+.property-snapshot ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.property-snapshot li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+.property-snapshot li > b,
+.property-snapshot li > span:not(.pill),
+.property-snapshot li > small {
+  flex-basis: 100%;
+  overflow-wrap: anywhere;
+}
+.property-snapshot small,
+.property-record-head p {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.property-entry-actions,
+.property-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.property-detail-title {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.property-detail-title > div {
+  min-width: 0;
+}
+.property-detail-title h2 {
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+  font-size: 1.25rem;
+}
+.property-detail-title p {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.property-review {
+  background: var(--bg);
+}
+.property-review li,
+.property-record-findings li {
+  margin: 8px 0;
+  line-height: 1.65;
+  font-size: 0.875rem;
+}
+.property-history-record {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--blue);
+  background: var(--bg);
+  margin: 14px 0;
+  break-inside: avoid;
+}
+.property-record-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.property-record-head > div {
+  min-width: 0;
+}
+.property-record-head h4 {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+.property-record-head p {
+  margin: 8px 0;
+}
+.property-record-head .iconbtn {
+  flex-shrink: 0;
+}
+.property-history-record details {
+  margin: 12px 0;
+}
+.property-history-record summary,
+.property-allocation > summary,
+.property-family > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 10px 0;
+  line-height: 1.5;
+}
+.property-record-notes {
+  white-space: pre-wrap;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.property-family > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+.property-family > div span {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.property-allocation {
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 620px) {
+  .property-snapshot {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .property-controls {
+    align-items: stretch;
+  }
+  .property-controls .field,
+  .property-controls .search {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .property-controls.focused .field {
+    flex: 1 1 175px;
+  }
+  .property-controls.focused .property-history-actions {
+    flex: 0 0 auto;
+  }
+  .property-controls input[type="date"] {
+    width: 100%;
+  }
+  .asset-card,
+  .property-ledger,
+  .property-claims,
+  .property-review,
+  .property-family {
+    padding: 12px;
+  }
+  .property-history-record {
+    padding: 10px;
+  }
+  .property-detail-title {
+    flex-wrap: wrap;
+  }
+  .property-entry-actions .btn,
+  .property-card-actions .btn {
+    flex: 1 1 100%;
+    white-space: normal;
+  }
+  .asset-head > .avatar {
+    display: none;
+  }
+}

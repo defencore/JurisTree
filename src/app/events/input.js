@@ -1,5 +1,6 @@
 import { renderSearch } from "../../features/search.js";
 import { renderCalendar } from "../../features/calendar.js";
+import { renderProperty } from "../../features/property.js";
 import { renderPeople } from "../../ui/people.js";
 import { renderEvents } from "../../features/events.js";
 import { renderDocuments } from "../../features/documents.js";
@@ -8,6 +9,14 @@ import { $, $$ } from "../../core/dom.js";
 import { getLocale } from "../../i18n/index.js";
 export function bindInputEvents() {
   document.addEventListener("input", (e) => {
+    if (e.target.id === "propertySearch") {
+      const start = e.target.selectionStart;
+      appState.propertySearch = e.target.value;
+      renderProperty();
+      $("#propertySearch").focus();
+      $("#propertySearch").setSelectionRange(start, start);
+      return;
+    }
     if (e.target.id === "globalSearch") {
       appState.searchLimit = 20;
       renderSearch();

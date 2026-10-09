@@ -24,6 +24,11 @@ import { fresh } from "./project.js";
 import { profileRecordError } from "./profile-records.js";
 import { migrateProfileHistory } from "./profile-migrations.js";
 import {
+  normalizePropertyRecords,
+  propertyRecords,
+} from "./property-records.js";
+import { propertyMetadataFields } from "../core/property-records.js";
+import {
   isProfessionalRelationship,
   professionalFieldKeys,
 } from "../core/professional-relationships.js";
@@ -244,6 +249,14 @@ export function validateImport(raw) {
   const relIds = new Set(p.relations.map((r) => r.id));
   p.graphView = normalizeGraphView(raw.graphView || {}, relIds);
   p.property = list("property", 500).map((a) => {
+    const currency = String(a.currency || "")
+      .trim()
+      .toUpperCase();
+    if (
+      (currency && !/^[A-Z]{3}$/.test(currency)) ||
+      (a.value !== "" && a.value != null && !currency)
+    )
+      throw Error(translate("ui.propertyCurrencyError"));
     const allocations = Array.isArray(a.allocations)
       ? a.allocations
           .filter((x) => x && peopleIds.has(x.personId))
@@ -267,9 +280,11 @@ export function validateImport(raw) {
       id: a.id,
       title: str(a.title, 250) || translate("ui.property"),
       ownerId: peopleIds.has(a.ownerId) ? a.ownerId : "",
-      currency: ["USD", "EUR", "UAH", "GBP"].includes(a.currency)
-        ? a.currency
-        : "USD",
+      currency,
+      ...Object.fromEntries(
+        propertyMetadataFields().map((key) => [key, str(a[key], 1500)]),
+      ),
+      ...normalizePropertyRecords(a, peopleIds),
       value,
       notes: str(a.notes),
       allocations,
@@ -336,6 +351,9 @@ export function validateImport(raw) {
     return x;
   });
   const docIds = new Set(p.documents.map((d) => d.id));
+  for (const asset of p.property)
+    for (const { record } of propertyRecords(asset))
+      if (record.sourceId && !docIds.has(record.sourceId)) record.sourceId = "";
   for (const person of p.people) {
     for (const key of ["bioSourceIds", "healthSourceIds"])
       person[key] = person[key].filter((id) => docIds.has(id));

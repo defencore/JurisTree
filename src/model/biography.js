@@ -1,4 +1,5 @@
 import { recordConfigs } from "../core/config.js";
+import { propertyPeople, propertySources } from "./property-records.js";
 
 /** Collect the complete profile independently of workspace filters. */
 export function personBiography(project, id) {
@@ -16,13 +17,11 @@ export function personBiography(project, id) {
   const relations = project.relations.filter(
     (r) => r.from === id || r.to === id,
   );
-  const property = project.property.filter(
-    (a) =>
-      a.ownerId === id || a.allocations.some((share) => share.personId === id),
-  );
+  const property = project.property.filter((a) => propertyPeople(a).has(id));
   const sourceIds = new Set([
     ...(profile.bioSourceIds || []),
     ...(profile.healthSourceIds || []),
+    ...property.flatMap((asset) => [...propertySources(asset)]),
     ...testimony.map(({ record }) => record.sourceId).filter(Boolean),
     ...Object.values(recordConfigs()).flatMap((cfg) =>
       (profile[cfg.key] || []).map((record) => record.sourceId).filter(Boolean),

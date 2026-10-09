@@ -186,7 +186,7 @@ export default {
   "ui.familyRelationships": "РОДСТВЕННЫЕ СВЯЗИ",
   "ui.documentsPhotosRecords": "ДОКУМЕНТЫ · ФОТО · ЗАПИСИ",
   "ui.nextSteps": "СЛЕДУЮЩИЕ ШАГИ",
-  "ui.ownershipAndAllocationPlan": "СОБСТВЕННОСТЬ И ПЛАН РАСПРЕДЕЛЕНИЯ",
+  "ui.ownershipAndAllocationPlan": "ПРАВА, ПЕРЕДАЧИ И ПРЕТЕНЗИИ",
   "ui.familyTimeline": "ХРОНОЛОГИЯ СЕМЬИ",
   "ui.howAreWeRelated": "Кем мне приходится этот человек?",
   "ui.kinship": "Родство",
@@ -2109,4 +2109,129 @@ export default {
   "ui.recordSection": "Раздел профиля",
   "ui.noUpcomingRecordsHint":
     "Здесь показаны только записи с точной датой в выбранном будущем периоде. Прошлые записи и даты, указанные только годом, доступны в хронологии.",
+  "ui.filter": "Фильтр",
+  "ui.sourceUrl": "Ссылка на источник",
+  "ui.propertyAddClaim": "Добавить притязание",
+  "ui.propertyAddRight": "Добавить период владения / пользования",
+  "ui.propertyAddTransfer": "Добавить передачу имущества",
+  "ui.propertyAll": "Всё имущество",
+  "ui.propertyAnalysisHint":
+    "Сводка учитывает выбранную дату и внесённые доказательства. Родство и планы распределения не устанавливают право на имущество; притязания и передачи учитываются отдельно.",
+  "ui.propertyAnalysisHelp": "Как работает анализ",
+  "ui.propertyAsOf": "Анализ по состоянию на",
+  "ui.propertyAssignment": "Передача прав",
+  "ui.propertyBack": "К списку имущества",
+  "ui.propertyChooseOneParty":
+    "Для каждой стороны выберите лицо из схемы или укажите внешнее лицо — заполните только одно из этих полей.",
+  "ui.propertyChronology": "История владения и передач",
+  "ui.propertyChronologyHint":
+    "Вся история остаётся видимой. Сводка и вопросы для проверки учитывают выбранную дату. Передача автоматически не создаёт и не закрывает период владения.",
+  "ui.propertyClaim": "Притязание на имущество",
+  "ui.propertyClaimAgainst": "Другая сторона / ответчик из схемы",
+  "ui.propertyClaimAsserted": "Заявленное притязание",
+  "ui.propertyClaimDate": "Дата или год притязания",
+  "ui.propertyClaimDisputed": "Спорное притязание",
+  "ui.propertyClaimGrounds": "Основания и обстоятельства притязания",
+  "ui.propertyClaimPotential": "Возможное притязание — требует оценки",
+  "ui.propertyClaimRecognized": "Признано по внесённому решению",
+  "ui.propertyClaimRejected": "Отклонено по внесённому решению",
+  "ui.propertyClaimResolvedDate": "Дата или год решения / закрытия",
+  "ui.propertyClaimThrough":
+    "Связанное лицо / наследодатель, через кого заявляется право",
+  "ui.propertyClaimType": "Категория притязания",
+  "ui.propertyClaimWithdrawn": "Отозвано",
+  "ui.propertyClaimant": "Заявитель из схемы",
+  "ui.propertyClaimedShare": "Заявленная доля имущества (%)",
+  "ui.propertyClaims": "Притязания и конкурирующие интересы",
+  "ui.propertyContractDate": "Дата или год подписания договора",
+  "ui.propertyCreditorClaim": "Требование кредитора",
+  "ui.propertyCurrencyError":
+    "Укажите трёхбуквенный код валюты, например UAH, EUR, USD или CAD. Для оценки имущества нужна валюта.",
+  "ui.propertyEffectiveDate": "Дата или год передачи / регистрации",
+  "ui.propertyEvidence": "Регистрация и реквизиты документов",
+  "ui.propertyEvidenceNeeded": "Документы или факты, которые нужно получить",
+  "ui.propertyExchange": "Обмен",
+  "ui.propertyExternalParty": "Внешнее лицо / организация",
+  "ui.propertyFamilyConnections":
+    "Участники и зафиксированные родственные связи",
+  "ui.propertyFamilyHint":
+    "Связи показаны относительно опорного владельца. Они описывают схему, без определения наследников или законных долей.",
+  "ui.propertyGrounds": "Основание / договор / обстоятельства",
+  "ui.propertyHistoryAnalysis": "История и анализ имущества",
+  "ui.propertyHolder": "Владелец права / пользователь из схемы",
+  "ui.propertyLease": "Аренда",
+  "ui.propertyManagement": "Управление",
+  "ui.propertyMaritalClaim": "Притязание на общее имущество супругов",
+  "ui.propertyNeedsReview": "Есть вопросы для проверки",
+  "ui.propertyNoClaims":
+    "Притязания не внесены. Это не подтверждает отсутствие других притязаний.",
+  "ui.propertyNoDatedOwner":
+    "Нет периода владения, устанавливающего владельца на эту дату.",
+  "ui.propertyNoHistory": "История владения и передач ещё не внесена.",
+  "ui.propertyNoMatches": "Нет имущества по выбранным фильтрам",
+  "ui.propertyNoReviewFindings":
+    "Эти проверки не выявили несогласованностей. Это не является правовым заключением.",
+  "ui.propertyNoUseRecords":
+    "На эту дату не внесены периоды пользования или управления.",
+  "ui.propertyOpen": "открытых",
+  "ui.propertyOpenClaims": "Открытые притязания",
+  "ui.propertyPeriodUncertain": "Период требует уточнения",
+  "ui.propertyPositiveShare":
+    "Внесённая доля должна быть больше 0 и не превышать 100%. Если неизвестна — оставьте поле пустым.",
+  "ui.propertyPossession": "Фактическое владение",
+  "ui.propertyRecordDetails": "Подробности и источники",
+  "ui.propertyRecordHint":
+    "Внесите известные стороны, даты и доказательства. Неизвестные даты или доли можно не заполнять. Периоды владения, пользования, передачи, притязания и планы распределения учитываются отдельно.",
+  "ui.propertyRecordedOwners": "Зафиксированное владение на эту дату",
+  "ui.propertyReferenceOwner": "Опорный владелец / наследодатель",
+  "ui.propertyRegistrationDate": "Дата или год регистрации",
+  "ui.propertyReregistration": "Регистрация / переоформление",
+  "ui.propertyReview": "Доказательства и вопросы для проверки",
+  "ui.propertyRight": "Период владения / пользования",
+  "ui.propertyRightCurrent": "Продолжается (по записи)",
+  "ui.propertyRightDisputed": "Оспаривается",
+  "ui.propertyRightEnded": "Завершено (по записи)",
+  "ui.propertyRightType": "Вид права",
+  "ui.propertyRights": "Права и периоды пользования",
+  "ui.propertySale": "Продажа / покупка",
+  "ui.propertySameTransferParties":
+    "Отчуждатель и приобретатель должны быть разными лицами, кроме записи регистрации / переоформления.",
+  "ui.propertySearchHint": "Имущество, лицо, идентификатор или документ…",
+  "ui.propertyTransfer": "Передача имущества",
+  "ui.propertyTransferConditions": "Условия передачи",
+  "ui.propertyTransferDetails": "Договор и оплата",
+  "ui.propertyTransferFrom": "Отчуждатель / предыдущий владелец из схемы",
+  "ui.propertyTransferFromExternal": "Внешний отчуждатель",
+  "ui.propertyTransferTo": "Приобретатель / новый владелец из схемы",
+  "ui.propertyTransferToExternal": "Внешний приобретатель",
+  "ui.propertyTransferType": "Вид передачи",
+  "ui.propertyTransfers": "Передачи",
+  "ui.propertyUse": "Пользование",
+  "ui.propertyUsers": "Зафиксированные пользователи и управляющие",
+  "ui.propertyWithClaims": "Есть открытые притязания",
+  "ui.propertyWorkspaceHint":
+    "Отслеживайте владение, пользование, продажи, дарения и наследование по датам, с источниками и конкурирующими притязаниями.",
+  "ui.propertyUncertainOwnership":
+    "Даты владения или доли неполные либо неопределённые.",
+  "ui.propertyOverlappingShares":
+    "Внесённые доли владения превышают 100% на эту дату. Проверьте пересекающиеся периоды и конкурирующие записи.",
+  "ui.propertyOutstandingClaims":
+    "На выбранную дату остаются неразрешённые или возможные притязания; последующие передачи автоматически их не закрывают.",
+  "ui.propertyRecordNeedsReview":
+    "Запись или её источник ещё требует проверки.",
+  "ui.propertyMissingEvidence":
+    "К записи не привязан имеющийся неопровергнутый источник.",
+  "ui.propertyTransferDateMissing":
+    "У передачи нет даты или года, поэтому её место в цепочке неопределённо.",
+  "ui.propertyRecipientRightMissing":
+    "После этой передачи не внесён соответствующий период владения / пользования приобретателя.",
+  "ui.propertyTransferorRightMissing":
+    "Нет периода владения, подтверждающего внесённое право отчуждателя перед этой передачей.",
+  "ui.propertyTransferredShareMismatch":
+    "Переданная доля превышает внесённую долю отчуждателя до этой даты.",
+  "ui.propertyContractAfterDeath":
+    "Дата подписания договора позже внесённой даты смерти отчуждателя. Уточните дату, представителя и основания.",
+  "ui.propertySharePercent": "Доля имущества (%)",
+  "ui.propertyClaimRelationship":
+    "Зафиксированная связь с лицом, через которое заявляется право",
 };

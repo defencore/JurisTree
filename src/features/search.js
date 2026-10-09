@@ -7,7 +7,7 @@ import { resetAnalysis } from "../graph/analysis.js";
 import { render, select } from "../ui/render.js";
 import { icon, icons } from "../ui/icons.js";
 import { viewDocument } from "./documents.js";
-import { editProperty } from "./property.js";
+import { openPropertyHistory } from "./property-history.js";
 let cache = null;
 export function closeSearch() {
   $("#globalSearchResults").hidden = true;
@@ -53,7 +53,7 @@ export async function openSearchResult(kind, id) {
     resetAnalysis(false);
     select("relation", id);
     fit();
-  } else if (kind === "property") await editProperty(id);
+  } else if (kind === "property") openPropertyHistory(id);
   else if (kind === "group") {
     appState.groupFilter = id;
     appState.view = "tree";

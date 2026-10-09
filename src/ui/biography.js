@@ -1,3 +1,4 @@
+import { propertyHistoryReport } from "./property-history.js";
 import { personStatusMarkup } from "./person-status.js";
 import { reviewButton } from "./biography-review.js";
 import { relationshipConfig } from "../core/relationships.js";
@@ -186,7 +187,10 @@ export function renderBiography({
       .map(
         (a) =>
           `<article class="biography-record"><h4>${esc(a.title)}</h4>${fields([
-            [translate("ui.owner"), person(a.ownerId)?.name],
+            [translate("ui.propertyReferenceOwner"), person(a.ownerId)?.name],
+            [translate("ui.assetIdentifier"), a.identifier],
+            [translate("ui.country"), a.country],
+            [translate("ui.place"), a.location],
             [
               translate("ui.estimatedValue"),
               a.value !== "" && a.value != null
@@ -203,7 +207,7 @@ export function renderBiography({
                 .join("\n"),
             ],
             [translate("ui.notes"), a.notes],
-          ])}${sourceChips(documents.filter((d) => (d.propertyIds || []).includes(a.id)).map((d) => d.id))}</article>`,
+          ])}${sourceChips(documents.filter((d) => (d.propertyIds || []).includes(a.id)).map((d) => d.id))}${propertyHistoryReport(a)}</article>`,
       )
       .join(""),
     "property",

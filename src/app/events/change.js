@@ -16,9 +16,24 @@ import { clone } from "../../core/utils.js";
 import { state as appState } from "../../core/state.js";
 import { eventDomains } from "../../core/event-domains.js";
 import { renderMain } from "../../ui/render.js";
+import { renderProperty } from "../../features/property.js";
+import { dateExact } from "../../model/dates.js";
 export function bindChangeEvents() {
   document.addEventListener("change", (e) => {
     const t = e.target;
+    if (t.id === "propertyDate") {
+      if (dateExact(t.value)) appState.propertyDate = t.value;
+      renderProperty();
+      return;
+    }
+    if (
+      t.id === "propertyReviewFilter" &&
+      ["all", "claims", "review"].includes(t.value)
+    ) {
+      appState.propertyReviewFilter = t.value;
+      renderProperty();
+      return;
+    }
     if (
       ["eventDomain", "calendarDomain"].includes(t.id) &&
       Object.hasOwn(eventDomains(), t.value)

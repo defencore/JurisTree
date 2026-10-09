@@ -1,47 +1,19 @@
+import { propertyWorkspace } from "../ui/property-workspace.js";
+import { localDateString } from "../model/dates.js";
+import { propertyMetadataFields } from "../core/property-records.js";
 import { renderPropertyForm } from "../ui/forms/property.js";
-import { getLocale } from "../i18n/index.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
-import { linkedDocs } from "../model/evidence.js";
-import { asset, person } from "../model/project.js";
+import { asset } from "../model/project.js";
 import { commit } from "../services/history.js";
 import { personOptions } from "../ui/components.js";
 import { openDialog } from "../ui/dialog.js";
 import { icon } from "../ui/icons.js";
 export function renderProperty() {
-  $("#otherView").innerHTML =
-    `<div class="intro-line"><div><h2>${translate("ui.propertyAndPlannedAllocation")}</h2><p>${translate("ui.keepPropertyDetailsOwnershipDocumentsAndPlannedFamily")}</p></div></div><div class="banner">${translate("ui.youEnterTheSharesThisPlanDoesNot")}</div>${
-      appState.project.property
-        .map((a) => {
-          const total = (a.allocations || []).reduce(
-            (s, x) => s + Number(x.percent),
-            0,
-          );
-          return `<div class="asset-card"><div class="asset-head"><span class="avatar">${icon("home")}</span><div><h3>${esc(a.title)}</h3><p>${esc(person(a.ownerId)?.name || translate("ui.noOwnerSelected"))} · ${a.value ? new Intl.NumberFormat(getLocale()).format(a.value) + " " + esc(a.currency) : translate("ui.noValuation")}</p></div><button class="btn small" data-edit-property="${a.id}">${icon("edit")}</button></div>${(
-            a.allocations || []
-          )
-            .map(
-              (x) =>
-                `<div class="allocation"><span>${esc(person(x.personId)?.name || translate("ui.personDeleted"))}</span><b>${x.percent}%${
-                  a.value
-                    ? " · " +
-                      new Intl.NumberFormat(getLocale(), {
-                        maximumFractionDigits: 2,
-                      }).format((Number(a.value) * x.percent) / 100) +
-                      " " +
-                      esc(a.currency)
-                    : ""
-                }</b></div>`,
-            )
-            .join(
-              "",
-            )}<div class="asset-total ${Math.abs(total - 100) > 0.001 ? "bad" : ""}"><span>${total > 100 ? translate("ui.overallocated") : total < 100 ? translate("ui.unallocated") : translate("ui.allocated")}</span><b>${Math.abs(total - 100) > 0.001 ? Math.abs(100 - total).toFixed(2) + "%" : "100%"}</b></div>${a.notes ? `<p class="hint">${esc(a.notes)}</p>` : ""}<button class="btn small ghost" data-asset-doc="${a.id}" style="margin-top:10px">${icon("file")}${translate("ui.ownershipDocument")}${linkedDocs("property", a.id).length})</button></div>`;
-        })
-        .join("") ||
-      `<div class="empty">${icon("home")}<h2>${translate("ui.addFamilyProperty")}</h2><p>${translate("ui.forExampleAHouseLandBankDepositOr")}</p><button class="btn primary" data-action="add-property">${translate("ui.addProperty")}</button></div>`
-    }`;
+  appState.propertyDate ||= localDateString();
+  $("#otherView").innerHTML = propertyWorkspace();
 }
 export function allocationRow(
   a = {
@@ -68,6 +40,13 @@ export async function editProperty(id = null) {
     {
       validate: (f) => {
         if (!f.get("title").trim()) return translate("ui.enterATitle");
+        if (
+          f.get("currency") &&
+          !/^[A-Z]{3}$/.test(f.get("currency").trim().toUpperCase())
+        )
+          return translate("ui.propertyCurrencyError");
+        if (f.get("value") && !f.get("currency").trim())
+          return translate("ui.propertyCurrencyError");
         const ids = f.getAll("allocation-person"),
           vs = f.getAll("allocation-percent").map(Number);
         if (ids.length !== new Set(ids).size)
@@ -86,7 +65,13 @@ export async function editProperty(id = null) {
       title: f.get("title").trim(),
       ownerId: f.get("ownerId"),
       value: f.get("value") ? Number(f.get("value")) : "",
-      currency: f.get("currency"),
+      currency: f.get("currency").trim().toUpperCase(),
+      ...Object.fromEntries(
+        propertyMetadataFields().map((key) => [
+          key,
+          String(f.get(key) || "").trim(),
+        ]),
+      ),
       notes: f.get("notes"),
       allocations: f.getAll("allocation-person").map((personId, i) => ({
         personId,
@@ -100,6 +85,9 @@ export async function editProperty(id = null) {
         x: 670,
         y: 50 + appState.project.property.length * 160,
         ...data,
+        rights: [],
+        transfers: [],
+        claims: [],
       });
   });
 }

@@ -184,7 +184,7 @@ export default {
   "ui.familyRelationships": "FAMILY RELATIONSHIPS",
   "ui.documentsPhotosRecords": "DOCUMENTS · PHOTOS · RECORDS",
   "ui.nextSteps": "NEXT STEPS",
-  "ui.ownershipAndAllocationPlan": "OWNERSHIP AND ALLOCATION PLAN",
+  "ui.ownershipAndAllocationPlan": "RIGHTS, TRANSFERS AND CLAIMS",
   "ui.familyTimeline": "FAMILY TIMELINE",
   "ui.howAreWeRelated": "How are we related?",
   "ui.kinship": "Kinship",
@@ -2097,4 +2097,129 @@ export default {
   "ui.recordSection": "Profile section",
   "ui.noUpcomingRecordsHint":
     "Only records with an exact date in the selected future period appear here. Use Timeline to review past records and year-only dates.",
+  "ui.filter": "Filter",
+  "ui.sourceUrl": "Source URL",
+  "ui.propertyAddClaim": "Add claim",
+  "ui.propertyAddRight": "Add ownership / use period",
+  "ui.propertyAddTransfer": "Add transfer",
+  "ui.propertyAll": "All property",
+  "ui.propertyAnalysisHint":
+    "The summary uses the selected date and recorded evidence. Family relationships and allocation plans do not establish entitlement; claims and transfers remain separate records.",
+  "ui.propertyAnalysisHelp": "About this analysis",
+  "ui.propertyAsOf": "Analyze as of",
+  "ui.propertyAssignment": "Assignment of rights",
+  "ui.propertyBack": "All property",
+  "ui.propertyChooseOneParty":
+    "For each party, choose a person in the tree or enter an external party, using only one of these fields.",
+  "ui.propertyChronology": "Ownership and transfer history",
+  "ui.propertyChronologyHint":
+    "All historical records remain visible. The summary and review findings use the selected date. A transfer does not automatically create or close an ownership period.",
+  "ui.propertyClaim": "Property claim",
+  "ui.propertyClaimAgainst": "Other party / respondent in the tree",
+  "ui.propertyClaimAsserted": "Claim submitted",
+  "ui.propertyClaimDate": "Claim date or year",
+  "ui.propertyClaimDisputed": "Disputed claim",
+  "ui.propertyClaimGrounds": "Grounds and circumstances of the claim",
+  "ui.propertyClaimPotential": "Possible claim — requires assessment",
+  "ui.propertyClaimRecognized": "Recognized by a recorded decision",
+  "ui.propertyClaimRejected": "Rejected by a recorded decision",
+  "ui.propertyClaimResolvedDate": "Decision / closure date or year",
+  "ui.propertyClaimThrough":
+    "Related person / deceased person forming the basis",
+  "ui.propertyClaimType": "Claim category",
+  "ui.propertyClaimWithdrawn": "Withdrawn",
+  "ui.propertyClaimant": "Claimant in the tree",
+  "ui.propertyClaimedShare": "Claimed share of the property (%)",
+  "ui.propertyClaims": "Claims and competing interests",
+  "ui.propertyContractDate": "Contract signing date or year",
+  "ui.propertyCreditorClaim": "Creditor claim",
+  "ui.propertyCurrencyError":
+    "Enter a three-letter currency code, such as UAH, EUR, USD or CAD. A valuation requires a currency.",
+  "ui.propertyEffectiveDate": "Transfer / registration date or year",
+  "ui.propertyEvidence": "Registration and document details",
+  "ui.propertyEvidenceNeeded": "Documents or facts still needed",
+  "ui.propertyExchange": "Exchange",
+  "ui.propertyExternalParty": "External person / organization",
+  "ui.propertyFamilyConnections":
+    "Participants and recorded family connections",
+  "ui.propertyFamilyHint":
+    "Relationships are shown relative to the reference owner. They describe the tree, without determining heirs or legal shares.",
+  "ui.propertyGrounds": "Basis / agreement / circumstances",
+  "ui.propertyHistoryAnalysis": "Property history and analysis",
+  "ui.propertyHolder": "Right holder / user in the tree",
+  "ui.propertyLease": "Lease / tenancy",
+  "ui.propertyManagement": "Management",
+  "ui.propertyMaritalClaim": "Marital / joint property claim",
+  "ui.propertyNeedsReview": "With review findings",
+  "ui.propertyNoClaims":
+    "No claims recorded. This does not establish that no other claims exist.",
+  "ui.propertyNoDatedOwner":
+    "No ownership period establishes a holder on this date.",
+  "ui.propertyNoHistory": "No ownership or transfer history recorded yet.",
+  "ui.propertyNoMatches": "No property matches these filters",
+  "ui.propertyNoReviewFindings":
+    "No inconsistencies found by these checks. This is not a legal conclusion.",
+  "ui.propertyNoUseRecords":
+    "No use or management period recorded for this date.",
+  "ui.propertyOpen": "open",
+  "ui.propertyOpenClaims": "Open claims",
+  "ui.propertyPeriodUncertain": "Period requires clarification",
+  "ui.propertyPositiveShare":
+    "A recorded share must be greater than 0 and at most 100%. Leave it blank when unknown.",
+  "ui.propertyPossession": "Actual possession",
+  "ui.propertyRecordDetails": "Details and sources",
+  "ui.propertyRecordHint":
+    "Record the people, dates and evidence you know. Unknown dates or shares can remain blank. Ownership periods, use, transfers, claims and proposed allocations are recorded separately.",
+  "ui.propertyRecordedOwners": "Recorded ownership on this date",
+  "ui.propertyReferenceOwner": "Reference owner / estate owner",
+  "ui.propertyRegistrationDate": "Registration date or year",
+  "ui.propertyReregistration": "Registration / re-registration",
+  "ui.propertyReview": "Evidence and consistency review",
+  "ui.propertyRight": "Ownership / use period",
+  "ui.propertyRightCurrent": "Ongoing (recorded)",
+  "ui.propertyRightDisputed": "Disputed",
+  "ui.propertyRightEnded": "Ended (recorded)",
+  "ui.propertyRightType": "Type of right",
+  "ui.propertyRights": "Rights and use periods",
+  "ui.propertySale": "Sale / purchase",
+  "ui.propertySameTransferParties":
+    "The sender and recipient must differ, except for a registration / re-registration record.",
+  "ui.propertySearchHint": "Property, person, identifier or document…",
+  "ui.propertyTransfer": "Property transfer",
+  "ui.propertyTransferConditions": "Transfer conditions",
+  "ui.propertyTransferDetails": "Contract and payment details",
+  "ui.propertyTransferFrom": "Sender / former holder in the tree",
+  "ui.propertyTransferFromExternal": "External sender",
+  "ui.propertyTransferTo": "Recipient / new holder in the tree",
+  "ui.propertyTransferToExternal": "External recipient",
+  "ui.propertyTransferType": "Transfer type",
+  "ui.propertyTransfers": "Transfers",
+  "ui.propertyUse": "Use",
+  "ui.propertyUsers": "Recorded users and managers",
+  "ui.propertyWithClaims": "With open claims",
+  "ui.propertyWorkspaceHint":
+    "Track ownership, use, sales, gifts and inheritance by date, with sources and competing claims.",
+  "ui.propertyUncertainOwnership":
+    "Ownership dates or shares are incomplete or uncertain.",
+  "ui.propertyOverlappingShares":
+    "Recorded ownership shares exceed 100% on this date. Check overlapping periods and competing records.",
+  "ui.propertyOutstandingClaims":
+    "Unresolved or possible claims remain on the selected date; later transfers do not settle them automatically.",
+  "ui.propertyRecordNeedsReview":
+    "A record or its source still requires verification.",
+  "ui.propertyMissingEvidence":
+    "An available, non-refuted source has not been linked to a record.",
+  "ui.propertyTransferDateMissing":
+    "A transfer has no date or year, so its place in the chain is uncertain.",
+  "ui.propertyRecipientRightMissing":
+    "No matching ownership / use period is recorded for the recipient after this transfer.",
+  "ui.propertyTransferorRightMissing":
+    "No ownership period establishes the sender's recorded right before this transfer.",
+  "ui.propertyTransferredShareMismatch":
+    "The transferred share exceeds the sender's recorded share before this date.",
+  "ui.propertyContractAfterDeath":
+    "The contract signing date follows the sender's recorded death. Clarify the date, representative and grounds.",
+  "ui.propertySharePercent": "Share of the property (%)",
+  "ui.propertyClaimRelationship":
+    "Recorded relationship to the person forming the basis",
 };

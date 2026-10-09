@@ -1,3 +1,4 @@
+import { collectPropertyEvents } from "./property-events.js";
 import { recordConfigs } from "../core/config.js";
 import { translate } from "../i18n/index.js";
 import { sourceEvidence } from "../core/sources.js";
@@ -269,5 +270,7 @@ export function collectProjectEvents(
       });
     }
   }
+  if (included("assets"))
+    events.push(...collectPropertyEvents(project, selected));
   return events;
 }

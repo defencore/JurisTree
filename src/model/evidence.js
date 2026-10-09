@@ -3,7 +3,8 @@ import { sourceEvidence, sourceNeedsReview } from "../core/sources.js";
 import { types } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
-import { person, relation } from "./project.js";
+import { asset, person, relation } from "./project.js";
+import { propertySources } from "./property-records.js";
 import { usedBlobs } from "../services/files.js";
 export function sourceInScope(d) {
   return (
@@ -23,15 +24,18 @@ export function linkedDocs(kind, id) {
             : "propertyDocs"
       ].get(id) || []
     );
+  const sources =
+    kind === "property" ? propertySources(asset(id) || {}) : new Set();
   return appState.project.documents.filter(
     (d) =>
       sourceInScope(d) &&
-      (kind === "person"
+      ((kind === "person"
         ? d.people
         : kind === "relation"
           ? d.relations
           : d.propertyIds || []
-      ).includes(id),
+      ).includes(id) ||
+        sources.has(d.id)),
   );
 }
 export function isOfficial(d) {

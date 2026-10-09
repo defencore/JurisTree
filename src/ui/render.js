@@ -81,7 +81,9 @@ export function renderMain() {
   $("#viewEyebrow").textContent = eyebrows[appState.view];
   $("#viewSubtitle").textContent = appState.project.title;
   $("#canvasWrap").hidden = appState.view !== "tree";
-  $("#statusBoard").hidden = ["events", "calendar"].includes(appState.view);
+  $("#statusBoard").hidden = ["events", "calendar", "property"].includes(
+    appState.view,
+  );
   $("#otherView").hidden = appState.view === "tree";
   $("#viewActions").innerHTML =
     appState.view === "tree"

@@ -1,5 +1,6 @@
 import { resetWindow } from "./floating-windows.js";
 import { recordConfigs } from "../core/config.js";
+import { unlinkPropertyReference } from "../model/property-records.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
@@ -76,6 +77,9 @@ export async function confirmDelete(kind, id) {
   if (!f) return;
   commit(() => {
     if (kind === "person") {
+      const deletedName = appState.project.people.find(
+        (p) => p.id === id,
+      )?.name;
       appState.project.people = appState.project.people.filter(
         (p) => p.id !== id,
       );
@@ -97,6 +101,7 @@ export async function confirmDelete(kind, id) {
         d.relations = d.relations.filter((r) => !rs.includes(r));
       });
       appState.project.property.forEach((a) => {
+        unlinkPropertyReference(a, "person", id, deletedName);
         if (a.ownerId === id) a.ownerId = "";
         a.allocations = a.allocations.filter((x) => x.personId !== id);
       });
@@ -110,6 +115,9 @@ export async function confirmDelete(kind, id) {
         (d) => (d.relations = d.relations.filter((r) => r !== id)),
       );
     } else if (kind === "document") {
+      appState.project.property.forEach((a) =>
+        unlinkPropertyReference(a, "source", id),
+      );
       appState.project.documents = appState.project.documents.filter(
         (d) => d.id !== id,
       );

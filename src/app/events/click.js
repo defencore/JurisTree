@@ -28,6 +28,12 @@ import {
 } from "../../graph/analysis.js";
 import { editRelation } from "../../features/relationships.js";
 import { allocationRow, editProperty } from "../../features/property.js";
+import {
+  closePropertyHistory,
+  openPropertyHistory,
+  editPropertyRecord,
+  deletePropertyRecord,
+} from "../../features/property-history.js";
 import { editPerson } from "../../features/profiles.js";
 import { addProfileRecord } from "../../features/profile-record-entry.js";
 import { renderProfileRecord } from "../../ui/forms/profile-record.js";
@@ -55,6 +61,40 @@ export function bindClickEvents() {
     );
     if (!b) return;
     try {
+      if (b.dataset.propertyCommand) {
+        handleAction(b.dataset.propertyCommand);
+        return;
+      }
+      if (b.hasAttribute("data-property-back")) {
+        closePropertyHistory();
+        return;
+      }
+      if (b.dataset.propertyHistory) {
+        openPropertyHistory(b.dataset.propertyHistory);
+        return;
+      }
+      if (b.dataset.addPropertyRecord) {
+        await editPropertyRecord(
+          b.dataset.propertyId,
+          b.dataset.addPropertyRecord,
+        );
+        return;
+      }
+      if (b.dataset.editPropertyRecord) {
+        await editPropertyRecord(
+          b.dataset.propertyId,
+          b.dataset.propertyRecordKind,
+          b.dataset.editPropertyRecord,
+        );
+        return;
+      }
+      if (b.dataset.deletePropertyRecord) {
+        await deletePropertyRecord(
+          b.dataset.propertyRecordKind,
+          b.dataset.deletePropertyRecord,
+        );
+        return;
+      }
       if (b.dataset.addProfileDomain) {
         await addProfileRecord(null, b.dataset.addProfileDomain);
         return;

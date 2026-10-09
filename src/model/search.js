@@ -7,6 +7,8 @@ import {
   types,
 } from "../core/config.js";
 import { relationshipConfig } from "../core/relationships.js";
+import { propertyRecordConfigs } from "../core/property-records.js";
+import { propertyPeople, propertyRecords } from "./property-records.js";
 import { catalogs, translate } from "../i18n/index.js";
 import { personBiography } from "./biography.js";
 import { displayDate, years } from "./dates.js";
@@ -159,6 +161,10 @@ export function buildSearchIndex(project) {
       ...flat(a),
       people.get(a.ownerId)?.name,
       ...a.allocations.map((s) => people.get(s.personId)?.name),
+      ...[...propertyPeople(a)].map((id) => people.get(id)?.name),
+      ...propertyRecords(a).map(({ kind, record }) =>
+        recordText(propertyRecordConfigs()[kind], record),
+      ),
     ].join(" ");
   const entries = [];
   function add(kind, item, title, subtitle, text, fields = {}) {

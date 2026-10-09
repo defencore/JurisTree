@@ -185,7 +185,7 @@ export default {
   "ui.familyRelationships": "РОДИННІ ЗВ’ЯЗКИ",
   "ui.documentsPhotosRecords": "ДОКУМЕНТИ · ФОТО · ЗАПИСИ",
   "ui.nextSteps": "НАСТУПНІ КРОКИ",
-  "ui.ownershipAndAllocationPlan": "ВЛАСНІСТЬ І ПЛАН РОЗПОДІЛУ",
+  "ui.ownershipAndAllocationPlan": "ПРАВА, ПЕРЕДАЧІ ТА ПРЕТЕНЗІЇ",
   "ui.familyTimeline": "ХРОНОЛОГІЯ РОДИНИ",
   "ui.howAreWeRelated": "Хто ця людина мені?",
   "ui.kinship": "Спорідненість",
@@ -2101,4 +2101,128 @@ export default {
   "ui.recordSection": "Розділ профілю",
   "ui.noUpcomingRecordsHint":
     "Тут показані лише записи з точною датою в обраному майбутньому періоді. Минулі записи та дати, вказані лише роком, доступні у хронології.",
+  "ui.filter": "Фільтр",
+  "ui.sourceUrl": "Посилання на джерело",
+  "ui.propertyAddClaim": "Додати претензію",
+  "ui.propertyAddRight": "Додати період володіння / користування",
+  "ui.propertyAddTransfer": "Додати передачу майна",
+  "ui.propertyAll": "Усе майно",
+  "ui.propertyAnalysisHint":
+    "Зведення враховує обрану дату та внесені докази. Спорідненість і плани розподілу не встановлюють право на майно; претензії та передачі обліковуються окремо.",
+  "ui.propertyAnalysisHelp": "Як працює аналіз",
+  "ui.propertyAsOf": "Аналіз станом на",
+  "ui.propertyAssignment": "Передача прав",
+  "ui.propertyBack": "До переліку майна",
+  "ui.propertyChooseOneParty":
+    "Для кожної сторони оберіть особу зі схеми або вкажіть сторонню особу — заповніть лише одне з цих полів.",
+  "ui.propertyChronology": "Історія володіння та передач",
+  "ui.propertyChronologyHint":
+    "Уся історія залишається видимою. Зведення та питання для перевірки враховують обрану дату. Передача автоматично не створює і не закриває період володіння.",
+  "ui.propertyClaim": "Претензія щодо майна",
+  "ui.propertyClaimAgainst": "Інша сторона / відповідач зі схеми",
+  "ui.propertyClaimAsserted": "Заявлена претензія",
+  "ui.propertyClaimDate": "Дата або рік претензії",
+  "ui.propertyClaimDisputed": "Спірна претензія",
+  "ui.propertyClaimGrounds": "Підстави та обставини претензії",
+  "ui.propertyClaimPotential": "Можлива претензія — потребує оцінки",
+  "ui.propertyClaimRecognized": "Визнана за внесеним рішенням",
+  "ui.propertyClaimRejected": "Відхилена за внесеним рішенням",
+  "ui.propertyClaimResolvedDate": "Дата або рік рішення / закриття",
+  "ui.propertyClaimThrough":
+    "Пов’язана особа / спадкодавець, через кого заявляється право",
+  "ui.propertyClaimType": "Категорія претензії",
+  "ui.propertyClaimWithdrawn": "Відкликана",
+  "ui.propertyClaimant": "Заявник зі схеми",
+  "ui.propertyClaimedShare": "Заявлена частка майна (%)",
+  "ui.propertyClaims": "Претензії та конкуруючі інтереси",
+  "ui.propertyContractDate": "Дата або рік підписання договору",
+  "ui.propertyCreditorClaim": "Вимога кредитора",
+  "ui.propertyCurrencyError":
+    "Вкажіть трилітерний код валюти, наприклад UAH, EUR, USD або CAD. Для оцінки майна потрібна валюта.",
+  "ui.propertyEffectiveDate": "Дата або рік передачі / реєстрації",
+  "ui.propertyEvidence": "Реєстрація та реквізити документів",
+  "ui.propertyEvidenceNeeded": "Документи або факти, які потрібно отримати",
+  "ui.propertyExchange": "Обмін",
+  "ui.propertyExternalParty": "Стороння особа / організація",
+  "ui.propertyFamilyConnections": "Учасники та зафіксовані родинні зв’язки",
+  "ui.propertyFamilyHint":
+    "Зв’язки показані відносно опорного власника. Вони описують схему, без визначення спадкоємців або законних часток.",
+  "ui.propertyGrounds": "Підстава / договір / обставини",
+  "ui.propertyHistoryAnalysis": "Історія та аналіз майна",
+  "ui.propertyHolder": "Власник права / користувач зі схеми",
+  "ui.propertyLease": "Оренда",
+  "ui.propertyManagement": "Управління",
+  "ui.propertyMaritalClaim": "Претензія щодо спільного майна подружжя",
+  "ui.propertyNeedsReview": "Є питання для перевірки",
+  "ui.propertyNoClaims":
+    "Претензій не внесено. Це не підтверджує відсутності інших претензій.",
+  "ui.propertyNoDatedOwner":
+    "Немає періоду володіння, що встановлює власника на цю дату.",
+  "ui.propertyNoHistory": "Історію володіння та передач ще не внесено.",
+  "ui.propertyNoMatches": "Немає майна за обраними фільтрами",
+  "ui.propertyNoReviewFindings":
+    "Ці перевірки не виявили неузгодженостей. Це не є правовим висновком.",
+  "ui.propertyNoUseRecords":
+    "На цю дату не внесено періодів користування або управління.",
+  "ui.propertyOpen": "відкритих",
+  "ui.propertyOpenClaims": "Відкриті претензії",
+  "ui.propertyPeriodUncertain": "Період потребує уточнення",
+  "ui.propertyPositiveShare":
+    "Внесена частка має бути більшою за 0 і не перевищувати 100%. Якщо невідома — залиште поле порожнім.",
+  "ui.propertyPossession": "Фактичне володіння",
+  "ui.propertyRecordDetails": "Подробиці та джерела",
+  "ui.propertyRecordHint":
+    "Внесіть відомі сторони, дати та докази. Невідомі дати або частки можна не заповнювати. Періоди володіння, користування, передачі, претензії та плани розподілу обліковуються окремо.",
+  "ui.propertyRecordedOwners": "Зафіксоване володіння на цю дату",
+  "ui.propertyReferenceOwner": "Опорний власник / спадкодавець",
+  "ui.propertyRegistrationDate": "Дата або рік реєстрації",
+  "ui.propertyReregistration": "Реєстрація / переоформлення",
+  "ui.propertyReview": "Докази та питання для перевірки",
+  "ui.propertyRight": "Період володіння / користування",
+  "ui.propertyRightCurrent": "Триває (за записом)",
+  "ui.propertyRightDisputed": "Оспорюється",
+  "ui.propertyRightEnded": "Завершено (за записом)",
+  "ui.propertyRightType": "Вид права",
+  "ui.propertyRights": "Права та періоди користування",
+  "ui.propertySale": "Продаж / купівля",
+  "ui.propertySameTransferParties":
+    "Відчужувач і набувач мають бути різними особами, крім запису реєстрації / переоформлення.",
+  "ui.propertySearchHint": "Майно, особа, ідентифікатор або документ…",
+  "ui.propertyTransfer": "Передача майна",
+  "ui.propertyTransferConditions": "Умови передачі",
+  "ui.propertyTransferDetails": "Договір та оплата",
+  "ui.propertyTransferFrom": "Відчужувач / попередній власник зі схеми",
+  "ui.propertyTransferFromExternal": "Сторонній відчужувач",
+  "ui.propertyTransferTo": "Набувач / новий власник зі схеми",
+  "ui.propertyTransferToExternal": "Сторонній набувач",
+  "ui.propertyTransferType": "Вид передачі",
+  "ui.propertyTransfers": "Передачі",
+  "ui.propertyUse": "Користування",
+  "ui.propertyUsers": "Зафіксовані користувачі та управителі",
+  "ui.propertyWithClaims": "Є відкриті претензії",
+  "ui.propertyWorkspaceHint":
+    "Відстежуйте володіння, користування, продажі, дарування та спадкування за датами, з джерелами й конкуруючими претензіями.",
+  "ui.propertyUncertainOwnership":
+    "Дати володіння або частки неповні чи невизначені.",
+  "ui.propertyOverlappingShares":
+    "Внесені частки володіння перевищують 100% на цю дату. Перевірте періоди, що перекриваються, та конкуруючі записи.",
+  "ui.propertyOutstandingClaims":
+    "На обрану дату залишаються невирішені або можливі претензії; подальші передачі автоматично їх не закривають.",
+  "ui.propertyRecordNeedsReview":
+    "Запис або його джерело ще потребує перевірки.",
+  "ui.propertyMissingEvidence":
+    "До запису не прив’язано наявне неспростоване джерело.",
+  "ui.propertyTransferDateMissing":
+    "У передачі немає дати або року, тому її місце в ланцюжку невизначене.",
+  "ui.propertyRecipientRightMissing":
+    "Після цієї передачі не внесено відповідного періоду володіння / користування набувача.",
+  "ui.propertyTransferorRightMissing":
+    "Немає періоду володіння, що підтверджує внесене право відчужувача перед цією передачею.",
+  "ui.propertyTransferredShareMismatch":
+    "Передана частка перевищує внесену частку відчужувача до цієї дати.",
+  "ui.propertyContractAfterDeath":
+    "Дата підписання договору пізніша за внесену дату смерті відчужувача. Уточніть дату, представника та підстави.",
+  "ui.propertySharePercent": "Частка майна (%)",
+  "ui.propertyClaimRelationship":
+    "Зафіксований зв’язок з особою, через яку заявляється право",
 };

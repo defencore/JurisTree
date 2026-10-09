@@ -5,6 +5,7 @@ import { profileScope } from "../features/profiles.js";
 import { defaultGraphView } from "../graph/analysis.js";
 import { translate } from "../i18n/index.js";
 import { sourceInScope } from "./evidence.js";
+import { propertySources } from "./property-records.js";
 export function person(id) {
   return appState.renderIndex?.project === appState.project
     ? appState.renderIndex.people.get(id)
@@ -90,11 +91,25 @@ export function withProjectIndex(fn) {
     relationDocs: new Map(),
     propertyDocs: new Map(),
   };
+  const propertyBySource = new Map();
+  for (const item of appState.project.property)
+    for (const id of propertySources(item)) {
+      if (!propertyBySource.has(id)) propertyBySource.set(id, []);
+      propertyBySource.get(id).push(item.id);
+    }
   for (const d of appState.project.documents.filter(sourceInScope))
     for (const [key, ids] of [
       ["peopleDocs", d.people],
       ["relationDocs", d.relations],
-      ["propertyDocs", d.propertyIds],
+      [
+        "propertyDocs",
+        [
+          ...new Set([
+            ...(d.propertyIds || []),
+            ...(propertyBySource.get(d.id) || []),
+          ]),
+        ],
+      ],
     ])
       for (const id of ids || []) {
         if (!index[key].has(id)) index[key].set(id, []);

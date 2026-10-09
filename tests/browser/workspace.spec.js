@@ -176,7 +176,7 @@ test("exports a full ZIP, reimports it and exports SVG and PNG", async ({
   });
   await page.locator('#modal input[name="title"]').fill("Attachment test");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator("#docCount")).toHaveText("97");
+  await expect(page.locator("#docCount")).toHaveText("103");
   await expect(page.locator("#saveState")).toContainText("Draft saved");
   await page.locator('[data-action="export"]').click();
   const [zip] = await Promise.all([

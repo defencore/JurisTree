@@ -45,7 +45,7 @@ test("demo data round-trips through the validated archive model", () => {
   const model = validateImport(JSON.parse(JSON.stringify(project())));
   assert.equal(model.people.length, 99);
   assert.equal(model.relations.length, 163);
-  assert.equal(model.documents.length, 96);
+  assert.equal(model.documents.length, 102);
 });
 
 test("rejects duplicate identifiers and unsupported schemas", () => {

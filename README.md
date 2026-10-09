@@ -1,6 +1,6 @@
 # JurisTree
 
-JurisTree is a multilingual workspace for family relationships, personal profiles, documents, evidence, events and property planning. It runs entirely in the browser and can be hosted on GitHub Pages.
+JurisTree is a multilingual workspace for family relationships, personal profiles, documents, evidence, events and property history. It runs entirely in the browser and can be hosted on GitHub Pages.
 
 The application uses native JavaScript ES modules and plain CSS. It has no backend, user accounts, remote database, production Node.js runtime or CDN dependency. JSZip and SVG icons are included locally.
 
@@ -27,11 +27,11 @@ The application uses native JavaScript ES modules and plain CSS. It has no backe
 - Global search across all stored values and linked context, with combined queries, field filters, keyboard navigation and multilingual terms.
 - A4 autobiography printing and browser Save as PDF, including every populated section and source reference.
 - Upcoming anniversaries and a historical timeline, including partial dates and leap-day handling.
-- Property records with manually entered allocation shares.
+- Property history with dated ownership/use, gifts, sales, inheritance, evidence review and competing claims; proposed allocation shares remain separate.
 - Undo/redo, browser draft storage, portable ZIP archives and PNG/SVG image export.
 - English, Ukrainian and Russian interfaces, displayed as **EN / UA / RU**.
 
-The demo contains 99 people, 163 relationships, 96 source references and 10 family groups, spanning eight generations from 1824 to 2025. All identities, relationships, institutions, identifiers and personal details are invented. The project title carries the fictional-data notice; individual records use natural names and descriptions.
+The demo contains 99 people, 163 relationships, 102 source references and 10 family groups, spanning eight generations from 1824 to 2025. All identities, relationships, institutions, identifiers and personal details are invented. The project title carries the fictional-data notice; individual records use natural names and descriptions.
 
 Surname histories match the recorded events: Jane Hart became Jane Doe, Jamie Doe became Jamie Roe, Robin Vale became Robin Roe on adoption, and Casey Ward became Casey Roe on marriage. Jesse Ward retains her biological father's surname. Morgan Blake retains her birth surname throughout her marriage and divorce. Biological, adoptive and step-parent relationships remain separate.
 
@@ -89,11 +89,35 @@ Open a person's editor and expand **Add more information** to use sections outsi
 
 Dates and numeric amounts are validated during editing and import. Monetary values retain the entered precision, including zero, and are not calculated automatically. A personal portrait stores entered descriptions and their attribution; it does not infer beliefs or make psychological assessments. These modules capture information and sources, rather than generate country-specific migration or tax forms. Court and financial counterparties can be linked to an existing person or entered as an external party. Monetary records do not automatically create reciprocal entries or calculate account balances. Gender, orientation and treatment records retain their independent dates and attribution; they do not infer one another or automatically overwrite the basic gender field.
 
-Identified assets form a per-person inventory, separate from the property's inheritance/allocation plan. Reuse an asset or account identifier in a restriction record to find both through search. Restrictions record their own dates and status; they do not change ownership or account balances automatically.
+Identified assets form a per-person inventory, separate from the central property history and its proposed inheritance/allocation plan. Reuse an asset or account identifier in a restriction record to find both through search. Restrictions record their own dates and status; they do not change ownership or account balances automatically.
 
 Company interests are per-person records. Use separate entries for different roles, share classes and periods, and consistent registration identifiers across profiles. Registered and beneficial interests can overlap; the application does not add them together or calculate indirect ownership. Account balances, crypto quantities and valuations are dated, manually entered observations, with their original decimal strings preserved. There are no live balance, pricing or blockchain queries.
 
 A direct sanctions designation and an association with a designated person or entity are distinct record types. An association does not designate the other party. Enter the regime, list reference, status, dates, official URL and verification independently; there is no automatic sanctions screening or propagation. Party affiliation is dated history, separate from the personal portrait's political views.
+
+## Property history and competing claims
+
+Open **Property and shares**, add a property with its identifier, country, location and optional valuation, then choose **Property history and analysis**. Use the date selector to inspect the recorded holders and users at a particular point in time. Search the property list by entered values, participant names or linked source metadata; filter it to open claims or records needing review.
+
+Each property has three independently editable collections:
+
+| Collection                     | Contents                                                                                                                                                                                                                                                                         |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rights and use periods         | A person or external party; registered ownership, use, lease, beneficial interest, possession or management; share if known; inclusive start/end dates or years; ongoing/ended/disputed status; grounds, registration requisites, source and verification.                       |
+| Transfers                      | Gift, sale, inheritance, registration, division, exchange or assignment; sender and recipient, internal or external; right type, share, effective date/year, signing and registration dates, payment/currency, conditions and evidence. Enter a separate row for each recipient. |
+| Claims and competing interests | Possible, submitted, disputed or resolved claims; claimant, related/deceased person forming the basis, respondent, claimed share, grounds, missing evidence, dates, case/reference and verification.                                                                             |
+
+**Analyze as of** shows ownership separately from use or management. Missing shares remain unknown. Missing dates and ambiguous year boundaries are flagged; a year is never turned into an invented exact day. A right with no end date requires an explicitly ongoing status to be shown as a definite active period up to today. Refuted rights are retained in history and excluded from the snapshot. Unknown or incomplete periods are listed for clarification. Claims close on their recorded resolution date; year-only boundaries remain conservative. The chronology retains all historical and future entries while the snapshot and review use the selected date.
+
+The review identifies missing dated ownership, incomplete periods/shares, known ownership shares exceeding 100%, open claims, unverified or missing sources, undated transfers, missing recipient periods, missing sender ownership or insufficient recorded shares, and an explicitly dated signing after the sender's recorded death. Findings appear beside the affected records. A later registration or inheritance distribution is not treated as a contract signed by the deceased. Review findings concern entered evidence and consistency; they do not decide title, legal validity, limitation periods or entitlement.
+
+A transfer does not automatically create or close a right, and it does not settle another person's claim. Record the resulting periods and any claim decision explicitly. A recognized claim is not silently converted into an ownership period. The reference/estate owner anchors the family comparison and existing proposed allocation plan; selecting that person does not establish actual ownership. Proposed allocations remain separate from recorded rights. Per-person identified asset observations are also separate and are not merged or counted twice automatically.
+
+The demonstration includes the **Riverside agricultural parcel**. Inspect **1920-01-01** for Henry and Charles Doe's half shares, **1932-07-01** for Alice Doe's registered title, and **1933-01-01** for the gifts to Edward Doe and Florence Hart. Albert Doe's objection through his father Charles remains open after the gifts. A later inquiry by Nathan Doe explicitly needs the intervening succession chain. Current ownership is left unknown where later title records are missing. Participant and claimant relationships are derived from the family tree without declaring heirs or assigning legal shares.
+
+Property history and all linked source references appear in every participant's complete autobiography and printed/PDF report, including external parties and records outside the visible workspace. Global search includes ledger values and participant names. Dated property records appear as one-time entries in **Financial chronology**, with a link back to the property; they are never family anniversaries. Edits support undo/redo, draft saving and ZIP backup. Deleting a person preserves the historical party's name in external-party fields or context notes; deleting a source clears the reference while retaining the history.
+
+The separation of title records, family links and supporting estate documents follows the public [court information on proof of inheritance](https://court.gov.ua/press/news/2031269). This is an information-structure reference, not a registry integration or a jurisdiction-specific inheritance engine.
 
 ## Information structure references
 
@@ -272,6 +296,7 @@ src/
   core/
     state.js               Shared runtime state and history collections
     config.js              Record types, profile sections and display settings
+    property-records.js     Ledger fields, progressive groups and validation rules
     profile-groups.js      Shared ordered information hierarchy
     event-domains.js       Date categories, recurrence and celebration rules
     person-filter-fields.js Filter field, operator and query validation registry
@@ -282,6 +307,9 @@ src/
     dom.js                 DOM queries and HTML escaping
     utils.js               IDs, cloning, formatting, URLs and downloads
   model/                   Project selectors, validation, dates, person status, relationship labels, evidence and kinship
+    property-history.js    Dated rights, open claims and evidence consistency checks
+    property-records.js    Canonical ledger validation and reference lifecycle
+    property-events.js     One-time financial dates from the property ledger
     kinship-index.js       Scoped family adjacency and shared ancestry calculations
     biography-review.js    Pure interval coverage, gap detection and clarification lists
     profile-migrations.js  One-time normalization of earlier mixed profile history
@@ -317,6 +345,8 @@ src/
     person-status.js       Shared translated life and age badges
     components.js          Shared HTML components
     forms/                 Individual dialog and form components
+    property-workspace.js  Search, dated snapshots and allocation planning
+    property-history.js    Rights, transfers, claims and complete report rendering
     profile-fields.js      Shared structured field display for profiles and biographies
     biography-review.js    Review controls and translated report rendering
     event-domains.js       Category selection and contextual record actions
@@ -337,6 +367,7 @@ src/
     demo-details.js         Residence, appearance, health, skills, travel and citizenship
     demo-life-records.js    Attributed life events, service, testimony and contacts
     demo-business-records.js Assets, restrictions, accounts, companies and organizational links
+    demo-property-history.js Dated land ownership, gifts and competing family claims
     demo-sources.js         Core evidence references and review states
   styles/                  Base, workspace, graph, forms and feature stylesheets
   vendor/                  Local JSZip distribution and its module entry point

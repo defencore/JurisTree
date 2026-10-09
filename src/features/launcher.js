@@ -122,6 +122,10 @@ export function activateTree(
   appState.docShowAll = false;
   appState.showDocs = false;
   appState.eventSearch = "";
+  appState.propertyFocus = "";
+  appState.propertyDate = "";
+  appState.propertySearch = "";
+  appState.propertyReviewFilter = "all";
   appState.eventType = "";
   appState.eventDomain = "family";
   appState.calendarMode = "month";
