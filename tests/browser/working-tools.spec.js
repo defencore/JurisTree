@@ -222,7 +222,7 @@ test("edits court, financial, public office and self-described identity records 
     .locator('[name="identityHistory-value"]')
     .fill("Example self-description");
   await identity.locator('[name="identityHistory-from"]').fill("2026-01-01");
-  await identity.getByText("Context and attribution", { exact: true }).click();
+  await identity.getByText("Sources and verification", { exact: true }).click();
   await identity.locator('[name="identityHistory-basis"]').selectOption("self");
   await page.locator('#modal button[type="submit"]').click();
   await expect(page.locator("#modal")).not.toBeVisible();

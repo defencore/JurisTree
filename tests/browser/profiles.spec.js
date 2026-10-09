@@ -38,7 +38,7 @@ test("edits detailed optional profiles, reports and name history and restores th
   await expect(claims.locator('[name="claims-verification"]')).toHaveValue(
     "pending",
   );
-  await claims.getByText("Context and attribution", { exact: true }).click();
+  await claims.getByText("Sources and verification", { exact: true }).click();
   await claims.locator('[name="claims-reportedBy"]').fill("Fictional witness");
   const identity = await add("identity");
   await identity.locator('[name="identity-series"]').fill("DEMO");
@@ -71,7 +71,7 @@ test("edits detailed optional profiles, reports and name history and restores th
   await personal
     .locator('[name="personal-description"]')
     .fill("Fictional example belief");
-  await personal.getByText("Context and attribution", { exact: true }).click();
+  await personal.getByText("Sources and verification", { exact: true }).click();
   await personal.locator('[name="personal-basis"]').selectOption("self");
   const custom = await add("custom");
   await custom.locator('[name="custom-title"]').fill("Additional detail");

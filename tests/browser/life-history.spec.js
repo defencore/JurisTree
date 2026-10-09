@@ -58,7 +58,7 @@ test("edits life events, service, witnesses and social contacts and restores the
   await death
     .locator('[name="death-circumstances"]')
     .fill("A conflicting account retained for review.");
-  await death.getByText("Context and attribution", { exact: true }).click();
+  await death.getByText("Sources and verification", { exact: true }).click();
   await death.locator('[name="death-verification"]').selectOption("refuted");
   const witness = await addRecord(page, "witnesses");
   await witness
@@ -70,7 +70,7 @@ test("edits life events, service, witnesses and social contacts and restores the
   await witness
     .locator('[name="witnesses-statement"]')
     .fill("Observed the handover of the family papers.");
-  await witness.getByText("Context and attribution", { exact: true }).click();
+  await witness.getByText("Sources and verification", { exact: true }).click();
   await witness.locator('[name="witnesses-sourceId"]').selectOption("d9");
   const contact = await addRecord(page, "contacts");
   await contact.locator('[name="contacts-type"]').selectOption("social");
