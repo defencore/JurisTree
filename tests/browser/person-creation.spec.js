@@ -293,6 +293,10 @@ for (const language of ["en", "uk", "ru"]) {
       await page.locator("[data-add-creation-link]").click();
       await page.locator('[name="new-link-person"]').nth(1).selectOption("p3");
       await page.locator(".creation-link-details > summary").first().click();
+      await page.addStyleTag({
+        content:
+          ".modal-body { scrollbar-gutter: stable; } .modal-body::-webkit-scrollbar { width: 15px; } .creation-links .btn { font-size: 16px; }",
+      });
       expect(
         await page
           .locator("#modal")

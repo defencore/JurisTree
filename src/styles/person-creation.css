@@ -12,6 +12,14 @@
 .creation-links .hint {
   margin: 12px 0;
 }
+.creation-links .btn {
+  max-width: 100%;
+  white-space: normal;
+  text-align: left;
+}
+.creation-links .btn .icon {
+  flex-shrink: 0;
+}
 .creation-link {
   position: relative;
   border-top: 1px solid var(--line);
@@ -25,6 +33,7 @@
 }
 .creation-link .field {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 .creation-link .field select {
   text-overflow: ellipsis;
