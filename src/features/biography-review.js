@@ -1,12 +1,12 @@
 import { $, esc } from "../core/dom.js";
-import { person } from "../model/project.js";
+import { translate } from "../i18n/index.js";
 import {
   defaultReviewPeriod,
   reviewBiography,
 } from "../model/biography-review.js";
-import { translate } from "../i18n/index.js";
-import { openDialog } from "../ui/dialog.js";
+import { person } from "../model/lookup.js";
 import { renderReview } from "../ui/biography-review.js";
+import { openDialog } from "../ui/dialog.js";
 
 export function updateBiographyReview() {
   const host = $("#biographyReview");

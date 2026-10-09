@@ -9,7 +9,7 @@ import { eventDomain, eventTypesInDomain } from "../src/core/event-domains.js";
 import { orderedProfileSections } from "../src/core/profile-groups.js";
 import { state } from "../src/core/state.js";
 import { sample } from "../src/data/demo.js";
-import { collectProfile } from "../src/features/profiles.js";
+import { collectProfile } from "../src/model/profile-form.js";
 import { setLanguage } from "../src/i18n/index.js";
 import { personBiography } from "../src/model/biography.js";
 import { yearOccurrences } from "../src/model/calendar.js";

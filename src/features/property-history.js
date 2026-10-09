@@ -3,8 +3,8 @@ import { propertyRecordConfigs } from "../core/property-records.js";
 import { state } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate as t } from "../i18n/index.js";
+import { asset } from "../model/lookup.js";
 import { propertyRecordError } from "../model/property-records.js";
-import { asset } from "../model/project.js";
 import { commit } from "../services/history.js";
 import { openDialog, toast } from "../ui/dialog.js";
 import {

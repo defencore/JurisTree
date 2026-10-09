@@ -1,4 +1,3 @@
-import { normalizePersonFilter } from "../core/person-filter-fields.js";
 import {
   defaultScopes,
   evidenceTypes,
@@ -9,6 +8,13 @@ import {
   statusTypes,
   types,
 } from "../core/config.js";
+import { normalizeGraphView } from "../core/graph-view.js";
+import { normalizePersonFilter } from "../core/person-filter-fields.js";
+import {
+  isProfessionalRelationship,
+  professionalFieldKeys,
+} from "../core/professional-relationships.js";
+import { propertyMetadataFields } from "../core/property-records.js";
 import {
   relationshipConfig,
   relationshipFields,
@@ -16,22 +22,17 @@ import {
 import { sourceEvidence, sourceVerificationConfig } from "../core/sources.js";
 import { state as appState } from "../core/state.js";
 import { safeUrl, uid } from "../core/utils.js";
-import { collectProfile } from "../features/profiles.js";
-import { normalizeGraphView } from "../graph/analysis.js";
 import { translate } from "../i18n/index.js";
 import { dateExact, partialDate } from "./dates.js";
-import { fresh } from "./project.js";
-import { profileRecordError } from "./profile-records.js";
+import { collectProfile } from "./profile-form.js";
 import { migrateProfileHistory } from "./profile-migrations.js";
+import { profileRecordError } from "./profile-records.js";
+import { fresh } from "./project.js";
 import {
   normalizePropertyRecords,
   propertyRecords,
 } from "./property-records.js";
-import { propertyMetadataFields } from "../core/property-records.js";
-import {
-  isProfessionalRelationship,
-  professionalFieldKeys,
-} from "../core/professional-relationships.js";
+
 export function isParentCycle(from, to, except) {
   const stack = [to],
     seen = new Set();

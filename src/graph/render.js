@@ -1,13 +1,15 @@
-import { $, $$ } from "../core/dom.js";
 import { graphStateInfo } from "../core/config.js";
+import { $, $$ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { withProjectIndex } from "../model/project.js";
 import { withKinshipIndex } from "../model/kinship-index.js";
+import { withProjectIndex } from "../model/project.js";
+import { renderGraphControls } from "../ui/graph-controls.js";
 import { applyCamera } from "./camera.js";
-import { renderGraphControls } from "./controls.js";
-import { graphLineStyle, renderGraphLegend } from "./legend.js";
-import { filteredGraphNodes, groupBackdrop, nodeSVG } from "./nodes.js";
 import { renderGraphEdges } from "./edges.js";
+import { graphLineStyle, renderGraphLegend } from "./legend.js";
+import { filteredGraphNodes } from "./node-data.js";
+import { groupBackdrop, nodeSVG } from "./nodes.js";
+
 export function renderGraph() {
   if (!appState.project) return;
   return withProjectIndex(renderGraphAll);

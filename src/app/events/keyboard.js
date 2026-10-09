@@ -1,20 +1,21 @@
-import { toggleFavorite } from "../../features/favorites.js";
-import { render, select } from "../../ui/render.js";
-import { redo, undo } from "../../services/history.js";
-import { openFiles } from "../../services/files.js";
-import { exportArchive } from "../../services/archive.js";
-import { applyCamera, fit, zoom } from "../../graph/camera.js";
-import {
-  clearGraphSelection,
-  resetAnalysis,
-  toggleGraphSelection,
-} from "../../graph/analysis.js";
-import { editProperty } from "../../features/property.js";
-import { toggleGroup } from "../../features/groups.js";
-import { viewDocument } from "../../features/documents.js";
-import { viewBiography } from "../../features/biography.js";
 import { $ } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
+import { exportArchive } from "../../features/archive.js";
+import { openFiles } from "../../features/attachments.js";
+import { viewBiography } from "../../features/biography.js";
+import { viewDocument } from "../../features/documents.js";
+import { toggleFavorite } from "../../features/favorites.js";
+import {
+  clearGraphSelection,
+  toggleGraphSelection,
+} from "../../features/graph-analysis.js";
+import { toggleGroup } from "../../features/groups.js";
+import { editProperty } from "../../features/property.js";
+import { applyCamera, fit, zoom } from "../../graph/camera.js";
+import { resetAnalysis } from "../../model/graph-view.js";
+import { redo, undo } from "../../services/history.js";
+import { render, select } from "../../ui/render.js";
+
 export function bindKeyboardEvents() {
   document.addEventListener("keydown", (e) => {
     if (!appState.editorActive || !$("#startScreen").hidden) return;

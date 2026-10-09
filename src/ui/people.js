@@ -1,13 +1,14 @@
-import { personPassesFilter } from "../features/person-filter-state.js";
-import { personStatusMarkup } from "./person-status.js";
-import { getLocale, translate } from "../i18n/index.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { requirements } from "../model/evidence.js";
+import { getLocale, translate } from "../i18n/index.js";
 import { years } from "../model/dates.js";
+import { requirements } from "../model/evidence.js";
+import { personPassesFilter } from "../model/person-filter-state.js";
 import { withProjectIndex } from "../model/project.js";
 import { avatar, biographyButton } from "./components.js";
 import { icon } from "./icons.js";
+import { personStatusMarkup } from "./person-status.js";
+
 export function renderPeople() {
   if (!appState.project) return;
   return withProjectIndex(renderPeopleAll);

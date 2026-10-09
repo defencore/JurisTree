@@ -1,8 +1,3 @@
-import { propertyHistoryReport } from "./property-history.js";
-import { personStatusMarkup } from "./person-status.js";
-import { reviewButton } from "./biography-review.js";
-import { relationshipConfig } from "../core/relationships.js";
-import { sourceVerificationConfig } from "../core/sources.js";
 import {
   evidenceTypes,
   recordConfigs,
@@ -11,16 +6,21 @@ import {
   types,
 } from "../core/config.js";
 import { esc } from "../core/dom.js";
+import { relationshipConfig } from "../core/relationships.js";
+import { sourceVerificationConfig } from "../core/sources.js";
 import { state as appState } from "../core/state.js";
 import { bytes } from "../core/utils.js";
-import { roleLabel } from "../model/relationship-labels.js";
 import { getLocale, translate } from "../i18n/index.js";
 import { displayDate, years } from "../model/dates.js";
 import { hasFile } from "../model/evidence.js";
-import { person } from "../model/project.js";
+import { person } from "../model/lookup.js";
+import { roleLabel } from "../model/relationship-labels.js";
+import { reviewButton } from "./biography-review.js";
 import { avatar, sourceChips, sourceLink } from "./components.js";
 import { icon } from "./icons.js";
+import { personStatusMarkup } from "./person-status.js";
 import { fields, recordValues } from "./profile-fields.js";
+import { propertyHistoryReport } from "./property-history.js";
 
 function section(label, symbol, body, key) {
   if (!body) return "";

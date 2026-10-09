@@ -1,12 +1,12 @@
 import { familyEventTypes } from "../core/config.js";
 import { esc } from "../core/dom.js";
+import { eventTypesInDomain } from "../core/event-domains.js";
 import { getLocale, translate } from "../i18n/index.js";
 import { monthBounds } from "../model/calendar.js";
 import { displayDate, localDateString, utcDay } from "../model/dates.js";
-import { person } from "../model/project.js";
+import { person } from "../model/lookup.js";
 import { typeOptions } from "./components.js";
 import { icon } from "./icons.js";
-import { eventTypesInDomain } from "../core/event-domains.js";
 
 function monthTitle(month) {
   return new Intl.DateTimeFormat(getLocale(), {

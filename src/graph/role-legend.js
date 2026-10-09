@@ -1,7 +1,7 @@
 import { $, esc } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { translate as t } from "../i18n/index.js";
-import { person } from "../model/project.js";
+import { person } from "../model/lookup.js";
 import { icon } from "../ui/icons.js";
 import { graphRoleGroups } from "./roles.js";
 

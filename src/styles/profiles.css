@@ -164,12 +164,6 @@
   margin-bottom: 12px;
   overflow: hidden;
 }
-.profile-additional-sections {
-  margin: 20px 0;
-  border: 1px dashed var(--line);
-  border-radius: 6px;
-}
-.profile-additional-sections > summary,
 .record-field-group > summary {
   display: flex;
   align-items: center;
@@ -180,21 +174,15 @@
   color: var(--muted);
   font-weight: 700;
 }
-.profile-additional-sections > summary > .icon:last-child,
 .record-field-group > summary > .icon {
   margin-left: auto;
   width: 17px;
 }
-.profile-additional-sections > summary::-webkit-details-marker,
 .record-field-group > summary::-webkit-details-marker {
   display: none;
 }
-.profile-additional-sections[open] > summary > .icon:last-child,
 .record-field-group[open] > summary > .icon:last-child {
   transform: rotate(180deg);
-}
-.profile-additional-sections > div {
-  padding: 0 14px 14px;
 }
 .record-field-group {
   border-top: 1px solid var(--line);

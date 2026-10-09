@@ -1,22 +1,19 @@
-import { getLocale, translate } from "../i18n/index.js";
-import {
-  PERSON_CARD_WIDTH,
-  PERSON_CARD_HEIGHT,
-  docStates,
-} from "../core/config.js";
+import { docStates } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { fullDiagram, visiblePeople } from "./analysis.js";
-import { graphRole } from "./roles.js";
-import { svgText } from "./text.js";
-import { years } from "../model/dates.js";
 import { theme } from "../core/theme.js";
-import { personCard, personCardActions } from "./cards/person.js";
-import { personStatusBadges } from "../ui/person-status.js";
-import { requirements, hasFile, sourceInScope } from "../model/evidence.js";
-import { person } from "../model/project.js";
+import { getLocale, translate } from "../i18n/index.js";
+import { years } from "../model/dates.js";
+import { hasFile, requirements } from "../model/evidence.js";
+import { fullDiagram } from "../model/graph-view.js";
+import { person } from "../model/lookup.js";
 import { documentIcon } from "../ui/components.js";
 import { svgIcon } from "../ui/icons.js";
+import { personStatusBadges } from "../ui/person-status.js";
+import { personCard, personCardActions } from "./cards/person.js";
+import { graphRole } from "./roles.js";
+import { svgText } from "./text.js";
+
 export function nodeSVG(n, images = null, exporting = false) {
   const multi =
       !exporting &&
@@ -113,87 +110,4 @@ export function groupBackdrop(nodes) {
       return `<g class="group-background"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#f4f7fb" fill-opacity=".6" stroke="${g.color}" stroke-opacity=".18" stroke-dasharray="6 5"/><g data-toggle-group="${g.id}" tabindex="0" role="button" aria-label="${translate("ui.collapseGroup")} ${esc(g.name)}" style="cursor:pointer">${svgIcon("users", x + 16, y + 10, g.color, 0.7)}${svgText(g.name + " · " + ps.length, x + 40, y + 25, 55, 1, 13, g.color, 600)}${svgIcon("fold", x + w - 33, y + 10, g.color, 0.65)}</g></g>`;
     })
     .join("");
-}
-
-export function filteredGraphNodes() {
-  const full = fullDiagram(),
-    shown = visiblePeople(full),
-    collapsed = full
-      ? []
-      : appState.project.groups.filter(
-          (g) =>
-            g.collapsed &&
-            !appState.analysisExpandedGroups.has(g.id) &&
-            (!appState.groupFilter || appState.groupFilter === g.id),
-        ),
-    hidden = new Set(),
-    ns = [];
-  for (const g of collapsed) {
-    const members = shown.filter(
-      (p) => (p.groupIds || []).includes(g.id) && !hidden.has(p.id),
-    );
-    if (!members.length) continue;
-    members.forEach((p) => hidden.add(p.id));
-    ns.push({
-      ...g,
-      kind: "group",
-      members: members.map((p) => p.id),
-      x: Number.isFinite(g.x) ? g.x : Math.min(...members.map((p) => p.x)),
-      y: Number.isFinite(g.y) ? g.y : Math.min(...members.map((p) => p.y)),
-      w: PERSON_CARD_WIDTH,
-      h: 130,
-    });
-  }
-  ns.push(
-    ...shown
-      .filter((p) => !hidden.has(p.id))
-      .map((p) => ({
-        ...p,
-        kind: "person",
-        w: PERSON_CARD_WIDTH,
-        h: PERSON_CARD_HEIGHT,
-      })),
-  );
-  const peopleIds = new Set(shown.map((p) => p.id));
-  if (appState.showDocs)
-    ns.push(
-      ...appState.project.documents
-        .filter(
-          (d) =>
-            (full || sourceInScope(d)) &&
-            (full ||
-              d.people.some((id) => peopleIds.has(id)) ||
-              (!appState.groupFilter &&
-                !appState.graphFocus &&
-                !appState.personFilter.rules.length)),
-        )
-        .map((d, i) => ({
-          ...d,
-          kind: "document",
-          x: Number.isFinite(d.x) ? d.x : 40 + i * 255,
-          y: Number.isFinite(d.y) ? d.y : 780,
-          w: 228,
-          h: 128,
-        })),
-    );
-  if (appState.project.purpose === "property")
-    ns.push(
-      ...appState.project.property
-        .filter(
-          (a) =>
-            full ||
-            (!appState.graphFocus && !appState.personFilter.rules.length) ||
-            peopleIds.has(a.ownerId) ||
-            (a.allocations || []).some((x) => peopleIds.has(x.personId)),
-        )
-        .map((a, i) => ({
-          ...a,
-          kind: "property",
-          x: Number.isFinite(a.x) ? a.x : 680,
-          y: Number.isFinite(a.y) ? a.y : 65 + i * 180,
-          w: 245,
-          h: 128,
-        })),
-    );
-  return ns;
 }

@@ -1,8 +1,9 @@
-import { relationshipConfig } from "../core/relationships.js";
 import { relTypes } from "../core/config.js";
-import { person } from "./project.js";
-import { translate } from "../i18n/index.js";
 import { isProfessionalRelationship } from "../core/professional-relationships.js";
+import { relationshipConfig } from "../core/relationships.js";
+import { translate } from "../i18n/index.js";
+import { person } from "./lookup.js";
+
 export function roleGroup(r, id) {
   if (isProfessionalRelationship(r.type)) return "professional";
   if (["parent", "adopted", "step_parent"].includes(r.type))

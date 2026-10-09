@@ -1,4 +1,26 @@
 export default {
+  "ui.undoRedo": "Undo and redo",
+  "ui.personProfiles": "People & profiles",
+  "ui.completePersonProfiles": "Complete personal records",
+  "ui.profileNavigationShort": "Profile, history and connections",
+  "ui.peopleAndConnections": "People & connections",
+  "ui.datesAndHistory": "Dates & history",
+  "ui.recordsAndAnalysis": "Records & analysis",
+  "ui.profileOverview": "Overview",
+  "ui.findProfileSection": "Find a section or field…",
+  "ui.profileSections": "Profile sections",
+  "ui.jumpToSection": "Go to a section",
+  "ui.profileNavigationHint":
+    "Only add the information you need. Every section is optional.",
+  "ui.completeProfileEditorHint":
+    "Start with the name. Add details in any section using the navigation or search. Save when you are ready.",
+  "ui.noProfileSections":
+    "No matching sections. Try another field name or clear the search.",
+  "ui.profileDirectoryHint":
+    "Open a person to view and edit their complete profile, relationships, sources and property history.",
+  "ui.profileSectionsCount": "sections filled",
+  "ui.allProfiles": "All profiles",
+  "ui.openFullProfile": "Open complete profile",
   "ui.deathRecordHint":
     "Each account keeps its own source and verification. Set the basic death date and life status separately in Basic information.",
   "ui.invalidProfileUrl": "Enter a complete HTTP or HTTPS URL.",
@@ -118,9 +140,6 @@ export default {
   "ui.additionalProfileFacts": "Additional profile facts",
   "ui.additionalFact": "Additional fact",
   "ui.valueDetails": "Value / details",
-  "ui.moreProfileSections": "Add more information",
-  "ui.moreProfileSectionsHint":
-    "Open only the sections you need. Empty sections add no records.",
   "ui.invalidProfileNumber": "Enter a valid number in the profile record.",
   "ui.invalidProfileYear": "Enter a four-digit year in the profile record.",
   "ui.mapOptions": "Map tools",
@@ -344,8 +363,6 @@ export default {
   "ui.maidenNameVariantsInOtherLanguages":
     "Maiden name, variants in other languages",
   "ui.treeResearchNotes": "Tree research notes",
-  "ui.profileSectionVisibilityHint":
-    "All sections can be edited here. Workspace visibility affects the person panel; the complete autobiography includes every populated section.",
   "ui.notSpecified": "Not specified",
   "ui.female": "Female",
   "ui.male": "Male",

@@ -1,4 +1,5 @@
-import { graphView } from "./analysis.js";
+import { graphView } from "../model/graph-view.js";
+
 export function connection(a, b, horizontal = false) {
   let x1 = a.x + a.w / 2,
     y1 = a.y + a.h,

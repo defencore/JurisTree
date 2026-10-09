@@ -72,8 +72,6 @@ test("residence editor validates periods, saves country details and retains biol
   const section = page
     .locator(".profile-editor-section")
     .filter({ has: page.locator('[data-add-record="residences"]') });
-  if (!(await section.isVisible()))
-    await page.locator(".profile-additional-sections > summary").click();
   if ((await section.getAttribute("open")) === null)
     await section.locator("summary").first().click();
   await section.locator('[data-add-record="residences"]').click();

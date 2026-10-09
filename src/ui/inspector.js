@@ -1,28 +1,29 @@
-import { personStatusMarkup } from "./person-status.js";
-import { reviewButton } from "./biography-review.js";
-import { $, esc } from "../core/dom.js";
-import { state as appState } from "../core/state.js";
 import { relTypes } from "../core/config.js";
+import { $, esc } from "../core/dom.js";
 import { isDirectedRelationship } from "../core/professional-relationships.js";
 import { relationshipConfig } from "../core/relationships.js";
-import { fields, recordValues } from "./profile-fields.js";
-import { windowControls } from "./floating-windows.js";
-import { favoriteButton } from "../features/favorites.js";
-import { kinGroups } from "../features/groups.js";
-import { renderPersonDetails } from "../features/profiles.js";
-import { relationShown } from "../graph/analysis.js";
-import { roleLabel } from "../model/relationship-labels.js";
+import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { years } from "../model/dates.js";
-import { requirements, linkedDocs, edgeState } from "../model/evidence.js";
-import { person, group, relation, doc } from "../model/project.js";
+import { edgeState, linkedDocs, requirements } from "../model/evidence.js";
+import { relationShown } from "../model/graph-view.js";
+import { doc, group, person, relation } from "../model/lookup.js";
+import { roleLabel } from "../model/relationship-labels.js";
+import { reviewButton } from "./biography-review.js";
 import {
   avatar,
   biographyButton,
   miniDoc,
   requirementCard,
 } from "./components.js";
+import { favoriteButton } from "./favorites.js";
+import { windowControls } from "./floating-windows.js";
+import { kinGroups } from "./groups.js";
 import { icon } from "./icons.js";
+import { personStatusMarkup } from "./person-status.js";
+import { renderPersonDetails } from "./profile-details.js";
+import { fields, recordValues } from "./profile-fields.js";
+
 export function renderInspector() {
   let html = `<div class="inspector-header" tabindex="0" title="${translate("ui.moveWindowHint")}"><b>${translate("ui.personDetails")}</b><div class="window-head-actions">${windowControls()}<button class="iconbtn mobile-only" data-action="close-panel" aria-label="${translate("ui.closeDetails")}">${icon("panelClose")}</button></div></div>`;
   if (!appState.selected) {
@@ -45,7 +46,7 @@ export function renderInspector() {
       .map((g) => `<span class="pill">${esc(g.name)}</span>`)
       .join(
         "",
-      )}${p.id === appState.project.subjectId ? `<span class="pill blue">${icon("fingerprint")}${translate("ui.ownerDeceasedEstateOwner")}</span>` : ""}${p.id === appState.project.claimantId ? `<span class="pill teal">${icon("user")}${translate("ui.claimant")}</span>` : ""}</div></div><div class="profile-actions">${favoriteButton(p)}<button class="btn small" data-edit-person="${p.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small" data-portrait="${p.id}">${icon("photo")}${translate("ui.photo")}</button></div><button class="btn compare-profile" data-action="compare">${icon("compare")}${translate("ui.howAreWeRelated")}</button>${biographyButton(p)}${reviewButton(p.id)}${kinGroups(p)}<div class="panel-section"><div class="panel-title"><h3>${translate("ui.requiredDocuments")}</h3><small>${done} / ${req.length} ${translate("ui.available2")}</small></div><div class="progress"><i style="width:${req.length ? (done / req.length) * 100 : 100}%"></i></div>${req.map((t) => requirementCard(p, t)).join("") || `<p class="hint">${translate("ui.configureTheChecklistInThePersonProfile")}</p>`}</div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.sourcesForThisPerson")}</h3><button class="btn small ghost" data-add-for="${p.id}">${icon("plus")}${translate("ui.add")}</button></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.noCertificatesPhotosOrArchiveRecordsAddedYet")}</p>`}</div>${renderPersonDetails(p)}${p.aliases ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.otherNames")}</h3></div><div class="note-box">${esc(p.aliases)}</div></div>` : ""}${p.notes ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.notes")}</h3></div><div class="note-box">${esc(p.notes)}</div></div>` : ""}`;
+      )}${p.id === appState.project.subjectId ? `<span class="pill blue">${icon("fingerprint")}${translate("ui.ownerDeceasedEstateOwner")}</span>` : ""}${p.id === appState.project.claimantId ? `<span class="pill teal">${icon("user")}${translate("ui.claimant")}</span>` : ""}</div></div><div class="profile-actions">${favoriteButton(p)}<button class="btn small" data-edit-person="${p.id}">${icon("edit")}${translate("ui.edit")}</button><button class="btn small" data-portrait="${p.id}">${icon("photo")}${translate("ui.photo")}</button></div><button class="btn compare-profile" data-action="compare">${icon("compare")}${translate("ui.howAreWeRelated")}</button><button class="btn full-profile-button" data-full-profile="${p.id}">${icon("user")}${translate("ui.openFullProfile")}${icon("arrowRight")}</button>${biographyButton(p)}${reviewButton(p.id)}${kinGroups(p)}<div class="panel-section"><div class="panel-title"><h3>${translate("ui.requiredDocuments")}</h3><small>${done} / ${req.length} ${translate("ui.available2")}</small></div><div class="progress"><i style="width:${req.length ? (done / req.length) * 100 : 100}%"></i></div>${req.map((t) => requirementCard(p, t)).join("") || `<p class="hint">${translate("ui.configureTheChecklistInThePersonProfile")}</p>`}</div><div class="panel-section"><div class="panel-title"><h3>${translate("ui.sourcesForThisPerson")}</h3><button class="btn small ghost" data-add-for="${p.id}">${icon("plus")}${translate("ui.add")}</button></div>${ds.map(miniDoc).join("") || `<p class="kin-empty">${translate("ui.noCertificatesPhotosOrArchiveRecordsAddedYet")}</p>`}</div>${renderPersonDetails(p)}${p.aliases ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.otherNames")}</h3></div><div class="note-box">${esc(p.aliases)}</div></div>` : ""}${p.notes ? `<div class="panel-section"><div class="panel-title"><h3>${translate("ui.notes")}</h3></div><div class="note-box">${esc(p.notes)}</div></div>` : ""}`;
   } else if (appState.selected.kind === "relation") {
     const r = relation(appState.selected.id);
     if (!r) return;

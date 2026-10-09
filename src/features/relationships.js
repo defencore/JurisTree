@@ -1,24 +1,25 @@
+import { $, esc } from "../core/dom.js";
 import {
   collectRelationship,
   duplicateRelationship,
   relationshipConfig,
 } from "../core/relationships.js";
-import { profileRecordError } from "../model/profile-records.js";
-import {
-  renderRelationshipForm,
-  bindRelationshipForm,
-} from "../ui/forms/relationship.js";
-import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { kinshipBetween } from "../model/kinship.js";
-import { person, relation } from "../model/project.js";
+import { person, relation } from "../model/lookup.js";
+import { profileRecordError } from "../model/profile-records.js";
 import { isParentCycle } from "../model/validation.js";
 import { commit } from "../services/history.js";
 import { avatar, personOptions } from "../ui/components.js";
 import { openDialog, toast } from "../ui/dialog.js";
+import {
+  bindRelationshipForm,
+  renderRelationshipForm,
+} from "../ui/forms/relationship.js";
 import { icon } from "../ui/icons.js";
+
 export async function editRelation(id = null, context = {}) {
   if (appState.project.people.length < 2) {
     toast(translate("ui.addAtLeastTwoPeopleFirst"));

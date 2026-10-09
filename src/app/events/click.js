@@ -1,59 +1,59 @@
-import { printBiography } from "../../features/print-biography.js";
-import { openBiographyReview } from "../../features/biography-review.js";
-import { openSearchResult } from "../../features/search.js";
-import {
-  renderCalendar,
-  changeCalendarMonth,
-} from "../../features/calendar.js";
-import { toggleFavorite } from "../../features/favorites.js";
-import { render, select } from "../../ui/render.js";
-import { icons } from "../../ui/icons.js";
-import { closeModal, confirmDelete, toast } from "../../ui/dialog.js";
-import { cropImage } from "../../ui/cropper.js";
-import { copyCitation } from "../../ui/components.js";
-import { commit } from "../../services/history.js";
-import { openFiles } from "../../services/files.js";
-import { exportArchive, exportImage } from "../../services/archive.js";
-import { doc } from "../../model/project.js";
-import { linkedDocs, isOfficial } from "../../model/evidence.js";
-import { translate } from "../../i18n/index.js";
-import { graphAnalysisDialog } from "../../graph/controls.js";
-import { fit, focusPerson } from "../../graph/camera.js";
+import { $ } from "../../core/dom.js";
+import { state as appState } from "../../core/state.js";
+import { download, uid } from "../../core/utils.js";
 import { isMobileLayout } from "../../core/viewport.js";
+import { exportArchive, exportImage } from "../../features/archive.js";
+import { openFiles } from "../../features/attachments.js";
+import { openBiographyReview } from "../../features/biography-review.js";
+import { viewBiography } from "../../features/biography.js";
+import { changeCalendarMonth } from "../../features/calendar.js";
+import { confirmDelete } from "../../features/delete.js";
+import { editDocument, viewDocument } from "../../features/documents.js";
+import { deleteFamilyEvent, editFamilyEvent } from "../../features/events.js";
+import { toggleFavorite } from "../../features/favorites.js";
 import {
   applyGraphPreset,
   hideGraphRelation,
   revealGraphRelation,
   showAnalysisResult,
-} from "../../graph/analysis.js";
-import { editRelation } from "../../features/relationships.js";
-import { allocationRow, editProperty } from "../../features/property.js";
+} from "../../features/graph-analysis.js";
+import { graphAnalysisDialog } from "../../features/graph-tools.js";
+import { deleteGroup, editGroup, toggleGroup } from "../../features/groups.js";
+import { selectStartTemplate } from "../../features/launcher.js";
+import { printBiography } from "../../features/print-biography.js";
+import { addProfileRecord } from "../../features/profile-record-entry.js";
+import {
+  closeFullProfile,
+  openFullProfile,
+} from "../../features/profile-workspace.js";
+import { editPerson } from "../../features/profiles.js";
 import {
   closePropertyHistory,
-  openPropertyHistory,
-  editPropertyRecord,
   deletePropertyRecord,
+  editPropertyRecord,
+  openPropertyHistory,
 } from "../../features/property-history.js";
-import { editPerson } from "../../features/profiles.js";
-import { addProfileRecord } from "../../features/profile-record-entry.js";
+import { editProperty } from "../../features/property.js";
+import { editRelation } from "../../features/relationships.js";
+import { openSearchResult } from "../../features/search.js";
+import { fit, focusPerson } from "../../graph/camera.js";
+import { translate } from "../../i18n/index.js";
+import { isOfficial, linkedDocs } from "../../model/evidence.js";
+import { doc } from "../../model/lookup.js";
+import { commit } from "../../services/history.js";
+import { copyCitation } from "../../ui/components.js";
+import { cropImage } from "../../ui/cropper.js";
+import { closeModal, toast } from "../../ui/dialog.js";
 import { renderProfileRecord } from "../../ui/forms/profile-record.js";
-import { viewBiography } from "../../features/biography.js";
-import { selectStartTemplate } from "../../features/launcher.js";
-import { deleteGroup, editGroup, toggleGroup } from "../../features/groups.js";
-import {
-  deleteFamilyEvent,
-  editFamilyEvent,
-  renderEvents,
-} from "../../features/events.js";
-import {
-  editDocument,
-  renderDocuments,
-  viewDocument,
-} from "../../features/documents.js";
-import { download, uid } from "../../core/utils.js";
-import { state as appState } from "../../core/state.js";
-import { $ } from "../../core/dom.js";
+import { allocationRow } from "../../ui/forms/property.js";
+import { icons } from "../../ui/icons.js";
+import { updateProfileCounts } from "../../ui/profile-navigation.js";
+import { render, select } from "../../ui/render.js";
+import { renderCalendar } from "../../ui/workspaces/calendar.js";
+import { renderDocuments } from "../../ui/workspaces/documents.js";
+import { renderEvents } from "../../ui/workspaces/events.js";
 import { handleAction } from "../actions.js";
+
 export function bindClickEvents() {
   document.addEventListener("click", async (e) => {
     const b = e.target.closest(
@@ -61,6 +61,37 @@ export function bindClickEvents() {
     );
     if (!b) return;
     try {
+      if (b.dataset.historyCommand) {
+        await handleAction(b.dataset.historyCommand);
+        return;
+      }
+      if (b.dataset.fullProfile) {
+        openFullProfile(b.dataset.fullProfile);
+        return;
+      }
+      if (b.hasAttribute("data-profile-back")) {
+        closeFullProfile();
+        return;
+      }
+      if (b.dataset.profileMap) {
+        select("person", b.dataset.profileMap);
+        focusPerson(b.dataset.profileMap);
+        return;
+      }
+      if (b.dataset.profileRelation) {
+        await editRelation(null, { from: b.dataset.profileRelation });
+        return;
+      }
+      if (b.dataset.profileReference) {
+        await editDocument(null, null, {
+          personId: b.dataset.profileReference,
+        });
+        return;
+      }
+      if (b.dataset.profileProperty) {
+        await editProperty(null, b.dataset.profileProperty);
+        return;
+      }
       if (b.dataset.propertyCommand) {
         handleAction(b.dataset.propertyCommand);
         return;
@@ -130,6 +161,10 @@ export function bindClickEvents() {
         return;
       }
       if (b.dataset.fastPerson) {
+        if (appState.view === "people") {
+          openFullProfile(b.dataset.fastPerson);
+          return;
+        }
         select("person", b.dataset.fastPerson);
         focusPerson(b.dataset.fastPerson);
         return;
@@ -205,8 +240,9 @@ export function bindClickEvents() {
       }
       if (b.hasAttribute("data-group-filter")) {
         appState.groupFilter = b.dataset.groupFilter;
-        if (!["events", "calendar"].includes(appState.view))
+        if (!["events", "calendar", "people"].includes(appState.view))
           appState.view = "tree";
+        if (appState.view === "people") appState.profileFocus = "";
         appState.eventLimit = 80;
         appState.comparisonPath = null;
         render();
@@ -278,10 +314,12 @@ export function bindClickEvents() {
           renderProfileRecord(section),
         );
         icons();
+        updateProfileCounts();
         return;
       }
       if (b.hasAttribute("data-remove-record")) {
         b.closest(".profile-record").remove();
+        updateProfileCounts();
         return;
       }
       if (b.dataset.attachDocument) {
@@ -343,6 +381,7 @@ export function bindClickEvents() {
       }
       if (b.dataset.view) {
         appState.view = b.dataset.view;
+        if (appState.view === "people") appState.profileFocus = "";
         render();
         if (appState.view === "tree") isMobileLayout() ? focusPerson() : fit();
         if (isMobileLayout()) $("#sidebar").classList.remove("open");

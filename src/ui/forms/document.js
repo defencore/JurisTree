@@ -1,22 +1,23 @@
 import {
-  sourceVerificationConfig,
-  sourceEvidence,
-} from "../../core/sources.js";
-import { renderRecordFields } from "./profile-record.js";
-import {
-  types,
+  defaultScopes,
   evidenceTypes,
   relTypes,
-  defaultScopes,
+  types,
 } from "../../core/config.js";
 import { $, esc } from "../../core/dom.js";
+import {
+  sourceEvidence,
+  sourceVerificationConfig,
+} from "../../core/sources.js";
 import { state as appState } from "../../core/state.js";
 import { bytes, safeUrl } from "../../core/utils.js";
 import { translate } from "../../i18n/index.js";
 import { documentSubjects } from "../../model/evidence.js";
-import { person } from "../../model/project.js";
-import { typeOptions, checks } from "../components.js";
+import { person } from "../../model/lookup.js";
+import { checks, typeOptions } from "../components.js";
 import { icon } from "../icons.js";
+import { renderRecordFields } from "./profile-record.js";
+
 export function renderDocumentForm(file, old, chosenType, id, chosenEvidence) {
   return `${file ? `<div class="upload-info">${icon("paperclip")} ${esc(file.name)} · ${bytes(file.blob.size)}${file.originalSize ? ` ${translate("ui.original")} ` + bytes(file.originalSize) : ""}</div>` : ""}<label class="field">${translate("ui.documentSourceTitle")}<input name="title" value="${esc(old.title)}" placeholder="${translate("ui.forExampleMariaSBirthCertificate")}" required maxlength="250"></label><div class="form-grid"><label class="field">${translate("ui.type")}<select name="type">${typeOptions(types(), chosenType)}</select></label><label class="field">${translate("ui.documentAvailability")}<select name="status">${typeOptions(
     {

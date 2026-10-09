@@ -1,9 +1,12 @@
 import { emptyPersonFilter } from "./person-filter-fields.js";
+
 /** Runtime-only state. Persist only project data and referenced attachment blobs. */
 export const state = {
   project: undefined,
   selected: null,
   view: "tree",
+  profileFocus: "",
+  profileSearch: "",
   showDocs: false,
   camera: {
     x: 0,

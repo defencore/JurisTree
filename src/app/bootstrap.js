@@ -1,9 +1,11 @@
 import { state as appState } from "../core/state.js";
-import { renderStart, showStartScreen } from "../features/launcher.js";
+import { showStartScreen } from "../features/launcher.js";
 import { fresh } from "../model/project.js";
 import { validateImport } from "../model/validation.js";
-import { webTools } from "../services/browser-tools.js";
 import { icons } from "../ui/icons.js";
+import { renderStart } from "../ui/start.js";
+import { webTools } from "./browser-tools.js";
+
 export async function init() {
   appState.db = null;
   appState.project = fresh();

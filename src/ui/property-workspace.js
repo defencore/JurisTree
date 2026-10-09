@@ -2,15 +2,15 @@ import { esc } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { getLocale, translate as t } from "../i18n/index.js";
 import { linkedDocs } from "../model/evidence.js";
-import { propertyPeople } from "../model/property-records.js";
+import { person } from "../model/lookup.js";
 import { analyzeProperty } from "../model/property-history.js";
-import { person } from "../model/project.js";
+import { propertyPeople } from "../model/property-records.js";
 import { typeOptions } from "./components.js";
+import { icon } from "./icons.js";
 import {
   propertyHistoryView,
   propertySnapshotMarkup,
 } from "./property-history.js";
-import { icon } from "./icons.js";
 
 export function allocationSummary(asset) {
   const total = (asset.allocations || []).reduce(

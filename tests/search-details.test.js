@@ -12,7 +12,7 @@ import {
 } from "../src/model/search.js";
 import { validateImport } from "../src/model/validation.js";
 import { profileRecordError } from "../src/model/profile-records.js";
-import { collectProfile } from "../src/features/profiles.js";
+import { collectProfile } from "../src/model/profile-form.js";
 import { personBiography } from "../src/model/biography.js";
 import { renderBiography } from "../src/ui/biography.js";
 import { collectProjectEvents } from "../src/model/events.js";

@@ -1,14 +1,24 @@
-import { renderSearch } from "../../features/search.js";
-import { renderCalendar } from "../../features/calendar.js";
-import { renderProperty } from "../../features/property.js";
-import { renderPeople } from "../../ui/people.js";
-import { renderEvents } from "../../features/events.js";
-import { renderDocuments } from "../../features/documents.js";
-import { state as appState } from "../../core/state.js";
 import { $, $$ } from "../../core/dom.js";
+import { state as appState } from "../../core/state.js";
 import { getLocale } from "../../i18n/index.js";
+import { renderPeople } from "../../ui/people.js";
+import { renderSearch } from "../../ui/search.js";
+import { renderCalendar } from "../../ui/workspaces/calendar.js";
+import { renderDocuments } from "../../ui/workspaces/documents.js";
+import { renderEvents } from "../../ui/workspaces/events.js";
+import { renderProfiles } from "../../ui/workspaces/people.js";
+import { renderProperty } from "../../ui/workspaces/property.js";
+
 export function bindInputEvents() {
   document.addEventListener("input", (e) => {
+    if (e.target.id === "profileSearch") {
+      const start = e.target.selectionStart;
+      appState.profileSearch = e.target.value;
+      renderProfiles();
+      $("#profileSearch").focus();
+      $("#profileSearch").setSelectionRange(start, start);
+      return;
+    }
     if (e.target.id === "propertySearch") {
       const start = e.target.selectionStart;
       appState.propertySearch = e.target.value;

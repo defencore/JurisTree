@@ -4,7 +4,7 @@ import { eventTypesInDomain } from "../core/event-domains.js";
 import { state } from "../core/state.js";
 import { translate as t } from "../i18n/index.js";
 import { displayDate } from "../model/dates.js";
-import { group } from "../model/project.js";
+import { group } from "../model/lookup.js";
 import { typeOptions } from "./components.js";
 import { eventDomainControl } from "./event-domains.js";
 import { icon } from "./icons.js";

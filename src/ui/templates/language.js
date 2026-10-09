@@ -1,0 +1,1 @@
+export const languageControl = `<label class="language-control" title="@@ui.language@@"><i data-icon="globe"></i><span data-language-label>@@ui.language@@</span><select data-language aria-label="@@ui.language@@"><option value="en" lang="en">EN</option><option value="uk" lang="uk">UA</option><option value="ru" lang="ru">RU</option></select></label>`;

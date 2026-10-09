@@ -1,15 +1,17 @@
 import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../core/config.js";
 import { state as appState } from "../core/state.js";
-import { graphView, relationShown } from "./analysis.js";
-import { fit } from "./camera.js";
-import { renderGraphControls } from "./controls.js";
-import { filteredGraphNodes } from "./nodes.js";
 import { translate } from "../i18n/index.js";
-import { group, person, withProjectIndex } from "../model/project.js";
+import { graphView, relationShown } from "../model/graph-view.js";
+import { group, person } from "../model/lookup.js";
+import { withProjectIndex } from "../model/project.js";
 import { commit } from "../services/history.js";
 import { toast } from "../ui/dialog.js";
+import { renderGraphControls } from "../ui/graph-controls.js";
+import { fit } from "./camera.js";
 import { familyLayout } from "./layouts/family.js";
 import { circularLayout, networkLayout } from "./layouts/network.js";
+import { filteredGraphNodes } from "./node-data.js";
+
 export async function arrangeGraph(style = graphView().layout) {
   if (appState.analysisBusy) return;
   const start = appState.project,

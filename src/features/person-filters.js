@@ -1,52 +1,36 @@
 import { $ } from "../core/dom.js";
-import { state } from "../core/state.js";
-import { clone, download, safeName, uid } from "../core/utils.js";
 import {
   emptyPersonFilter,
   normalizePersonFilter,
 } from "../core/person-filter-fields.js";
+import { state } from "../core/state.js";
+import { clone, download, safeName, uid } from "../core/utils.js";
+import { fit, focusPerson } from "../graph/camera.js";
+import { translate as t } from "../i18n/index.js";
+import { localDateString } from "../model/dates.js";
+import { resetAnalysis } from "../model/graph-view.js";
+import { buildPersonFilterFacts } from "../model/person-filter-facts.js";
+import {
+  personFilterReport,
+  resetPersonFilter,
+} from "../model/person-filter-state.js";
 import {
   evaluatePersonFilter,
   personFilterCsv,
 } from "../model/person-filters.js";
-import { buildPersonFilterFacts } from "../model/person-filter-facts.js";
-import { localDateString } from "../model/dates.js";
-import { translate as t } from "../i18n/index.js";
 import { commit } from "../services/history.js";
-import { resetAnalysis } from "../graph/analysis.js";
-import { fit, focusPerson } from "../graph/camera.js";
-import { render, select } from "../ui/render.js";
-import { openDialog, closeModal } from "../ui/dialog.js";
-import { icons } from "../ui/icons.js";
+import { closeModal, openDialog } from "../ui/dialog.js";
 import {
-  renderPersonFilterForm,
-  renderFilterRule,
-  renderSavedPersonFilters,
   defaultFilterRule,
   quickPersonFilters,
+  renderFilterRule,
+  renderPersonFilterForm,
+  renderSavedPersonFilters,
 } from "../ui/forms/person-filters.js";
+import { icons } from "../ui/icons.js";
 import { renderPersonFilterResults } from "../ui/person-filter-results.js";
-import {
-  personFilterReport,
-  resetPersonFilter,
-} from "./person-filter-state.js";
+import { render, select } from "../ui/render.js";
 
-export function renderPersonFilterBar() {
-  const count = state.personFilter.rules.length;
-  $("#personFilterCount").textContent = count || "";
-  $('[data-action="person-filters"]').setAttribute(
-    "aria-pressed",
-    String(count > 0),
-  );
-  const bar = $("#personFilterBar");
-  bar.hidden = !count;
-  if (!count) {
-    bar.innerHTML = "";
-    return;
-  }
-  const report = personFilterReport();
-  bar.innerHTML = `<span>${t("ui.filterActiveResults")} <b>${report.matches.length} / ${report.total}</b> · ${t("ui.filterConditionCount")} ${count}</span><div><button type="button" class="btn small" data-action="person-filters">${t("ui.edit")}</button><button type="button" class="btn small ghost" data-action="clear-person-filters">${t("ui.filterReset")}</button></div>${!report.matches.length ? `<p>${t("ui.filterNoMatches")}</p>` : ""}`;
-}
 function apply(query) {
   state.personFilter = query;
   resetAnalysis(false);

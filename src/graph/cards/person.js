@@ -6,7 +6,7 @@ import { initials } from "../../core/utils.js";
 import { translate } from "../../i18n/index.js";
 import { displayDate } from "../../model/dates.js";
 import { requirements } from "../../model/evidence.js";
-import { objectUrl } from "../../services/files.js";
+import { objectUrl } from "../../services/blobs.js";
 import { svgIcon } from "../../ui/icons.js";
 import { personStatusBadges } from "../../ui/person-status.js";
 import { graphTextWidth, svgPill, svgText, wrapMeasuredText } from "../text.js";

@@ -1,4 +1,5 @@
 import { brandMark } from "../brand.js";
+import { languageControl } from "./language.js";
 
 export const startTemplate = `
 <section
@@ -13,16 +14,10 @@ export const startTemplate = `
         <b>JurisTree</b><small>@@ui.peopleDocumentsRelationships@@</small>
       </div>
     </div>
-    <label class="language-control"
-      ><span data-language-label>Language</span
-      ><select data-language aria-label="Language">
-        <option value="en">EN</option>
-        <option value="uk">UA</option>
-        <option value="ru">RU</option>
-      </select></label
-    ><button class="btn start-help" type="button" data-action="coverage">
-      <i data-icon="help"></i>@@ui.capabilitiesAndLimits@@
+<button class="btn start-help" type="button" data-action="coverage">
+      <i data-icon="help"></i><span>@@ui.capabilitiesAndLimits@@</span>
     </button>
+    <div class="header-preferences">${languageControl}</div>
   </header>
   <main class="start-main">
     <div class="start-heading">

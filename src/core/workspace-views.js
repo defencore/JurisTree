@@ -1,0 +1,72 @@
+/** Canonical workspace navigation and heading metadata. */
+export const workspaceViews = [
+  {
+    key: "tree",
+    group: "ui.peopleAndConnections",
+    title: "ui.relationshipMap",
+    eyebrow: "ui.familyRelationships",
+    hint: "ui.peopleGroupsAndSearch",
+    icon: "tree",
+    count: "peopleCount",
+  },
+  {
+    key: "people",
+    group: "ui.peopleAndConnections",
+    title: "ui.personProfiles",
+    eyebrow: "ui.completePersonProfiles",
+    hint: "ui.profileNavigationShort",
+    icon: "users",
+    count: "profileCount",
+  },
+  {
+    key: "calendar",
+    group: "ui.datesAndHistory",
+    title: "ui.calendar",
+    eyebrow: "ui.birthdaysAndAnniversaries",
+    hint: "ui.birthdaysAndAnniversaries",
+    icon: "calendarClock",
+  },
+  {
+    key: "events",
+    heading: "ui.eventsAndAnniversaries",
+    group: "ui.datesAndHistory",
+    title: "ui.eventsAndDates",
+    eyebrow: "ui.familyTimeline",
+    hint: "ui.anniversariesAndTimeline",
+    icon: "events",
+    count: "eventCount",
+  },
+  {
+    key: "documents",
+    heading: "ui.documentsAndSources",
+    group: "ui.recordsAndAnalysis",
+    title: "ui.documents",
+    eyebrow: "ui.documentsPhotosRecords",
+    hint: "ui.sourcesAndDigitalCopies",
+    icon: "sources",
+    count: "docCount",
+  },
+  {
+    key: "property",
+    heading: "ui.propertyAndShares",
+    group: "ui.recordsAndAnalysis",
+    title: "ui.property",
+    eyebrow: "ui.ownershipAndAllocationPlan",
+    hint: "ui.ownershipAndShares",
+    icon: "property",
+    count: "assetCount",
+  },
+  {
+    key: "gaps",
+    group: "ui.recordsAndAnalysis",
+    title: "ui.evidenceAndGaps",
+    eyebrow: "ui.nextSteps",
+    hint: "ui.whatNeedsConfirmation",
+    icon: "gaps",
+    count: "gapCount",
+  },
+];
+
+export function workspaceView(key) {
+  return workspaceViews.find((view) => view.key === key) || workspaceViews[0];
+}

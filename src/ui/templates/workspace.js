@@ -1,4 +1,6 @@
 import { brandMark } from "../brand.js";
+import { languageControl } from "./language.js";
+import { workspaceNavigation } from "./navigation.js";
 
 export const workspaceTemplate = `
 <div id="appShell" hidden>
@@ -21,14 +23,7 @@ export const workspaceTemplate = `
       ><span class="demo-tag" id="demoTag">@@ui.demo@@</span>
     </div>
     <div class="top-actions">
-      <label class="language-control"
-        ><span data-language-label>Language</span
-        ><select data-language aria-label="Language">
-          <option value="en">EN</option>
-          <option value="uk">UA</option>
-          <option value="ru">RU</option>
-        </select></label
-      ><button
+<button
         class="iconbtn start-home"
         data-action="start"
         aria-label="@@ui.homeScreen@@"
@@ -46,6 +41,7 @@ export const workspaceTemplate = `
         <i data-icon="download"></i><span>@@ui.exportTree@@</span>
       </button>
     </div>
+    <div class="header-preferences">${languageControl}</div>
   </header>
   <section class="global-search-bar" aria-label="@@ui.globalSearch@@">
     <div class="global-search-input"><i data-icon="search"></i><input id="globalSearch" type="search" autocomplete="off" placeholder="@@ui.globalSearchPlaceholder@@" aria-label="@@ui.globalSearch@@" aria-controls="globalSearchResults" aria-expanded="false"><button type="button" class="iconbtn small" data-action="clear-search" aria-label="@@ui.clearSearch@@"><i data-icon="x"></i></button></div>
@@ -54,6 +50,7 @@ export const workspaceTemplate = `
   </section>
   <div class="workspace">
     <aside class="sidebar" id="sidebar">
+      ${workspaceNavigation()}
       <div class="purpose">
         <p class="section-label">@@ui.workspaceMode@@</p>
         <select id="purpose" aria-label="@@ui.treePurpose@@">
@@ -66,61 +63,6 @@ export const workspaceTemplate = `
         </button>
       </div>
       <section class="favorites-section"><p class="section-label">@@ui.workingPeople@@</p><div id="favoriteList"></div></section>
-      <nav class="nav" aria-label="@@ui.workspaceSections@@">
-        <p class="section-label nav-label">@@ui.workspaceSections@@</p>
-        <button
-          class="navbtn active"
-          data-view="tree"
-          title="@@ui.relationshipMapPeopleGroupsAndSearch@@"
-        >
-          <span class="nav-icon"><i data-icon="tree"></i></span
-          ><span class="nav-text"
-            ><b>@@ui.relationshipMap@@</b
-            ><small>@@ui.peopleGroupsAndSearch@@</small></span
-          ><span class="count" id="peopleCount"></span></button
-        ><button
-          class="navbtn"
-          data-view="events"
-          title="@@ui.eventsAndDatesAnniversariesAndTimeline@@"
-        >
-          <span class="nav-icon"><i data-icon="events"></i></span
-          ><span class="nav-text"
-            ><b>@@ui.eventsAndDates@@</b
-            ><small>@@ui.anniversariesAndTimeline@@</small></span
-          ><span class="count" id="eventCount"></span></button
-        ><button class="navbtn" data-view="calendar"><span class="nav-icon"><i data-icon="calendarClock"></i></span><span class="nav-text"><b>@@ui.calendar@@</b><small>@@ui.birthdaysAndAnniversaries@@</small></span></button
-        ><button
-          class="navbtn"
-          data-view="documents"
-          title="@@ui.documentsSourcesAndDigitalCopies@@"
-        >
-          <span class="nav-icon"><i data-icon="sources"></i></span
-          ><span class="nav-text"
-            ><b>@@ui.documents@@</b
-            ><small>@@ui.sourcesAndDigitalCopies@@</small></span
-          ><span class="count" id="docCount"></span></button
-        ><button
-          class="navbtn"
-          data-view="gaps"
-          title="@@ui.evidenceAndGapsWhatNeedsConfirmation@@"
-        >
-          <span class="nav-icon"><i data-icon="gaps"></i></span
-          ><span class="nav-text"
-            ><b>@@ui.evidenceAndGaps@@</b
-            ><small>@@ui.whatNeedsConfirmation@@</small></span
-          ><span class="count warning" id="gapCount"></span></button
-        ><button
-          class="navbtn"
-          data-view="property"
-          title="@@ui.propertyOwnershipAndShares@@"
-        >
-          <span class="nav-icon"><i data-icon="property"></i></span
-          ><span class="nav-text"
-            ><b>@@ui.property@@</b
-            ><small>@@ui.ownershipAndShares@@</small></span
-          ><span class="count" id="assetCount"></span>
-        </button>
-      </nav>
       <div class="families-section">
         <div class="section-top">
           <p class="section-label" id="groupSectionLabel">
@@ -283,6 +225,10 @@ export const workspaceTemplate = `
         </details>
       </div>
       <div class="scroll-view" id="otherView" hidden></div>
+      <div class="workspace-history" id="workspaceHistory" role="group" aria-label="@@ui.undoRedo@@" hidden>
+        <button type="button" class="iconbtn" data-history-command="undo" aria-label="@@ui.undo@@" title="@@ui.undoCtrlZ@@"><i data-icon="undo"></i></button>
+        <button type="button" class="iconbtn" data-history-command="redo" aria-label="@@ui.redo@@" title="@@ui.redoCtrlShiftZ@@"><i data-icon="redo"></i></button>
+      </div>
     </main>
     <button type="button" class="mobile-shade" data-action="close-mobile-panels" aria-label="@@ui.closeNavigation@@"></button>
     <aside class="inspector" id="inspector"></aside>

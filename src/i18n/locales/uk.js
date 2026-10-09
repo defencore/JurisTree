@@ -1,4 +1,26 @@
 export default {
+  "ui.undoRedo": "Скасування та повторення змін",
+  "ui.personProfiles": "Особи та профілі",
+  "ui.completePersonProfiles": "Повні профілі осіб",
+  "ui.profileNavigationShort": "Профіль, історія та зв’язки",
+  "ui.peopleAndConnections": "Особи та зв’язки",
+  "ui.datesAndHistory": "Дати та історія",
+  "ui.recordsAndAnalysis": "Матеріали та аналіз",
+  "ui.profileOverview": "Огляд",
+  "ui.findProfileSection": "Знайти розділ або поле…",
+  "ui.profileSections": "Розділи профілю",
+  "ui.jumpToSection": "Перейти до розділу",
+  "ui.profileNavigationHint":
+    "Додавайте лише потрібну інформацію. Усі розділи необов’язкові.",
+  "ui.completeProfileEditorHint":
+    "Почніть з імені. Додавайте деталі в потрібних розділах через зміст або пошук. Наприкінці збережіть зміни.",
+  "ui.noProfileSections":
+    "Розділів не знайдено. Спробуйте іншу назву поля або очистьте пошук.",
+  "ui.profileDirectoryHint":
+    "Відкрийте особу, щоб переглянути й доповнити повний профіль, зв’язки, джерела та історію майна.",
+  "ui.profileSectionsCount": "розділів заповнено",
+  "ui.allProfiles": "Усі профілі",
+  "ui.openFullProfile": "Відкрити повний профіль",
   "ui.deathRecordHint":
     "Кожна версія обставин має власне джерело й статус перевірки. Основну дату смерті та статус особи вкажіть окремо в основних відомостях.",
   "ui.invalidProfileUrl": "Вкажіть повне посилання з HTTP або HTTPS.",
@@ -118,9 +140,6 @@ export default {
   "ui.additionalProfileFacts": "Інші відомості про особу",
   "ui.additionalFact": "Додатковий факт",
   "ui.valueDetails": "Значення / відомості",
-  "ui.moreProfileSections": "Додати більше відомостей",
-  "ui.moreProfileSectionsHint":
-    "Відкривайте лише потрібні розділи. Порожні розділи не створюють записів.",
   "ui.invalidProfileNumber": "Введіть коректне число в записі профілю.",
   "ui.invalidProfileYear": "Введіть рік із чотирьох цифр у записі профілю.",
   "ui.mapOptions": "Опції схеми",
@@ -344,8 +363,6 @@ export default {
   "ui.maidenNameVariantsInOtherLanguages":
     "Дівоче прізвище, варіанти іншими мовами",
   "ui.treeResearchNotes": "Нотатки для роботи з деревом",
-  "ui.profileSectionVisibilityHint":
-    "Тут можна редагувати всі розділи. Налаштування видимості впливає на панель особи; повна автобіографія містить усі заповнені розділи.",
   "ui.notSpecified": "Не вказано",
   "ui.female": "Жіноча",
   "ui.male": "Чоловіча",

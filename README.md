@@ -51,7 +51,11 @@ The launch screen opens before loading a demo or replacing a draft. To explore t
 
 ## Detailed profiles
 
-Open a person's editor and expand **Add more information** to use sections outside the current workspace's visible scope. Select a section, add a record, then expand only the field groups you need. All sections remain editable regardless of workspace visibility. **Choose visible data** controls the sections in the person panel; the complete autobiography includes every populated section.
+Open **People & profiles** to find a person, then open their complete profile. Relationships, source files, property history, editing, autobiography and PDF printing are available from that workspace. Family links open the other person's full profile; **Show on map** returns to the relationship diagram.
+
+The person editor has a searchable section index on desktop and a section picker on phones. Search by a section or field label, such as passport, specialty or account. All sections are available regardless of workspace purpose. Only the name is required. Open a section, add a record, then expand only the field groups you need. Navigation and search operate on the existing form and preserve unsaved entries in hidden sections. Invalid required fields are revealed before focusing them. **Choose visible data** controls the compact person panel, while complete profiles and autobiographies include all sections.
+
+The language selector stays in the preferences area at the right edge of the header on both the home screen and workspace. Navigation separates people and connections, dates and history, and records and analysis. Undo/redo is available in the map, property tools and other workspace views.
 
 | Module                         | Available information                                                                                                                                                                                                                                                                        |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -226,7 +230,7 @@ A heart and **Living** label indicate an explicitly recorded living status. A ca
 
 Biological parenthood, adoption and step-parenthood are independent relationship types. Adding an adoptive parent does not replace biological parents. Both sets remain in the profile, autobiography and diagram. Unverified relationships retain their evidence state.
 
-To record where someone lived, open **Add more information → Residence history by country**. Add a separate record for each country or residence period. Start/end fields accept full dates or years; an open end is supported. Expand residence details for type, current/former/planned status and permit references. Residence data is included in search, autobiography, print/PDF, dated events and ZIP backups. Earlier address-only residence records still use the same persisted array and retain their fields.
+To record where someone lived, open the person editor and choose **Residence history by country** from its section index. Add a separate record for each country or residence period. Start/end fields accept full dates or years; an open end is supported. Expand residence details for type, current/former/planned status and permit references. Residence data is included in search, autobiography, print/PDF, dated events and ZIP backups. Earlier address-only residence records still use the same persisted array and retain their fields.
 
 The navy, pale blue and gold palette follows the [Franciscans reference website](https://l2.franciscans.dev/uk). `src/core/theme.js` owns the shared color tokens, applied as CSS custom properties and used directly in person-card SVG exports. Typography retains the existing Tahoma/Verdana/DejaVu Sans stacks. Workspace height is calculated by the shell's flex layout; tablet panels and mobile navigation use the shared header offset to avoid covering search.
 
@@ -290,6 +294,8 @@ src/
   main.js                  Mounting, language changes and application startup
   app/
     bootstrap.js           Draft initialization
+    runtime.js             Application effects for project and storage signals
+    browser-tools.js       Optional browser modelContext integration
     actions.js             Named UI actions
     events.js              Event registration
     events/                Click, change, input, keyboard and upload handlers
@@ -298,6 +304,10 @@ src/
     config.js              Record types, profile sections and display settings
     property-records.js     Ledger fields, progressive groups and validation rules
     profile-groups.js      Shared ordered information hierarchy
+    profile-catalog.js     Searchable section and field metadata
+    workspace-views.js     Canonical navigation and view heading registry
+    signals.js             Explicit application effect subscriptions
+    graph-view.js          Graph settings defaults and normalization
     event-domains.js       Date categories, recurrence and celebration rules
     person-filter-fields.js Filter field, operator and query validation registry
     profile-sections/      Independent extended profile definitions and field groups
@@ -306,7 +316,15 @@ src/
     viewport.js            Shared mobile layout breakpoint
     dom.js                 DOM queries and HTML escaping
     utils.js               IDs, cloning, formatting, URLs and downloads
-  model/                   Project selectors, validation, dates, person status, relationship labels, evidence and kinship
+  model/                   Data queries, validation and calculations; no UI imports
+    lookup.js              Runtime project entity lookup without rendering dependencies
+    project.js             Fresh projects, scoped records and temporary query index
+    profile-form.js        Complete form data collection
+    profile-scope.js       Compact workspace visibility preferences
+    person-filter-state.js Shared cached analytical query results
+    graph-view.js          Visibility and runtime analysis state
+    graph-analysis.js      Paths, neighborhoods and connection calculations
+    workspace.js           Current or saved draft selection
     property-history.js    Dated rights, open claims and evidence consistency checks
     property-records.js    Canonical ledger validation and reference lifecycle
     property-events.js     One-time financial dates from the property ledger
@@ -317,10 +335,18 @@ src/
     person-filter-facts.js Shared analytical facts, dates, source and family counts
     person-filter-assets.js Dated inventory observations and currency/share totals
     contacts.js            Safe phone, email and social contact links
-  features/                People, favorites, calendar, search, printing, biography review, documents and launcher flows
+  features/                Controllers for user workflows; import UI and model modules
+    profile-workspace.js   Complete profile navigation
+    workspace-session.js   Project activation and draft replacement
+    attachments.js         Upload, crop and portrait workflows
+    archive.js             Archive and diagram import/export workflows
+    delete.js              Entity deletion and reference cleanup
+    graph-analysis.js      Apply analysis, visibility presets and selection commands
+    graph-tools.js         Graph help, filter and analysis dialog workflows
   graph/
     render.js              Graph composition and SVG definitions
-    nodes.js               Visible node selection and non-person cards
+    nodes.js               SVG node rendering and non-person cards
+    node-data.js           Visible node data for camera, rendering and exports
     cards/person.js        Person-card content, status badges, dates and actions
     edges.js               Relationship, source and property lines
     geometry.js            Connection paths
@@ -332,13 +358,23 @@ src/
     camera.js              Zoom and positioning
     interaction.js         Mouse interaction
     touch.js               Touch gestures
-    analysis.js            Map filters and connection analysis
-  services/                IndexedDB saving, history, files, archives and browser tools
+  services/                UI-independent browser persistence and history
+    blobs.js               Attachment object URLs, references and lifetime
+    history.js             Project commits, undo/redo and selection repair
+    storage.js             Serialized IndexedDB writes and storage signals
   ui/
     shell.js               Shell mounting and static translation bindings
     templates/             Readable launch, workspace and dialog markup
     render.js              Workspace render orchestration and selection
-    people.js              People list
+    people.js              Compact map people list
+    workspaces/            Profiles, calendar, chronology, documents, gaps and property
+    profile-navigation.js  Shared section search and navigation without form reconstruction
+    profile-details.js     Structured complete and compact profile display
+    favorites.js           Favorite controls and quick-access rendering
+    groups.js              Family connections and group navigation
+    search.js              Global search results and cached index
+    start.js               Launch screen rendering
+    graph-controls.js      Graph toolbar rendering
     inspector.js           Person and relationship panel
     status-board.js        Workspace document counters
     save-status.js         Save phase display in the current interface language
@@ -377,11 +413,13 @@ tests/                    Unit and browser integration tests
 
 Runtime state is explicitly imported as `appState`; application features do not attach their own state to `window`. Persisted project data is separate from temporary selections, filters, dialogs, camera state and undo history.
 
-Domain operations read the project through model selectors. UI edits go through `commit()` in `services/history.js`, which records undo history, updates the timestamp, renders and schedules persistence. Graph rendering uses a temporary project index to avoid repeated full-array searches.
+Domain operations read the project through model selectors. UI edits go through `commit()` in `services/history.js`, which records undo history, updates the timestamp and publishes `project:changed`. `app/runtime.js` connects that signal to rendering and persistence. Storage reports status and errors through the same explicit signal mechanism; it does not import the UI. Graph rendering uses a temporary project index to avoid repeated full-array searches.
+
+Module imports are acyclic. Core, model and storage modules never import UI, graph rendering or feature controllers; UI never imports feature controllers. `tests/architecture.test.js` enforces these boundaries and verifies all relative imports exist. Rendering and controller functions have separate canonical modules, without forwarding aliases.
 
 Forms are separate components from the operations that validate and save them. Profile sections use the record configuration in `core/config.js` for fields, rendering, collection and import validation.
 
-The optional browser `document.modelContext` integration is isolated in `services/browser-tools.js`. The application also works when this browser API is absent.
+The optional browser `document.modelContext` integration is isolated in `app/browser-tools.js`. The application also works when this browser API is absent.
 
 ## Adding functionality
 
@@ -397,7 +435,7 @@ The optional browser `document.modelContext` integration is isolated in `service
 
 Create a module in `src/core/profile-sections/` using `defineSection()` and register it in that directory's `index.js`. A definition owns its persisted array key, title, icon, record label, field groups and date ranges. Its optional `numericMinimums` and `numericMaximums` validate lower and upper bounds and set matching form constraints. Its optional `calendar: { type, dates: [[field, messageKey]] }` declares dates for the shared event collector; new modules can contribute dates without modifying the collector. Its optional `coverage: { from, to, current: { field: [values] }, kinds }` declares continuous periods for biography review. Its optional `validate(record)` supplies section-specific validation. Field types include text, textarea, select, person reference, source, HTTP/HTTPS URL, exact date, partial period, year and number. Person references resolve to names and are cleared if the referenced person is removed. Unlabelled groups show immediately; labelled groups become expandable details.
 
-Register the section in the ordered hierarchy in `core/profile-groups.js`. For calendar dates, add its event type to `familyEventTypes()` and assign a category in `core/event-domains.js`. The registry feeds the editor, collection, import validation, source cleanup, workspace scope picker and complete autobiography. Add translations in all three catalogs and tests for meaningful validation or persistence behavior. Choose initial visibility in `defaultScopes` only when the section should appear in that workspace by default; otherwise it is accessible through **Add more information**. Core profile sections remain defined in `core/config.js`.
+Register the section in the ordered hierarchy in `core/profile-groups.js`. For calendar dates, add its event type to `familyEventTypes()` and assign a category in `core/event-domains.js`. The registry feeds the editor, collection, import validation, source cleanup, workspace scope picker and complete autobiography. Add translations in all three catalogs and tests for meaningful validation or persistence behavior. Choose initial visibility in `defaultScopes` only when the section should appear in that workspace by default; every section is always available through the complete editor and profile catalog. Core profile sections remain defined in `core/config.js`.
 
 ### Translations
 

@@ -1,8 +1,9 @@
 import { relTypes } from "../../core/config.js";
 import { state as appState } from "../../core/state.js";
-import { pathDepthOptions } from "../../graph/controls.js";
 import { translate } from "../../i18n/index.js";
 import { icon } from "../icons.js";
+import { pathDepthOptions } from "./path-options.js";
+
 export function renderGraphAnalysisForm(fields, settings) {
   return `<div class="analysis-tabs">${[
     ["path", translate("ui.path")],

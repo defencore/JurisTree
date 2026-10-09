@@ -1,6 +1,7 @@
-import { processFiles } from "../../services/files.js";
-import { state as appState } from "../../core/state.js";
 import { $ } from "../../core/dom.js";
+import { state as appState } from "../../core/state.js";
+import { processFiles } from "../../features/attachments.js";
+
 export function bindUploadsEvents() {
   document.addEventListener("dragover", (e) => {
     if (e.target.closest("#dropZone,#canvasWrap")) {

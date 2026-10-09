@@ -1,9 +1,16 @@
-import { collectPropertyEvents } from "./property-events.js";
 import { recordConfigs } from "../core/config.js";
-import { translate } from "../i18n/index.js";
-import { sourceEvidence } from "../core/sources.js";
-import { isProfessionalRelationship } from "../core/professional-relationships.js";
 import { canRepeatAnnually } from "../core/event-domains.js";
+import { isProfessionalRelationship } from "../core/professional-relationships.js";
+import { sourceEvidence } from "../core/sources.js";
+import { state as appState } from "../core/state.js";
+import { getLocale, translate } from "../i18n/index.js";
+import {
+  dateExact,
+  localDateString,
+  nextAnniversary,
+  utcDay,
+} from "./dates.js";
+import { collectPropertyEvents } from "./property-events.js";
 
 /** Collect dates from the project. Profile visibility is an optional view filter. */
 export function collectProjectEvents(
@@ -273,4 +280,38 @@ export function collectProjectEvents(
   if (included("assets"))
     events.push(...collectPropertyEvents(project, selected));
   return events;
+}
+
+export function familyEvents() {
+  return collectProjectEvents(appState.project, {
+    groupId: appState.groupFilter,
+  });
+}
+export function upcomingEvents(events, today = localDateString(), days = 90) {
+  return events
+    .flatMap((event) => {
+      let next = event.annual
+        ? nextAnniversary(event.date, today)
+        : dateExact(event.date) && event.date >= today
+          ? {
+              date: event.date,
+              days: utcDay(event.date) - utcDay(today),
+              years: 0,
+              adjusted: false,
+            }
+          : null;
+      return next && next.days <= days
+        ? [
+            {
+              ...event,
+              next,
+            },
+          ]
+        : [];
+    })
+    .sort(
+      (a, b) =>
+        a.next.days - b.next.days ||
+        a.title.localeCompare(b.title, getLocale()),
+    );
 }

@@ -1,23 +1,24 @@
+import { eventDomains } from "../../core/event-domains.js";
+import { state as appState } from "../../core/state.js";
+import { clone } from "../../core/utils.js";
+import { importFile } from "../../features/archive.js";
+import { processFiles, setPortrait } from "../../features/attachments.js";
 import {
-  renderCalendar,
   changeCalendarMonth,
   changeCalendarYear,
 } from "../../features/calendar.js";
-import { commit } from "../../services/history.js";
-import { processFiles, setPortrait } from "../../services/files.js";
-import { importFile } from "../../services/archive.js";
-import { arrangeGraph } from "../../graph/layout.js";
-import { updatePathSearchMode } from "../../graph/controls.js";
-import { resetAnalysis } from "../../graph/analysis.js";
+import { updatePathSearchMode } from "../../features/graph-tools.js";
 import { renderKinResult } from "../../features/relationships.js";
-import { renderEvents } from "../../features/events.js";
-import { renderDocuments } from "../../features/documents.js";
-import { clone } from "../../core/utils.js";
-import { state as appState } from "../../core/state.js";
-import { eventDomains } from "../../core/event-domains.js";
-import { renderMain } from "../../ui/render.js";
-import { renderProperty } from "../../features/property.js";
+import { arrangeGraph } from "../../graph/layout.js";
 import { dateExact } from "../../model/dates.js";
+import { resetAnalysis } from "../../model/graph-view.js";
+import { commit } from "../../services/history.js";
+import { renderMain } from "../../ui/render.js";
+import { renderCalendar } from "../../ui/workspaces/calendar.js";
+import { renderDocuments } from "../../ui/workspaces/documents.js";
+import { renderEvents } from "../../ui/workspaces/events.js";
+import { renderProperty } from "../../ui/workspaces/property.js";
+
 export function bindChangeEvents() {
   document.addEventListener("change", (e) => {
     const t = e.target;

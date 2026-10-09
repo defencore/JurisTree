@@ -3,8 +3,9 @@ import { familyConnection } from "../core/relationships.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { edgeState } from "./evidence.js";
-import { person, relation } from "./project.js";
 import { withKinshipIndex } from "./kinship-index.js";
+import { person, relation } from "./lookup.js";
+
 export function ancestorPaths(id) {
   return withKinshipIndex((index) => indexedAncestorPaths(id, index));
 }

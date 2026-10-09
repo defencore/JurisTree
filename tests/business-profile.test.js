@@ -16,8 +16,8 @@ import { buildSearchIndex, searchIndex } from "../src/model/search.js";
 import { collectProjectEvents } from "../src/model/events.js";
 import { roleGroup, roleLabel } from "../src/model/relationship-labels.js";
 import { kinshipBetween } from "../src/model/kinship.js";
-import { collectProfile } from "../src/features/profiles.js";
-import { findGraphPaths } from "../src/graph/analysis.js";
+import { collectProfile } from "../src/model/profile-form.js";
+import { findGraphPaths } from "../src/model/graph-analysis.js";
 import { renderBiography } from "../src/ui/biography.js";
 import { setLanguage } from "../src/i18n/index.js";
 

@@ -209,9 +209,6 @@
   .form-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .profile-additional-sections > div {
-    padding: 0 6px 6px;
-  }
   .profile-editor-section > div {
     padding: 10px;
   }
@@ -228,7 +225,6 @@
     min-height: 44px;
   }
   .profile-editor-section summary,
-  .profile-additional-sections > summary,
   .record-field-group > summary {
     min-height: 48px;
   }

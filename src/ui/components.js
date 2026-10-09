@@ -4,10 +4,11 @@ import { state as appState } from "../core/state.js";
 import { initials, safeUrl } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { hasFile, isOfficial } from "../model/evidence.js";
-import { doc } from "../model/project.js";
-import { objectUrl } from "../services/files.js";
+import { doc } from "../model/lookup.js";
+import { objectUrl } from "../services/blobs.js";
 import { openDialog, toast } from "./dialog.js";
 import { icon } from "./icons.js";
+
 export function avatar(p) {
   return `<span class="avatar ${p.gender === "f" ? "" : "alt"}">${p.avatarId && appState.blobs.has(p.avatarId) ? `<img alt="" src="${objectUrl(p.avatarId)}">` : esc(initials(p.name))}</span>`;
 }

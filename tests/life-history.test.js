@@ -10,7 +10,7 @@ import { personBiography } from "../src/model/biography.js";
 import { contactHref } from "../src/model/contacts.js";
 import { buildSearchIndex, searchIndex } from "../src/model/search.js";
 import { collectProjectEvents } from "../src/model/events.js";
-import { collectProfile } from "../src/features/profiles.js";
+import { collectProfile } from "../src/model/profile-form.js";
 import { renderBiography } from "../src/ui/biography.js";
 import { setLanguage } from "../src/i18n/index.js";
 

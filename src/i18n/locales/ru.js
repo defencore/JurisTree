@@ -1,4 +1,26 @@
 export default {
+  "ui.undoRedo": "Отмена и повторение изменений",
+  "ui.personProfiles": "Люди и профили",
+  "ui.completePersonProfiles": "Полные профили людей",
+  "ui.profileNavigationShort": "Профиль, история и связи",
+  "ui.peopleAndConnections": "Люди и связи",
+  "ui.datesAndHistory": "Даты и история",
+  "ui.recordsAndAnalysis": "Материалы и анализ",
+  "ui.profileOverview": "Обзор",
+  "ui.findProfileSection": "Найти раздел или поле…",
+  "ui.profileSections": "Разделы профиля",
+  "ui.jumpToSection": "Перейти к разделу",
+  "ui.profileNavigationHint":
+    "Добавляйте только нужную информацию. Все разделы необязательны.",
+  "ui.completeProfileEditorHint":
+    "Начните с имени. Добавляйте детали в нужных разделах через оглавление или поиск. В конце сохраните изменения.",
+  "ui.noProfileSections":
+    "Разделы не найдены. Попробуйте другое название поля или очистите поиск.",
+  "ui.profileDirectoryHint":
+    "Откройте человека, чтобы просмотреть и дополнить полный профиль, связи, источники и историю имущества.",
+  "ui.profileSectionsCount": "разделов заполнено",
+  "ui.allProfiles": "Все профили",
+  "ui.openFullProfile": "Открыть полный профиль",
   "ui.deathRecordHint":
     "Каждая версия обстоятельств имеет свой источник и статус проверки. Основную дату смерти и статус человека укажите отдельно в основных сведениях.",
   "ui.invalidProfileUrl": "Укажите полную ссылку с HTTP или HTTPS.",
@@ -118,9 +140,6 @@ export default {
   "ui.additionalProfileFacts": "Прочие сведения о человеке",
   "ui.additionalFact": "Дополнительный факт",
   "ui.valueDetails": "Значение / сведения",
-  "ui.moreProfileSections": "Добавить больше сведений",
-  "ui.moreProfileSectionsHint":
-    "Открывайте только нужные разделы. Пустые разделы не создают записей.",
   "ui.invalidProfileNumber": "Введите корректное число в записи профиля.",
   "ui.invalidProfileYear": "Введите год из четырёх цифр в записи профиля.",
   "ui.mapOptions": "Опции схемы",
@@ -344,8 +363,6 @@ export default {
   "ui.maidenNameVariantsInOtherLanguages":
     "Девичья фамилия, варианты на других языках",
   "ui.treeResearchNotes": "Заметки для работы с деревом",
-  "ui.profileSectionVisibilityHint":
-    "Здесь можно редактировать все разделы. Настройка видимости влияет на панель человека; полная автобиография содержит все заполненные разделы.",
   "ui.notSpecified": "Не указано",
   "ui.female": "Женский",
   "ui.male": "Мужской",

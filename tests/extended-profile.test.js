@@ -6,7 +6,7 @@ import { recordConfigs } from "../src/core/config.js";
 import { validateImport } from "../src/model/validation.js";
 import { profileRecordError } from "../src/model/profile-records.js";
 import { personBiography } from "../src/model/biography.js";
-import { collectProfile } from "../src/features/profiles.js";
+import { collectProfile } from "../src/model/profile-form.js";
 import { pinchCamera } from "../src/graph/touch.js";
 import { setLanguage } from "../src/i18n/index.js";
 

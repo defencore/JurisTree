@@ -1,15 +1,21 @@
-import {
-  editPersonFilters,
-  clearPersonFilters,
-} from "../features/person-filters.js";
-import { closeSearch, renderSearch } from "../features/search.js";
-import { updateBiographyReview } from "../features/biography-review.js";
-import { moveCalendarPeriod, renderCalendar } from "../features/calendar.js";
-import { localDateString } from "../model/dates.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
+import { exportDialog } from "../features/archive.js";
+import { openFiles } from "../features/attachments.js";
+import { updateBiographyReview } from "../features/biography-review.js";
+import { moveCalendarPeriod } from "../features/calendar.js";
 import { editDocument } from "../features/documents.js";
-import { editFamilyEvent, renderEvents } from "../features/events.js";
+import { editFamilyEvent } from "../features/events.js";
+import {
+  applyGraphAnalysis,
+  clearGraphSelection,
+} from "../features/graph-analysis.js";
+import {
+  editGraphFilters,
+  graphAnalysisDialog,
+  graphHelp,
+  runGraphAnalysis,
+} from "../features/graph-tools.js";
 import { editGroup } from "../features/groups.js";
 import {
   backupLaunchDraft,
@@ -20,29 +26,25 @@ import {
   pickStartImport,
   showStartScreen,
 } from "../features/launcher.js";
+import {
+  clearPersonFilters,
+  editPersonFilters,
+} from "../features/person-filters.js";
 import { editPerson, editProject, editScope } from "../features/profiles.js";
 import { editProperty } from "../features/property.js";
 import { comparePeople, editRelation } from "../features/relationships.js";
-import {
-  applyGraphAnalysis,
-  clearGraphSelection,
-  relationShown,
-  resetAnalysis,
-} from "../graph/analysis.js";
 import { fit, focusPerson, zoom } from "../graph/camera.js";
-import {
-  editGraphFilters,
-  graphAnalysisDialog,
-  graphHelp,
-  renderGraphControls,
-  runGraphAnalysis,
-} from "../graph/controls.js";
 import { arrangeGraph } from "../graph/layout.js";
 import { translate } from "../i18n/index.js";
-import { exportDialog } from "../services/archive.js";
-import { openFiles } from "../services/files.js";
+import { localDateString } from "../model/dates.js";
+import { relationShown, resetAnalysis } from "../model/graph-view.js";
 import { redo, undo } from "../services/history.js";
+import { renderGraphControls } from "../ui/graph-controls.js";
 import { render, renderMain } from "../ui/render.js";
+import { closeSearch, renderSearch } from "../ui/search.js";
+import { renderCalendar } from "../ui/workspaces/calendar.js";
+import { renderEvents } from "../ui/workspaces/events.js";
+
 export async function newTree() {
   showStartScreen();
 }

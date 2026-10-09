@@ -1,13 +1,13 @@
+import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { state as appState } from "../core/state.js";
-import { person } from "../model/project.js";
-import { commit } from "../services/history.js";
-import { select } from "../ui/render.js";
 import { viewDocument } from "../features/documents.js";
 import { toggleGroup } from "../features/groups.js";
 import { editProperty } from "../features/property.js";
+import { person } from "../model/lookup.js";
+import { commit } from "../services/history.js";
+import { select } from "../ui/render.js";
 import { applyCamera } from "./camera.js";
 import { renderGraph } from "./render.js";
-import { CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM } from "../core/config.js";
 
 const midpoint = ([a, b]) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 const distance = ([a, b]) => Math.hypot(a.x - b.x, a.y - b.y);

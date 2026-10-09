@@ -1,8 +1,9 @@
-import { state } from "../core/state.js";
 import { emptyPersonFilter } from "../core/person-filter-fields.js";
-import { evaluatePersonFilter } from "../model/person-filters.js";
-import { localDateString } from "../model/dates.js";
+import { state } from "../core/state.js";
 import { getLanguage } from "../i18n/index.js";
+import { localDateString } from "./dates.js";
+import { evaluatePersonFilter } from "./person-filters.js";
+
 let cache;
 export function personFilterReport() {
   const today = localDateString();

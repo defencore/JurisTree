@@ -10,10 +10,7 @@ test("edits detailed optional profiles, reports and name history and restores th
   await page.locator("#startCreate").click();
   await page.locator('#viewActions [data-action="add-person"]').click();
   await page.locator('#modal input[name="name"]').fill("John Doe (TEST)");
-  await expect(
-    page.locator(".profile-additional-sections"),
-  ).not.toHaveAttribute("open", "");
-  await page.locator(".profile-additional-sections > summary").click();
+  await expect(page.locator("[data-profile-editor]")).toBeVisible();
   async function add(section) {
     const panel = page
       .locator(".profile-editor-section")

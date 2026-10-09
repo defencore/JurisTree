@@ -16,7 +16,7 @@ import { profileRecordError } from "../src/model/profile-records.js";
 import { personBiography } from "../src/model/biography.js";
 import { renderBiography } from "../src/ui/biography.js";
 import { clampWindow } from "../src/ui/floating-windows.js";
-import { collectProfile } from "../src/features/profiles.js";
+import { collectProfile } from "../src/model/profile-form.js";
 
 test("calendar handles Monday weeks, leap days, year boundaries and milestone anniversaries", () => {
   assert.deepEqual(monthBounds("2024-02"), {

@@ -1,90 +1,36 @@
-import { renderGraphHelpForm } from "../ui/forms/graph-help.js";
-import { isProfessionalRelationship } from "../core/professional-relationships.js";
-import { roleLabel } from "../model/relationship-labels.js";
-import { renderGraphFiltersForm } from "../ui/forms/graph-filters.js";
-import { renderGraphAnalysisForm } from "../ui/forms/graph-analysis.js";
-import { getLocale } from "../i18n/index.js";
 import { graphStateInfo, relTypes } from "../core/config.js";
 import { $, esc } from "../core/dom.js";
+import { isProfessionalRelationship } from "../core/professional-relationships.js";
 import { state as appState } from "../core/state.js";
+import { fit } from "../graph/camera.js";
+import { graphLineSample } from "../graph/legend.js";
+import { getLocale, translate } from "../i18n/index.js";
+import { edgeState } from "../model/evidence.js";
 import {
   findCommonConnections,
   findConnectingNetwork,
   findGraphPaths,
   findNeighborhood,
-  graphView,
-  relationShown,
-  resetAnalysis,
-  visiblePeople,
-} from "./analysis.js";
-import { fit } from "./camera.js";
-import { graphLineSample } from "./legend.js";
-import { translate } from "../i18n/index.js";
-import { edgeState } from "../model/evidence.js";
-import { doc, person, relation, withProjectIndex } from "../model/project.js";
+} from "../model/graph-analysis.js";
+import { graphView, resetAnalysis } from "../model/graph-view.js";
+import { doc, person, relation } from "../model/lookup.js";
+import { withProjectIndex } from "../model/project.js";
+import { roleLabel } from "../model/relationship-labels.js";
 import { commit } from "../services/history.js";
-import {
-  avatar,
-  miniDoc,
-  personOptions,
-  typeOptions,
-} from "../ui/components.js";
+import { avatar, miniDoc, personOptions } from "../ui/components.js";
 import { openDialog, toast } from "../ui/dialog.js";
+import { renderGraphAnalysisForm } from "../ui/forms/graph-analysis.js";
+import { renderGraphFiltersForm } from "../ui/forms/graph-filters.js";
+import { renderGraphHelpForm } from "../ui/forms/graph-help.js";
+import { pathDepthOptions } from "../ui/forms/path-options.js";
 import { icon, icons } from "../ui/icons.js";
+
 export function graphHelp() {
   openDialog(translate("ui.workingWithTheMap"), renderGraphHelpForm(), {
     footer: false,
   });
 }
-export function renderGraphControls() {
-  const toolbar = $("#graphToolbar"),
-    context = $("#graphContext");
-  if (!toolbar || !context) return;
-  const toolsButton = $('[data-action="mobile-tools"]');
-  toolsButton?.setAttribute(
-    "aria-expanded",
-    String(document.body.classList.contains("mobile-tools-open")),
-  );
-  const moveButton = $('[data-action="touch-move"]');
-  moveButton?.setAttribute("aria-pressed", String(appState.touchMove));
-  moveButton?.classList.toggle("active", appState.touchMove);
-  if ($("#mobileMapHint"))
-    $("#mobileMapHint").textContent = translate(
-      appState.touchMove ? "ui.mobileMoveHint" : "ui.mobileMapHint",
-    );
 
-  toolbar.hidden = appState.view !== "tree";
-  context.hidden = appState.view !== "tree";
-  if (appState.view !== "tree") return;
-  const cfg = graphView(),
-    ps = visiblePeople(false),
-    ids = new Set(ps.map((p) => p.id)),
-    rs = appState.project.relations.filter(
-      (r) => ids.has(r.from) && ids.has(r.to) && relationShown(r),
-    );
-  appState.multiSelection = new Set(
-    [...appState.multiSelection].filter((id) => person(id)),
-  );
-  const changed =
-    cfg.types.length !== Object.keys(relTypes()).length ||
-    cfg.states.length !== Object.keys(graphStateInfo()).length ||
-    cfg.hiddenRelations.length ||
-    !cfg.showIsolated;
-  toolbar.innerHTML = `<div class="graph-toolbar-group"><button class="btn small graph-search-btn" data-action="graph-search">${icon("route")}${translate("ui.connectionSearch")}</button><button class="btn small ${changed ? "active" : ""}" data-action="graph-filters">${icon("sliders")}${translate("ui.display")}${changed ? `<span class="filter-mark">${translate("ui.changed")}</span>` : ""}</button><button class="iconbtn small ${appState.selectionMode ? "active" : ""}" data-action="selection-mode" aria-label="${translate("ui.boxSelectPeople")}" title="${translate("ui.boxSelectionShiftDrag")}" aria-pressed="${appState.selectionMode}">${icon("selectBox")}</button></div><div class="graph-toolbar-group"><label class="layout-control"><span>${translate("ui.layout")}</span><select id="graphLayout" aria-label="${translate("ui.mapLayout")}" ${appState.analysisBusy ? "disabled" : ""}>${typeOptions(
-    {
-      generations: translate("ui.generations3"),
-      network: translate("ui.network"),
-      circle: translate("ui.circle"),
-    },
-    cfg.layout,
-  )}</select></label><button class="btn small ${appState.showDocs ? "active" : ""}" id="docsToggle" data-action="toggle-docs" aria-pressed="${appState.showDocs}">${icon("files")}${translate("ui.sources2")}</button></div><span class="graph-view-summary">${ps.length}/${appState.project.people.length} ${translate("ui.people2")} ${rs.length}/${appState.project.relations.length} ${translate("ui.relationships")}</span><button class="iconbtn small" data-action="graph-help" aria-label="${translate("ui.workingWithTheMap")}" title="${translate("ui.workingWithTheMap")}">${icon("help")}</button>`;
-  $("#graph").classList.toggle("selection-mode", appState.selectionMode);
-  context.hidden =
-    !appState.analysisHighlight &&
-    !appState.graphFocus &&
-    !appState.multiSelection.size;
-  context.innerHTML = `<div>${appState.analysisHighlight ? `<b>${esc(appState.analysisHighlight.label)}</b><span>${appState.graphFocus ? translate("ui.resultsOnly") : translate("ui.resultsHighlightedOnMap")}</span>` : `<b>${translate("ui.selectedPeople2")} ${appState.multiSelection.size}</b><span>${translate("ui.ctrlOrShiftClickToChangeSelection")}</span>`}</div><div class="graph-context-actions">${appState.multiSelection.size > 1 ? `<button class="btn small" data-action="graph-search">${translate("ui.searchSelected")}</button>` : ""}${appState.multiSelection.size ? `<button class="btn small" data-action="focus-selection">${translate("ui.selectedOnly")}</button>` : ""}${appState.analysisHighlight || appState.graphFocus ? `<button class="btn small" data-action="clear-analysis">${translate("ui.showEntireMap")}</button>` : `<button class="btn small ghost" data-action="clear-selection">${translate("ui.clear")}</button>`}</div>`;
-}
 export async function editGraphFilters() {
   const cfg = graphView(),
     stateCounts = withProjectIndex(() => {
@@ -120,14 +66,7 @@ export async function editGraphFilters() {
   });
   fit();
 }
-export function pathDepthOptions(mode = "shortest", value = 600) {
-  return [2, 4, 6, 8, 12, ...(mode === "shortest" ? [600] : [])]
-    .map(
-      (n) =>
-        `<option value="${n}" ${n === value ? "selected" : ""}>${n === 600 ? translate("ui.unlimited") : n}</option>`,
-    )
-    .join("");
-}
+
 export function updatePathSearchMode() {
   const mode = $("#analysisPathMode").value,
     depth = $("#analysisDepth"),

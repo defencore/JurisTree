@@ -1,9 +1,9 @@
+import { emitSignal } from "../core/signals.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
-import { resetAnalysis } from "../graph/analysis.js";
-import { doc, person, relation } from "../model/project.js";
-import { scheduleSave } from "./storage.js";
-import { render } from "../ui/render.js";
+import { resetAnalysis } from "../model/graph-view.js";
+import { doc, person, relation } from "../model/lookup.js";
+
 export function checkpoint() {
   appState.history.push(clone(appState.project));
   if (appState.history.length > 45) appState.history.shift();
@@ -14,26 +14,25 @@ export function commit(action) {
   checkpoint();
   action();
   appState.project.updatedAt = new Date().toISOString();
-  render();
-  scheduleSave();
+  emitSignal("project:changed");
 }
 export function undo() {
   if (!appState.history.length) return;
   appState.future.push(clone(appState.project));
   appState.project = appState.history.pop();
   repairSelection();
-  render();
-  scheduleSave();
+  emitSignal("project:changed");
 }
 export function redo() {
   if (!appState.future.length) return;
   appState.history.push(clone(appState.project));
   appState.project = appState.future.pop();
   repairSelection();
-  render();
-  scheduleSave();
+  emitSignal("project:changed");
 }
 export function repairSelection() {
+  if (appState.profileFocus && !person(appState.profileFocus))
+    appState.profileFocus = "";
   appState.multiSelection = new Set(
     [...appState.multiSelection].filter((id) => person(id)),
   );

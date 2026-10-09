@@ -100,6 +100,14 @@
   gap: 3px;
   padding: 0 0 12px;
 }
+.nav-group + .nav-group {
+  margin-top: 12px;
+}
+.nav-group .nav-label {
+  padding: 0 9px;
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
 .navbtn {
   background: transparent;
   width: 100%;
@@ -111,8 +119,8 @@
   color: var(--ink);
   display: flex;
   gap: 10px;
-  min-height: 53px;
-  padding: 8px 9px;
+  min-height: 46px;
+  padding: 7px 9px;
   text-align: left;
   white-space: normal;
 }

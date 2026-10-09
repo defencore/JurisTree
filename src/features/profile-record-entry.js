@@ -3,7 +3,7 @@ import { eventDomain } from "../core/event-domains.js";
 import { orderedProfileSections } from "../core/profile-groups.js";
 import { state } from "../core/state.js";
 import { translate as t } from "../i18n/index.js";
-import { person } from "../model/project.js";
+import { person } from "../model/lookup.js";
 import { personOptions, typeOptions } from "../ui/components.js";
 import { openDialog, toast } from "../ui/dialog.js";
 import { editPerson } from "./profiles.js";

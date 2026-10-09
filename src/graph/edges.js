@@ -1,18 +1,19 @@
-import { state as appState } from "../core/state.js";
-import { esc } from "../core/dom.js";
-import { fullDiagram, graphView, relationShown } from "./analysis.js";
-import { graphLine } from "./geometry.js";
-import { graphStrokeAttributes } from "./legend.js";
-import { graphTextWidth, svgText } from "./text.js";
-import { edgeState, route } from "../model/evidence.js";
-import { person } from "../model/project.js";
-import { roleLabel } from "../model/relationship-labels.js";
-import { translate } from "../i18n/index.js";
 import { relTypes } from "../core/config.js";
+import { esc } from "../core/dom.js";
 import {
   isDirectedRelationship,
   isProfessionalRelationship,
 } from "../core/professional-relationships.js";
+import { state as appState } from "../core/state.js";
+import { translate } from "../i18n/index.js";
+import { edgeState, route } from "../model/evidence.js";
+import { fullDiagram, graphView, relationShown } from "../model/graph-view.js";
+import { person } from "../model/lookup.js";
+import { roleLabel } from "../model/relationship-labels.js";
+import { graphLine } from "./geometry.js";
+import { graphStrokeAttributes } from "./legend.js";
+import { graphTextWidth, svgText } from "./text.js";
+
 export function renderGraphEdges(ns, exporting = false) {
   const map = new Map(ns.map((n) => [n.id, n]));
   ns.filter((n) => n.kind === "group").forEach((n) =>

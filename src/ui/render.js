@@ -1,31 +1,37 @@
-import { eventRecordActions } from "./event-domains.js";
-import { renderPersonFilterBar } from "../features/person-filters.js";
+import { $, $$ } from "../core/dom.js";
+import { state as appState } from "../core/state.js";
+import { workspaceView } from "../core/workspace-views.js";
+import { renderGraph } from "../graph/render.js";
+import { translate } from "../i18n/index.js";
+import { familyEvents } from "../model/events.js";
+import { gaps, route, sourceInScope } from "../model/evidence.js";
+import { resetAnalysis } from "../model/graph-view.js";
+import { person } from "../model/lookup.js";
 import {
   personPassesFilter,
   resetPersonFilter,
-} from "../features/person-filter-state.js";
-import { $, $$ } from "../core/dom.js";
-import { state as appState } from "../core/state.js";
-import { translate } from "../i18n/index.js";
-import { person, withProjectIndex } from "../model/project.js";
-import { gaps, route, sourceInScope } from "../model/evidence.js";
-import { renderGroups } from "../features/groups.js";
-import { renderFavorites } from "../features/favorites.js";
-import { renderSearch } from "../features/search.js";
-import { renderCalendar } from "../features/calendar.js";
-import { renderEvents, familyEvents } from "../features/events.js";
-import { renderDocuments, renderGaps } from "../features/documents.js";
-import { renderProperty } from "../features/property.js";
-import { renderPeople } from "./people.js";
-import { renderInspector } from "./inspector.js";
-import { renderSaveStatus } from "./save-status.js";
-import { renderStatusBoard } from "./status-board.js";
-import { personOptions } from "./components.js";
-import { icon, icons } from "./icons.js";
-import { resetAnalysis } from "../graph/analysis.js";
-import { renderGraphControls } from "../graph/controls.js";
-import { renderGraph } from "../graph/render.js";
+} from "../model/person-filter-state.js";
+import { withProjectIndex } from "../model/project.js";
 import { scheduleSave } from "../services/storage.js";
+import { personOptions } from "./components.js";
+import { eventRecordActions } from "./event-domains.js";
+import { renderFavorites } from "./favorites.js";
+import { renderGraphControls } from "./graph-controls.js";
+import { renderGroups } from "./groups.js";
+import { icon, icons } from "./icons.js";
+import { renderInspector } from "./inspector.js";
+import { renderPeople } from "./people.js";
+import { renderPersonFilterBar } from "./person-filter-bar.js";
+import { renderSaveStatus } from "./save-status.js";
+import { renderSearch } from "./search.js";
+import { renderStatusBoard } from "./status-board.js";
+import { renderCalendar } from "./workspaces/calendar.js";
+import { renderDocuments } from "./workspaces/documents.js";
+import { renderEvents } from "./workspaces/events.js";
+import { renderGaps } from "./workspaces/gaps.js";
+import { renderProfiles } from "./workspaces/people.js";
+import { renderProperty } from "./workspaces/property.js";
+
 export function render() {
   if (!appState.project) return;
   return withProjectIndex(renderAll);
@@ -36,6 +42,7 @@ export function renderAll() {
   $("#projectTitle").textContent = appState.project.title;
   $("#demoTag").hidden = !appState.project.demo;
   $("#purpose").value = appState.project.purpose;
+  $("#profileCount").textContent = appState.project.people.length;
   $("#peopleCount").textContent = appState.project.people.length;
   $("#docCount").textContent =
     appState.project.documents.filter(sourceInScope).length;
@@ -61,43 +68,35 @@ export function renderAll() {
 }
 
 export function renderMain() {
-  const titles = {
-      tree: translate("ui.relationshipMap"),
-      documents: translate("ui.documentsAndSources"),
-      gaps: translate("ui.evidenceAndGaps"),
-      property: translate("ui.propertyAndShares"),
-      events: translate("ui.eventsAndAnniversaries"),
-      calendar: translate("ui.calendar"),
-    },
-    eyebrows = {
-      tree: translate("ui.familyRelationships"),
-      documents: translate("ui.documentsPhotosRecords"),
-      gaps: translate("ui.nextSteps"),
-      property: translate("ui.ownershipAndAllocationPlan"),
-      events: translate("ui.familyTimeline"),
-      calendar: translate("ui.birthdaysAndAnniversaries"),
-    };
-  $("#viewTitle").textContent = titles[appState.view];
-  $("#viewEyebrow").textContent = eyebrows[appState.view];
+  $("#workspaceHistory").hidden = ["tree", "property"].includes(appState.view);
+  $('[data-history-command="undo"]').disabled = !appState.history.length;
+  $('[data-history-command="redo"]').disabled = !appState.future.length;
+  const view = workspaceView(appState.view);
+  $("#viewTitle").textContent = translate(view.heading || view.title);
+  $("#viewEyebrow").textContent = translate(view.eyebrow);
+  $("#otherView").classList.toggle("profiles-view", appState.view === "people");
+  document.body.classList.toggle("profiles-active", appState.view === "people");
   $("#viewSubtitle").textContent = appState.project.title;
   $("#canvasWrap").hidden = appState.view !== "tree";
-  $("#statusBoard").hidden = ["events", "calendar", "property"].includes(
-    appState.view,
-  );
+  $("#statusBoard").hidden = [
+    "events",
+    "calendar",
+    "property",
+    "people",
+  ].includes(appState.view);
   $("#otherView").hidden = appState.view === "tree";
-  $("#viewActions").innerHTML =
-    appState.view === "tree"
-      ? `<button class="btn" data-action="compare" title="${translate("ui.howAreWeRelated")}">${icon("compare")}<span>${translate("ui.kinship")}</span></button><button class="btn" data-action="add-relation" title="${translate("ui.addRelationship")}">${icon("link")}<span>${translate("ui.relationship")}</span></button><button class="btn primary" data-action="add-person" title="${translate("ui.addPerson")}">${icon("addPerson")}<span>${translate("ui.addPerson")}</span></button>${appState.comparisonPath ? `<button class="iconbtn" data-action="clear-comparison" title="${translate("ui.clearPathHighlight")}" aria-label="${translate("ui.clearPathHighlight")}">${icon("x")}</button>` : ""}`
-      : ["calendar", "events"].includes(appState.view)
-        ? eventRecordActions(
-            appState.view === "calendar"
-              ? appState.calendarDomain
-              : appState.eventDomain,
-            appState.view === "calendar",
-          )
-        : appState.view === "property"
-          ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
-          : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
+  $("#viewActions").innerHTML = ["tree", "people"].includes(appState.view)
+    ? `<button class="btn" data-action="compare" title="${translate("ui.howAreWeRelated")}">${icon("compare")}<span>${translate("ui.kinship")}</span></button><button class="btn" data-action="add-relation" title="${translate("ui.addRelationship")}">${icon("link")}<span>${translate("ui.relationship")}</span></button><button class="btn primary" data-action="add-person" title="${translate("ui.addPerson")}">${icon("addPerson")}<span>${translate("ui.addPerson")}</span></button>${appState.comparisonPath ? `<button class="iconbtn" data-action="clear-comparison" title="${translate("ui.clearPathHighlight")}" aria-label="${translate("ui.clearPathHighlight")}">${icon("x")}</button>` : ""}`
+    : ["calendar", "events"].includes(appState.view)
+      ? eventRecordActions(
+          appState.view === "calendar"
+            ? appState.calendarDomain
+            : appState.eventDomain,
+          appState.view === "calendar",
+        )
+      : appState.view === "property"
+        ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
+        : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
   const path = route();
   $("#pathPanel").innerHTML =
     appState.view === "tree" && appState.project.purpose === "inheritance"
@@ -108,7 +107,8 @@ export function renderMain() {
     renderGraph();
     return;
   }
-  if (appState.view === "calendar") renderCalendar();
+  if (appState.view === "people") renderProfiles();
+  else if (appState.view === "calendar") renderCalendar();
   else if (appState.view === "events") renderEvents();
   else if (appState.view === "documents") renderDocuments();
   else if (appState.view === "gaps") renderGaps();

@@ -154,10 +154,7 @@ test("phone users can open the autobiography and edit optional document details"
   const card = await page.locator('.node[data-node="p5"] .card').boundingBox();
   await page.touchscreen.tap(card.x + 40, card.y + 35);
   await page.locator('#inspector [data-edit-person="p5"]').first().tap();
-  await expect(
-    page.locator(".profile-additional-sections"),
-  ).not.toHaveAttribute("open", "");
-  await page.locator(".profile-additional-sections > summary").tap();
+  await expect(page.locator("[data-profile-editor]")).toBeVisible();
   const identity = page
     .locator(".profile-editor-section")
     .filter({ has: page.locator('[data-add-record="identity"]') });

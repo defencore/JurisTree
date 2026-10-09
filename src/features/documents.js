@@ -1,115 +1,21 @@
 import { isMedia } from "../core/attachments.js";
-import {
-  sourceEvidence,
-  sourceNeedsReview,
-  sourceVerificationConfig,
-} from "../core/sources.js";
-import { profileRecordError } from "../model/profile-records.js";
-import { recordValues } from "../ui/profile-fields.js";
-import { renderDocumentForm, bindDocumentForm } from "../ui/forms/document.js";
 import { defaultScopes, evidenceTypes, types } from "../core/config.js";
-import { $, esc } from "../core/dom.js";
+import { esc } from "../core/dom.js";
+import { sourceEvidence, sourceVerificationConfig } from "../core/sources.js";
 import { state as appState } from "../core/state.js";
 import { bytes, safeUrl, uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
-import { years } from "../model/dates.js";
-import {
-  documentSubjects,
-  edgeState,
-  gaps,
-  hasFile,
-  linkedDocs,
-  requirements,
-  route,
-  sourceInScope,
-} from "../model/evidence.js";
-import { doc, person, relation } from "../model/project.js";
-import { objectUrl } from "../services/files.js";
+import { documentSubjects, hasFile } from "../model/evidence.js";
+import { doc, person, relation } from "../model/lookup.js";
+import { profileRecordError } from "../model/profile-records.js";
+import { objectUrl } from "../services/blobs.js";
 import { commit } from "../services/history.js";
-import {
-  avatar,
-  documentIcon,
-  requirementCard,
-  sourceLink,
-  statusBadge,
-  typeOptions,
-} from "../ui/components.js";
+import { documentIcon, sourceLink, statusBadge } from "../ui/components.js";
 import { openDialog } from "../ui/dialog.js";
+import { bindDocumentForm, renderDocumentForm } from "../ui/forms/document.js";
 import { icon } from "../ui/icons.js";
-export function renderDocuments() {
-  const matched = appState.project.documents.filter(
-    (d) =>
-      (appState.docShowAll || sourceInScope(d)) &&
-      (!appState.docTypeFilter || d.type === appState.docTypeFilter) &&
-      (!appState.docFileFilter ||
-        hasFile(d) === (appState.docFileFilter === "attached")) &&
-      [
-        d.title,
-        d.source,
-        d.repository,
-        d.reference,
-        d.transcription,
-        d.notes,
-        ...d.people.map((id) => person(id)?.name),
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(appState.docFilter.toLowerCase()),
-  );
-  const docs = matched.filter((d) =>
-    !appState.docStatusFilter || appState.docStatusFilter === "review"
-      ? appState.docStatusFilter !== "review" || sourceNeedsReview(d)
-      : d.status === appState.docStatusFilter,
-  );
-  const tabs = [
-    ["", translate("ui.all")],
-    ["available", translate("ui.documentsAvailable2")],
-    ["requested", translate("ui.requested")],
-    ["review", translate("ui.review2")],
-    ["not_found", translate("ui.notFound")],
-  ];
-  const count = (f) =>
-    matched.filter((d) =>
-      !f || f === "review"
-        ? f !== "review" || sourceNeedsReview(d)
-        : d.status === f,
-    ).length;
-  $("#otherView").innerHTML =
-    `<div class="intro-line"><div><h2>${translate("ui.sourcesSupportingYourTree")}</h2><p>${translate("ui.aDocumentCanBeAvailableWithoutADigital")}</p></div></div><div class="drop-zone" id="dropZone" role="button" tabindex="0">${icon("upload")}<span>${translate("ui.addDocumentsOrPhotographs")}<small>${translate("ui.attachmentUploadHint")}</small></span><span class="btn small">${translate("ui.chooseFiles")}</span></div><div class="filterbar"><div class="search">${icon("search")}<input id="docSearch" value="${esc(appState.docFilter)}" placeholder="${translate("ui.nameArchiveRecordNumberOrText")}" aria-label="${translate("ui.searchSources")}"></div><select id="docTypeFilter" aria-label="${translate("ui.sourceType")}"><option value="">${translate("ui.allTypes")}</option>${typeOptions(types(), appState.docTypeFilter)}</select><select id="docFileFilter" aria-label="${translate("ui.fileAvailability")}"><option value="">${translate("ui.allRecords")}</option><option value="attached" ${appState.docFileFilter === "attached" ? "selected" : ""}>${translate("ui.fileAttached2")}</option><option value="missing" ${appState.docFileFilter === "missing" ? "selected" : ""}>${translate("ui.noDigitalCopy2")}</option></select><label class="source-all"><input type="checkbox" id="docShowAll" ${appState.docShowAll ? "checked" : ""}>${translate("ui.allTreeSources")}</label><div class="layout-switch"><button class="${appState.docLayout === "cards" ? "active" : ""}" data-doc-layout="cards" aria-label="${translate("ui.sourceCards")}">${icon("grid")}</button><button class="${appState.docLayout === "table" ? "active" : ""}" data-doc-layout="table" aria-label="${translate("ui.sourceTable")}">${icon("list")}</button></div></div><div class="source-tabs">${tabs.map(([f, l]) => `<button class="source-tab ${appState.docStatusFilter === f ? "active" : ""}" data-source-filter="${f}">${l}<span>${count(f)}</span></button>`).join("")}</div>${appState.docLayout === "table" ? `<div class="doc-table-wrap"><table class="doc-table"><thead><tr><th>${translate("ui.source")}</th><th>${translate("ui.availability")}</th><th>${translate("ui.evidenceType")}</th><th>${translate("ui.file")}</th><th></th></tr></thead><tbody>${docs.map((d) => `<tr><td><button data-document="${d.id}">${esc(d.title)}</button><small>${esc(d.repository || d.source || types()[d.type])}</small></td><td>${statusBadge(d)}</td><td><span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${esc(evidenceTypes()[d.evidence])}</span></td><td><span class="file-state ${hasFile(d) ? "attached" : ""}">${hasFile(d) ? bytes(d.size) : translate("ui.notAttached")}</span></td><td><button class="iconbtn small" data-edit-document="${d.id}" aria-label="${translate("ui.editSource")}">${icon("edit")}</button></td></tr>`).join("")}</tbody></table></div>` : `<div class="doc-grid">${docs.map((d) => `<article class="doc-card"><button class="doc-preview ${d.type}" data-document="${d.id}" aria-label="${translate("ui.open")} ${esc(d.title)}">${d.mime?.startsWith("image/") && hasFile(d) ? `<img src="${objectUrl(d.assetId)}" alt="">` : icon(documentIcon(d))}<span class="preview-tag">${esc(types()[d.type])}</span></button><div class="doc-body">${statusBadge(d)}<h3>${esc(d.title)}</h3><span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${icon(d.evidence === "official" ? "badge" : "help")}${esc(evidenceTypes()[d.evidence])}</span><p class="source-origin">${icon("landmark")}${esc(d.repository || d.source || translate("ui.sourceNotSpecified"))}</p>${d.reference ? `<p>${esc(d.reference)}</p>` : ""}<p class="source-links">${d.people.length} ${translate("ui.people")} ${d.relations.length} ${translate("ui.relationships")}${d.date ? " · " + esc(d.date) : ""}</p></div><div class="doc-foot"><span class="file-state ${hasFile(d) ? "attached" : ""}">${icon("paperclip")}${hasFile(d) ? translate("ui.fileAttached2") : translate("ui.noCopy")}</span><button class="iconbtn small" data-attach-document="${d.id}" aria-label="${hasFile(d) ? translate("ui.replace") : translate("ui.add")} ${translate("ui.file2")}" title="${hasFile(d) ? translate("ui.replace") : translate("ui.add")} ${translate("ui.file2")}">${icon("upload")}</button><button class="iconbtn small" data-edit-document="${d.id}" aria-label="${translate("ui.editSource")}" title="${translate("ui.edit")}">${icon("edit")}</button><button class="iconbtn small" data-document="${d.id}" aria-label="${translate("ui.openSource")}" title="${translate("ui.open")}">${icon("eye")}</button></div></article>`).join("")}</div>`}${docs.length ? "" : `<div class="empty">${icon("book")}<h2>${appState.project.documents.length ? translate("ui.nothingMatchesTheseFilters") : translate("ui.startWithYourFirstSource")}</h2><p>${translate("ui.addAFileOrARecordOfA")}</p><button class="btn primary" data-action="reference">${icon("plus")}${translate("ui.addRecord")}</button></div>`}`;
-}
-export function renderGaps() {
-  const gs = gaps(),
-    path = route(),
-    scope =
-      appState.project.purpose === "inheritance" && path.found
-        ? appState.project.people.filter((p) => path.people.includes(p.id))
-        : appState.project.people;
-  const available = scope.flatMap(requirements).filter((t) => t.done).length,
-    review = scope
-      .flatMap(requirements)
-      .filter((t) => t.state === "review").length;
-  $("#otherView").innerHTML =
-    `<div class="intro-line"><div><h2>${translate("ui.whatYouHaveAndWhatIsStillMissing")}</h2><p>${appState.project.purpose === "inheritance" && path.found ? translate("ui.documentsForTheRouteFromOwnerToClaimant") : translate("ui.documentsForPeopleAndFamilyRelationshipsInThe")}</p></div></div><div class="banner">${icon("clipboard")}${translate("ui.editTheChecklistInThePersonProfileLabels")}</div><div class="gaps-summary"><div class="stat"><strong style="color:var(--teal)">${available}</strong><small>${translate("ui.requiredDocumentsAvailable")}</small></div><div class="stat"><strong style="color:var(--amber)">${gs.length}</strong><small>${translate("ui.evidenceGaps")}</small></div><div class="stat"><strong style="color:var(--violet)">${review}</strong><small>${translate("ui.needReview")}</small></div></div>${scope
-      .map((p) => {
-        const req = requirements(p);
-        if (!req.length) return "";
-        return `<section class="gap-group"><div class="gap-head"><button class="kin-person gap-person-title" data-person="${p.id}">${avatar(p)}<span><h3>${esc(p.name)}</h3><small>${esc(years(p))}</small></span></button><span class="pill ${req.every((t) => t.done) ? "teal" : "amber"}">${req.filter((t) => t.done).length} / ${req.length} ${translate("ui.available2")}</span></div>${req.map((t) => requirementCard(p, t)).join("")}</section>`;
-      })
-      .join(
-        "",
-      )}<div class="panel-title" style="margin-top:25px"><h3>${translate("ui.relationshipDocuments")}</h3></div>${
-      gs
-        .filter((g) => g.kind === "relation")
-        .map((g) => {
-          const r = relation(g.id),
-            state = edgeState(r),
-            ds = linkedDocs("relation", r.id);
-          return `<section class="gap-group"><h3>${esc(g.name)}</h3><div class="requirement ${["review", "requested"].includes(state) ? state : "missing"}" style="margin-top:12px">${icon(state === "review" ? "search" : state === "requested" ? "fileClock" : "fileMissing")}<span><b>${esc(types()[g.type])}</b><small>${state === "review" ? translate("ui.sourceAddedReviewTheRelationship") : state === "requested" ? translate("ui.requestedAwaitingDocument") : state === "indirect" ? translate("ui.onlyIndirectEvidenceAvailable") : translate("ui.officialSourceMissing")}</small></span>${ds.length ? `<button data-document="${ds[0].id}">${translate("ui.open")}</button>` : `<button data-gap-kind="relation" data-gap-id="${r.id}" data-gap-type="${g.type}">${translate("ui.add")}</button>`}</div></section>`;
-        })
-        .join("") ||
-      `<p class="hint">${translate("ui.noGapsInRelationshipDocuments")}</p>`
-    }`;
-}
+import { recordValues } from "../ui/profile-fields.js";
+
 export async function editDocument(id = null, file = null, context = {}) {
   const old = id
     ? doc(id)

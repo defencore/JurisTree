@@ -1,31 +1,12 @@
 import { recordConfigs } from "../core/config.js";
+import { defaultGraphView } from "../core/graph-view.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
-import { profileScope } from "../features/profiles.js";
-import { defaultGraphView } from "../graph/analysis.js";
 import { translate } from "../i18n/index.js";
 import { sourceInScope } from "./evidence.js";
+import { profileScope } from "./profile-scope.js";
 import { propertySources } from "./property-records.js";
-export function person(id) {
-  return appState.renderIndex?.project === appState.project
-    ? appState.renderIndex.people.get(id)
-    : appState.project.people.find((p) => p.id === id);
-}
-export function relation(id) {
-  return appState.renderIndex?.project === appState.project
-    ? appState.renderIndex.relations.get(id)
-    : appState.project.relations.find((r) => r.id === id);
-}
-export function doc(id) {
-  return appState.renderIndex?.project === appState.project
-    ? appState.renderIndex.documents.get(id)
-    : appState.project.documents.find((d) => d.id === id);
-}
-export function asset(id) {
-  return appState.renderIndex?.project === appState.project
-    ? appState.renderIndex.property.get(id)
-    : appState.project.property.find((a) => a.id === id);
-}
+
 export function fresh() {
   return {
     format: "juristree",
@@ -47,18 +28,7 @@ export function fresh() {
     updatedAt: new Date().toISOString(),
   };
 }
-export function group(id) {
-  return appState.project.groups.find((g) => g.id === id);
-}
-export function nodeItem(kind, id) {
-  return kind === "person"
-    ? person(id)
-    : kind === "document"
-      ? doc(id)
-      : kind === "group"
-        ? group(id)
-        : asset(id);
-}
+
 export function scopedPerson(p) {
   const result = clone(p),
     visible = profileScope();

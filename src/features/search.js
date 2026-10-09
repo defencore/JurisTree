@@ -1,47 +1,12 @@
-import { $, esc } from "../core/dom.js";
+import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { getLanguage, translate } from "../i18n/index.js";
-import { buildSearchIndex, searchIndex } from "../model/search.js";
-import { focusPerson, fit } from "../graph/camera.js";
-import { resetAnalysis } from "../graph/analysis.js";
+import { fit, focusPerson } from "../graph/camera.js";
+import { resetAnalysis } from "../model/graph-view.js";
 import { render, select } from "../ui/render.js";
-import { icon, icons } from "../ui/icons.js";
+import { closeSearch, renderSearch } from "../ui/search.js";
 import { viewDocument } from "./documents.js";
 import { openPropertyHistory } from "./property-history.js";
-let cache = null;
-export function closeSearch() {
-  $("#globalSearchResults").hidden = true;
-  $("#globalSearch").setAttribute("aria-expanded", "false");
-}
-export function renderSearch() {
-  const input = $("#globalSearch"),
-    query = input.value.trim();
-  if (!query || !appState.editorActive) {
-    closeSearch();
-    return;
-  }
-  const project = appState.project,
-    language = getLanguage();
-  if (
-    !cache ||
-    cache.project !== project ||
-    cache.updatedAt !== project.updatedAt ||
-    cache.language !== language
-  )
-    cache = {
-      project,
-      updatedAt: project.updatedAt,
-      language,
-      index: buildSearchIndex(project),
-    };
-  const matches = searchIndex(cache.index, query),
-    shown = matches.slice(0, appState.searchLimit);
-  $("#globalSearchResults").innerHTML =
-    `<div class="search-result-head"><strong>${translate("ui.searchResults")} (${matches.length})</strong><button type="button" class="iconbtn small" data-action="close-search" aria-label="${translate("ui.closeSearch")}">${icon("x")}</button></div><p class="hint">${translate("ui.searchCombinationHint")}</p><div class="search-result-list">${shown.map((entry) => `<button type="button" class="global-search-result" data-search-kind="${entry.kind}" data-search-id="${entry.id}">${icon({ person: "user", document: "file", relation: "link", property: "home", group: "users" }[entry.kind])}<span><b>${esc(entry.title)}</b><small>${esc([entry.kindLabel, entry.subtitle].filter(Boolean).join(" · "))}</small></span></button>`).join("") || `<p class="empty-search">${translate("ui.noSearchResults")}</p>`}</div>${matches.length > shown.length ? `<button type="button" class="btn" data-action="more-search">${translate("ui.moreSearchResults")} · ${shown.length}/${matches.length}</button>` : ""}`;
-  $("#globalSearchResults").hidden = false;
-  input.setAttribute("aria-expanded", "true");
-  icons();
-}
+
 export async function openSearchResult(kind, id) {
   closeSearch();
   if (kind === "person") {

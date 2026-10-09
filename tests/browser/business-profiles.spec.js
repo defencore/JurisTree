@@ -10,8 +10,6 @@ async function addRecord(page, section) {
   const panel = page
     .locator(".profile-editor-section")
     .filter({ has: page.locator(`[data-add-record="${section}"]`) });
-  if (!(await panel.isVisible()))
-    await page.locator(".profile-additional-sections > summary").click();
   if ((await panel.getAttribute("open")) === null)
     await panel.locator("summary").first().click();
   await panel.locator(`[data-add-record="${section}"]`).click();
@@ -257,8 +255,6 @@ test("new profiles and directional graph labels fit desktop and a narrow phone i
     const company = page
       .locator(".profile-editor-section")
       .filter({ has: page.locator('[data-add-record="companies"]') });
-    if (!(await company.isVisible()))
-      await page.locator(".profile-additional-sections > summary").click();
     await company.locator("summary").first().click();
     await expandFields(company.locator(".profile-record").first());
     for (const selector of ["#modal", "#modal .modal-body"])

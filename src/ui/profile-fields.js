@@ -1,8 +1,8 @@
-import { person } from "../model/project.js";
 import { esc } from "../core/dom.js";
-import { displayDate } from "../model/dates.js";
-import { contactHref } from "../model/contacts.js";
 import { safeUrl } from "../core/utils.js";
+import { contactHref } from "../model/contacts.js";
+import { displayDate } from "../model/dates.js";
+import { person } from "../model/lookup.js";
 
 export function fields(entries) {
   const rows = entries.filter(([, value]) => value !== "" && value != null);

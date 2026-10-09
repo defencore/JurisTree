@@ -10,8 +10,6 @@ async function addRecord(page, section) {
   const panel = page
     .locator(".profile-editor-section")
     .filter({ has: page.locator(`[data-add-record="${section}"]`) });
-  if (!(await panel.isVisible()))
-    await page.locator(".profile-additional-sections > summary").click();
   if ((await panel.getAttribute("open")) === null)
     await panel.locator("summary").first().click();
   await panel.locator(`[data-add-record="${section}"]`).click();

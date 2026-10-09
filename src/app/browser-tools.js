@@ -1,12 +1,14 @@
 import { state as appState } from "../core/state.js";
 import { clone, uid } from "../core/utils.js";
-import { profileScope } from "../features/profiles.js";
 import { fit } from "../graph/camera.js";
 import { translate } from "../i18n/index.js";
 import { gaps, route, sourceInScope } from "../model/evidence.js";
 import { kinshipBetween } from "../model/kinship.js";
-import { person, scopedPerson } from "../model/project.js";
-import { commit } from "./history.js";
+import { person } from "../model/lookup.js";
+import { profileScope } from "../model/profile-scope.js";
+import { scopedPerson } from "../model/project.js";
+import { commit } from "../services/history.js";
+
 export function webTools() {
   if (!document.modelContext?.registerTool) return;
   const lc = new AbortController();

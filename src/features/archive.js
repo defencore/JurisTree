@@ -1,31 +1,33 @@
 import { attachmentExtensions } from "../core/attachments.js";
-import { renderExportForm } from "../ui/forms/export.js";
-import JSZip from "../vendor/zip.js";
 import {
-  MAX_ATTACHMENT_BYTES,
   graphStateInfo,
+  MAX_ATTACHMENT_BYTES,
   relTypes,
 } from "../core/config.js";
 import { $, $$, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { clone, dataUrl, download, safeName, uid } from "../core/utils.js";
-import {
-  activateTree,
-  confirmStartReplacement,
-  renderStart,
-} from "../features/launcher.js";
-import { graphView, relationShown, visiblePeople } from "../graph/analysis.js";
 import { bounds } from "../graph/camera.js";
 import { exportLineLegend } from "../graph/legend.js";
+import { filteredGraphNodes } from "../graph/node-data.js";
 import { graphDefs, renderFilteredGraph } from "../graph/render.js";
-import { filteredGraphNodes } from "../graph/nodes.js";
 import { svgText } from "../graph/text.js";
 import { translate } from "../i18n/index.js";
+import {
+  graphView,
+  relationShown,
+  visiblePeople,
+} from "../model/graph-view.js";
 import { withProjectIndex } from "../model/project.js";
 import { validateImport } from "../model/validation.js";
-import { usedBlobs } from "./files.js";
-import { saveNow } from "./storage.js";
+import { usedBlobs } from "../services/blobs.js";
+import { saveNow } from "../services/storage.js";
 import { openDialog, toast } from "../ui/dialog.js";
+import { renderExportForm } from "../ui/forms/export.js";
+import { renderStart } from "../ui/start.js";
+import JSZip from "../vendor/zip.js";
+import { activateTree, confirmStartReplacement } from "./workspace-session.js";
+
 export async function exportArchive(
   model = appState.project,
   files = appState.blobs,

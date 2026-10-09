@@ -1,34 +1,18 @@
-import { propertyWorkspace } from "../ui/property-workspace.js";
-import { localDateString } from "../model/dates.js";
 import { propertyMetadataFields } from "../core/property-records.js";
-import { renderPropertyForm } from "../ui/forms/property.js";
-import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
-import { asset } from "../model/project.js";
+import { asset } from "../model/lookup.js";
 import { commit } from "../services/history.js";
-import { personOptions } from "../ui/components.js";
 import { openDialog } from "../ui/dialog.js";
-import { icon } from "../ui/icons.js";
-export function renderProperty() {
-  appState.propertyDate ||= localDateString();
-  $("#otherView").innerHTML = propertyWorkspace();
-}
-export function allocationRow(
-  a = {
-    personId: appState.project.people[0]?.id,
-    percent: "",
-  },
-) {
-  return `<div class="allocation-editor"><select name="allocation-person">${personOptions(a.personId)}</select><input type="number" name="allocation-percent" min="0" max="100" step="0.01" value="${esc(a.percent)}" placeholder="%" aria-label="${translate("ui.percentageShare")}"><button type="button" class="iconbtn" data-remove-allocation aria-label="${translate("ui.removeShare")}">${icon("x")}</button></div>`;
-}
-export async function editProperty(id = null) {
+import { renderPropertyForm } from "../ui/forms/property.js";
+
+export async function editProperty(id = null, ownerId = "") {
   const a = id
     ? asset(id)
     : {
         title: "",
-        ownerId: "",
+        ownerId,
         value: "",
         currency: "USD",
         notes: "",

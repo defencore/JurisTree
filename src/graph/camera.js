@@ -1,7 +1,8 @@
+import { CAMERA_MAX_ZOOM, CAMERA_MIN_ZOOM } from "../core/config.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
-import { filteredGraphNodes } from "./nodes.js";
-import { CAMERA_MIN_ZOOM, CAMERA_MAX_ZOOM } from "../core/config.js";
+import { filteredGraphNodes } from "./node-data.js";
+
 export function focusPerson(
   id = appState.selected?.kind === "person" ? appState.selected.id : "",
 ) {

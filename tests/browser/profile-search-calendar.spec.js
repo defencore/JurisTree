@@ -115,7 +115,6 @@ test("edits optional physical, medical, skill, weapon, travel, spending and citi
 }) => {
   await page.locator('#personList [data-person="p10"]').click();
   await page.locator('#inspector [data-edit-person="p10"]').first().click();
-  await page.locator(".profile-additional-sections > summary").click();
   async function add(section) {
     const panel = page
       .locator(".profile-editor-section")

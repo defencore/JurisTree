@@ -1,11 +1,12 @@
+import { types } from "../core/config.js";
 import { familyConnection } from "../core/relationships.js";
 import { sourceEvidence, sourceNeedsReview } from "../core/sources.js";
-import { types } from "../core/config.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
-import { asset, person, relation } from "./project.js";
+import { usedBlobs } from "../services/blobs.js";
+import { asset, person, relation } from "./lookup.js";
 import { propertySources } from "./property-records.js";
-import { usedBlobs } from "../services/files.js";
+
 export function sourceInScope(d) {
   return (
     !Array.isArray(d.purposes) ||

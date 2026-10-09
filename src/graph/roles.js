@@ -3,7 +3,7 @@ import { state } from "../core/state.js";
 import { theme } from "../core/theme.js";
 import { getLanguage, translate as t } from "../i18n/index.js";
 import { genderWord, kinshipBetween } from "../model/kinship.js";
-import { person, relation } from "../model/project.js";
+import { person, relation } from "../model/lookup.js";
 import { roleGroup, roleLabel } from "../model/relationship-labels.js";
 
 export const graphRoleGroups = {

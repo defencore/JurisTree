@@ -11,7 +11,7 @@ import { familyLayout } from "../src/graph/layouts/family.js";
 import {
   findGraphPaths,
   findConnectingNetwork,
-} from "../src/graph/analysis.js";
+} from "../src/model/graph-analysis.js";
 import { catalogs, setLanguage, translate } from "../src/i18n/index.js";
 
 function project() {

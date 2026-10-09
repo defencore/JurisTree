@@ -1,21 +1,21 @@
-import { render, select } from "../ui/render.js";
-import { scheduleSave } from "../services/storage.js";
-import { repairSelection } from "../services/history.js";
-import { fit, focusPerson } from "./camera.js";
-import { isMobileLayout } from "../core/viewport.js";
-import { editProperty } from "../features/property.js";
-import { toggleGroup } from "../features/groups.js";
-import { viewDocument } from "../features/documents.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
-import { toggleGraphSelection } from "./analysis.js";
-import { applyCamera, zoom } from "./camera.js";
-import { renderGraphControls } from "./controls.js";
-import { filteredGraphNodes } from "./nodes.js";
+import { isMobileLayout } from "../core/viewport.js";
+import { viewDocument } from "../features/documents.js";
+import { toggleGraphSelection } from "../features/graph-analysis.js";
+import { toggleGroup } from "../features/groups.js";
+import { editProperty } from "../features/property.js";
+import { nodeItem, person } from "../model/lookup.js";
+import { repairSelection } from "../services/history.js";
+import { scheduleSave } from "../services/storage.js";
+import { renderGraphControls } from "../ui/graph-controls.js";
+import { render, select } from "../ui/render.js";
+import { applyCamera, fit, focusPerson, zoom } from "./camera.js";
+import { filteredGraphNodes } from "./node-data.js";
 import { renderGraph } from "./render.js";
-import { nodeItem, person } from "../model/project.js";
 import { bindTouchInteractions } from "./touch.js";
+
 export function bindGraphInteractions() {
   const graph = $("#graph");
   bindTouchInteractions(graph);

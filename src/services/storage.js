@@ -1,13 +1,13 @@
+import { emitSignal } from "../core/signals.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
-import { pruneBlobs, usedBlobs } from "./files.js";
-import { toast } from "../ui/dialog.js";
-import { updateSaveStatus } from "../ui/save-status.js";
+import { pruneBlobs, usedBlobs } from "./blobs.js";
+
 export function scheduleSave() {
   if (!appState.editorActive) return;
   clearTimeout(appState.saveTimer);
-  updateSaveStatus("saving");
+  emitSignal("storage:status", "saving");
   appState.saveTimer = setTimeout(() => saveNow(), 400);
 }
 export async function saveNow() {
@@ -33,9 +33,12 @@ export async function saveNow() {
     );
   try {
     await appState.saveSerial;
-    updateSaveStatus("saved");
+    emitSignal("storage:status", "saved");
   } catch {
-    updateSaveStatus("unavailable");
-    toast(translate("ui.couldNotSaveTheBrowserDraftExportA"), true);
+    emitSignal("storage:status", "unavailable");
+    emitSignal(
+      "storage:error",
+      translate("ui.couldNotSaveTheBrowserDraftExportA"),
+    );
   }
 }

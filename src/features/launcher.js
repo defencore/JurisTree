@@ -1,67 +1,18 @@
-import { resetPersonFilter } from "./person-filter-state.js";
-import { importFile } from "../services/archive.js";
-import { renderCapabilitiesForm } from "../ui/forms/capabilities.js";
-import { getLocale } from "../i18n/index.js";
 import { startTemplates } from "../core/config.js";
-import { $, esc } from "../core/dom.js";
+import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { sample } from "../data/demo.js";
-import { resetAnalysis } from "../graph/analysis.js";
-import { fit, focusPerson } from "../graph/camera.js";
-import { isMobileLayout } from "../core/viewport.js";
+import { fit } from "../graph/camera.js";
 import { translate } from "../i18n/index.js";
 import { fresh } from "../model/project.js";
-import { exportArchive } from "../services/archive.js";
-import { checkpoint } from "../services/history.js";
-import { scheduleSave } from "../services/storage.js";
+import { launchDraft } from "../model/workspace.js";
 import { openDialog } from "../ui/dialog.js";
-import { icon } from "../ui/icons.js";
-import { render } from "../ui/render.js";
-import { updateSaveStatus } from "../ui/save-status.js";
-export function launchDraft() {
-  return appState.editorActive
-    ? {
-        project: appState.project,
-        files: appState.blobs,
-      }
-    : appState.savedDraft;
-}
-export function renderStart() {
-  const draft = launchDraft(),
-    ready = appState.initialized && !appState.startBusy;
-  $("#startTemplateGrid").innerHTML = Object.entries(startTemplates())
-    .map(
-      ([key, t]) =>
-        `<button type="button" class="start-template ${key === appState.startTemplate ? "chosen" : ""}" data-start-template="${key}" aria-pressed="${key === appState.startTemplate}" ${ready ? "" : "disabled"}><span class="start-template-icon">${icon(t.icon)}</span><span><b>${t.title}</b><small>${t.description}</small></span><span class="template-check">${icon("check")}</span></button>`,
-    )
-    .join("");
-  $("#startTemplateDetail").textContent =
-    startTemplates()[appState.startTemplate].detail;
-  $("#startCreate").disabled = !ready;
-  $("#startImport").disabled = !ready;
-  $("#startDemo").disabled = !ready;
-  $("#startResume").hidden = !draft;
-  $("#startContinue").disabled = !ready || !draft;
-  if (draft) {
-    $("#startDraftTitle").textContent = draft.project.title;
-    $("#startDraftSummary").textContent =
-      `${draft.project.people.length} ${translate("ui.people")} ${draft.project.relations.length} ${translate("ui.relationships2")} ${draft.project.documents.length} ${translate("ui.sources")}`;
-    $("#startDraftDate").textContent = appState.editorActive
-      ? translate("ui.currentWorkInThisWindow")
-      : draft.project.updatedAt &&
-          Number.isFinite(Date.parse(draft.project.updatedAt))
-        ? `${translate("ui.saved")} ` +
-          new Date(draft.project.updatedAt).toLocaleString(getLocale())
-        : translate("ui.draftInThisBrowser");
-  }
-  $("#startStorageNote").textContent = !appState.initialized
-    ? translate("ui.checkingSavedWork")
-    : appState.db
-      ? translate("ui.draftsAreSavedInThisBrowserExportZip")
-      : translate("ui.autosaveIsUnavailableInThisBrowserExportZip");
-  $("#startDrop").setAttribute("aria-busy", String(appState.startBusy));
-}
+import { renderCapabilitiesForm } from "../ui/forms/capabilities.js";
+import { renderStart } from "../ui/start.js";
+import { exportArchive, importFile } from "./archive.js";
+import { activateTree, confirmStartReplacement } from "./workspace-session.js";
+
 export function showStartScreen() {
   $("#appShell").hidden = true;
   $("#startScreen").hidden = false;
@@ -80,89 +31,7 @@ export function selectStartTemplate(key) {
   appState.startTemplate = key;
   renderStart();
 }
-export async function confirmStartReplacement(summary = "") {
-  const draft = launchDraft();
-  if (!draft) return true;
-  const f = await openDialog(
-    translate("ui.openAnotherMap"),
-    `${summary}<p class="hint">${translate("ui.theCurrentDraft")}${esc(draft.project.title)}${translate("ui.willBeReplacedExportAnArchiveToKeep")}</p><button type="button" class="btn" data-action="start-backup">${icon("archive")}${translate("ui.downloadCurrentDraftZip")}</button>`,
-    {
-      submit: translate("ui.openAnotherMap2"),
-    },
-  );
-  return !!f;
-}
-export function activateTree(
-  model,
-  files = new Map(),
-  { persist = true } = {},
-) {
-  if (appState.editorActive) checkpoint();
-  else {
-    appState.history = [];
-    appState.future = [];
-  }
-  resetAnalysis(false);
-  appState.multiSelection.clear();
-  appState.selectionMode = false;
-  appState.touchMove = false;
-  document.body.classList.remove("mobile-tools-open");
-  appState.project = model;
-  for (const [id, b] of files) appState.blobs.set(id, b);
-  appState.editorActive = true;
-  appState.savedDraft = null;
-  appState.view = "tree";
-  appState.groupFilter = "";
-  resetPersonFilter();
-  appState.comparisonPath = null;
-  appState.docFilter = "";
-  appState.docTypeFilter = "";
-  appState.docStatusFilter = "";
-  appState.docFileFilter = "";
-  appState.docShowAll = false;
-  appState.showDocs = false;
-  appState.eventSearch = "";
-  appState.propertyFocus = "";
-  appState.propertyDate = "";
-  appState.propertySearch = "";
-  appState.propertyReviewFilter = "all";
-  appState.eventType = "";
-  appState.eventDomain = "family";
-  appState.calendarMode = "month";
-  appState.calendarUndatedLimit = 80;
-  appState.calendarMonth = "";
-  appState.calendarDay = "";
-  appState.calendarSearch = "";
-  appState.calendarType = "";
-  appState.calendarDomain = "family";
-  appState.eventMode = "upcoming";
-  appState.eventLimit = 80;
-  appState.camera = {
-    x: 0,
-    y: 0,
-    z: 1,
-  };
-  $("#peopleSearch").value = "";
-  $("#globalSearch").value = "";
-  $("#globalSearchResults").hidden = true;
-  $("#globalSearch").setAttribute("aria-expanded", "false");
-  appState.searchLimit = 20;
-  $("#sidebar").classList.remove("open");
-  $("#inspector").classList.remove("open");
-  appState.selected = appState.project.people.length
-    ? {
-        kind: "person",
-        id: appState.project.claimantId || appState.project.people[0].id,
-      }
-    : null;
-  $("#startScreen").hidden = true;
-  $("#appShell").hidden = false;
-  $("#startError").textContent = "";
-  render();
-  requestAnimationFrame(() => (isMobileLayout() ? focusPerson() : fit()));
-  if (persist) scheduleSave();
-  else updateSaveStatus("restored");
-}
+
 export async function createFromTemplate() {
   if (!appState.initialized || appState.startBusy) return false;
   const name = $("#startTitle").value.trim();

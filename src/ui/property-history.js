@@ -4,16 +4,16 @@ import { state } from "../core/state.js";
 import { translate as t } from "../i18n/index.js";
 import { displayDate } from "../model/dates.js";
 import { kinshipBetween } from "../model/kinship.js";
+import { person } from "../model/lookup.js";
 import {
   analyzeProperty,
-  propertyTimeline,
   propertySnapshot,
+  propertyTimeline,
 } from "../model/property-history.js";
 import { propertyPeople } from "../model/property-records.js";
-import { person } from "../model/project.js";
 import { sourceChips } from "./components.js";
-import { fields, recordValues } from "./profile-fields.js";
 import { icon } from "./icons.js";
+import { fields, recordValues } from "./profile-fields.js";
 
 function party(id, external) {
   return person(id)?.name || external || t("ui.notSpecified");
