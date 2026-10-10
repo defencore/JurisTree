@@ -1,3 +1,4 @@
+import { projectVersion } from "./project-revision.js";
 import { selectedGraphNodes, nodeKey } from "./graph-selection.js";
 import { validDiagramKeys } from "./diagram.js";
 
@@ -44,7 +45,7 @@ function lockIndex(project) {
   const previous = cache.get(project);
   if (
     previous?.locks === project.placementLocks &&
-    previous.updatedAt === project.updatedAt
+    previous.version === projectVersion(project)
   )
     return previous;
   const nodes = new Set(project.placementLocks?.nodes || []),
@@ -71,7 +72,7 @@ function lockIndex(project) {
     );
   const result = {
     locks: project.placementLocks,
-    updatedAt: project.updatedAt,
+    version: projectVersion(project),
     nodes,
     connectors,
     people,

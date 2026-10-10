@@ -3,18 +3,35 @@ import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { validDiagramKeys } from "../model/diagram.js";
 import { resetAnalysis } from "../model/graph-view.js";
-import { doc, person, relation } from "../model/lookup.js";
+import { asset, doc, group, person, relation } from "../model/lookup.js";
+import { advanceProjectRevision } from "../model/project-revision.js";
 
 export function checkpoint() {
-  appState.history.push(clone(appState.project));
+  recordCheckpoint(clone(appState.project));
+}
+function recordCheckpoint(before) {
+  appState.history.push(before);
   if (appState.history.length > 45) appState.history.shift();
   appState.future = [];
 }
 /** Apply a project edit and keep rendering, history and draft saving in one path. */
 export function commit(action) {
-  checkpoint();
-  action();
+  const before = clone(appState.project);
+  try {
+    action();
+  } catch (error) {
+    appState.project = before;
+    appState.renderIndex = null;
+    throw error;
+  }
+  commitSnapshot(before);
+}
+/** Finish an interactive preview through the same history, rendering and saving path. */
+export function commitSnapshot(before) {
+  recordCheckpoint(before);
   appState.project.updatedAt = new Date().toISOString();
+  advanceProjectRevision(appState.project);
+  appState.renderIndex = null;
   emitSignal("project:changed");
 }
 export function undo() {
@@ -69,7 +86,13 @@ export function repairSelection() {
       ? person(appState.selected.id)
       : appState.selected.kind === "relation"
         ? relation(appState.selected.id)
-        : doc(appState.selected.id))
+        : appState.selected.kind === "property"
+          ? asset(appState.selected.id)
+          : appState.selected.kind === "group"
+            ? group(appState.selected.id)
+            : appState.selected.kind === "document"
+              ? doc(appState.selected.id)
+              : null)
   )
     appState.selected = null;
 }

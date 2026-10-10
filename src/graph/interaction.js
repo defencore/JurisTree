@@ -12,12 +12,11 @@ import { redrawDiagram } from "../features/diagram.js";
 import { toggleGroup } from "../features/groups.js";
 import { editProperty } from "../features/property.js";
 import { nodeItem, person } from "../model/lookup.js";
-import { repairSelection } from "../services/history.js";
-import { scheduleSave } from "../services/storage.js";
+import { commitSnapshot, repairSelection } from "../services/history.js";
 import { render, select } from "../ui/render.js";
 import { applyCamera, fit, focusPerson, zoom } from "./camera.js";
 import { filteredGraphNodes } from "./node-data.js";
-import { renderGraph } from "./render.js";
+import { scheduleGraphRender } from "./render.js";
 import { bindTouchInteractions } from "./touch.js";
 
 export function bindGraphInteractions() {
@@ -153,7 +152,7 @@ export function bindGraphInteractions() {
           p.y = old.y + moveY;
         }
       }
-      renderGraph();
+      scheduleGraphRender();
     }
   });
   graph.addEventListener("pointerup", finishGraphDrag);
@@ -216,12 +215,7 @@ export function finishGraphDrag(e) {
     }
     if (d.locked && d.moved) return;
     if (d.moved) {
-      appState.history.push(d.before);
-      if (appState.history.length > 45) appState.history.shift();
-      appState.future = [];
-      appState.project.updatedAt = new Date().toISOString();
-      scheduleSave();
-      renderGraph();
+      commitSnapshot(d.before);
     } else if (d.nodeKind === "person")
       select("person", d.id, { openPanel: !appState.diagramEditing });
     else if (d.nodeKind === "document") viewDocument(d.id);

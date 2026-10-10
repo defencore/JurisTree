@@ -9,6 +9,7 @@ import {
   relationShown,
 } from "../model/graph-view.js";
 import { withProjectIndex } from "../model/project.js";
+import { projectVersion } from "../model/project-revision.js";
 import { nodeKey } from "../model/graph-selection.js";
 import { commit } from "../services/history.js";
 import { toast } from "../ui/dialog.js";
@@ -51,7 +52,7 @@ export async function arrangeGraph(
     return;
   }
   const start = state.project,
-    updatedAt = start.updatedAt,
+    version = projectVersion(start),
     cfg = graphView(),
     input = currentLayoutInput(),
     signature = scopeKey(input);
@@ -75,7 +76,7 @@ export async function arrangeGraph(
       );
     if (
       state.project !== start ||
-      start.updatedAt !== updatedAt ||
+      projectVersion(start) !== version ||
       scopeKey(currentLayoutInput()) !== signature
     ) {
       toast(translate("ui.treeChangedDuringLayoutTryAgain"));

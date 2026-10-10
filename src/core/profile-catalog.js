@@ -1,8 +1,9 @@
+import { localizedConfig } from "../i18n/localized-config.js";
 import { recordConfigs, sectionInfo } from "./config.js";
 import { profileGroups } from "./profile-groups.js";
 
 /** Shared metadata for section discovery, editing and complete profiles. */
-export function profileCatalog() {
+export const profileCatalog = localizedConfig(() => {
   const configs = recordConfigs();
   return profileGroups().map((group) => ({
     ...group,
@@ -23,7 +24,7 @@ export function profileCatalog() {
       ].join(" "),
     })),
   }));
-}
+});
 
 export function profileOverviewCount(person, cfg) {
   return Number(

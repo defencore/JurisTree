@@ -9,11 +9,11 @@ import {
 } from "../src/model/dates.js";
 import { emptyPersonFilter } from "../src/core/person-filter-fields.js";
 import { sample } from "../src/data/demo.js";
+import { validateImport } from "../src/model/validation.js";
 import {
-  validateImport,
   chronologyError,
   profileFormError,
-} from "../src/model/validation.js";
+} from "../src/model/profile-validation.js";
 import { relationshipConfig } from "../src/core/relationships.js";
 import { profileRecordError } from "../src/model/profile-records.js";
 import { personStatus } from "../src/model/person-status.js";

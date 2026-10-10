@@ -6,7 +6,7 @@ import { clone } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
 import { sourceInScope } from "./evidence.js";
 import { profileScope } from "./profile-scope.js";
-import { propertySources } from "./property-records.js";
+import { createProjectIndex } from "./project-index.js";
 
 export function fresh() {
   return {
@@ -54,40 +54,14 @@ export function scopedPerson(p) {
 export function withProjectIndex(fn) {
   if (appState.renderIndex?.project === appState.project) return fn();
   const previous = appState.renderIndex;
-  const index = {
-    project: appState.project,
-    people: new Map(appState.project.people.map((p) => [p.id, p])),
-    relations: new Map(appState.project.relations.map((r) => [r.id, r])),
-    documents: new Map(appState.project.documents.map((d) => [d.id, d])),
-    property: new Map(appState.project.property.map((a) => [a.id, a])),
-    peopleDocs: new Map(),
-    relationDocs: new Map(),
-    propertyDocs: new Map(),
-  };
-  const propertyBySource = new Map();
-  for (const item of appState.project.property)
-    for (const id of propertySources(item)) {
-      if (!propertyBySource.has(id)) propertyBySource.set(id, []);
-      propertyBySource.get(id).push(item.id);
-    }
-  for (const d of appState.project.documents.filter(sourceInScope))
-    for (const [key, ids] of [
-      ["peopleDocs", d.people],
-      ["relationDocs", d.relations],
-      [
-        "propertyDocs",
-        [
-          ...new Set([
-            ...(d.propertyIds || []),
-            ...(propertyBySource.get(d.id) || []),
-          ]),
-        ],
-      ],
-    ])
-      for (const id of ids || []) {
-        if (!index[key].has(id)) index[key].set(id, []);
-        index[key].get(id).push(d);
-      }
+  const index = createProjectIndex(appState.project);
+  for (const key of ["peopleDocs", "relationDocs", "propertyDocs"])
+    index[key] = new Map(
+      [...index[key]].map(([id, documents]) => [
+        id,
+        documents.filter(sourceInScope),
+      ]),
+    );
   appState.renderIndex = index;
   try {
     return fn();

@@ -535,7 +535,7 @@ test.describe("fixed placement on desktop", () => {
     const svg = await page.evaluate(async () => {
       const { fullSVG } = await import(
         new URL(
-          "features/archive.js",
+          "graph/export.js",
           document.querySelector('script[type="module"]').src,
         ).href
       );

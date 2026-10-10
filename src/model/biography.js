@@ -1,50 +1,21 @@
-import { recordConfigs } from "../core/config.js";
-import { propertyPeople, propertySources } from "./property-records.js";
+import { state } from "../core/state.js";
+import { createProjectIndex } from "./project-index.js";
 
-/** Collect the complete profile independently of workspace filters. */
-export function personBiography(project, id) {
-  const profile = project.people.find((p) => p.id === id);
+/** Collect the complete profile, sharing an index during directory rendering or search. */
+export function personBiography(project, id, index = null) {
+  index ||=
+    state.renderIndex?.project === project
+      ? state.renderIndex
+      : createProjectIndex(project);
+  const profile = index.people.get(id);
   if (!profile) return null;
-  const testimony = project.people.flatMap((owner) =>
-    (owner.witnessRecords || [])
-      .filter((r) => r.witnessId === id)
-      .map((record) => ({
-        personId: owner.id,
-        personName: owner.name,
-        record,
-      })),
-  );
-  const relations = project.relations.filter(
-    (r) => r.from === id || r.to === id,
-  );
-  const property = project.property.filter((a) => propertyPeople(a).has(id));
-  const sourceIds = new Set([
-    ...(profile.bioSourceIds || []),
-    ...(profile.healthSourceIds || []),
-    ...property.flatMap((asset) => [...propertySources(asset)]),
-    ...testimony.map(({ record }) => record.sourceId).filter(Boolean),
-    ...Object.values(recordConfigs()).flatMap((cfg) =>
-      (profile[cfg.key] || []).map((record) => record.sourceId).filter(Boolean),
-    ),
-  ]);
-  const relationIds = new Set(relations.map((r) => r.id));
-  const propertyIds = new Set(property.map((a) => a.id));
-  const documents = project.documents.filter(
-    (d) =>
-      sourceIds.has(d.id) ||
-      (d.people || []).includes(id) ||
-      (d.subjectIds || []).includes(id) ||
-      (d.relations || []).some((rid) => relationIds.has(rid)) ||
-      (d.propertyIds || []).some((aid) => propertyIds.has(aid)),
-  );
+  const groupIds = new Set(profile.groupIds || []);
   return {
     profile,
-    relations,
-    property,
-    documents,
-    testimony,
-    groups: project.groups.filter((g) =>
-      (profile.groupIds || []).includes(g.id),
-    ),
+    relations: index.personRelations.get(id) || [],
+    property: index.personProperty.get(id) || [],
+    documents: index.profileDocs.get(id) || [],
+    testimony: index.testimony.get(id) || [],
+    groups: project.groups.filter((group) => groupIds.has(group.id)),
   };
 }

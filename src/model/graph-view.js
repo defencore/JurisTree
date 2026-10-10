@@ -1,3 +1,4 @@
+import { projectVersion } from "./project-revision.js";
 import { normalizeGraphView } from "../core/graph-view.js";
 import { state as appState } from "../core/state.js";
 import { edgeState } from "./evidence.js";
@@ -14,12 +15,12 @@ export function directConnectionScope() {
     !directCache ||
     directCache.project !== project ||
     directCache.rootId !== rootId ||
-    directCache.updatedAt !== project.updatedAt
+    directCache.version !== projectVersion(project)
   )
     directCache = {
       project,
       rootId,
-      updatedAt: project.updatedAt,
+      version: projectVersion(project),
       scope: directConnections(project, rootId),
     };
   return directCache.scope;

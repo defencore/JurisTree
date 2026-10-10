@@ -111,11 +111,11 @@ export function renderMain() {
     appState.view === "tree" && appState.project.purpose === "inheritance"
       ? `<div class="path-panel">${icon("route")}<span class="label">${translate("ui.owner")}</span><select id="subjectSelect" aria-label="${translate("ui.deceasedEstateOwner")}">${personOptions(appState.project.subjectId, true)}</select><span class="label">${translate("ui.claimant")}</span><select id="claimantSelect" aria-label="${translate("ui.claimant")}">${personOptions(appState.project.claimantId, true)}</select><span class="path-summary">${path.found ? icon("link") + " " + path.relations.length + ` ${translate("ui.familyRelationships2")}` : translate("ui.noRouteFound")}</span></div>`
       : "";
-  renderGraphControls();
   if (appState.view === "tree") {
     renderGraph();
     return;
   }
+  renderGraphControls();
   if (appState.view === "people") renderProfiles();
   else if (appState.view === "calendar") renderCalendar();
   else if (appState.view === "events") renderEvents();

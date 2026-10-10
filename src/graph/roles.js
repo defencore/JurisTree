@@ -1,8 +1,10 @@
+import { projectVersion } from "../model/project-revision.js";
 import { familyConnection } from "../core/relationships.js";
 import { state } from "../core/state.js";
 import { theme } from "../core/theme.js";
 import { getLanguage, translate as t } from "../i18n/index.js";
-import { genderWord, kinshipBetween } from "../model/kinship.js";
+import { kinshipBetween } from "../model/kinship.js";
+import { genderWord } from "../model/kinship-labels.js";
 import { person, relation } from "../model/lookup.js";
 import { roleGroup, roleLabel } from "../model/relationship-labels.js";
 
@@ -163,7 +165,9 @@ export function graphRole(id) {
       ? { kind: "person", id: state.directConnectionRoot }
       : state.selected;
   if (selected?.kind !== "person" || !person(selected.id)) return null;
-  const key = [state.project.updatedAt, selected.id, getLanguage()].join("|");
+  const key = [projectVersion(state.project), selected.id, getLanguage()].join(
+    "|",
+  );
   if (!cache || cache.project !== state.project || cache.key !== key)
     cache = { project: state.project, key, roles: new Map() };
   if (!cache.roles.has(id)) {

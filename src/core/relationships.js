@@ -1,3 +1,4 @@
+import { localizedConfig } from "../i18n/localized-config.js";
 import { defineSection } from "./profile-sections/define.js";
 import {
   isDirectedRelationship,
@@ -6,7 +7,7 @@ import {
   professionalRelationshipGroup,
 } from "./professional-relationships.js";
 
-export function relationshipConfig() {
+export const relationshipConfig = localizedConfig(() => {
   return defineSection(
     "",
     "ui.relationshipDetails",
@@ -124,7 +125,7 @@ export function relationshipConfig() {
     ],
     [["fromDate", "toDate"]],
   ).config;
-}
+});
 
 /** Social, explicitly unverified and ended marital connections do not establish current kinship. */
 export function familyConnection(r) {

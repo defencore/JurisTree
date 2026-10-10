@@ -138,7 +138,7 @@ for (const [language, width, fromLabel, toLabel] of [
     const exportedPeriod = await page.evaluate(async () => {
       const { fullSVG } = await import(
           new URL(
-            "features/archive.js",
+            "graph/export.js",
             document.querySelector('script[type="module"]').src,
           ).href
         ),

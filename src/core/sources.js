@@ -1,7 +1,8 @@
+import { localizedConfig } from "../i18n/localized-config.js";
 import { defineSection } from "./profile-sections/define.js";
 
 /** Source review and the truth of an individual claim are recorded separately. */
-export function sourceVerificationConfig() {
+export const sourceVerificationConfig = localizedConfig(() => {
   return defineSection(
     "",
     "ui.verificationDetails",
@@ -30,7 +31,7 @@ export function sourceVerificationConfig() {
       ],
     ],
   ).config;
-}
+});
 
 export function sourceEvidence(d) {
   if (

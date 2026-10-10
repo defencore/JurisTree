@@ -440,9 +440,7 @@ test.describe("desktop diagram editing", () => {
         points: [{ x: -1500, y: 1900 }],
         label: { x: -1600, y: 1950 },
       };
-      const { fullSVG } = await import(
-        new URL("features/archive.js", base).href
-      );
+      const { fullSVG } = await import(new URL("graph/export.js", base).href);
       return Promise.all([fullSVG("view"), fullSVG("full")]);
     });
     for (const output of exports) {

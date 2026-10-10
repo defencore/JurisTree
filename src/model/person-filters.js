@@ -62,6 +62,7 @@ export function evaluatePersonFilter(
     files = new Map(),
     groupId = "",
     facts = null,
+    search = null,
   } = {},
 ) {
   const query = normalizePersonFilter(raw);
@@ -70,7 +71,7 @@ export function evaluatePersonFilter(
   const searches = new Map();
   const searchRules = query.rules.filter((r) => r.field === "search");
   if (searchRules.length) {
-    const index = buildSearchIndex(project);
+    const index = search || buildSearchIndex(project);
     for (const r of searchRules)
       searches.set(
         r.value,

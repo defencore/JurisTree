@@ -5,6 +5,7 @@ import { state } from "../../core/state.js";
 import { getLocale, translate as t } from "../../i18n/index.js";
 import { orderedPeople } from "../../model/person-selection.js";
 import { personBiography } from "../../model/biography.js";
+import { withProjectIndex } from "../../model/project.js";
 import { displayDate } from "../../model/dates.js";
 import {
   personDisplayName,
@@ -25,6 +26,10 @@ import {
 } from "../profile-navigation.js";
 
 export function renderProfiles() {
+  return withProjectIndex(renderProfileWorkspace);
+}
+
+function renderProfileWorkspace() {
   const current = person(state.profileFocus);
   $("#otherView").classList.toggle("profiles-view", true);
   $("#otherView").innerHTML = current ? fullProfile(current) : directory();

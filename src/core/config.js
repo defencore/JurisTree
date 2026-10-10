@@ -1,3 +1,4 @@
+import { localizedConfig } from "../i18n/localized-config.js";
 import { theme } from "./theme.js";
 import { translate } from "../i18n/index.js";
 import { extendedProfileSections } from "./profile-sections/index.js";
@@ -5,7 +6,7 @@ import { orderedProfileSections } from "./profile-groups.js";
 export const GRAPH_FONT = "DejaVu Sans,Tahoma,Verdana,Arial,sans-serif";
 export const CAMERA_MIN_ZOOM = 0.025;
 export const CAMERA_MAX_ZOOM = 2.5;
-export function types() {
+export const types = localizedConfig(() => {
   return {
     birth: translate("ui.birthCertificate"),
     marriage: translate("ui.marriageCertificate"),
@@ -32,8 +33,8 @@ export function types() {
     recording: translate("ui.recording"),
     other: translate("ui.otherDocument"),
   };
-}
-export function relTypes() {
+});
+export const relTypes = localizedConfig(() => {
   return {
     parent: translate("ui.biologicalParenthood"),
     spouse: translate("ui.registeredMarriage"),
@@ -47,26 +48,26 @@ export function relTypes() {
     sanctions_link: translate("ui.sanctionsConnection"),
     unconfirmed: translate("ui.possibleKinship"),
   };
-}
-export function statusTypes() {
+});
+export const statusTypes = localizedConfig(() => {
   return {
     available: translate("ui.available"),
     requested: translate("ui.requested"),
     not_found: translate("ui.notFound"),
     needs_review: translate("ui.needsReview"),
   };
-}
-export function evidenceTypes() {
+});
+export const evidenceTypes = localizedConfig(() => {
   return {
     official: translate("ui.officialSource"),
     indirect: translate("ui.indirectEvidence"),
     unverified: translate("ui.unverifiedSource"),
   };
-}
+});
 export const PERSON_CARD_WIDTH = 280;
 export const PERSON_CARD_HEIGHT = 212;
 export const MAX_ATTACHMENT_BYTES = 100 * 1024 * 1024;
-export function docStates() {
+export const docStates = localizedConfig(() => {
   return {
     available: {
       label: translate("ui.documentAvailable"),
@@ -89,7 +90,7 @@ export function docStates() {
       icon: "search",
     },
   };
-}
+});
 export const groupColors = [
   theme.blue,
   theme.teal,
@@ -98,7 +99,7 @@ export const groupColors = [
   theme.red,
   theme.violet,
 ];
-export function sectionInfo() {
+export const sectionInfo = localizedConfig(() => {
   const sections = {
     timeline: [translate("ui.familyDates"), "calendarClock"],
     biography: [translate("ui.biographyAndHistory"), "book"],
@@ -113,8 +114,8 @@ export function sectionInfo() {
   return Object.fromEntries(
     orderedProfileSections().map((key) => [key, sections[key]]),
   );
-}
-export function recordConfigs() {
+});
+export const recordConfigs = localizedConfig(() => {
   return {
     ...Object.fromEntries(
       Object.entries(extendedProfileSections()).map(([key, section]) => [
@@ -167,8 +168,8 @@ export function recordConfigs() {
       ],
     },
   };
-}
-export function familyEventTypes() {
+});
+export const familyEventTypes = localizedConfig(() => {
   return {
     birth: [translate("ui.birth"), "baby"],
     death: [translate("ui.deathAnniversary"), "heart"],
@@ -203,16 +204,16 @@ export function familyEventTypes() {
     occupation: [translate("ui.workAndEducation"), "briefcase"],
     pet: [translate("ui.pets"), "paw"],
   };
-}
-export function eventCategories() {
+});
+export const eventCategories = localizedConfig(() => {
   return Object.fromEntries(
     ["custom", "anniversary", "jubilee", "memorial"].map((key) => [
       key,
       familyEventTypes()[key][0],
     ]),
   );
-}
-export function graphStateInfo() {
+});
+export const graphStateInfo = localizedConfig(() => {
   return {
     official: [translate("ui.officialSourceAvailable"), theme.teal],
     missing: [translate("ui.evidenceMissing"), theme.amber],
@@ -221,7 +222,7 @@ export function graphStateInfo() {
     indirect: [translate("ui.indirectEvidence"), theme.muted],
     conflict: [translate("ui.disputed"), theme.red],
   };
-}
+});
 export const graphLineDashes = {
   official: "",
   missing: "7 5",
@@ -230,7 +231,7 @@ export const graphLineDashes = {
   indirect: "3 5",
   conflict: "7 5",
 };
-export function auxiliaryLineStyles() {
+export const auxiliaryLineStyles = localizedConfig(() => {
   return {
     source: {
       label: translate("ui.sourceMentionedPerson"),
@@ -245,4 +246,4 @@ export function auxiliaryLineStyles() {
       width: 1.5,
     },
   };
-}
+});

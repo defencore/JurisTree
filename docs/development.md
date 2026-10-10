@@ -33,6 +33,8 @@ npm run test:browser
 
 Use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to select an existing Chromium executable. Set `JURISTREE_BASE_URL` to test another static deployment, including a project subdirectory.
 
+Run `npm run benchmark` for repeatable, in-memory catalog, search-index and profile-directory measurements. It reports median timings after warm-up using the demonstration and a 594-person fixture with independent reference IDs. Timings are diagnostic, not pass/fail thresholds; browser interaction tests verify behavior separately.
+
 ## GitHub Pages
 
 1. Push this repository to GitHub with `main` as the default branch.
@@ -51,7 +53,7 @@ To use another static host, upload the contents of `dist/` while preserving its 
 
 `model/diagram.js` owns route validation, bounded coordinates, alignment and snapping. `model/connector-path.js` calculates card ports and manual polyline/orthogonal paths. `project.diagram` stores routes by relationship, source-person, property-allocation or group-caption key; it contains no profile facts. `model/map-views.js` captures an independent copy of routes and display settings. Missing or deleted connections are discarded during import and view restoration.
 
-`features/diagram.js` coordinates editing actions and history. `graph/diagram-interaction.js` captures mouse, pen, touch and keyboard gestures on the stable SVG root, previews mutations, and commits one history entry on completion. Cancellation restores the preceding project. `graph/diagram-markup.js` owns caption plates and editing handles; `ui/diagram-tools.js` renders progressive controls. Diagram bounds include waypoints and captions. Export rendering suppresses handles, grid and temporary selection strokes.
+`features/diagram.js` coordinates editing actions and history. `graph/diagram-interaction.js` captures pointer gestures on the stable SVG root; `graph/diagram-keyboard.js` owns keyboard commands and `graph/diagram-handles.js` restores handle focus. Preview updates use `core/frame-task.js` to combine pointer bursts within one animation frame. Release and cancellation finish synchronously and discard pending previews, with one history entry on completion. Cancellation restores the preceding project. `graph/diagram-markup.js` owns caption plates and editing handles; `ui/diagram-tools.js` renders progressive controls. Diagram bounds include waypoints and captions. Export rendering suppresses handles, grid and temporary selection strokes.
 
 Portrait selection math lives in `model/crop-geometry.js`; `ui/cropper.js` owns gestures, preview and encoding. Portrait frames can extend beyond the image for reduction with white padding; document crops remain within the page. Group colors accept validated six-digit hex values from the native color picker.
 
@@ -76,6 +78,7 @@ src/
     actions.js             Named UI actions
     events.js              Event registration
     events/                Click, change, input, keyboard and upload handlers
+      click/               Profile, property, calendar, graph, source and navigation commands
   core/
     state.js               Shared runtime state and history collections
     config.js              Record types, profile sections and display settings
@@ -85,6 +88,7 @@ src/
     workspace-views.js     Canonical navigation and view heading registry
     workspace-modes.js     Mode definitions, templates and compact section defaults
     signals.js             Explicit application effect subscriptions
+    frame-task.js          Cancellable animation-frame batching for interactive previews
     graph-view.js          Graph settings defaults and normalization
     event-domains.js       Date categories, recurrence and celebration rules
     person-filter-fields.js Filter field, operator and query validation registry
@@ -96,7 +100,15 @@ src/
     utils.js               IDs, cloning, formatting, URLs and downloads
   model/                   Data queries, validation and calculations; no UI imports
     lookup.js              Runtime project entity lookup without rendering dependencies
-    project.js             Fresh projects, scoped records and temporary query index
+    project.js             Fresh projects, scoped records and temporary query context
+    project-index.js       Entity maps, profile sources, property and testimony associations
+    project-revision.js    Runtime edit revisions for cache and asynchronous layout validity
+    validation.js          Archive validation orchestration
+    import/                Bounded list, person, relationship, property and source normalization
+    profile-validation.js  Editor record and chronology validation
+    search.js              Search index construction
+    search/                Query parsing, matching and multilingual terminology
+    search-cache.js        Shared workspace search cache
     profile-form.js        Complete form data collection
     profile-references.js  Person/source/relationship labels and reference lifecycle
     profile-scope.js       Compact workspace visibility preferences
@@ -109,6 +121,9 @@ src/
     property-records.js    Canonical ledger validation and reference lifecycle
     property-events.js     One-time financial dates from the property ledger
     kinship-index.js       Scoped family adjacency and shared ancestry calculations
+    kinship-paths.js       Ancestry and family-path traversal
+    kinship-labels.js      Gender-aware lineal, cousin and affinity terminology
+    kinship.js             Derived kinship and evidence resolution
     biography-review.js    Pure interval coverage, gap detection and clarification lists
     profile-migrations.js  One-time normalization of earlier mixed profile history
     profile-activities.js  One-time consolidation of former activity summaries and section keys
@@ -123,12 +138,16 @@ src/
     portrait.js            File/clipboard portrait workflow
     source-attachment-editor.js  Staged multi-file source editing
     document-view.js       Source metadata and attachment gallery
-    archive.js             Archive and diagram import/export workflows
+    archive.js             Portable ZIP/JSON import and ZIP export workflows
+    image-export.js        SVG/PNG downloads and temporary image-resource cleanup
     delete.js              Entity deletion and reference cleanup
     graph-analysis.js      Apply analysis, visibility presets and selection commands
     graph-tools.js         Graph help, filter and analysis dialog workflows
   graph/
-    render.js              Graph composition and SVG definitions
+    render.js              Graph composition, preview scheduling and reusable SVG definitions
+    export.js              Full-tree and current-view SVG composition
+    diagram-keyboard.js    Keyboard route, label and selection editing
+    diagram-handles.js     Handle geometry and focus restoration
     nodes.js               SVG node rendering and non-person cards
     node-data.js           Visible node data for camera, rendering and exports
     cards/person.js        Person-card content, status badges, dates and actions
@@ -144,12 +163,14 @@ src/
     touch.js               Touch gestures
   services/                UI-independent browser persistence and history
     blobs.js               Attachment object URLs, references and lifetime
-    history.js             Project commits, undo/redo and selection repair
+    history.js             Atomic edits, snapshots, undo/redo and selection repair
     storage.js             Serialized IndexedDB writes and storage signals
+    zip-validation.js      ZIP directory bounds and archive limits
   ui/
     shell.js               Shell mounting and static translation bindings
     templates/             Readable launch, workspace and dialog markup
     render.js              Workspace render orchestration and selection
+    input-focus.js         Text selection and focus preservation during workspace refresh
     people.js              Compact map people list
     workspaces/            Profiles, calendar, chronology, documents, gaps and property
     profile-navigation.js  Shared section search and navigation without form reconstruction
@@ -177,6 +198,7 @@ src/
     icons.js               One immutable collection of SVG icon paths
   i18n/
     index.js               Language preference and message lookup
+    localized-config.js    Immutable configuration factories cached once per language
     locales/               Matching English, Ukrainian and Russian message catalogs
   data/
     demo.js                Fresh demo composition and initial generation layout
@@ -196,15 +218,21 @@ scripts/                   Development preview, syntax validation and static bui
 tests/                    Unit and browser integration tests
 ```
 
-Runtime state is explicitly imported as `appState`; application features do not attach their own state to `window`. Persisted project data is separate from temporary selections, filters, dialogs, camera state and undo history.
+Runtime state is explicitly imported from `core/state.js`; application features do not attach their own state to `window`. Persisted project data is separate from temporary selections, filters, dialogs, camera state and undo history.
 
-Domain operations read the project through model selectors. UI edits go through `commit()` in `services/history.js`, which records undo history, updates the timestamp and publishes `project:changed`. `app/runtime.js` connects that signal to rendering and persistence. Storage reports status and errors through the same explicit signal mechanism; it does not import the UI. Graph rendering uses a temporary project index to avoid repeated full-array searches.
+Domain operations read the project through model selectors. UI edits go through `commit()` in `services/history.js`, which applies synchronous edits atomically, records undo history, advances the runtime revision, updates the timestamp and publishes `project:changed`. Failed edits restore the preceding project without consuming undo/redo entries. Completed card drags use `commitSnapshot(before)` through the same notification and saving path. `app/runtime.js` connects that signal to rendering and persistence. Storage reports status and errors through the same explicit signal mechanism; it does not import the UI. `model/project-index.js` constructs ordered entity and association maps once per render or search-index build. Complete profiles use unfiltered source associations; evidence panels filter their separate document maps by workspace purpose. Nested rendering shares the active index and releases it even if rendering throws. Avoid retaining this temporary index across edits or pointer previews.
 
-Module imports are acyclic. Core, model and storage modules never import UI, graph rendering or feature controllers; UI never imports feature controllers. `tests/architecture.test.js` enforces these boundaries and verifies all relative imports exist. Rendering and controller functions have separate canonical modules, without forwarding aliases.
+Module imports are acyclic. Core, model and storage modules never import UI, graph rendering or feature controllers; UI never imports feature controllers. `tests/architecture.test.js` enforces these boundaries and verifies relative imports, re-exports and literal dynamic imports exist. Rendering and controller functions have separate canonical modules, without forwarding aliases.
+
+Shared button sizing and visual variants live in `styles/buttons.css`. Compact sizes do not override primary, ghost or danger colors; browser tests check primary text and icon contrast in normal and hover states.
 
 Forms are separate components from the operations that validate and save them. Profile sections use the record configuration in `core/config.js` for fields, rendering, collection and import validation.
 
-`model/dates.js` owns date validation and display. Complete dates use `DD.MM.YYYY` in every language; known years retain their precision. `ui/date-input.js` provides the shared text field and native calendar picker, converting named fields to canonical `YYYY-MM-DD` values at the `formdata` boundary. Archive data, chronological comparisons and calculations continue to use canonical dates. Use this component for new exact-date or period fields; controllers reading fields directly must call `dateInputValue()` before validation or storage. Relationship titles and periods render on separate lines, with additional spacing between episodes connecting the same people.
+`model/date-values.js` owns canonical date validation and display; `model/dates.js` adds age and calendar calculations. Complete dates use `DD.MM.YYYY` in every language; partial dates, approximations and ranges retain their precision. `ui/date-input.js` provides shared precision controls, text fields and a native calendar picker, converting named fields to canonical date strings at the `formdata` boundary. Archive data, chronological comparisons and calculations continue to use canonical dates. Use this component for new exact-date or period fields; controllers reading fields directly must call `dateInputValue()` before validation or storage. Relationship titles and periods render on separate lines, with additional spacing between episodes connecting the same people.
+
+Localized field and mode factories use `i18n/localized-config.js`. They return deeply frozen definitions cached separately for EN, UA and RU; callers must construct new objects rather than modify a definition. Language changes select the corresponding catalog immediately. Definitions contain configuration only, never user records.
+
+Search builds linked descriptions once per entity and shares one project index across profiles. `model/search-cache.js` supplies the same search index to global search and analytical filters. Cache keys include project identity, edit revision, language and the local date. `projectVersion(project)` combines the persisted timestamp with a runtime revision so edits within one millisecond still invalidate queries, roles, direct connections, locks and pending asynchronous layouts. Coordinate previews do not invalidate fact-based caches; finish them with the history service.
 
 The optional browser `document.modelContext` integration is isolated in `app/browser-tools.js`. The application also works when this browser API is absent.
 
@@ -213,9 +241,9 @@ The optional browser `document.modelContext` integration is isolated in `app/bro
 ### A new action or feature
 
 1. Implement the feature under `src/features/` and reusable form markup under `src/ui/forms/`.
-2. Add a named handler in `app/actions.js` and use `data-action` on its control. Add specialized event handling in the appropriate `app/events/` module when needed.
+2. Add a named handler in `app/actions.js` and use `data-action` on its control. Contextual click commands belong in the appropriate `app/events/click/` domain module. Each command has a matching predicate, an action and explicit precedence; contextual commands run before generic navigation when controls have multiple attributes. Await asynchronous actions so the dispatcher can report their errors. Input handlers use `ui/input-focus.js` to preserve text selection and defer replacement during composition.
 3. Modify project data through `commit()` so undo/redo and saving stay consistent.
-4. Extend `model/validation.js` when the persisted model changes.
+4. Extend the corresponding `model/import/` normalizer and `model/profile-validation.js` when the persisted model changes. Keep earlier archive normalization at this boundary; runtime consumers use the current data contract.
 5. Add relevant messages to all three locale catalogs and cover meaningful data or interaction behavior with tests.
 
 ### A new profile section

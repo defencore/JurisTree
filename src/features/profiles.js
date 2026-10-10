@@ -11,7 +11,7 @@ import {
 } from "../model/person-creation.js";
 import { collectProfile } from "../model/profile-form.js";
 import { profileScope } from "../model/profile-scope.js";
-import { profileFormError } from "../model/validation.js";
+import { profileFormError } from "../model/profile-validation.js";
 import { commit } from "../services/history.js";
 import { openDialog } from "../ui/dialog.js";
 import { renderPersonForm } from "../ui/forms/person.js";

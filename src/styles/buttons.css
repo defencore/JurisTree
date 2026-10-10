@@ -1,0 +1,85 @@
+/* Shared button sizes stay independent of visual variants. */
+.btn,
+.iconbtn {
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: none;
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 0.875rem;
+  font-weight: 400;
+  gap: 8px;
+  justify-content: center;
+  min-height: 36px;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+.btn:hover,
+.iconbtn:hover {
+  background: var(--bg);
+  border-color: var(--line);
+}
+.btn.small {
+  padding: 6px 10px;
+}
+.iconbtn {
+  height: 37px;
+  min-height: 37px;
+  padding: 0;
+  width: 37px;
+}
+.iconbtn.small {
+  height: 33px;
+  min-height: 30px;
+  width: 33px;
+}
+.btn.primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--paper);
+  font-weight: 700;
+}
+.btn.primary:hover {
+  background: var(--blue-dark);
+  border-color: var(--blue-dark);
+  color: var(--paper);
+}
+.btn.ghost,
+.iconbtn.ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+.btn.danger {
+  background: var(--paper);
+  border-color: var(--red-soft);
+  color: var(--red);
+}
+.btn.active,
+.iconbtn.active {
+  background: var(--blue-soft);
+  border-color: var(--line);
+  color: var(--muted);
+}
+.btn .icon {
+  height: 19px;
+  width: 19px;
+}
+.iconbtn .icon {
+  height: 20px;
+  width: 20px;
+}
+.btn.small .icon,
+.iconbtn.small .icon {
+  height: 18px;
+  width: 18px;
+}
+.btn:focus-visible,
+.iconbtn:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--muted);
+  outline-offset: 3px;
+}

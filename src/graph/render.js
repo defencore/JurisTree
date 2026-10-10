@@ -3,6 +3,7 @@ import { graphView } from "../model/graph-view.js";
 import { routeHandles } from "./diagram-markup.js";
 import { graphStateInfo } from "../core/config.js";
 import { $, $$ } from "../core/dom.js";
+import { frameTask } from "../core/frame-task.js";
 import { state as appState } from "../core/state.js";
 import { withKinshipIndex } from "../model/kinship-index.js";
 import { withProjectIndex } from "../model/project.js";
@@ -14,7 +15,12 @@ import { graphLineStyle, renderGraphLegend } from "./legend.js";
 import { filteredGraphNodes } from "./node-data.js";
 import { nodeSVG } from "./nodes.js";
 
+const preview = frameTask(renderGraph);
+export const scheduleGraphRender = preview.request;
+const definitions = new WeakMap();
+
 export function renderGraph() {
+  preview.cancel();
   if (!appState.project) return;
   return withProjectIndex(renderGraphAll);
 }
@@ -22,7 +28,12 @@ export function renderGraph() {
 export function renderGraphAll() {
   renderGraphControls();
   renderGraphLegend();
-  $("#graphDefs").innerHTML = graphDefs();
+  const defs = $("#graphDefs"),
+    markup = graphDefs();
+  if (definitions.get(defs) !== markup) {
+    defs.innerHTML = markup;
+    definitions.set(defs, markup);
+  }
   $("#scene").innerHTML = renderFilteredGraph() + routeHandles();
   applyCamera();
   renderDiagramTools();

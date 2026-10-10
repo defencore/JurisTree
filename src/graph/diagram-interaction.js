@@ -1,3 +1,5 @@
+import { bounded, markerPosition, focusSegment } from "./diagram-handles.js";
+import { bindDiagramKeyboard } from "./diagram-keyboard.js";
 import { connectorPlacementLocked } from "../model/placement-locks.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
@@ -5,9 +7,9 @@ import { clone } from "../core/utils.js";
 import {
   connectorElement,
   labelPosition,
-  labelElement,
-  removeRoutePoint,
   redrawDiagram,
+  scheduleDiagramRedraw,
+  cancelDiagramRedraw,
   selectDiagramConnection,
   storeRoute,
   toggleDiagramNode,
@@ -22,33 +24,6 @@ import { graphView } from "../model/graph-view.js";
 import { commit } from "../services/history.js";
 import { filteredGraphNodes } from "./node-data.js";
 
-const bounded = (point) => ({
-  x: Math.max(-100000, Math.min(100000, point.x)),
-  y: Math.max(-100000, Math.min(100000, point.y)),
-});
-const markerPosition = (element) => {
-  const matrix = element.transform.baseVal.getItem(0).matrix;
-  return { x: matrix.e, y: matrix.f };
-};
-function focusSegment(key, axis, position) {
-  const markers = [
-    ...document.querySelectorAll(
-      '#graph [data-route-segment][data-connector="' +
-        key +
-        '"][data-segment-axis="' +
-        axis +
-        '"]',
-    ),
-  ];
-  markers.sort((a, b) => {
-    const distance = (el) => {
-      const p = markerPosition(el);
-      return Math.hypot(p.x - position.x, p.y - position.y);
-    };
-    return distance(a) - distance(b);
-  });
-  markers[0]?.focus({ preventScroll: true });
-}
 export function bindDiagramInteractions(graph) {
   let gesture = null,
     consumedClick = false;
@@ -287,12 +262,13 @@ export function bindDiagramInteractions(graph) {
           storeRoute(key, route);
         }
       }
-      redrawDiagram();
+      scheduleDiagramRedraw();
     },
     true,
   );
   function finish(event) {
     if (!gesture || event.pointerId !== gesture.pointerId) return;
+    cancelDiagramRedraw();
     event.preventDefault();
     event.stopImmediatePropagation();
     consumedClick = true;
@@ -324,174 +300,14 @@ export function bindDiagramInteractions(graph) {
   }
   graph.addEventListener("pointerup", finish, true);
   graph.addEventListener("pointercancel", finish, true);
-  graph.addEventListener(
-    "keydown",
-    (event) => {
-      const node = event.target.closest("[data-node]");
-      if (
-        node &&
-        ["person", "document", "property", "group"].includes(
-          node.dataset.kind,
-        ) &&
-        event.key === "Enter" &&
-        (state.selectionMode ||
-          event.ctrlKey ||
-          event.metaKey ||
-          event.shiftKey)
-      ) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        toggleDiagramNode(node.dataset.kind, node.dataset.node);
-        return;
-      }
-      if (event.key === "Escape" && gesture) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        finish({
-          type: "pointercancel",
-          pointerId: gesture.pointerId,
-          preventDefault() {},
-          stopImmediatePropagation() {},
-        });
-        return;
-      }
-      const handle = event.target.closest("[data-route-point]"),
-        label = event.target.closest("[data-route-label]"),
-        segment = event.target.closest("[data-route-segment]"),
-        directions = {
-          ArrowLeft: [-1, 0],
-          ArrowRight: [1, 0],
-          ArrowUp: [0, -1],
-          ArrowDown: [0, 1],
-        };
-      const connector = event.target.closest(
-        "[data-connector][data-from-node]",
-      );
-      if (connector && !label && !handle && !segment && event.key === "Enter") {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        selectDiagramConnection(
-          connector.dataset.connector,
-          state.selectionMode ||
-            event.ctrlKey ||
-            event.metaKey ||
-            event.shiftKey,
-        );
-        connectorElement(connector.dataset.connector)?.focus({
-          preventScroll: true,
-        });
-        return;
-      }
-      if (
-        state.diagramEditing &&
-        handle &&
-        ["Delete", "Backspace"].includes(event.key)
-      ) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        removeRoutePoint(Number(handle.dataset.routePoint));
-        return;
-      }
-      if (
-        label &&
-        event.key === "Enter" &&
-        (state.diagramEditing ||
-          !label.dataset.routeLabel.startsWith("g:") ||
-          state.selectionMode ||
-          event.ctrlKey ||
-          event.metaKey ||
-          event.shiftKey)
-      ) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        selectDiagramConnection(
-          label.dataset.routeLabel,
-          state.selectionMode ||
-            event.ctrlKey ||
-            event.metaKey ||
-            event.shiftKey,
-        );
-        labelElement(label.dataset.routeLabel)?.focus({ preventScroll: true });
-        return;
-      }
-      if (!state.diagramEditing) return;
-      if (segment && directions[event.key]) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        const key = segment.dataset.connector,
-          el = connectorElement(key),
-          nodes = filteredGraphNodes(),
-          a = nodes.find((n) => n.id === el?.dataset.fromNode),
-          b = nodes.find((n) => n.id === el?.dataset.toNode),
-          axis = segment.dataset.segmentAxis,
-          delta =
-            directions[event.key][axis === "x" ? 0 : 1] *
-            (graphView().snapToGrid ? graphView().gridSize : 5) *
-            (event.shiftKey ? 5 : 1);
-        if (!a || !b || !delta || connectorPlacementLocked(state.project, key))
-          return;
-        const origin = connectorPoints(a, b, diagramRoute(state.project, key))[
-            Number(segment.dataset.routeSegment)
-          ],
-          desired = snapPoint(
-            {
-              x: origin.x + (axis === "x" ? delta : 0),
-              y: origin.y + (axis === "y" ? delta : 0),
-            },
-            graphView(),
-            event.altKey,
-          ),
-          offset = desired[axis] - origin[axis];
-        const position = markerPosition(segment);
-        position[axis] += offset;
-        commit(() =>
-          storeRoute(
-            key,
-            shiftConnectorSegment(
-              a,
-              b,
-              diagramRoute(state.project, key),
-              Number(segment.dataset.routeSegment),
-              offset,
-            ),
-          ),
-        );
-        focusSegment(key, axis, position);
-        return;
-      }
-      if ((!handle && !label) || !directions[event.key]) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      const key = handle?.dataset.connector || label.dataset.routeLabel,
-        index = handle ? Number(handle.dataset.routePoint) : -1,
-        route = clone(diagramRoute(state.project, key)),
-        original = index >= 0 ? route.points[index] : labelPosition(key);
-      if (!original || connectorPlacementLocked(state.project, key)) return;
-      const step =
-          (graphView().snapToGrid ? graphView().gridSize : 5) *
-          (event.shiftKey ? 5 : 1),
-        direction = directions[event.key],
-        next = bounded(
-          snapPoint(
-            {
-              x: original.x + direction[0] * step,
-              y: original.y + direction[1] * step,
-            },
-            graphView(),
-            event.altKey,
-          ),
-        );
-      if (index >= 0) route.points[index] = next;
-      else route.label = next;
-      commit(() => storeRoute(key, route));
-      $(
-        "#graph [" +
-          (index >= 0
-            ? 'data-route-point="' + index + '"][data-connector="' + key + '"'
-            : 'data-route-label="' + key + '"') +
-          "]",
-      )?.focus({ preventScroll: true });
-    },
-    true,
-  );
+  bindDiagramKeyboard(graph, () => {
+    if (!gesture) return false;
+    finish({
+      type: "pointercancel",
+      pointerId: gesture.pointerId,
+      preventDefault() {},
+      stopImmediatePropagation() {},
+    });
+    return true;
+  });
 }

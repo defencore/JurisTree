@@ -1,14 +1,16 @@
+import { projectVersion } from "./project-revision.js";
 import { emptyPersonFilter } from "../core/person-filter-fields.js";
 import { state } from "../core/state.js";
 import { getLanguage } from "../i18n/index.js";
 import { localDateString } from "./dates.js";
+import { projectSearchIndex } from "./search-cache.js";
 import { evaluatePersonFilter } from "./person-filters.js";
 
 let cache;
 export function personFilterReport() {
   const today = localDateString();
   const key = [
-    state.project.updatedAt,
+    projectVersion(state.project),
     today,
     getLanguage(),
     state.groupFilter,
@@ -22,6 +24,9 @@ export function personFilterReport() {
         today,
         files: state.blobs,
         groupId: state.groupFilter,
+        search: state.personFilter.rules.some((rule) => rule.field === "search")
+          ? projectSearchIndex(state.project)
+          : null,
       }),
     };
   return cache.report;

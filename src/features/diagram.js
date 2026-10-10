@@ -1,6 +1,7 @@
 import { diagramSelectionItems } from "../ui/diagram-selection.js";
 import { connectorPlacementLocked } from "../model/placement-locks.js";
 import { $ } from "../core/dom.js";
+import { frameTask } from "../core/frame-task.js";
 import { state } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { applyCamera } from "../graph/camera.js";
@@ -19,6 +20,10 @@ import { renderDiagramTools } from "../ui/diagram-tools.js";
 import { render, select } from "../ui/render.js";
 import { renderInspector } from "../ui/inspector.js";
 import { toggleGraphNode } from "../model/graph-selection.js";
+
+const preview = frameTask(redrawDiagram);
+export const scheduleDiagramRedraw = preview.request;
+export const cancelDiagramRedraw = preview.cancel;
 
 export const connectorElement = (key) =>
   $('#graph [data-connector="' + key + '"][data-from-node]');
@@ -54,6 +59,7 @@ export function toggleDiagramTools() {
 }
 /** Preserve screen positions when the editing controls change height. */
 export function redrawDiagram() {
+  preview.cancel();
   const before = $("#graph").getBoundingClientRect();
   renderGraph();
   const after = $("#graph").getBoundingClientRect();

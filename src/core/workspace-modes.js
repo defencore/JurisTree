@@ -1,3 +1,4 @@
+import { localizedConfig } from "../i18n/localized-config.js";
 import { orderedProfileSections } from "./profile-groups.js";
 import { translate } from "../i18n/index.js";
 
@@ -184,7 +185,7 @@ export function normalizeModePurposes(
 }
 
 /** One registry supplies launch templates, mode controls and source visibility labels. */
-export function workspaceModes() {
+export const workspaceModes = localizedConfig(() => {
   return Object.fromEntries(
     Object.entries(definitions).map(([key, mode]) => [
       key,
@@ -198,9 +199,9 @@ export function workspaceModes() {
       },
     ]),
   );
-}
+});
 
-export function startTemplates() {
+export const startTemplates = localizedConfig(() => {
   return {
     ...workspaceModes(),
     blank: {
@@ -214,4 +215,4 @@ export function startTemplates() {
       detail: translate("ui.emptyMapWithoutExtraProfileSectionsChangePurpose"),
     },
   };
-}
+});

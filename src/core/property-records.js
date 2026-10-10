@@ -1,3 +1,4 @@
+import { localizedConfig } from "../i18n/localized-config.js";
 import { defineSection } from "./profile-sections/define.js";
 import { attributionGroup } from "./profile-sections/attribution.js";
 
@@ -15,7 +16,7 @@ const documentGroup = [
     ["documentUrl", "ui.sourceUrl", "url"],
   ],
 ];
-export function propertyRecordConfigs() {
+export const propertyRecordConfigs = localizedConfig(() => {
   return {
     rights: defineSection(
       "rights",
@@ -187,8 +188,8 @@ export function propertyRecordConfigs() {
       shareBounds,
     ).config,
   };
-}
+});
 
-export function propertyMetadataFields() {
+export const propertyMetadataFields = localizedConfig(() => {
   return ["identifier", "country", "location"];
-}
+});

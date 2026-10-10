@@ -85,7 +85,7 @@ function fixture() {
         },
         {
           attachments: [],
-      id: "refuted",
+          id: "refuted",
           value: "9000",
           sharePercent: "100",
           currency: "USD",

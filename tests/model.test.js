@@ -5,7 +5,8 @@ import { sample } from "../src/data/demo.js";
 import { fresh } from "../src/model/project.js";
 import { validateImport } from "../src/model/validation.js";
 import { dateExact, partialDate, nextAnniversary } from "../src/model/dates.js";
-import { kinshipBetween, cousinName } from "../src/model/kinship.js";
+import { kinshipBetween } from "../src/model/kinship.js";
+import { cousinName } from "../src/model/kinship-labels.js";
 import { edgeState } from "../src/model/evidence.js";
 import { familyLayout } from "../src/graph/layouts/family.js";
 import {

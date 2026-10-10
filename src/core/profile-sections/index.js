@@ -1,3 +1,4 @@
+import { localizedConfig } from "../../i18n/localized-config.js";
 import { civilSection } from "./civil.js";
 import { pregnancySection } from "./pregnancy.js";
 import { deathSection } from "./death.js";
@@ -31,7 +32,7 @@ import { companiesSection } from "./companies.js";
 import { sanctionsSection } from "./sanctions.js";
 import { politicalSection } from "./political.js";
 
-export function extendedProfileSections() {
+export const extendedProfileSections = localizedConfig(() => {
   return {
     civil: civilSection(),
     pregnancy: pregnancySection(),
@@ -67,4 +68,4 @@ export function extendedProfileSections() {
     personal: personalSection(),
     custom: customSection(),
   };
-}
+});

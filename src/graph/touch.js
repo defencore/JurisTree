@@ -14,7 +14,7 @@ import { person } from "../model/lookup.js";
 import { commit } from "../services/history.js";
 import { select } from "../ui/render.js";
 import { applyCamera } from "./camera.js";
-import { renderGraph } from "./render.js";
+import { renderGraph, scheduleGraphRender } from "./render.js";
 
 const midpoint = ([a, b]) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 const distance = ([a, b]) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -180,7 +180,7 @@ export function bindTouchInteractions(graph) {
             graphView(),
           ),
         );
-        renderGraph();
+        scheduleGraphRender();
       } else {
         appState.camera.x = gesture.camera.x + dx;
         appState.camera.y = gesture.camera.y + dy;

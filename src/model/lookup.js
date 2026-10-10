@@ -21,7 +21,9 @@ export function asset(id) {
     : appState.project.property.find((a) => a.id === id);
 }
 export function group(id) {
-  return appState.project.groups.find((g) => g.id === id);
+  return appState.renderIndex?.project === appState.project
+    ? appState.renderIndex.groups.get(id)
+    : appState.project.groups.find((g) => g.id === id);
 }
 export function nodeItem(kind, id) {
   return kind === "person"

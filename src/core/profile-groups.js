@@ -1,7 +1,8 @@
+import { localizedConfig } from "../i18n/localized-config.js";
 import { translate } from "../i18n/index.js";
 
 /** One information hierarchy for profile editing, section settings and biographies. */
-export function profileGroups() {
+export const profileGroups = localizedConfig(() => {
   return [
     [
       "ui.profileIdentityGroup",
@@ -34,7 +35,7 @@ export function profileGroups() {
     ],
     ["ui.profileOtherGroup", ["travel", "political", "custom"]],
   ].map(([label, sections]) => ({ label: translate(label), sections }));
-}
-export function orderedProfileSections() {
+});
+export const orderedProfileSections = localizedConfig(() => {
   return profileGroups().flatMap((group) => group.sections);
-}
+});

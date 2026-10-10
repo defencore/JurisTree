@@ -6,6 +6,28 @@ import { fileURLToPath } from "node:url";
 import { parse } from "espree";
 
 const root = fileURLToPath(new URL("../src/", import.meta.url));
+function dependencies(ast) {
+  const imports = new Set();
+  function visit(node) {
+    if (!node || typeof node !== "object") return;
+    if (
+      [
+        "ImportDeclaration",
+        "ExportNamedDeclaration",
+        "ExportAllDeclaration",
+        "ImportExpression",
+      ].includes(node.type) &&
+      typeof node.source?.value === "string" &&
+      node.source.value.startsWith(".")
+    )
+      imports.add(node.source.value);
+    for (const value of Object.values(node))
+      if (Array.isArray(value)) value.forEach(visit);
+      else if (value && typeof value === "object") visit(value);
+  }
+  visit(ast);
+  return [...imports];
+}
 async function modules(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   return (
@@ -31,13 +53,9 @@ test("module dependencies are acyclic and data, storage and UI do not depend on 
       ecmaVersion: "latest",
       sourceType: "module",
     });
-    const imports = ast.body
-      .filter(
-        (node) =>
-          node.type === "ImportDeclaration" &&
-          node.source.value.startsWith("."),
-      )
-      .map((node) => path.resolve(path.dirname(file), node.source.value));
+    const imports = dependencies(ast).map((source) =>
+      path.resolve(path.dirname(file), source),
+    );
     graph.set(
       file,
       imports.filter(
