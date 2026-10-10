@@ -1,3 +1,4 @@
+import { mediaTargetLabel } from "./image-regions.js";
 import { profileReferenceLabel } from "./profile-references.js";
 import { relationshipLabel } from "./relationship-labels.js";
 import {
@@ -69,6 +70,11 @@ export function buildSearchIndex(project) {
   const describeDocument = (d) =>
     [
       ...flat(d),
+      ...d.attachments.flatMap((file) =>
+        (file.regions || []).flatMap((region) =>
+          region.targets.map((target) => mediaTargetLabel(project, target)),
+        ),
+      ),
       labels(types()[d.type] || ""),
       labels(statusTypes()[d.status] || ""),
       labels(evidenceTypes()[d.evidence] || ""),

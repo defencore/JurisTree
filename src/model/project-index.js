@@ -1,3 +1,4 @@
+import { targetPeople } from "./image-regions.js";
 import { recordConfigs } from "../core/config.js";
 import { propertyPeople, propertySources } from "./property-records.js";
 
@@ -63,17 +64,33 @@ export function createProjectIndex(project) {
     }
   }
   for (const document of project.documents) {
+    const targets = document.attachments.flatMap((file) =>
+      (file.regions || []).flatMap((region) => region.targets),
+    );
+    const imagePeople = targets.flatMap((target) =>
+      targetPeople(project, target),
+    );
     const propertyIds = new Set([
+      ...targets.filter((t) => t.kind === "property").map((t) => t.propertyId),
       ...(document.propertyIds || []),
       ...(propertyBySource.get(document.id) || []),
     ]);
     for (const [key, ids] of [
-      ["peopleDocs", document.people || []],
-      ["relationDocs", document.relations || []],
+      ["peopleDocs", [...(document.people || []), ...imagePeople]],
+      [
+        "relationDocs",
+        [
+          ...(document.relations || []),
+          ...targets
+            .filter((t) => t.kind === "relation")
+            .map((t) => t.relationId),
+        ],
+      ],
       ["propertyDocs", propertyIds],
     ])
       for (const id of new Set(ids)) append(index[key], id, document);
     const profileIds = new Set([
+      ...imagePeople,
       ...(document.people || []),
       ...(document.subjectIds || []),
       ...(sourcePeople.get(document.id) || []),

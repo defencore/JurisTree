@@ -1,3 +1,6 @@
+import { viewBiography } from "../../../features/biography.js";
+import { annotateImage } from "../../../features/image-annotations.js";
+import { selectLibraryImage } from "../../../features/image-library.js";
 import { state as appState } from "../../../core/state.js";
 import { exportArchive } from "../../../features/archive.js";
 import { exportImage } from "../../../features/image-export.js";
@@ -18,6 +21,38 @@ import { closeModal } from "../../../ui/dialog.js";
 import { select } from "../../../ui/render.js";
 
 export const sourcesClicks = [
+  {
+    priority: 42,
+    matches: (b) => b.dataset.annotateImage,
+    run: async (b) => {
+      const id = b.dataset.annotateImage;
+      const modal = document.querySelector("#modal");
+      const context = appState.modalResolve
+        ? { kind: modal.dataset.kind, personId: modal.dataset.biographyPerson }
+        : null;
+      if (
+        await annotateImage(id, b.dataset.imageAsset, b.dataset.imageRegion)
+      ) {
+        if (context?.kind === "source-view")
+          await viewDocument(id, b.dataset.imageAsset);
+        else if (context?.kind === "biography")
+          await viewBiography(context.personId);
+      }
+    },
+  },
+  {
+    priority: 43,
+    matches: (b) => b.hasAttribute("data-media-library"),
+    run: async (b) => {
+      closeModal();
+      await selectLibraryImage({
+        personId: b.dataset.attachmentPerson || b.dataset.mediaLibrary,
+        section: b.dataset.attachmentSection,
+        recordId: b.dataset.libraryRecord,
+        portrait: b.hasAttribute("data-library-portrait"),
+      });
+    },
+  },
   {
     priority: 46,
     matches: (b) => b.dataset.attachDocument,

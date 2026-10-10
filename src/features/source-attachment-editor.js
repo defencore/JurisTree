@@ -8,13 +8,15 @@ import {
   MAX_SOURCE_FILES,
   projectAttachmentIds,
 } from "../model/source-attachments.js";
+import { mediaTargetLabel } from "../model/image-regions.js";
+import { sourceRecordLinks } from "../model/source-record-links.js";
 import { prepareAttachment } from "../services/attachment-files.js";
 import { objectUrl } from "../services/blobs.js";
 import { pastedImages, readClipboardImages } from "../services/clipboard.js";
 import { icon, icons } from "../ui/icons.js";
 
 export function bindSourceAttachments(root, source, initialFiles = []) {
-  const entries = source.attachments.map((file) => ({ ...file }));
+  const entries = structuredClone(source.attachments);
   const blobs = new Map(),
     urls = new Map();
   const panel = root.querySelector("[data-attachment-input]");
@@ -52,7 +54,20 @@ export function bindSourceAttachments(root, source, initialFiles = []) {
     panel.querySelector("[data-attachment-list]").innerHTML = entries
       .map((file, index) => {
         const url = urls.get(file.assetId) || objectUrl(file.assetId);
-        return `<div class="attachment-row" data-staged-attachment="${file.assetId}"><span class="attachment-thumb">${file.mime.startsWith("image/") && url ? `<img src="${url}" alt="" loading="lazy" decoding="async">` : icon("file")}</span><div><b>${index + 1}. ${esc(file.filename)}</b><small>${bytes(file.size)}</small><label class="attachment-caption">${translate("ui.attachmentCaption")}<input data-attachment-caption="${file.assetId}" value="${esc(file.caption)}" maxlength="500"></label></div><button type="button" class="iconbtn" data-remove-attachment="${file.assetId}" aria-label="${esc(translate("ui.removeAttachment", { name: file.filename }))}" title="${translate("ui.delete")}">${icon("trash")}</button></div>`;
+        const usages = [
+          ...(source.people || []).map(
+            (id) => appState.project.people.find((p) => p.id === id)?.name,
+          ),
+          ...sourceRecordLinks(appState.project, source.id)
+            .filter(({ record }) => record.sourceId === source.id)
+            .map(({ profile, config }) => `${profile.name} · ${config.label}`),
+          ...(file.regions || []).flatMap((region) =>
+            region.targets.map((target) =>
+              mediaTargetLabel(appState.project, target),
+            ),
+          ),
+        ].filter(Boolean);
+        return `<div class="attachment-row" data-staged-attachment="${file.assetId}"><span class="attachment-thumb">${file.mime.startsWith("image/") && url ? `<img src="${url}" alt="" loading="lazy" decoding="async">` : icon("file")}</span><div><b>${index + 1}. ${esc(file.filename)}</b><small>${bytes(file.size)}</small><label class="attachment-caption">${translate("ui.attachmentCaption")}<input data-attachment-caption="${file.assetId}" value="${esc(file.caption || "")}" maxlength="500"></label>${file.mime.startsWith("image/") ? `<label class="attachment-caption">${translate("ui.imageDescription")}<textarea data-attachment-description="${file.assetId}" rows="2" maxlength="15000" placeholder="${translate("ui.imageDescriptionHint")}">${esc(file.description || "")}</textarea></label><label class="attachment-caption">${translate("ui.imageInscription")}<textarea data-attachment-inscription="${file.assetId}" rows="2" maxlength="15000">${esc(file.inscription || "")}</textarea></label>` : ""}${usages.length ? `<details class="attachment-usage"><summary>${translate("ui.imageUsedIn")}</summary><ul>${[...new Set(usages)].map((label) => `<li>${esc(label)}</li>`).join("")}</ul></details>` : ""}<div class="attachment-order"><button type="button" class="btn small ghost" data-attachment-up="${file.assetId}" ${index === 0 ? "disabled" : ""}>↑ ${translate("ui.moveUp")}</button><button type="button" class="btn small ghost" data-attachment-down="${file.assetId}" ${index === entries.length - 1 ? "disabled" : ""}>↓ ${translate("ui.moveDown")}</button></div></div><button type="button" class="iconbtn" data-remove-attachment="${file.assetId}" aria-label="${esc(translate("ui.removeAttachment", { name: file.filename }))}" title="${translate("ui.delete")}">${icon("trash")}</button></div>`;
       })
       .join("");
     icons();
@@ -83,7 +98,14 @@ export function bindSourceAttachments(root, source, initialFiles = []) {
             );
           const assetId = uid(),
             { blob, ...metadata } = prepared;
-          entries.push({ assetId, caption: "", ...metadata });
+          entries.push({
+            assetId,
+            caption: "",
+            description: "",
+            inscription: "",
+            regions: [],
+            ...metadata,
+          });
           blobs.set(assetId, blob);
           if (blob.type.startsWith("image/"))
             urls.set(assetId, URL.createObjectURL(blob));
@@ -115,6 +137,17 @@ export function bindSourceAttachments(root, source, initialFiles = []) {
     (event) => {
       if (event.target.closest("[data-choose-attachments]")) input.click();
       if (event.target.closest("[data-paste-images]")) paste();
+      const order = event.target.closest(
+        "[data-attachment-up],[data-attachment-down]",
+      );
+      if (order) {
+        const id = order.dataset.attachmentUp || order.dataset.attachmentDown;
+        const index = entries.findIndex((file) => file.assetId === id),
+          next = index + (order.dataset.attachmentUp ? -1 : 1);
+        if (index >= 0 && next >= 0 && next < entries.length)
+          [entries[index], entries[next]] = [entries[next], entries[index]];
+        render();
+      }
       const button = event.target.closest("[data-remove-attachment]");
       if (button) {
         const id = button.dataset.removeAttachment;
@@ -133,9 +166,14 @@ export function bindSourceAttachments(root, source, initialFiles = []) {
   panel.addEventListener(
     "input",
     (event) => {
-      const id = event.target.dataset.attachmentCaption;
-      const file = entries.find((file) => file.assetId === id);
-      if (file) file.caption = event.target.value;
+      for (const field of ["caption", "description", "inscription"]) {
+        const id =
+          event.target.dataset[
+            "attachment" + field[0].toUpperCase() + field.slice(1)
+          ];
+        const file = entries.find((file) => file.assetId === id);
+        if (file) file[field] = event.target.value;
+      }
     },
     options,
   );

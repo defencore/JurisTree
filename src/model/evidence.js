@@ -1,3 +1,4 @@
+import { sourceImageTargets, targetPeople } from "./image-regions.js";
 import { types } from "../core/config.js";
 import { familyConnection } from "../core/relationships.js";
 import { sourceEvidence, sourceNeedsReview } from "../core/sources.js";
@@ -36,7 +37,14 @@ export function linkedDocs(kind, id) {
           ? d.relations
           : d.propertyIds || []
       ).includes(id) ||
-        sources.has(d.id)),
+        sources.has(d.id) ||
+        sourceImageTargets(d).some((target) =>
+          kind === "person"
+            ? targetPeople(appState.project, target).includes(id)
+            : kind === "relation"
+              ? target.relationId === id
+              : target.propertyId === id,
+        )),
   );
 }
 export function isOfficial(d) {

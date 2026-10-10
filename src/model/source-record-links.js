@@ -1,3 +1,4 @@
+import { sourceImageTargets, targetKey } from "./image-regions.js";
 import { recordConfigs } from "../core/config.js";
 
 export function profileRecordTarget(project, { personId, section, recordId }) {
@@ -14,10 +15,25 @@ export function profileRecordTarget(project, { personId, section, recordId }) {
 }
 
 export function sourceRecordLinks(project, sourceId) {
+  const source = project.documents.find((source) => source.id === sourceId);
+  const targets = new Set(
+    source ? sourceImageTargets(source).map(targetKey) : [],
+  );
   return project.people.flatMap((profile) =>
     Object.entries(recordConfigs()).flatMap(([section, config]) =>
       (profile[config.key] || [])
-        .filter((record) => record.sourceId === sourceId)
+        .filter(
+          (record) =>
+            record.sourceId === sourceId ||
+            targets.has(
+              targetKey({
+                kind: "record",
+                personId: profile.id,
+                section,
+                recordId: record.id,
+              }),
+            ),
+        )
         .map((record) => ({ profile, record, config, section })),
     ),
   );

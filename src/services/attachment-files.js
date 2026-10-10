@@ -51,6 +51,14 @@ export async function prepareAttachment(file) {
   if (/^(audio|video)\//.test(mime) && file.size > 20 * 1048576)
     throw Error(translate("ui.recordingLimit"));
   const blob = file.type === mime ? file : new Blob([file], { type: mime });
-  if (mime.startsWith("image/")) await imageDimensions(blob);
-  return { blob, filename: file.name, mime, size: blob.size };
+  const image = mime.startsWith("image/") ? await imageDimensions(blob) : null;
+  return {
+    blob,
+    filename: file.name,
+    mime,
+    size: blob.size,
+    ...(image
+      ? { width: image.naturalWidth, height: image.naturalHeight }
+      : {}),
+  };
 }

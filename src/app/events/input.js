@@ -5,12 +5,14 @@ import { renderWithInputFocus } from "../../ui/input-focus.js";
 import { renderPeople } from "../../ui/people.js";
 import { renderSearch } from "../../ui/search.js";
 import { renderCalendar } from "../../ui/workspaces/calendar.js";
+import { renderImageLibrary } from "../../ui/workspaces/image-library.js";
 import { renderDocuments } from "../../ui/workspaces/documents.js";
 import { renderEvents } from "../../ui/workspaces/events.js";
 import { renderProfiles } from "../../ui/workspaces/people.js";
 import { renderProperty } from "../../ui/workspaces/property.js";
 
 const workspaces = {
+  librarySearch: { field: "librarySearch", render: renderImageLibrary },
   profileSearch: { field: "profileSearch", render: renderProfiles },
   propertySearch: { field: "propertySearch", render: renderProperty },
   calendarSearch: { field: "calendarSearch", render: renderCalendar },

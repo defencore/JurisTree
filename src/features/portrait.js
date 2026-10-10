@@ -47,7 +47,8 @@ export async function openPortraitPicker(id) {
   let reading = false;
   await openDialog(
     translate("ui.personProfilePhoto"),
-    attachmentInput({ portrait: true }),
+    attachmentInput({ portrait: true }) +
+      `<button type="button" class="btn" data-media-library="${id}" data-library-portrait>${translate("ui.imageFromLibrary")}</button>`,
     {
       kind: "portrait-picker",
       footer: false,

@@ -1,3 +1,4 @@
+import { sourcePeopleIds } from "../model/image-regions.js";
 import { diagramKey, diagramRoute } from "../model/diagram.js";
 import {
   routedConnector,
@@ -180,7 +181,7 @@ export function renderGraphEdges(ns, exporting = false, boxes = null) {
       const n = map.get(d.id);
       if (!n) continue;
       const linked = new Set();
-      for (const id of d.people) {
+      for (const id of sourcePeopleIds(appState.project, d)) {
         const p = map.get(id);
         if (!p || linked.has(p.id)) continue;
         linked.add(p.id);

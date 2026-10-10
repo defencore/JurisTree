@@ -1,3 +1,6 @@
+import { personImageItems } from "../model/image-regions.js";
+import { biographyImages } from "./biography-images.js";
+import { imageItemKey } from "./media-image.js";
 import {
   evidenceTypes,
   recordConfigs,
@@ -38,7 +41,7 @@ function section(label, symbol, body, key) {
   return `<section class="biography-section" data-biography-section="${key}"><h3>${icon(symbol)}${esc(label)}</h3>${body}</section>`;
 }
 
-function record(sectionKey, item, personId) {
+function record(sectionKey, item, personId, imageMarkup = "") {
   const cfg = recordConfigs()[sectionKey];
   const values = recordValues(cfg, item);
   const body =
@@ -46,7 +49,7 @@ function record(sectionKey, item, personId) {
     sourceChips(item.sourceId ? [item.sourceId] : []) +
     recordReferenceActions(cfg, item);
   return body
-    ? `<article class="biography-record">${body}${recordAttachmentsButton(personId, sectionKey, item)}</article>`
+    ? `<article class="biography-record">${body}${imageMarkup}${recordAttachmentsButton(personId, sectionKey, item)}</article>`
     : "";
 }
 
@@ -75,6 +78,20 @@ function source(d) {
           )
           .join("\n"),
       ],
+      [
+        translate("ui.imageDescription"),
+        d.attachments
+          .map((file) => file.description)
+          .filter(Boolean)
+          .join("\n"),
+      ],
+      [
+        translate("ui.imageInscription"),
+        d.attachments
+          .map((file) => file.inscription)
+          .filter(Boolean)
+          .join("\n"),
+      ],
       [translate("ui.documentText"), d.transcription],
       [translate("ui.notes"), d.notes],
     ].concat(recordValues(sourceVerificationConfig(), d)),
@@ -89,11 +106,17 @@ export function renderBiography({
   groups,
   testimony = [],
 }) {
+  const shownImages = new Set();
+  function images(items) {
+    const unique = items.filter((item) => !shownImages.has(imageItemKey(item)));
+    unique.forEach((item) => shownImages.add(imageItemKey(item)));
+    return biographyImages(unique);
+  }
   const dates = personLifeDates(p, { includeUnknown: false });
   const age = personLifeDetail(p, { includeUnknown: false });
   let html = `<article class="biography"><header class="biography-header">${avatar(p)}<div><h2>${esc(personDisplayName(p))}</h2>${dates ? `<p>${esc(dates)}</p>` : ""}<p class="hint">${translate("ui.autobiographyDescription")}</p></div></header>`;
   html += personStatusMarkup(p, { includeUnknown: false });
-  html += `<div class="biography-toolbar"><button type="button" class="btn" data-print-biography="${p.id}">${icon("printer")}${translate("ui.printBiography")}</button>${reviewButton(p.id)}<p class="hint">${translate("ui.printBiographyHint")}</p></div>`;
+  html += `<div class="biography-toolbar"><button type="button" class="btn" data-print-biography="${p.id}">${icon("printer")}${translate("ui.printBiography")}</button><button type="button" class="btn" data-report-biography="${p.id}">${icon("book")}${translate("ui.reportOptions")}</button>${reviewButton(p.id)}<p class="hint">${translate("ui.printBiographyHint")}</p></div>`;
   html += section(
     translate("ui.basicInformation"),
     "user",
@@ -152,7 +175,21 @@ export function renderBiography({
         label,
         symbol,
         profileOverviewDetails(cfg, p) +
-          (p[cfg.key] || []).map((item) => record(key, item, p.id)).join(""),
+          (p[cfg.key] || [])
+            .map((item) =>
+              record(
+                key,
+                item,
+                p.id,
+                images(
+                  personImageItems(appState.project, p.id, {
+                    section: key,
+                    recordId: item.id,
+                  }),
+                ),
+              ),
+            )
+            .join(""),
         key,
       );
   }
@@ -235,6 +272,12 @@ export function renderBiography({
     "notebook",
     p.notes ? `<div class="biography-prose">${esc(p.notes)}</div>` : "",
     "notes",
+  );
+  html += section(
+    translate("ui.imageRecordPhotos"),
+    "photo",
+    images(personImageItems(appState.project, p.id)),
+    "photographs",
   );
   html += section(
     translate("ui.documentsAndSources"),

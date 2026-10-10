@@ -3,32 +3,20 @@ import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { personBiography } from "../model/biography.js";
 import { personDisplayName } from "../model/person-display.js";
-import { renderBiography } from "../ui/biography.js";
+import { biographyReport } from "../ui/biography-report.js";
 
 /** Prepare a standalone report from the same complete profile used by the on-screen biography. */
-export function prepareBiographyPrint(id) {
+export function prepareBiographyPrint(id, options = {}) {
   const biography = personBiography(appState.project, id);
   if (!biography) return false;
   const target = $("#biographyPrint");
   target.innerHTML =
     `<p class="print-report-title">${translate("ui.profileReport")}</p>` +
-    renderBiography(biography);
-  target
-    .querySelectorAll(
-      ".biography-toolbar,.biography-record-actions,[data-biography]",
-    )
-    .forEach((el) => el.remove());
-  target.querySelectorAll("button[data-document]").forEach((button) => {
-    const text = document.createElement("span");
-    text.className = "print-source";
-    text.textContent = button.textContent;
-    button.replaceWith(text);
-  });
-  target.querySelectorAll("button").forEach((button) => button.remove());
+    biographyReport(biography, options);
   return true;
 }
-export async function printBiography(id) {
-  if (!prepareBiographyPrint(id)) return;
+export async function printBiography(id, options = {}) {
+  if (!prepareBiographyPrint(id, options)) return;
   await Promise.all(
     [...$("#biographyPrint").querySelectorAll("img")].map((img) =>
       img.decode().catch(() => {}),

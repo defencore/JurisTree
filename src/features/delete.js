@@ -1,3 +1,6 @@
+import { pruneImageTargets, mediaTargetLabel } from "../model/image-regions.js";
+import { esc } from "../core/dom.js";
+import { sourceRecordLinks } from "../model/source-record-links.js";
 import { unlinkProfileReferences } from "../model/profile-references.js";
 import { state as appState } from "../core/state.js";
 import { translate } from "../i18n/index.js";
@@ -13,9 +16,28 @@ export async function confirmDelete(kind, id) {
     document: translate("ui.theDocument"),
     property: translate("ui.theProperty"),
   };
+  const source =
+    kind === "document" && appState.project.documents.find((d) => d.id === id);
+  const usages = source
+    ? [
+        ...source.people.map(
+          (id) => appState.project.people.find((p) => p.id === id)?.name,
+        ),
+        ...sourceRecordLinks(appState.project, id).map(
+          ({ profile, config }) => `${profile.name} · ${config.label}`,
+        ),
+        ...source.attachments.flatMap((file) =>
+          (file.regions || []).flatMap((region) =>
+            region.targets.map((target) =>
+              mediaTargetLabel(appState.project, target),
+            ),
+          ),
+        ),
+      ].filter(Boolean)
+    : [];
   const f = await openDialog(
     `${translate("ui.delete")} ` + labels[kind] + "?",
-    `<p class="hint">${translate("ui.youCanUndoThisOnTheMapWhen")}</p>`,
+    `<p class="hint">${translate("ui.youCanUndoThisOnTheMapWhen")}</p>${usages.length ? `<p>${translate("ui.imageUsedIn")}</p><ul>${[...new Set(usages)].map((label) => `<li>${esc(label)}</li>`).join("")}</ul>` : ""}`,
     {
       submit: translate("ui.delete"),
     },
@@ -78,6 +100,7 @@ export async function confirmDelete(kind, id) {
         (d) => (d.propertyIds = (d.propertyIds || []).filter((x) => x !== id)),
       );
     }
+    pruneImageTargets(appState.project);
     repairSelection();
   });
 }

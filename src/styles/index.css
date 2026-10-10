@@ -29,3 +29,5 @@
 @import "./person-creation.css";
 @import "./person-picker.css";
 @import url("./print.css");
+
+@import "./image-library.css";

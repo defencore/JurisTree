@@ -53,7 +53,8 @@ export async function exportArchive(
 
 Open JurisTree, choose Import and select this ZIP file.
 The archive contains tree.json and all attached files.
-Source attachments retain their original contents. Cropped images are additional copies.
+Source attachments retain their original contents. Image annotations and shared links are stored in tree.json.
+Region views reuse their originals. Cropped copies are separate files.
 Portraits are prepared copies.
 Property shares are a user plan, not a legal determination.
 `,

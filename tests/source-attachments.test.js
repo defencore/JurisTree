@@ -17,6 +17,9 @@ const file = (assetId, filename = `${assetId}.png`) => ({
   assetId,
   filename,
   caption: "",
+  description: "",
+  inscription: "",
+  regions: [],
   mime: "image/png",
   size: 12,
 });

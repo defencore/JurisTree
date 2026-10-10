@@ -1,3 +1,4 @@
+import { normalizeImageRegions } from "./image-regions.js";
 import { attachmentExtensions } from "../core/attachments.js";
 import { translate } from "../i18n/index.js";
 
@@ -38,10 +39,22 @@ export function normalizeSourceAttachments(source) {
       size > 50 * 1048576
     )
       throw Error(translate("ui.invalidAttachment"));
+    if (!mime.startsWith("image/") && file.regions?.length)
+      throw Error(translate("ui.invalidImageRegions"));
     return {
       assetId: file.assetId,
       filename: String(file.filename || "").slice(0, 500),
       caption: String(file.caption || "").slice(0, 500),
+      description: String(file.description || "").slice(0, 15000),
+      inscription: String(file.inscription || "").slice(0, 15000),
+      regions: normalizeImageRegions(file.regions),
+      ...(Number.isInteger(file.width) &&
+      file.width > 0 &&
+      Number.isInteger(file.height) &&
+      file.height > 0 &&
+      file.width * file.height <= 90e6
+        ? { width: file.width, height: file.height }
+        : {}),
       mime,
       size,
     };

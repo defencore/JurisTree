@@ -1,3 +1,4 @@
+import { sourcePeopleIds } from "../model/image-regions.js";
 import { workspaceModes } from "../core/workspace-modes.js";
 import { PERSON_CARD_HEIGHT, PERSON_CARD_WIDTH } from "../core/config.js";
 import { state as appState } from "../core/state.js";
@@ -54,7 +55,9 @@ export function filteredGraphNodes() {
           (d) =>
             (full || sourceInScope(d)) &&
             (full ||
-              d.people.some((id) => peopleIds.has(id)) ||
+              sourcePeopleIds(appState.project, d).some((id) =>
+                peopleIds.has(id),
+              ) ||
               (!appState.groupFilter &&
                 !appState.graphFocus &&
                 !appState.personFilter.rules.length)),

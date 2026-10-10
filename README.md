@@ -34,10 +34,11 @@ Modes suggest visible sections and a starting view. Switching modes preserves al
 - Interactive relationship map with family roles, saved arrangements, position locks, manual line routing, layouts, connection analysis and touch navigation.
 - Optional profile sections for identity, civil status, education, employment, residence, travel, health, interests, finances and other records.
 - Sources with multiple files or photos, clipboard pasting, original text, citations, verification and configurable document checklists.
+- Image library with descriptions, original inscriptions, movable region annotations and reusable links to people or individual records.
 - Combined search and advanced filters, saved queries and CSV export.
 - Separate family celebrations, life history, legal and financial dates, with month/year calendars.
 - Property history with dated rights, transfers and competing claims.
-- Favorites, undo/redo, draggable dialogs, complete biographies and PDF printing.
+- Favorites, undo/redo, draggable dialogs, complete biographies and configurable family/PDF reports.
 
 Civil records distinguish the act, its participants, issued documents and later annotations, following the structure of the [Ukrainian civil registry instruction](https://zakon.rada.gov.ua/laws/show/z0691-08#Text). Records link to people, relationships and sources without automatically changing names or ancestry.
 

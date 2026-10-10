@@ -88,6 +88,9 @@ function projectFixture() {
       propertyIds: ["asset"],
     },
   ];
+  project.documents.forEach((source) => {
+    source.attachments = [];
+  });
   return project;
 }
 

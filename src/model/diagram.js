@@ -1,3 +1,4 @@
+import { sourcePeopleIds } from "./image-regions.js";
 export const MAX_DIAGRAM_ROUTES = 3000;
 export const MAX_ROUTE_POINTS = 32;
 const coordinate = (value) =>
@@ -11,7 +12,7 @@ export function validDiagramKeys(project) {
     ...project.relations.map((r) => diagramKey("r", r.id)),
     ...project.groups.map((g) => diagramKey("g", g.id)),
     ...project.documents.flatMap((d) =>
-      d.people.map((id) => diagramKey("d", d.id, id)),
+      sourcePeopleIds(project, d).map((id) => diagramKey("d", d.id, id)),
     ),
     ...project.property.flatMap((a) =>
       (a.allocations || []).map((allocation) =>

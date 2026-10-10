@@ -79,7 +79,7 @@
     border-radius: 0;
     padding: 4mm;
     margin-bottom: 4mm;
-    break-inside: auto;
+    break-inside: avoid-page;
   }
   #biographyPrint .biography-fields {
     display: grid;

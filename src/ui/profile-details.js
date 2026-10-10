@@ -1,3 +1,6 @@
+import { state } from "../core/state.js";
+import { personImageItems } from "../model/image-regions.js";
+import { biographyImages } from "./biography-images.js";
 import { recordConfigs, sectionInfo } from "../core/config.js";
 import { esc } from "../core/dom.js";
 import {
@@ -18,7 +21,10 @@ import {
 } from "./profile-fields.js";
 
 export function recordDetails(section, r, personId) {
-  const attachments = recordAttachmentsButton(personId, section, r);
+  const attachments =
+    biographyImages(
+      personImageItems(state.project, personId, { section, recordId: r.id }),
+    ) + recordAttachmentsButton(personId, section, r);
   const cfg = recordConfigs()[section];
   if (cfg.extended)
     return `<div class="biography-record">${fields(recordValues(cfg, r))}${r.sourceId ? sourceChips([r.sourceId]) : ""}${recordReferenceActions(cfg, r)}${attachments}</div>`;

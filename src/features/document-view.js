@@ -1,3 +1,4 @@
+import { sourcePeopleIds } from "../model/image-regions.js";
 import { displayDate } from "../model/dates.js";
 import { personDisplayName } from "../model/person-display.js";
 import { evidenceTypes, types } from "../core/config.js";
@@ -16,7 +17,7 @@ import { icon, icons } from "../ui/icons.js";
 import { recordValues } from "../ui/profile-fields.js";
 import { sourceGallery } from "../ui/source-gallery.js";
 
-export async function viewDocument(id) {
+export async function viewDocument(id, attachmentId = "") {
   const d = doc(id);
   if (!d) return;
   const external = sourceLink(d);
@@ -36,7 +37,7 @@ export async function viewDocument(id) {
   const records = sourceRecordLinks(appState.project, id);
   await openDialog(
     d.title,
-    `<div class="source-view"><div data-source-gallery>${sourceGallery(d)}</div><div class="source-detail"><div class="pills">${statusBadge(d)}<span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${icon(d.evidence === "official" ? "badge" : "help")}${esc(evidenceTypes()[d.evidence])}</span><span class="pill">${icon("paperclip")}${hasFile(d) ? translate("ui.attachedFilesCount", { count: d.attachments.length }) + " · " + bytes(attachmentSize(d)) : translate("ui.noDigitalCopy2")}</span></div><h3>${icon("landmark")}${translate("ui.sourceProvenance")}</h3><dl>${details
+    `<div class="source-view"><div data-source-gallery>${sourceGallery(d, attachmentId)}</div><div class="source-detail"><div class="pills">${statusBadge(d)}<span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${icon(d.evidence === "official" ? "badge" : "help")}${esc(evidenceTypes()[d.evidence])}</span><span class="pill">${icon("paperclip")}${hasFile(d) ? translate("ui.attachedFilesCount", { count: d.attachments.length }) + " · " + bytes(attachmentSize(d)) : translate("ui.noDigitalCopy2")}</span></div><h3>${icon("landmark")}${translate("ui.sourceProvenance")}</h3><dl>${details
       .filter(([, v]) => v)
       .map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`)
       .join(
@@ -52,7 +53,7 @@ export async function viewDocument(id) {
         .join("") ||
       `<span class="hint">${translate("ui.theDocumentSubjectHasNotBeenSpecified")}</span>`
     }</div>${records.length ? `<h3>${icon("paperclip")}${translate("ui.linkedProfileRecords")}</h3><div class="source-binds">${records.map(({ profile, record, config, section }) => `<button type="button" data-open-profile-section="${section}" data-profile-person="${profile.id}">${esc(personDisplayName(profile))} · ${esc(config.label)}${record.title || record.awardName ? ` · ${esc(record.title || record.awardName)}` : ""}</button>`).join("")}</div>` : ""}<h3>${icon("users")}${translate("ui.allRelatedPeople")}</h3><div class="source-binds">${
-      d.people
+      sourcePeopleIds(appState.project, d)
         .map((pid) => person(pid))
         .filter(Boolean)
         .map(

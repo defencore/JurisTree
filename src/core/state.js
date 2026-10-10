@@ -25,6 +25,7 @@ export const state = {
   fileContext: {},
   toastTimer: undefined,
   modalResolve: null,
+  librarySearch: "",
   docFilter: "",
   docTypeFilter: "",
   docStatusFilter: "",

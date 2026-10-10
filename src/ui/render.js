@@ -29,6 +29,7 @@ import { renderSaveStatus } from "./save-status.js";
 import { renderSearch } from "./search.js";
 import { renderStatusBoard } from "./status-board.js";
 import { renderCalendar } from "./workspaces/calendar.js";
+import { renderImageLibrary } from "./workspaces/image-library.js";
 import { renderDocuments } from "./workspaces/documents.js";
 import { renderEvents } from "./workspaces/events.js";
 import { renderGaps } from "./workspaces/gaps.js";
@@ -92,6 +93,7 @@ export function renderMain() {
     "calendar",
     "property",
     "people",
+    "library",
   ].includes(appState.view);
   $("#otherView").hidden = appState.view === "tree";
   $("#viewActions").innerHTML = ["tree", "people"].includes(appState.view)
@@ -103,9 +105,11 @@ export function renderMain() {
             : appState.eventDomain,
           appState.view === "calendar",
         )
-      : appState.view === "property"
-        ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
-        : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
+      : appState.view === "library"
+        ? `<button class="btn primary" data-action="add-document">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`
+        : appState.view === "property"
+          ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
+          : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
   const path = route();
   $("#pathPanel").innerHTML =
     appState.view === "tree" && appState.project.purpose === "inheritance"
@@ -119,6 +123,7 @@ export function renderMain() {
   if (appState.view === "people") renderProfiles();
   else if (appState.view === "calendar") renderCalendar();
   else if (appState.view === "events") renderEvents();
+  else if (appState.view === "library") renderImageLibrary();
   else if (appState.view === "documents") renderDocuments();
   else if (appState.view === "gaps") renderGaps();
   else renderProperty();

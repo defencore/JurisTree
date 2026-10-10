@@ -10,5 +10,9 @@ export function viewBiography(id) {
   return openDialog(translate("ui.autobiography"), renderBiography(biography), {
     wide: true,
     footer: false,
+    kind: "biography",
+    onOpen: () => {
+      document.querySelector("#modal").dataset.biographyPerson = id;
+    },
   });
 }

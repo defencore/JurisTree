@@ -1,3 +1,4 @@
+import { pruneImageTargets } from "../model/image-regions.js";
 import { emitSignal } from "../core/signals.js";
 import { state as appState } from "../core/state.js";
 import { clone } from "../core/utils.js";
@@ -19,6 +20,7 @@ export function commit(action) {
   const before = clone(appState.project);
   try {
     action();
+    pruneImageTargets(appState.project);
   } catch (error) {
     appState.project = before;
     appState.renderIndex = null;

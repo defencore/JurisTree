@@ -1,3 +1,4 @@
+import { prepareBiographyReport } from "../../../features/biography-report.js";
 import { $ } from "../../../core/dom.js";
 import { state as appState } from "../../../core/state.js";
 import { openBiographyReview } from "../../../features/biography-review.js";
@@ -22,6 +23,13 @@ import { render } from "../../../ui/render.js";
 import { renderDocuments } from "../../../ui/workspaces/documents.js";
 
 export const profilesClicks = [
+  {
+    priority: 12,
+    matches: (b) => b.dataset.reportBiography,
+    run: async (b) => {
+      await prepareBiographyReport(b.dataset.reportBiography);
+    },
+  },
   {
     priority: 1,
     matches: (b) => b.dataset.fullProfile,

@@ -37,6 +37,14 @@ export const workspaceViews = [
     count: "eventCount",
   },
   {
+    key: "library",
+    group: "ui.recordsAndAnalysis",
+    title: "ui.imageLibrary",
+    hint: "ui.imageLibraryHint",
+    eyebrow: "ui.imageLibraryHint",
+    icon: "photo",
+  },
+  {
     key: "documents",
     heading: "ui.documentsAndSources",
     group: "ui.recordsAndAnalysis",

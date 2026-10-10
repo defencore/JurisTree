@@ -12,5 +12,5 @@ export function recordAttachmentsButton(personId, section, record) {
     )
   )
     return "";
-  return `<div class="biography-record-actions"><button type="button" class="btn small" data-record-attachments="${esc(record.id)}" data-attachment-person="${esc(personId)}" data-attachment-section="${esc(section)}">${icon("paperclip")}${translate("ui.recordPhotosDocuments")}</button></div>`;
+  return `<div class="biography-record-actions"><button type="button" class="btn small" data-record-attachments="${esc(record.id)}" data-attachment-person="${esc(personId)}" data-attachment-section="${esc(section)}">${icon("paperclip")}${translate("ui.recordPhotosDocuments")}</button><button type="button" class="btn small ghost" data-media-library data-library-record="${esc(record.id)}" data-attachment-person="${esc(personId)}" data-attachment-section="${esc(section)}">${icon("photo")}${translate("ui.imageFromLibrary")}</button></div>`;
 }
