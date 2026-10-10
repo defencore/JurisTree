@@ -472,11 +472,6 @@ export default {
   "ui.firstAndLastName": "Ім’я та прізвище",
   "ui.gender": "Стать",
   "ui.status": "Стан",
-  "ui.exactBirthDate": "Точна дата народження",
-  "ui.orBirthYear": "Або рік народження",
-  "ui.ifTheExactDateIsUnknown": "Якщо точна дата невідома",
-  "ui.exactDeathDate": "Точна дата смерті",
-  "ui.orDeathYear": "Або рік смерті",
   "ui.otherNamesAndSpellings": "Інші імена й написання",
   "ui.maidenNameVariantsInOtherLanguages":
     "Дівоче прізвище, варіанти іншими мовами",
@@ -896,7 +891,6 @@ export default {
   "ui.sourcePhoto": "Джерело / фото",
   "ui.deleteRecord": "Видалити запис",
   "ui.noSource": "Без джерела",
-  "ui.yearOrDayMonthYear": "Рік або DD.MM.YYYY",
   "ui.lifeStoryAndHistoricalInformation":
     "Хто ця людина, її життя та історичні відомості",
   "ui.supportingSources": "Зовнішні підтвердження",
@@ -2253,7 +2247,7 @@ export default {
   "ui.datedRecords": "Датовані записи",
   "ui.recordSection": "Розділ профілю",
   "ui.noUpcomingRecordsHint":
-    "Тут показані лише записи з точною датою в обраному майбутньому періоді. Минулі записи та дати, вказані лише роком, доступні у хронології.",
+    "Тут показані лише записи з повною, неприблизною датою в обраному майбутньому періоді. Минулі записи, неповні дати та діапазони дат доступні у хронології.",
   "ui.filter": "Фільтр",
   "ui.sourceUrl": "Посилання на джерело",
   "ui.propertyAddClaim": "Додати претензію",
@@ -2619,4 +2613,11 @@ export default {
   "ui.cancelRoutePoint": "Скасувати додавання",
   "ui.diagramRemovePoint": "Видалити вибраний поворот",
   "ui.diagramSelectItems": "Вибрати елементи",
+  "ui.datePrecision": "Точність дати",
+  "ui.datePrecisionDay": "Повна дата",
+  "ui.datePrecisionMonth": "Місяць і рік",
+  "ui.datePrecisionYear": "Лише рік",
+  "ui.datePrecisionApproximate": "Приблизна дата",
+  "ui.datePrecisionRange": "Діапазон дат",
+  "ui.dateFormats": "DD.MM.YYYY, MM.YYYY, YYYY, ≈ YYYY, YYYY – YYYY",
 };

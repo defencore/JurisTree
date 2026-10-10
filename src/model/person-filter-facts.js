@@ -89,7 +89,10 @@ export function buildPersonFilterFacts(project, today, files = new Map()) {
       life: status.life,
       age: status.age,
       minor:
-        status.age && status.life !== "deceased" && !status.uncertainAge
+        status.age &&
+        status.life !== "deceased" &&
+        !status.uncertainAge &&
+        !status.age.approximate
           ? status.minor
           : null,
       gender: p.gender || "u",

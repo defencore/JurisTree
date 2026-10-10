@@ -17,9 +17,9 @@ const recordTitle = (record, config) =>
 export function defaultReviewPeriod(person, today = localDateString()) {
   const birth = partialDate(person.birth),
     death = partialDate(person.death);
-  const to = death ? [death.max, today].sort()[0] : today;
-  if (!birth) return { from: "", to };
-  const year = birth.year + 18;
+  const to = death && !death.approximate ? [death.max, today].sort()[0] : today;
+  if (!birth || birth.approximate) return { from: "", to };
+  const year = Number(birth.max.slice(0, 4)) + 18;
   let adult = String(year).padStart(4, "0") + birth.max.slice(4);
   if (!dateExact(adult)) adult = String(year).padStart(4, "0") + "-02-28";
   return { from: adult <= to ? adult : birth.min, to };
@@ -44,8 +44,12 @@ export function reviewBiography(person, options = {}) {
     throw new RangeError("Invalid biography review period");
   const birth = partialDate(person.birth),
     death = partialDate(person.death);
-  if (birth && from < birth.min) from = birth.min;
-  to = [to, today, ...(death ? [death.max] : [])].sort()[0];
+  if (birth && !birth.approximate && from < birth.min) from = birth.min;
+  to = [
+    to,
+    today,
+    ...(death && !death.approximate ? [death.max] : []),
+  ].sort()[0];
   if (from > to)
     throw new RangeError("Review period is outside the recorded lifetime");
   const intervals = [],
@@ -87,6 +91,8 @@ export function reviewBiography(person, options = {}) {
       if (
         !start ||
         (!end && !current) ||
+        start.approximate ||
+        end?.approximate ||
         (mode === "corroborated" && record.verification !== "corroborated")
       )
         continue;

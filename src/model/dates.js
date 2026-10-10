@@ -1,30 +1,6 @@
 import { getLocale, translate } from "../i18n/index.js";
-export function dateExact(value) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) return "";
-  const [y, m, d] = value.split("-").map(Number);
-  if (y < 1 || m < 1 || m > 12 || d < 1) return "";
-  const dt = new Date(0);
-  dt.setUTCFullYear(y, m - 1, d);
-  return dt.getUTCFullYear() === y &&
-    dt.getUTCMonth() === m - 1 &&
-    dt.getUTCDate() === d
-    ? value
-    : "";
-}
-export function displayDate(value) {
-  const v = String(value || "");
-  if (dateExact(v)) {
-    return v.split("-").reverse().join(".");
-  }
-  return v;
-}
-/** Convert entered day/month/year dates to the canonical archive representation. */
-export function dateInputValue(value) {
-  const text = String(value || "").trim(),
-    match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(text),
-    canonical = match ? `${match[3]}-${match[2]}-${match[1]}` : text;
-  return dateExact(canonical) ? canonical : text;
-}
+import { dateExact, displayDate, parseDateValue } from "./date-values.js";
+export { dateExact, displayDate, dateInputValue } from "./date-values.js";
 
 export function displayDateTime(value) {
   if (!value) return "";
@@ -33,22 +9,7 @@ export function displayDateTime(value) {
   return `${displayDate(localDateString(date))} ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }
 export function partialDate(value) {
-  const text = String(value || "");
-  if (dateExact(text))
-    return {
-      min: text,
-      max: text,
-      year: Number(text.slice(0, 4)),
-      exact: true,
-    };
-  if (/^\d{4}$/.test(text) && Number(text) > 0)
-    return {
-      min: text + "-01-01",
-      max: text + "-12-31",
-      year: Number(text),
-      exact: false,
-    };
-  return null;
+  return parseDateValue(value);
 }
 export function localDateString(date = new Date()) {
   return [
@@ -74,6 +35,7 @@ export function ageBounds(birthValue, atValue) {
   return {
     min: Math.max(0, completedYears(birth.max, at.min)),
     max: completedYears(birth.min, at.max),
+    ...(birth.approximate || at.approximate ? { approximate: true } : {}),
   };
 }
 export function utcDay(value) {

@@ -37,7 +37,7 @@ Use the current name in the main field. Add maiden surnames and previous names i
 
 Choose **Add relationship**, select **First person**, **Second person** and the relationship type, then save. Add dates, status and supporting sources when known.
 
-Enter complete dates as **DD.MM.YYYY**, or select them with the calendar button. Period fields also accept a year when the day and month are unknown. On the map, the relationship name appears above its **From** and **To** dates; only entered endpoints are shown.
+Enter complete dates as **DD.MM.YYYY**, or select them with the calendar button. For birth, death and period fields, choose **Month and year**, **Year only**, **Approximate date** or **Date range** beside the input. Examples: `05.1980`, `1980`, `≈ 1980` and `1980–1985`. See [incomplete dates](user-guide.md#dates-with-incomplete-information) for calendar and age handling. On the map, the relationship name appears above its **From** and **To** dates; only entered endpoints are shown.
 
 Use the search above either person list to narrow it by surname, given name or a combination in any order. Maiden surnames, previous names and alternate spellings are included. Lists are ordered by surname, then full name. Searching preserves the current choice; a selection outside the results is kept under **Current selection** until you explicitly choose someone else. Press Enter or Down Arrow in the search to focus the list; Escape clears the search. The same search is available when connecting a person during creation.
 

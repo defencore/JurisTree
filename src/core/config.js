@@ -128,7 +128,7 @@ export function recordConfigs() {
       fields: [
         ["title", translate("ui.event"), "text"],
         ["category", translate("ui.eventType"), "select", eventCategories()],
-        ["date", translate("ui.date"), "date"],
+        ["date", translate("ui.date"), "period"],
         [
           "repeat",
           translate("ui.anniversary"),
@@ -160,8 +160,8 @@ export function recordConfigs() {
             other: translate("ui.other"),
           },
         ],
-        ["birth", translate("ui.birth"), "date"],
-        ["death", translate("ui.deathIfKnown"), "date"],
+        ["birth", translate("ui.birth"), "period"],
+        ["death", translate("ui.deathIfKnown"), "period"],
         ["notes", translate("ui.breedStoryNotes"), "textarea"],
         ["sourceId", translate("ui.sourcePhoto"), "source"],
       ],

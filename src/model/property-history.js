@@ -10,6 +10,7 @@ export function propertyPeriod(
   if (record.verification === "refuted") return "excluded";
   const from = partialDate(record.from),
     to = partialDate(record.to);
+  if (from?.approximate || to?.approximate) return "uncertain";
   if (from && from.min > date) return "future";
   if (to && to.max < date) return "ended";
   if (!from || from.max > date || (to && to.min < date)) return "uncertain";
@@ -20,8 +21,8 @@ export function propertyClaimOpen(record, date = localDateString()) {
   if (record.verification === "refuted") return false;
   const from = partialDate(record.date),
     to = partialDate(record.resolvedAt);
-  if (from && from.min > date) return false;
-  if (to && to.max <= date) return false;
+  if (from && !from.approximate && from.min > date) return false;
+  if (to && !to.approximate && to.max <= date) return false;
   return ["potential", "asserted", "disputed"].includes(record.status) || !!to;
 }
 export function propertySnapshot(asset, date = localDateString()) {
@@ -93,7 +94,7 @@ export function analyzeProperty(asset, project, date = localDateString()) {
   const people = new Map(project.people.map((p) => [p.id, p]));
   for (const { kind, record } of propertyTimeline(asset)) {
     const origin = partialDate(record.date || record.from);
-    if (origin && origin.min > date) continue;
+    if (origin && !origin.approximate && origin.min > date) continue;
     if (record.verification === "refuted") continue;
     const source = documents.get(record.sourceId);
     if (
@@ -129,7 +130,7 @@ export function analyzeProperty(asset, project, date = localDateString()) {
     if (
       record.rightKind === "ownership" &&
       record.fromId &&
-      origin &&
+      origin?.exact &&
       !["registration", "inheritance"].includes(record.kind)
     ) {
       const previous = utcDay(origin.min) - 1;
@@ -150,7 +151,13 @@ export function analyzeProperty(asset, project, date = localDateString()) {
     }
     const signed = partialDate(record.signedAt),
       death = partialDate(people.get(record.fromId)?.death);
-    if (signed && death && signed.min > death.max)
+    if (
+      signed &&
+      death &&
+      !signed.approximate &&
+      !death.approximate &&
+      signed.min > death.max
+    )
       add("propertyContractAfterDeath", kind, record.id);
   }
   return { snapshot, issues };

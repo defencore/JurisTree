@@ -185,7 +185,7 @@ export function validateImport(raw) {
       });
     }
     for (const date of [x.birth, x.death])
-      if (/^\d{4}-\d{2}-\d{2}$/.test(date) && !dateExact(date))
+      if (date && !partialDate(date))
         throw Error(translate("ui.invalidPersonDate"));
     const error = chronologyError(x);
     if (error) throw Error(error);
@@ -410,7 +410,13 @@ export function validateImport(raw) {
 export function chronologyError(p) {
   const birth = partialDate(p.birth),
     death = partialDate(p.death);
-  if (birth && death && death.max < birth.min)
+  if (
+    birth &&
+    death &&
+    !birth.approximate &&
+    !death.approximate &&
+    death.max < birth.min
+  )
     return translate("ui.deathCannotPrecedeBirth");
   for (const [key, label] of [
     ["residences", translate("ui.residence")],
@@ -422,13 +428,19 @@ export function chronologyError(p) {
           return label + translate("ui.enterAValidDate");
       const from = partialDate(record.from),
         to = partialDate(record.to);
-      if (from && to && to.max < from.min)
+      if (
+        from &&
+        to &&
+        !from.approximate &&
+        !to.approximate &&
+        to.max < from.min
+      )
         return label + translate("ui.endCannotPrecedeStart");
     }
   for (const pet of p.pets || []) {
     const from = partialDate(pet.birth),
       to = partialDate(pet.death);
-    if (from && to && to.max < from.min)
+    if (from && to && !from.approximate && !to.approximate && to.max < from.min)
       return translate("ui.petDeathCannotPrecedeBirth");
   }
   return "";
@@ -445,12 +457,12 @@ export function profileFormError(form, p) {
     }
   }
   for (const key of ["birthDate", "deathDate"])
-    if (form.get(key) && !dateExact(form.get(key)))
+    if (form.get(key) && !partialDate(form.get(key)))
       return translate("ui.enterAValidBirthOrDeathDate");
   return chronologyError({
     ...p,
     ...collectProfile(form, p),
-    birth: form.get("birthDate") || form.get("birthYear") || "",
-    death: form.get("deathDate") || form.get("deathYear") || "",
+    birth: form.get("birthDate") || "",
+    death: form.get("deathDate") || "",
   });
 }

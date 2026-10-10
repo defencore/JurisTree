@@ -55,7 +55,7 @@ export function personDisplayName(person) {
 
 export function formatAge(age) {
   if (!age) return "";
-  return `${age.min === age.max ? age.min : `${age.min}–${age.max}`} ${yearWord(age.max)}`;
+  return `${age.approximate ? "≈ " : ""}${age.min === age.max ? age.min : `${age.min}–${age.max}`} ${yearWord(age.max)}`;
 }
 
 export function personLifeDetail(

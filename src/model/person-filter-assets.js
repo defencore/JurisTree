@@ -24,10 +24,12 @@ function numberFromDecimal(value) {
   return Number(value.digits.toString() + "e" + -value.scale);
 }
 export function currentRecord(record, today) {
+  const from = partialDate(record.from),
+    to = partialDate(record.to);
   return (
     record.verification !== "refuted" &&
-    !(partialDate(record.from)?.min > today) &&
-    !(partialDate(record.to)?.max < today)
+    !(from && !from.approximate && from.min > today) &&
+    !(to && !to.approximate && to.max < today)
   );
 }
 /** Sum dated, current inventory observations by currency and known ownership share. No exchange rates or other financial collections are combined. */

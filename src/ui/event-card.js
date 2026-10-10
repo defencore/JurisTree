@@ -19,10 +19,17 @@ export function eventCard(event, upcoming = false, showRelative = true) {
           month: "short",
           timeZone: "UTC",
         }).format(new Date(utcDay(date) * 86400000))
-      : "";
+      : info?.precision === "month" && !info.approximate
+        ? new Intl.DateTimeFormat(getLocale(), {
+            month: "short",
+            timeZone: "UTC",
+          }).format(new Date(utcDay(info.min) * 86400000))
+        : "";
   const dateMark = info?.exact
     ? `<b>${Number(date.slice(8))}</b><small>${esc(month)}</small><span>${date.slice(0, 4)}</span>`
-    : `<b class="date-year">${info?.year || "—"}</b><small>${info ? translate("ui.yearOnly") : translate("ui.noDate")}</small>`;
+    : info?.precision === "month" && !info.approximate
+      ? `<b class="date-year">${esc(month)}</b><small>${info.year}</small>`
+      : `<b class="date-year">${info?.precision === "range" ? "↔" : `${info?.approximate ? "≈ " : ""}${info?.year || "—"}`}</b><small>${translate(info?.precision === "range" ? "ui.datePrecisionRange" : info?.approximate ? "ui.datePrecisionApproximate" : info ? "ui.datePrecisionYear" : "ui.noDate")}</small>`;
   const relative =
     upcoming && showRelative
       ? event.next.days === 0

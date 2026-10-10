@@ -2,7 +2,6 @@ import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
-import { dateExact } from "../model/dates.js";
 import { requirements } from "../model/evidence.js";
 import { person } from "../model/lookup.js";
 import {
@@ -83,16 +82,6 @@ export async function editPerson(id = null, section = null, addRecord = false) {
       },
       validate: (f) => {
         if (!f.get("name").trim()) return translate("ui.enterAName");
-        const birth = f.get("birthDate") || f.get("birthYear"),
-          death = f.get("deathDate") || f.get("deathYear");
-        if (
-          birth &&
-          death &&
-          Number(String(death).slice(0, 4)) < Number(String(birth).slice(0, 4))
-        )
-          return translate("ui.deathCannotPrecedeBirth");
-        if (dateExact(birth) && dateExact(death) && death < birth)
-          return translate("ui.deathCannotPrecedeBirth");
         const profileError = profileFormError(f, p);
         if (profileError) return profileError;
         if (!id) {
@@ -109,8 +98,8 @@ export async function editPerson(id = null, section = null, addRecord = false) {
     name: f.get("name").trim(),
     gender: f.get("gender"),
     lifeStatus: f.get("lifeStatus"),
-    birth: String(f.get("birthDate") || f.get("birthYear") || ""),
-    death: String(f.get("deathDate") || f.get("deathYear") || ""),
+    birth: String(f.get("birthDate") || ""),
+    death: String(f.get("deathDate") || ""),
     place: String(f.get("place") || ""),
     aliases: String(f.get("aliases") || ""),
     notes: String(f.get("notes") || ""),

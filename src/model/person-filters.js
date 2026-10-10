@@ -12,6 +12,7 @@ const folded = (value) =>
 const absent = (value) =>
   value == null || value === "" || (Array.isArray(value) && !value.length);
 function compareNumber(value, rule) {
+  if (value?.approximate) return false;
   const min = typeof value === "object" ? value.min : value;
   const max = typeof value === "object" ? value.max : value;
   const target = Number(rule.value);
@@ -144,6 +145,7 @@ export function personFilterCsv(report, today = localDateString()) {
       "Life status",
       "Minimum age",
       "Maximum age",
+      "Age approximate",
       "Identity document records",
       "Available sources",
       "Attached files",
@@ -163,6 +165,7 @@ export function personFilterCsv(report, today = localDateString()) {
       f.life,
       f.age?.min,
       f.age?.max,
+      f.age ? !!f.age.approximate : "",
       f.identityDocuments,
       f.documents,
       f.files,

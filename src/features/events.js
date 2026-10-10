@@ -4,7 +4,7 @@ import { canRepeatAnnually } from "../core/event-domains.js";
 import { state as appState } from "../core/state.js";
 import { uid } from "../core/utils.js";
 import { translate } from "../i18n/index.js";
-import { dateExact } from "../model/dates.js";
+import { partialDate } from "../model/dates.js";
 import { person } from "../model/lookup.js";
 import { commit } from "../services/history.js";
 import { openDialog, toast } from "../ui/dialog.js";
@@ -39,7 +39,7 @@ export async function editFamilyEvent(
       validate: (form) => {
         if (!form.get("title")?.trim())
           return translate("ui.enterAnEventTitle");
-        if (form.get("date") && !dateExact(form.get("date")))
+        if (form.get("date") && !partialDate(form.get("date")))
           return translate("ui.enterAValidDate2");
         const target = eventId ? owner : person(form.get("personId"));
         if (!target) return translate("ui.selectAPerson");

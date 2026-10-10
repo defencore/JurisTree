@@ -7,7 +7,7 @@ import { sourceInScope } from "../../model/evidence.js";
 import { personOptions, typeOptions } from "../components.js";
 import { icon } from "../icons.js";
 export function renderEventForm(eventId, owner, old) {
-  return `<div class="form-grid"><label class="field full">${translate("ui.personForThisEvent")}<select name="personId" ${eventId ? "disabled" : ""}>${personOptions(owner.id)}</select></label><label class="field full">${translate("ui.eventTitle")}<input name="title" value="${esc(old.title)}" maxlength="1000" required placeholder="${translate("ui.weddingAnniversaryRelocationGraduation")}"></label><label class="field">${translate("ui.eventType")}<select name="category">${typeOptions(eventCategories(), old.category || "custom")}</select></label><label class="field">${translate("ui.date")}${dateInput("date", old.date)}</label><label class="field">${translate("ui.repeat")}<select name="repeat">${typeOptions(
+  return `<div class="form-grid"><label class="field full">${translate("ui.personForThisEvent")}<select name="personId" ${eventId ? "disabled" : ""}>${personOptions(owner.id)}</select></label><label class="field full">${translate("ui.eventTitle")}<input name="title" value="${esc(old.title)}" maxlength="1000" required placeholder="${translate("ui.weddingAnniversaryRelocationGraduation")}"></label><label class="field">${translate("ui.eventType")}<select name="category">${typeOptions(eventCategories(), old.category || "custom")}</select></label><label class="field">${translate("ui.date")}${dateInput("date", old.date, { period: true })}</label><label class="field">${translate("ui.repeat")}<select name="repeat">${typeOptions(
     {
       none: translate("ui.oneTimeEvent"),
       annual: translate("ui.annualAnniversary2"),

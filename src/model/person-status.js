@@ -14,7 +14,11 @@ export function personStatus(person, today = localDateString()) {
   return {
     life,
     age,
-    minor: life !== "deceased" && !!age && age.max < 18,
-    uncertainAge: life !== "deceased" && !!age && age.min < 18 && age.max >= 18,
+    minor: life !== "deceased" && !!age && !age.approximate && age.max < 18,
+    uncertainAge:
+      life !== "deceased" &&
+      !!age &&
+      age.min < 18 &&
+      (age.approximate || age.max >= 18),
   };
 }

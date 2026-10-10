@@ -37,7 +37,6 @@ test("entered dates normalize to canonical values without accepting rollover, am
     "31.04.2026",
     "01/02/2026",
     "1.2.2026",
-    "2026-02",
     "00.01.2026",
   ]) {
     assert.equal(dateExact(dateInputValue(value)), "");

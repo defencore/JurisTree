@@ -15,11 +15,13 @@ export function formatFilterAssets(fact) {
     .join(" · ");
 }
 export function formatFilterAge(fact) {
-  return fact.age
-    ? fact.age.min === fact.age.max
+  if (!fact.age) return t("ui.unknown");
+  return (
+    (fact.age.approximate ? "≈ " : "") +
+    (fact.age.min === fact.age.max
       ? String(fact.age.min)
-      : `${fact.age.min}–${fact.age.max}`
-    : t("ui.unknown");
+      : `${fact.age.min}–${fact.age.max}`)
+  );
 }
 export function renderPersonFilterResults(report, limit = 30) {
   return `<h3>${t("ui.filterResults")} <span data-filter-result-count>${report.matches.length} / ${report.total}</span></h3><div class="filter-statistics">${[

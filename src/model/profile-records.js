@@ -33,7 +33,7 @@ export function profileRecordError(cfg, record) {
   for (const [start, end] of cfg.dateRanges || []) {
     const from = partialDate(record[start]),
       to = partialDate(record[end]);
-    if (from && to && to.max < from.min)
+    if (from && to && !from.approximate && !to.approximate && to.max < from.min)
       return cfg.label + translate("ui.endCannotPrecedeStart");
   }
   return cfg.validate?.(record) || "";

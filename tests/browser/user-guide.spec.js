@@ -77,7 +77,7 @@ test("a beginner can create a family, group, profile record and linked source us
     await page.locator('#viewActions [data-action="add-person"]').click();
     await page.locator('#modal [name="name"]').fill(name);
     await page.locator('#modal [name="gender"]').selectOption(gender);
-    await page.locator('#modal [name="birthYear"]').fill(birth);
+    await page.locator('#modal [name="birthDate"]').fill(birth);
     await page.locator('#modal button[type="submit"]').click();
   }
   const ids = await page

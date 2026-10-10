@@ -472,11 +472,6 @@ export default {
   "ui.firstAndLastName": "First and last name",
   "ui.gender": "Gender",
   "ui.status": "Status",
-  "ui.exactBirthDate": "Exact birth date",
-  "ui.orBirthYear": "Or birth year",
-  "ui.ifTheExactDateIsUnknown": "If the exact date is unknown",
-  "ui.exactDeathDate": "Exact death date",
-  "ui.orDeathYear": "Or death year",
   "ui.otherNamesAndSpellings": "Other names and spellings",
   "ui.maidenNameVariantsInOtherLanguages":
     "Maiden name, variants in other languages",
@@ -896,7 +891,6 @@ export default {
   "ui.sourcePhoto": "Source / photo",
   "ui.deleteRecord": "Delete record",
   "ui.noSource": "No source",
-  "ui.yearOrDayMonthYear": "Year or DD.MM.YYYY",
   "ui.lifeStoryAndHistoricalInformation":
     "Life story and historical information",
   "ui.supportingSources": "Supporting sources",
@@ -2250,7 +2244,7 @@ export default {
   "ui.datedRecords": "Dated records",
   "ui.recordSection": "Profile section",
   "ui.noUpcomingRecordsHint":
-    "Only records with an exact date in the selected future period appear here. Use Timeline to review past records and year-only dates.",
+    "Only records with a complete, non-approximate date in the selected future period appear here. Use Timeline to review past records, partial dates and date ranges.",
   "ui.filter": "Filter",
   "ui.sourceUrl": "Source URL",
   "ui.propertyAddClaim": "Add claim",
@@ -2615,4 +2609,11 @@ export default {
   "ui.cancelRoutePoint": "Cancel adding",
   "ui.diagramRemovePoint": "Remove selected waypoint",
   "ui.diagramSelectItems": "Select items",
+  "ui.datePrecision": "Date precision",
+  "ui.datePrecisionDay": "Complete date",
+  "ui.datePrecisionMonth": "Month and year",
+  "ui.datePrecisionYear": "Year only",
+  "ui.datePrecisionApproximate": "Approximate date",
+  "ui.datePrecisionRange": "Date range",
+  "ui.dateFormats": "DD.MM.YYYY, MM.YYYY, YYYY, ≈ YYYY, YYYY – YYYY",
 };

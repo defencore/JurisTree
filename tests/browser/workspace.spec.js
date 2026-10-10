@@ -85,7 +85,9 @@ test("opens a complete autobiography from every person entry point and language"
   await page.locator('#personList [data-person="p5"]').click();
   await page.locator('#inspector [data-biography="p5"]').click();
   await page.locator('.biography [data-biography="p3"]').click();
-  await expect(page.locator(".biography-header h2")).toHaveText("Jamie Roe (Doe)");
+  await expect(page.locator(".biography-header h2")).toHaveText(
+    "Jamie Roe (Doe)",
+  );
   await page.locator("[data-close]").first().click();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.locator('#graph [data-biography="p5"]').focus();
@@ -135,7 +137,7 @@ test("creates, edits, undoes and restores a saved draft", async ({ page }) => {
   await page.locator("#startCreate").click();
   await page.locator('#viewActions [data-action="add-person"]').click();
   await page.locator('#modal input[name="name"]').fill("Alice Example");
-  await page.locator('#modal input[name="birthYear"]').fill("1980");
+  await page.locator('#modal input[name="birthDate"]').fill("1980");
   await page.locator('#modal button[type="submit"]').click();
   await expect(page.locator("#personList")).toContainText("Alice Example");
   await page.locator('[data-action="undo"]').click();

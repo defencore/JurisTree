@@ -84,7 +84,7 @@ export function identitySection() {
           ],
           ["citizenship", "ui.citizenship"],
           ["personalNumber", "ui.personalIdentificationNumber"],
-          ["birthDate", "ui.birth", "date"],
+          ["birthDate", "ui.birth", "period"],
           ["birthPlace", "ui.placeOfBirth"],
           ["birthCountry", "ui.countryOfBirth"],
           ["registeredAddress", "ui.registeredAddress"],

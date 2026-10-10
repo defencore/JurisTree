@@ -472,11 +472,6 @@ export default {
   "ui.firstAndLastName": "Имя и фамилия",
   "ui.gender": "Пол",
   "ui.status": "Состояние",
-  "ui.exactBirthDate": "Точная дата рождения",
-  "ui.orBirthYear": "Или год рождения",
-  "ui.ifTheExactDateIsUnknown": "Если точная дата неизвестна",
-  "ui.exactDeathDate": "Точная дата смерти",
-  "ui.orDeathYear": "Или год смерти",
   "ui.otherNamesAndSpellings": "Другие имена и варианты написания",
   "ui.maidenNameVariantsInOtherLanguages":
     "Девичья фамилия, варианты на других языках",
@@ -899,7 +894,6 @@ export default {
   "ui.sourcePhoto": "Источник / фото",
   "ui.deleteRecord": "Удалить запись",
   "ui.noSource": "Без источника",
-  "ui.yearOrDayMonthYear": "Год или DD.MM.YYYY",
   "ui.lifeStoryAndHistoricalInformation":
     "Жизнь человека и исторические сведения",
   "ui.supportingSources": "Внешние подтверждения",
@@ -2262,7 +2256,7 @@ export default {
   "ui.datedRecords": "Датированные записи",
   "ui.recordSection": "Раздел профиля",
   "ui.noUpcomingRecordsHint":
-    "Здесь показаны только записи с точной датой в выбранном будущем периоде. Прошлые записи и даты, указанные только годом, доступны в хронологии.",
+    "Здесь показаны только записи с полной, неприблизительной датой в выбранном будущем периоде. Прошлые записи, неполные даты и диапазоны дат доступны в хронологии.",
   "ui.filter": "Фильтр",
   "ui.sourceUrl": "Ссылка на источник",
   "ui.propertyAddClaim": "Добавить притязание",
@@ -2631,4 +2625,11 @@ export default {
   "ui.cancelRoutePoint": "Отменить добавление",
   "ui.diagramRemovePoint": "Удалить выбранный поворот",
   "ui.diagramSelectItems": "Выбрать элементы",
+  "ui.datePrecision": "Точность даты",
+  "ui.datePrecisionDay": "Полная дата",
+  "ui.datePrecisionMonth": "Месяц и год",
+  "ui.datePrecisionYear": "Только год",
+  "ui.datePrecisionApproximate": "Приблизительная дата",
+  "ui.datePrecisionRange": "Диапазон дат",
+  "ui.dateFormats": "DD.MM.YYYY, MM.YYYY, YYYY, ≈ YYYY, YYYY – YYYY",
 };
