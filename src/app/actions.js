@@ -54,7 +54,8 @@ import { editPerson, editProject, editScope } from "../features/profiles.js";
 import { editProperty } from "../features/property.js";
 import { comparePeople, editRelation } from "../features/relationships.js";
 import { openUserGuide, downloadGuideExample } from "../features/user-guide.js";
-import { fit, focusPerson, zoom } from "../graph/camera.js";
+import { applyCamera, fit, focusPerson, zoom } from "../graph/camera.js";
+import { resizeCamera } from "../model/camera-viewport.js";
 import { arrangeGraph } from "../graph/layout.js";
 import { translate } from "../i18n/index.js";
 import { localDateString } from "../model/dates.js";
@@ -171,12 +172,19 @@ export async function handleAction(action) {
     "direct-connections": focusDirectConnections,
     "restore-connection-map": restoreConnectionMap,
     "mobile-tools": () => {
+      const before = $("#graph").getBoundingClientRect();
       const open = document.body.classList.toggle("mobile-tools-open");
       if (open) $("#inspector").classList.remove("open");
       $('[data-action="mobile-tools"]').setAttribute(
         "aria-expanded",
         String(open),
       );
+      appState.camera = resizeCamera(
+        appState.camera,
+        before,
+        $("#graph").getBoundingClientRect(),
+      );
+      applyCamera();
     },
     "touch-move": () => {
       appState.touchMove = !appState.touchMove;

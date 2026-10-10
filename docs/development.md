@@ -24,10 +24,10 @@ npm run check         # Run all of the above
 npm run preview       # Serve dist/ after building
 ```
 
-Browser integration checks require Chromium:
+Browser integration checks require Chromium and Firefox:
 
 ```sh
-npx playwright install chromium
+npx playwright install chromium firefox
 npm run test:browser
 ```
 
@@ -219,6 +219,8 @@ tests/                    Unit and browser integration tests
 ```
 
 Runtime state is explicitly imported from `core/state.js`; application features do not attach their own state to `window`. Persisted project data is separate from temporary selections, filters, dialogs, camera state and undo history.
+
+`styles/density.css` owns compact desktop control spacing; touch layouts and print typography keep their own sizing. Browser page zoom stays native. A graph `ResizeObserver` uses `model/camera-viewport.js` to preserve the viewed world center and selected map scale when the browser's CSS viewport changes. Internal panel toggles retain their own camera behavior. Resizing never runs Fit or scrolls the main panel. Placement options start collapsed and remember their open state during rendering. Browser zoom/reflow regressions run in both Chromium and Firefox; the remaining interaction suite runs in Chromium.
 
 Domain operations read the project through model selectors. UI edits go through `commit()` in `services/history.js`, which applies synchronous edits atomically, records undo history, advances the runtime revision, updates the timestamp and publishes `project:changed`. Failed edits restore the preceding project without consuming undo/redo entries. Completed card drags use `commitSnapshot(before)` through the same notification and saving path. `app/runtime.js` connects that signal to rendering and persistence. Storage reports status and errors through the same explicit signal mechanism; it does not import the UI. `model/project-index.js` constructs ordered entity and association maps once per render or search-index build. Complete profiles use unfiltered source associations; evidence panels filter their separate document maps by workspace purpose. Nested rendering shares the active index and releases it even if rendering throws. Avoid retaining this temporary index across edits or pointer previews.
 

@@ -1,3 +1,4 @@
+import { openMapLayout, openMapOptions } from "./helpers/map-options.js";
 import { test, expect } from "@playwright/test";
 
 async function snapshot(page) {
@@ -147,6 +148,7 @@ test("highlight preserves previous analysis, display filters and collapsed group
   });
   const before = await snapshot(page),
     previousIds = await visibleIds(page);
+  await openMapOptions(page);
   await page
     .locator('#graphToolbar [data-action="direct-connections"]')
     .click();
@@ -177,22 +179,12 @@ test("highlight preserves previous analysis, display filters and collapsed group
   expect(restored.project).toEqual(before.project);
   expect(restored.groupFilter).toBe(before.groupFilter);
   expect(restored.graphFocus).toEqual(before.graphFocus);
+  await openMapOptions(page);
   await page
     .locator('#graphToolbar [data-action="direct-connections"]')
     .click();
   await page.keyboard.press("Escape");
-  if (
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .isVisible()
-  )
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .click();
+  await openMapLayout(page);
   await page.locator("#graphLayout").selectOption("circle");
   await page.locator('.layout-controls [data-action="layout"]').click();
   await expect
@@ -225,18 +217,7 @@ test("all automatic layouts move only direct connections and preserve other peop
       hidden = before.project.people.filter(
         (p) => !expected.people.includes(p.id),
       );
-    if (
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .isVisible()
-    )
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .click();
+    await openMapLayout(page);
     await page.locator("#graphLayout").selectOption(style);
     await page.locator('.layout-controls [data-action="layout"]').click();
     await expect

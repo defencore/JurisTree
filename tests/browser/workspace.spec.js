@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 import { biographyProject } from "../fixtures/biography.js";
+import { openMapOptions } from "./helpers/map-options.js";
 
 const errors = [];
 test.beforeEach(async ({ page }) => {
@@ -159,6 +160,7 @@ test("renders all workspace sections and finds a graph path", async ({
     await page.locator(`[data-view="${view}"]`).click();
     await expect(page.locator("#viewTitle")).not.toBeEmpty();
   }
+  await openMapOptions(page);
   await page.locator('[data-action="graph-search"]').click();
   await page.locator("#analysisFrom").selectOption("p1");
   await page.locator("#analysisTo").selectOption("p5");

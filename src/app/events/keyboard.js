@@ -96,7 +96,7 @@ export function bindKeyboardEvents() {
       if (d) viewDocument(d.dataset.document);
       if (e.target.id === "dropZone") openFiles();
     }
-    if (e.target === $("#graph")) {
+    if (e.target === $("#graph") && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (e.key === "+" || e.key === "=") zoom(1.2);
       if (e.key === "-") zoom(1 / 1.2);
       if (e.key === "0") fit();

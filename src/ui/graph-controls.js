@@ -40,8 +40,7 @@ export function renderGraphControls() {
   context.hidden = appState.view !== "tree";
   if (appState.view !== "tree") return;
   const layoutOpen =
-    toolbar.querySelector(".graph-layout-settings")?.open ??
-    (innerWidth <= 760 || innerWidth >= 1440);
+    toolbar.querySelector(".graph-layout-settings")?.open ?? false;
   const cfg = graphView(),
     ps = visiblePeople(false),
     ids = new Set(ps.map((p) => p.id)),

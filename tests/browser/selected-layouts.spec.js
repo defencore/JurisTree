@@ -95,7 +95,7 @@ async function fixture(page) {
   });
 }
 async function showTools(page) {
-  if (!(await page.locator("#graphLayout").isVisible()))
+  if (!(await page.locator("#graphToolbar").isVisible()))
     await page.locator('[data-action="mobile-tools"]').click();
 }
 async function edit(page) {

@@ -6,7 +6,7 @@ import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { directConnectionScope } from "../model/graph-view.js";
 import { clone } from "../core/utils.js";
-import { isMobileLayout } from "../core/viewport.js";
+import { resizeCamera } from "../model/camera-viewport.js";
 import { viewDocument } from "../features/document-view.js";
 import { redrawDiagram } from "../features/diagram.js";
 import { toggleGroup } from "../features/groups.js";
@@ -14,7 +14,7 @@ import { editProperty } from "../features/property.js";
 import { nodeItem, person } from "../model/lookup.js";
 import { commitSnapshot, repairSelection } from "../services/history.js";
 import { render, select } from "../ui/render.js";
-import { applyCamera, fit, focusPerson, zoom } from "./camera.js";
+import { applyCamera, zoom } from "./camera.js";
 import { filteredGraphNodes } from "./node-data.js";
 import { scheduleGraphRender } from "./render.js";
 import { bindTouchInteractions } from "./touch.js";
@@ -224,16 +224,44 @@ export function finishGraphDrag(e) {
   }
 }
 export function bindResizeEvents() {
-  let lastWidth = innerWidth;
-  window.addEventListener("resize", () => {
-    if (lastWidth === innerWidth) return;
-    lastWidth = innerWidth;
-    if (
-      appState.initialized &&
-      appState.editorActive &&
-      $("#startScreen").hidden &&
-      appState.view === "tree"
-    )
-      isMobileLayout() ? focusPerson() : fit();
+  const graph = $("#graph");
+  const viewport = () => ({
+    width: innerWidth,
+    height: innerHeight,
+    ratio: devicePixelRatio,
   });
+  let previous = null,
+    previousViewport = viewport();
+  function updateViewport() {
+    const { width, height } = graph.getBoundingClientRect(),
+      nextViewport = viewport(),
+      viewportChanged = Object.keys(nextViewport).some(
+        (key) => nextViewport[key] !== previousViewport[key],
+      );
+    previousViewport = nextViewport;
+    if (
+      !width ||
+      !height ||
+      !appState.initialized ||
+      !appState.editorActive ||
+      !$("#startScreen").hidden ||
+      appState.view !== "tree"
+    ) {
+      previous = null;
+      return;
+    }
+    const next = { width, height };
+    if (
+      previous &&
+      viewportChanged &&
+      (width !== previous.width || height !== previous.height)
+    ) {
+      appState.camera = resizeCamera(appState.camera, previous, next);
+      applyCamera();
+    }
+    previous = next;
+  }
+  const observer = new ResizeObserver(updateViewport);
+  observer.observe(graph);
+  window.addEventListener("resize", updateViewport);
 }

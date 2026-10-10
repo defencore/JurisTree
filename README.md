@@ -55,7 +55,7 @@ Open `http://localhost:8080`. The preview serves static files; the deployed app 
 
 ```sh
 npm run check                   # Lint, syntax, unit tests and production build
-npx playwright install chromium
+npx playwright install chromium firefox
 npm run test:browser             # Browser interaction checks
 npm run preview                 # Serve the built dist/ directory
 ```

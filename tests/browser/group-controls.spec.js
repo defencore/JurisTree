@@ -1,3 +1,4 @@
+import { openMapLayout } from "./helpers/map-options.js";
 import { test, expect } from "@playwright/test";
 const snapshot = (page) =>
   page.evaluate(async () => {
@@ -137,18 +138,7 @@ test("arranging a family group moves only its members and the whole map uses the
           .filter((p) => p.groupIds.includes("g1"))
           .map((p) => p.id),
       );
-    if (
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .isVisible()
-    )
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .click();
+    await openMapLayout(page);
     await page.locator("#graphLayout").selectOption(style);
     await page.locator('.layout-controls [data-action="layout"]').click();
     await expect

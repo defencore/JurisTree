@@ -1,0 +1,261 @@
+/* Browser page zoom remains native; compact desktop spacing reserves room for the map. */
+@media screen and (min-width: 761px) and (pointer: fine) {
+  :root {
+    --workspace-header-height: 102px;
+  }
+  .topbar {
+    height: 56px;
+    padding: 0 14px;
+    gap: 14px;
+  }
+  .brand {
+    min-width: 180px;
+    gap: 8px;
+  }
+  .brandmark {
+    width: 30px;
+    height: 30px;
+  }
+  .brand b {
+    font-size: 1.125rem;
+  }
+  .brand small {
+    font-size: 0.6875rem;
+  }
+  .top-actions,
+  .header-preferences {
+    gap: 6px;
+  }
+  .header-preferences {
+    padding-left: 10px;
+  }
+  .topbar .btn,
+  .workspace .btn,
+  .global-search-bar .btn {
+    min-height: 32px;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    padding: 5px 9px;
+    gap: 6px;
+  }
+  .topbar .iconbtn,
+  .workspace .iconbtn,
+  .global-search-bar .iconbtn {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    padding: 0;
+  }
+  .topbar .btn .icon,
+  .workspace .btn .icon,
+  .workspace .iconbtn .icon {
+    width: 17px;
+    height: 17px;
+  }
+  .language-control select {
+    min-height: 32px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .global-search-bar {
+    height: 46px;
+    padding: 5px 14px;
+  }
+  .global-search-input {
+    height: 35px;
+  }
+  .global-search-input input {
+    padding: 5px 0;
+    font-size: 0.875rem;
+  }
+  .person-filter-toggle {
+    height: 35px;
+  }
+  .workspace {
+    grid-template-columns: 220px minmax(0, 1fr) 300px;
+  }
+  .view-full .workspace,
+  .workspace:has(.inspector[data-floating]) {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .sidebar {
+    padding: 12px 10px;
+  }
+  .navbtn {
+    min-height: 44px;
+    padding: 6px 7px;
+    gap: 8px;
+  }
+  .nav-group + .nav-group {
+    margin-top: 9px;
+  }
+  .nav-icon {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+  .nav-icon .icon {
+    width: 20px;
+    height: 20px;
+  }
+  .nav-text {
+    gap: 2px;
+  }
+  .nav-text b {
+    font-size: 0.8125rem;
+  }
+  .viewbar {
+    min-height: 64px;
+    padding: 10px 14px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .viewbar h1 {
+    font-size: 1.1875rem;
+  }
+  .viewbar #viewSubtitle {
+    margin-top: 3px;
+    font-size: 0.75rem;
+  }
+  .favorite-rail {
+    min-height: 36px;
+    padding: 3px 14px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  body:not(.view-full) .status-board {
+    padding: 0 14px 6px;
+  }
+  body:not(.view-full) .status-tile {
+    min-height: 40px;
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  body:not(.view-full) .status-tile > span:last-child {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  body:not(.view-full) .status-tile b {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  body:not(.view-full) .status-tile small {
+    font-size: 0.75rem;
+    margin: 0;
+  }
+  .tile-icon,
+  .tile-icon .icon {
+    width: 20px;
+    height: 22px;
+  }
+  .path-panel {
+    padding: 6px 14px;
+    gap: 6px 12px;
+  }
+  .path-panel select,
+  .layout-controls select {
+    min-height: 30px;
+    font-size: 0.8125rem;
+    padding: 4px 7px;
+  }
+  .graph-toolbar {
+    padding: 7px 14px;
+    gap: 6px 10px;
+  }
+  .graph-layout-settings > summary {
+    padding: 3px 0;
+  }
+  .layout-controls {
+    padding: 6px 0 3px;
+    gap: 6px 10px;
+  }
+  .layout-scope-hint {
+    font-size: 0.75rem;
+  }
+  .graph-view-summary {
+    font-size: 0.75rem;
+  }
+  .canvas-top {
+    padding: 6px 14px;
+  }
+  .tool-cluster {
+    padding: 2px;
+  }
+  .legend summary {
+    height: 34px;
+    padding: 6px 10px;
+    font-size: 0.8125rem;
+  }
+  .legend-content {
+    top: 34px;
+  }
+  .inspector {
+    padding: 14px;
+  }
+  .inspector-header {
+    padding-bottom: 8px;
+  }
+  .profile {
+    padding-bottom: 12px;
+  }
+  .profile .avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+  .profile h2 {
+    font-size: 1.0625rem;
+  }
+  .profile-actions {
+    padding-top: 8px;
+    gap: 6px;
+  }
+  .direct-connections-button {
+    margin-top: 6px;
+  }
+  .kin-group {
+    padding-top: 14px;
+  }
+}
+@media screen and (min-width: 761px) and (max-width: 1050px) and (pointer: fine) {
+  .workspace,
+  .view-full .workspace,
+  .workspace:has(.inspector[data-floating]) {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+}
+
+/* A zoomed desktop viewport can be wide but short, so map options need bounded space. */
+@media screen and (min-width: 1051px) and (max-height: 720px) {
+  .mobile-map-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+  .mobile-map-bar > p,
+  .mobile-map-bar > [data-action="touch-move"] {
+    display: none;
+  }
+  .map-settings {
+    display: none;
+  }
+  .mobile-tools-open .map-settings {
+    display: block;
+    max-height: 30dvh;
+    overflow: auto;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .view-full .mobile-map-bar {
+    display: none;
+  }
+  .view-full .map-settings {
+    display: contents;
+  }
+}

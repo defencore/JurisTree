@@ -1,3 +1,4 @@
+import { openMapLayout, openMapOptions } from "./helpers/map-options.js";
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 
@@ -58,6 +59,7 @@ test("home guide downloads a usable exercise and preserves the pending map title
   await closeGuide(page);
   await expect(page.locator('.node[data-kind="person"]')).toHaveCount(8);
   await expect(page.locator("#projectTitle")).toHaveText(example.title);
+  await openMapOptions(page);
   await page.locator('[data-action="graph-help"]').click();
   await page.locator('#modal [data-action="user-guide"]').click();
   await expect(page.locator("[data-user-guide]")).toBeVisible();
@@ -107,18 +109,7 @@ test("a beginner can create a family, group, profile record and linked source us
     await page.locator(`#modal [name="members"][value="${id}"]`).check();
   await page.locator('#modal button[type="submit"]').click();
   await expect(page.locator("#groupList")).toContainText("Jamie & Casey Doe");
-  if (
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .isVisible()
-  )
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .click();
+  await openMapLayout(page);
   await page.locator("#graphLayout").selectOption("generations");
   await page.locator('.layout-controls [data-action="layout"]').click();
   await page.locator('[data-action="fit"]').click();
