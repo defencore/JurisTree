@@ -16,7 +16,8 @@ import {
 } from "../../features/calendar.js";
 import { updatePathSearchMode } from "../../features/graph-tools.js";
 import { renderKinResult } from "../../features/relationships.js";
-import { arrangeGraph } from "../../graph/layout.js";
+import { layoutTypes } from "../../core/layouts.js";
+import { renderGraphControls } from "../../ui/graph-controls.js";
 import { dateExact, dateInputValue } from "../../model/dates.js";
 import { resetAnalysis } from "../../model/graph-view.js";
 import { commit } from "../../services/history.js";
@@ -95,7 +96,13 @@ export function bindChangeEvents() {
       return;
     }
     if (t.id === "graphLayout") {
-      arrangeGraph(t.value);
+      if (Object.hasOwn(layoutTypes, t.value)) appState.layoutStyle = t.value;
+      return;
+    }
+    if (t.id === "graphLayoutScope") {
+      if (["selected", "visible"].includes(t.value))
+        appState.layoutScope = t.value;
+      renderGraphControls();
       return;
     }
     if (t.id === "analysisPathMode") {

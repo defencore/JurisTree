@@ -19,9 +19,15 @@ test("divorced spouses have explicit edge, search, inspector and former-spouse l
     ["ru", "Разведены", "Бывшая жена", "Зарегистрированный брак"],
   ]) {
     await page.locator(".topbar [data-language]").selectOption(language);
-    await expect(page.locator('[data-edge="r13"]')).toContainText(label);
-    await expect(page.locator('[data-edge="r13"]')).not.toContainText(current);
-    await expect(page.locator('[data-edge="r4"]')).toContainText(current);
+    await expect(page.locator('[data-route-label="r:r13"]')).toContainText(
+      label,
+    );
+    await expect(page.locator('[data-route-label="r:r13"]')).not.toContainText(
+      current,
+    );
+    await expect(page.locator('[data-route-label="r:r4"]')).toContainText(
+      current,
+    );
     await expect(
       page.locator('.node[data-node="p9"] .person-card-role text'),
     ).toHaveText(former);
@@ -45,11 +51,13 @@ test("divorced spouses have explicit edge, search, inspector and former-spouse l
   await page.locator('[data-edit-relation="r13"]').click();
   await page.locator('[name="relationship-status"]').selectOption("current");
   await page.locator('#modal button[type="submit"]').click();
-  await expect(page.locator('[data-edge="r13"]')).toContainText(
+  await expect(page.locator('[data-route-label="r:r13"]')).toContainText(
     "Registered marriage",
   );
   await page.locator('[data-action="undo"]').click();
-  await expect(page.locator('[data-edge="r13"]')).toContainText("Divorced");
+  await expect(page.locator('[data-route-label="r:r13"]')).toContainText(
+    "Divorced",
+  );
 });
 
 for (const [language, width, burialLabel] of [

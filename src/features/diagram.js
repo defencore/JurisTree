@@ -1,12 +1,9 @@
-import {
-  nodePlacementLocked,
-  connectorPlacementLocked,
-} from "../model/placement-locks.js";
+import { diagramSelectionItems } from "../ui/diagram-selection.js";
+import { connectorPlacementLocked } from "../model/placement-locks.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { clone } from "../core/utils.js";
 import { applyCamera } from "../graph/camera.js";
-import { filteredGraphNodes } from "../graph/node-data.js";
 import { renderGraph } from "../graph/render.js";
 import { translate as t } from "../i18n/index.js";
 import {
@@ -19,7 +16,9 @@ import { nodeItem } from "../model/lookup.js";
 import { commit } from "../services/history.js";
 import { toast } from "../ui/dialog.js";
 import { renderDiagramTools } from "../ui/diagram-tools.js";
-import { render } from "../ui/render.js";
+import { render, select } from "../ui/render.js";
+import { renderInspector } from "../ui/inspector.js";
+import { toggleGraphNode } from "../model/graph-selection.js";
 
 export const connectorElement = (key) =>
   $('#graph [data-connector="' + key + '"][data-from-node]');
@@ -43,15 +42,6 @@ export function toggleDiagramTools() {
   state.diagramEditing = !state.diagramEditing;
   state.diagramAddPoint = false;
   state.diagramPointIndex = -1;
-  state.diagramSelecting = false;
-  state.diagramNodeSelection.clear();
-  state.diagramLabelSelection.clear();
-  state.diagramConnectionKey =
-    state.diagramEditing && state.selected?.kind === "relation"
-      ? "r:" + state.selected.id
-      : "";
-  if (state.diagramConnectionKey)
-    state.diagramLabelSelection.add(state.diagramConnectionKey);
   state.view = "tree";
   if (state.diagramEditing) document.body.classList.remove("mobile-tools-open");
   render();
@@ -71,12 +61,15 @@ export function redrawDiagram() {
   state.camera.y += before.top - after.top;
   applyCamera();
 }
-export function selectDiagramConnection(key, extend = false, label = false) {
-  if (!label) state.diagramSelecting = false;
+export function selectDiagramConnection(key, extend = false) {
+  if (!extend && key.startsWith("r:")) {
+    select("relation", key.slice(2), { openPanel: !state.diagramEditing });
+    return;
+  }
   state.diagramConnectionKey = key;
   state.diagramPointIndex = -1;
   state.diagramAddPoint = false;
-  if (extend && label) {
+  if (extend) {
     if (state.diagramLabelSelection.has(key))
       state.diagramLabelSelection.delete(key);
     else state.diagramLabelSelection.add(key);
@@ -85,30 +78,22 @@ export function selectDiagramConnection(key, extend = false, label = false) {
     state.multiSelection.clear();
     state.diagramNodeSelection.clear();
   }
-  redrawDiagram();
-}
-export function toggleDiagramSelecting() {
-  state.diagramSelecting = !state.diagramSelecting;
-  state.diagramAddPoint = false;
-  if (state.diagramSelecting) {
-    state.multiSelection.clear();
-    state.diagramNodeSelection.clear();
-    state.diagramLabelSelection.clear();
-    state.graphSelectionAnchor = "";
+  if (!state.diagramLabelSelection.has(key))
+    state.diagramConnectionKey = [...state.diagramLabelSelection].at(-1) || "";
+  if (key.startsWith("r:")) {
+    if (state.diagramLabelSelection.has(key))
+      state.selected = { kind: "relation", id: key.slice(2) };
+    else if (
+      state.selected?.kind === "relation" &&
+      state.selected.id === key.slice(2)
+    )
+      state.selected = null;
+    renderInspector();
   }
   redrawDiagram();
 }
 export function toggleDiagramNode(kind, id) {
-  if (kind === "person") {
-    if (state.multiSelection.has(id)) state.multiSelection.delete(id);
-    else state.multiSelection.add(id);
-    state.graphSelectionAnchor = "";
-  } else {
-    const key = kind + ":" + id;
-    if (state.diagramNodeSelection.has(key))
-      state.diagramNodeSelection.delete(key);
-    else state.diagramNodeSelection.add(key);
-  }
+  toggleGraphNode(state, kind, id);
   redrawDiagram();
 }
 export function changeDiagramSetting(name, value) {
@@ -125,7 +110,6 @@ export function changeDiagramSetting(name, value) {
     state.project.graphView = {
       ...cfg,
       [name]: value,
-      ...(name === "snapToGrid" && value ? { showGrid: true } : {}),
     };
   });
 }
@@ -156,7 +140,7 @@ export function beginRoutePoint() {
     return;
   }
   state.diagramAddPoint = !state.diagramAddPoint;
-  state.diagramSelecting = false;
+  state.selectionMode = false;
   redrawDiagram();
 }
 export function removeRoutePoint(index = state.diagramPointIndex) {
@@ -189,45 +173,6 @@ export function resetDiagramLabels() {
       storeRoute(key, route);
     }
   });
-}
-export function diagramSelectionItems() {
-  const nodes = filteredGraphNodes(),
-    ids = state.multiSelection.size
-      ? state.multiSelection
-      : !state.diagramSelecting &&
-          !state.diagramLabelSelection.size &&
-          !state.diagramNodeSelection.size &&
-          state.selected?.kind === "person"
-        ? new Set([state.selected.id])
-        : new Set();
-  const items = nodes
-    .filter((n) =>
-      n.kind === "person"
-        ? ids.has(n.id)
-        : state.diagramNodeSelection.has(n.kind + ":" + n.id),
-    )
-    .map((n) => ({
-      ...n,
-      id: n.kind + ":" + n.id,
-      idValue: n.id,
-      locked: nodePlacementLocked(state.project, n.kind, n.id),
-    }));
-  for (const key of state.diagramLabelSelection) {
-    const el = labelElement(key);
-    if (!el) continue;
-    const w = Number(el.dataset.labelWidth),
-      h = Number(el.dataset.labelHeight);
-    items.push({
-      id: key,
-      kind: "label",
-      locked: connectorPlacementLocked(state.project, key),
-      x: Number(el.dataset.labelX) - w / 2,
-      y: Number(el.dataset.labelY) - 10,
-      w,
-      h,
-    });
-  }
-  return items;
 }
 export function alignDiagramSelection(mode) {
   const items = diagramSelectionItems(),

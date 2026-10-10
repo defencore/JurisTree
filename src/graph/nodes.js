@@ -18,9 +18,8 @@ import { svgText } from "./text.js";
 export function nodeSVG(n, images = null, exporting = false) {
   const multi =
       !exporting &&
-      ((appState.diagramEditing &&
-        appState.diagramNodeSelection.has(n.kind + ":" + n.id)) ||
-        appState.multiSelection.has(n.id) ||
+      (appState.diagramNodeSelection.has(n.kind + ":" + n.id) ||
+        (n.kind === "person" && appState.multiSelection.has(n.id)) ||
         (n.kind === "group" &&
           n.members.some((id) => appState.multiSelection.has(id)))),
     direct = !fullDiagram() && directConnectionScope(),

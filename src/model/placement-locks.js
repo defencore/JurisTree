@@ -1,3 +1,4 @@
+import { selectedGraphNodes, nodeKey } from "./graph-selection.js";
 import { validDiagramKeys } from "./diagram.js";
 
 const lists = {
@@ -101,30 +102,17 @@ export function connectorPlacementLocked(project, key) {
 export function placementSelection(project, runtime, nodes) {
   const selectedNodes = new Set(),
     connectors = new Set();
-  if (runtime.diagramEditing) {
-    for (const node of nodes) {
-      if (
-        (node.kind === "person" && runtime.multiSelection.has(node.id)) ||
-        runtime.diagramNodeSelection.has(node.kind + ":" + node.id)
-      )
-        selectedNodes.add(node.kind + ":" + node.id);
-    }
-    for (const key of runtime.diagramLabelSelection) connectors.add(key);
-    if (
-      !runtime.diagramSelecting &&
-      !selectedNodes.size &&
-      !connectors.size &&
-      runtime.diagramConnectionKey
-    )
-      connectors.add(runtime.diagramConnectionKey);
-  } else {
-    for (const id of runtime.multiSelection) selectedNodes.add("person:" + id);
-  }
+  for (const node of selectedGraphNodes(nodes, runtime))
+    selectedNodes.add(nodeKey(node));
+  for (const key of runtime.diagramLabelSelection || []) connectors.add(key);
   if (
+    !runtime.selectionMode &&
     !selectedNodes.size &&
     !connectors.size &&
-    !(runtime.diagramEditing && runtime.diagramSelecting)
-  ) {
+    runtime.diagramConnectionKey
+  )
+    connectors.add(runtime.diagramConnectionKey);
+  if (!selectedNodes.size && !connectors.size && !runtime.selectionMode) {
     const selected = runtime.selected;
     if (selected?.kind === "relation") connectors.add("r:" + selected.id);
     else if (selected && lists[selected.kind])

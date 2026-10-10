@@ -51,6 +51,10 @@ export function focusPerson(
   applyCamera();
 }
 export function applyCamera() {
+  const tools = $(".graph-tools"),
+    legend = $("#graphLegend");
+  if (tools && legend)
+    legend.style.bottom = `calc(${tools.offsetHeight + 20}px + env(safe-area-inset-bottom, 0px))`;
   $("#scene").setAttribute(
     "transform",
     `translate(${appState.camera.x} ${appState.camera.y}) scale(${appState.camera.z})`,

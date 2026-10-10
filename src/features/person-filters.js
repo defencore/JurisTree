@@ -1,3 +1,4 @@
+import { clearGraphItems } from "../model/graph-selection.js";
 import { $ } from "../core/dom.js";
 import {
   emptyPersonFilter,
@@ -35,7 +36,7 @@ import { showPersonOnMap } from "./person-navigation.js";
 function apply(query) {
   state.personFilter = query;
   resetAnalysis(false);
-  state.multiSelection.clear();
+  clearGraphItems(state);
   const ids = personFilterReport().ids;
   if (state.selected?.kind === "person" && !ids.has(state.selected.id))
     state.selected = null;
@@ -45,7 +46,7 @@ function apply(query) {
 export function clearPersonFilters() {
   resetPersonFilter();
   resetAnalysis(false);
-  state.multiSelection.clear();
+  clearGraphItems(state);
   render();
   fit();
 }

@@ -107,7 +107,20 @@ test("a beginner can create a family, group, profile record and linked source us
     await page.locator(`#modal [name="members"][value="${id}"]`).check();
   await page.locator('#modal button[type="submit"]').click();
   await expect(page.locator("#groupList")).toContainText("Jamie & Casey Doe");
+  if (
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .isVisible()
+  )
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .click();
   await page.locator("#graphLayout").selectOption("generations");
+  await page.locator('.layout-controls [data-action="layout"]').click();
   await page.locator('[data-action="fit"]').click();
   await page.locator(`#personList [data-person="${ids["Robin Doe"]}"]`).click();
   await expect(

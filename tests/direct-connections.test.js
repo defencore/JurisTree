@@ -10,8 +10,9 @@ import {
 } from "../src/model/graph-view.js";
 import { fresh } from "../src/model/project.js";
 import { filteredGraphNodes } from "../src/graph/node-data.js";
-import { positionScopedLayout } from "../src/graph/layouts/scoped.js";
-import { familyLayout } from "../src/graph/layouts/family.js";
+import { layoutInput } from "../src/graph/layouts/input.js";
+import { computeLayout } from "../src/graph/layouts/compute.js";
+import { applyLayout } from "../src/graph/layouts/placement.js";
 import {
   PERSON_CARD_WIDTH as w,
   PERSON_CARD_HEIGHT as h,
@@ -145,26 +146,34 @@ test("scope refreshes after relationship edits, undo-style replacement and refer
   resetAnalysis(false);
 });
 
-test("partial layout keeps its relative geometry, avoids hidden cards, and does not mutate the project or input positions", () => {
+test("partial layout avoids outsiders and does not mutate the project or proposals", async () => {
   const project = fixture(),
     original = structuredClone(project),
     scope = directConnections(project, "root"),
-    input = familyLayout({
-      ...project,
-      people: project.people.filter((p) => scope.people.has(p.id)),
-      relations: project.relations.filter((r) => scope.relations.has(r.id)),
-      documents: [],
-      property: [],
-    }).people,
-    before = structuredClone(input),
-    output = positionScopedLayout(input, project, scope),
-    shift = {
-      x: output.get("root").x - input.get("root").x,
-      y: output.get("root").y - input.get("root").y,
-    };
-  for (const [id, p] of output) {
-    assert.equal(p.x - input.get(id).x, shift.x);
-    assert.equal(p.y - input.get(id).y, shift.y);
+    input = layoutInput(
+      project,
+      project.people.map((p) => ({ ...p, kind: "person", w, h })),
+      {
+        multiSelection: new Set(),
+        diagramNodeSelection: new Set(),
+        diagramLabelSelection: new Set(),
+        layoutScope: "visible",
+      },
+      { direct: scope },
+    ),
+    positions = await computeLayout(input, "generations"),
+    before = structuredClone(positions),
+    next = applyLayout(
+      project,
+      input,
+      positions,
+      "generations",
+      project.graphView,
+    ),
+    output = new Map(
+      next.people.filter((p) => scope.people.has(p.id)).map((p) => [p.id, p]),
+    );
+  for (const p of output.values()) {
     const obstacles = [
       ...project.people
         .filter((x) => !scope.people.has(x.id))
@@ -183,7 +192,14 @@ test("partial layout keeps its relative geometry, avoids hidden cards, and does 
     );
   }
   assert.deepEqual(project, original);
-  assert.deepEqual(input, before);
+  assert.deepEqual(positions, before);
+  assert.deepEqual(
+    next.people.filter((p) => !scope.people.has(p.id)),
+    project.people.filter((p) => !scope.people.has(p.id)),
+  );
+  assert.deepEqual(next.documents, project.documents);
+  assert.deepEqual(next.property, project.property);
+  assert.deepEqual(next.groups, project.groups);
 });
 
 test("family badges retain the reference person when another visible card is selected", () => {

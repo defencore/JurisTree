@@ -1,3 +1,4 @@
+import { clearGraphItems } from "../../model/graph-selection.js";
 import { beginRoutePoint, toggleDiagramTools } from "../../features/diagram.js";
 import { $ } from "../../core/dom.js";
 import { state as appState } from "../../core/state.js";
@@ -67,7 +68,7 @@ export function bindKeyboardEvents() {
       if (appState.directConnectionRoot) restoreConnectionMap();
       else if (appState.graphFocus || appState.analysisHighlight) {
         resetAnalysis();
-        appState.multiSelection.clear();
+        clearGraphItems(appState);
         appState.graphSelectionAnchor = "";
         render();
       } else clearGraphSelection();

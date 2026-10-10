@@ -8,13 +8,12 @@ import { directConnectionScope } from "../model/graph-view.js";
 import { clone } from "../core/utils.js";
 import { isMobileLayout } from "../core/viewport.js";
 import { viewDocument } from "../features/document-view.js";
-import { toggleGraphSelection } from "../features/graph-analysis.js";
+import { redrawDiagram } from "../features/diagram.js";
 import { toggleGroup } from "../features/groups.js";
 import { editProperty } from "../features/property.js";
 import { nodeItem, person } from "../model/lookup.js";
 import { repairSelection } from "../services/history.js";
 import { scheduleSave } from "../services/storage.js";
-import { renderGraphControls } from "../ui/graph-controls.js";
 import { render, select } from "../ui/render.js";
 import { applyCamera, fit, focusPerson, zoom } from "./camera.js";
 import { filteredGraphNodes } from "./node-data.js";
@@ -35,27 +34,6 @@ export function bindGraphInteractions() {
       return;
     const n = e.target.closest("[data-node]"),
       rect = graph.getBoundingClientRect();
-    if (n && (e.ctrlKey || e.metaKey || e.shiftKey)) {
-      if (n.dataset.kind === "person") toggleGraphSelection(n.dataset.node);
-      else if (n.dataset.kind === "group") {
-        appState.graphSelectionAnchor = "";
-        const g = filteredGraphNodes().find((x) => x.id === n.dataset.node);
-        if (g) {
-          const remove = g.members.every((id) =>
-            appState.multiSelection.has(id),
-          );
-          g.members.forEach((id) =>
-            remove
-              ? appState.multiSelection.delete(id)
-              : appState.multiSelection.add(id),
-          );
-          renderGraph();
-          renderGraphControls();
-        }
-      }
-      e.preventDefault();
-      return;
-    }
     if (n) {
       const item = nodeItem(n.dataset.kind, n.dataset.node),
         displayed = filteredGraphNodes().find((x) => x.id === item.id),
@@ -108,6 +86,8 @@ export function bindGraphInteractions() {
           ey: e.clientY,
           extend: e.ctrlKey || e.metaKey || e.shiftKey,
           beforeSelection: [...appState.multiSelection],
+          beforeNodes: [...appState.diagramNodeSelection],
+          beforeLabels: [...appState.diagramLabelSelection],
           moved: false,
         };
         $("#selectionBox").removeAttribute("hidden");
@@ -152,7 +132,7 @@ export function bindGraphInteractions() {
       box.setAttribute("width", Math.abs(dx));
       box.setAttribute("height", Math.abs(dy));
     } else {
-      if (appState.drag.locked) return;
+      if (appState.drag.locked || !appState.drag.moved) return;
       const item = nodeItem(appState.drag.nodeKind, appState.drag.id);
       const next = snapPoint(
           {
@@ -211,20 +191,20 @@ export function finishGraphDrag(e) {
         (Math.max(d.sy, d.ey) - rect.top - appState.camera.y) /
         appState.camera.z;
     appState.multiSelection = new Set(d.extend ? d.beforeSelection : []);
+    appState.diagramNodeSelection = new Set(d.extend ? d.beforeNodes : []);
+    appState.diagramLabelSelection = new Set(d.extend ? d.beforeLabels : []);
+    if (!d.extend) appState.diagramConnectionKey = "";
     appState.graphSelectionAnchor = "";
     for (const n of filteredGraphNodes())
       if (
-        ["person", "group"].includes(n.kind) &&
         n.x + n.w / 2 >= x1 &&
         n.x + n.w / 2 <= x2 &&
         n.y + n.h / 2 >= y1 &&
         n.y + n.h / 2 <= y2
       )
-        (n.kind === "group" ? n.members : [n.id]).forEach((id) =>
-          appState.multiSelection.add(id),
-        );
-    renderGraph();
-    renderGraphControls();
+        if (n.kind === "person") appState.multiSelection.add(n.id);
+        else appState.diagramNodeSelection.add(n.kind + ":" + n.id);
+    redrawDiagram();
     return;
   }
   if (d.kind === "node") {

@@ -1,3 +1,4 @@
+import { clearGraphItems } from "../model/graph-selection.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { applyCamera } from "../graph/camera.js";
@@ -16,7 +17,7 @@ export function focusDirectConnections() {
     state.directConnectionRoot = "";
     return;
   }
-  state.multiSelection.clear();
+  clearGraphItems(state);
   state.graphSelectionAnchor = "";
   state.view = "tree";
   redrawHighlight();

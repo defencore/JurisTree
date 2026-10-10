@@ -84,7 +84,11 @@ export function bindDiagramInteractions(graph) {
   graph.addEventListener(
     "pointerdown",
     (event) => {
-      if (!state.diagramEditing || state.analysisBusy || event.button !== 0)
+      if (
+        state.analysisBusy ||
+        event.button !== 0 ||
+        event.target.closest("[data-biography],[data-favorite]")
+      )
         return;
       const label = event.target.closest("[data-route-label]"),
         handle = event.target.closest("[data-route-point]"),
@@ -98,11 +102,12 @@ export function bindDiagramInteractions(graph) {
         ["person", "document", "property", "group"].includes(
           node.dataset.kind,
         ) &&
-        (state.diagramSelecting ||
+        (state.selectionMode ||
           event.ctrlKey ||
           event.metaKey ||
           event.shiftKey)
       ) {
+        if (event.pointerType === "touch") return;
         event.preventDefault();
         event.stopImmediatePropagation();
         toggleDiagramNode(node.dataset.kind, node.dataset.node);
@@ -110,6 +115,24 @@ export function bindDiagramInteractions(graph) {
         return;
       }
       if (!adding && !label && !connector) return;
+      if (
+        event.pointerType === "touch" &&
+        state.selectionMode &&
+        !adding &&
+        !handle &&
+        !segment
+      )
+        return;
+      const extend =
+        state.selectionMode || event.ctrlKey || event.metaKey || event.shiftKey;
+      if (
+        !state.diagramEditing &&
+        label?.dataset.routeLabel.startsWith("g:") &&
+        !extend
+      )
+        return;
+      if (!state.diagramEditing && event.pointerType === "touch" && !extend)
+        return;
       event.preventDefault();
       event.stopImmediatePropagation();
       if (event.isPrimary === false || gesture) return;
@@ -117,6 +140,11 @@ export function bindDiagramInteractions(graph) {
         ? state.diagramConnectionKey
         : label?.dataset.routeLabel || connector.dataset.connector;
       const start = point(event);
+      if (!state.diagramEditing || (extend && !handle && !segment && !adding)) {
+        consumedClick = true;
+        selectDiagramConnection(key, extend);
+        return;
+      }
       if (
         !adding &&
         !handle &&
@@ -124,27 +152,14 @@ export function bindDiagramInteractions(graph) {
         !(
           label &&
           state.diagramLabelSelection.has(key) &&
+          !state.selectionMode &&
           !event.ctrlKey &&
           !event.metaKey &&
           !event.shiftKey
         )
       ) {
-        selectDiagramConnection(
-          key,
-          state.diagramSelecting ||
-            event.ctrlKey ||
-            event.metaKey ||
-            event.shiftKey,
-          !!label,
-        );
-        if (
-          (state.diagramSelecting ||
-            event.ctrlKey ||
-            event.metaKey ||
-            event.shiftKey) &&
-          label
-        )
-          return;
+        selectDiagramConnection(key);
+        consumedClick = true;
       }
       if (connectorPlacementLocked(state.project, key)) {
         consumedClick = true;
@@ -312,7 +327,6 @@ export function bindDiagramInteractions(graph) {
   graph.addEventListener(
     "keydown",
     (event) => {
-      if (!state.diagramEditing) return;
       const node = event.target.closest("[data-node]");
       if (
         node &&
@@ -320,7 +334,7 @@ export function bindDiagramInteractions(graph) {
           node.dataset.kind,
         ) &&
         event.key === "Enter" &&
-        (state.diagramSelecting ||
+        (state.selectionMode ||
           event.ctrlKey ||
           event.metaKey ||
           event.shiftKey)
@@ -356,32 +370,51 @@ export function bindDiagramInteractions(graph) {
       if (connector && !label && !handle && !segment && event.key === "Enter") {
         event.preventDefault();
         event.stopImmediatePropagation();
-        selectDiagramConnection(connector.dataset.connector);
+        selectDiagramConnection(
+          connector.dataset.connector,
+          state.selectionMode ||
+            event.ctrlKey ||
+            event.metaKey ||
+            event.shiftKey,
+        );
         connectorElement(connector.dataset.connector)?.focus({
           preventScroll: true,
         });
         return;
       }
-      if (handle && ["Delete", "Backspace"].includes(event.key)) {
+      if (
+        state.diagramEditing &&
+        handle &&
+        ["Delete", "Backspace"].includes(event.key)
+      ) {
         event.preventDefault();
         event.stopImmediatePropagation();
         removeRoutePoint(Number(handle.dataset.routePoint));
         return;
       }
-      if (label && event.key === "Enter") {
+      if (
+        label &&
+        event.key === "Enter" &&
+        (state.diagramEditing ||
+          !label.dataset.routeLabel.startsWith("g:") ||
+          state.selectionMode ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey)
+      ) {
         event.preventDefault();
         event.stopImmediatePropagation();
         selectDiagramConnection(
           label.dataset.routeLabel,
-          state.diagramSelecting ||
+          state.selectionMode ||
             event.ctrlKey ||
             event.metaKey ||
             event.shiftKey,
-          true,
         );
         labelElement(label.dataset.routeLabel)?.focus({ preventScroll: true });
         return;
       }
+      if (!state.diagramEditing) return;
       if (segment && directions[event.key]) {
         event.preventDefault();
         event.stopImmediatePropagation();

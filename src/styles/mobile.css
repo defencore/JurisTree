@@ -311,3 +311,21 @@
     padding: 6px;
   }
 }
+
+/* Keep the essential map controls in one row on narrow screens. */
+@media (max-width: 760px) {
+  .graph-tools .tool-cluster {
+    padding: 0;
+  }
+  .graph-tools .zoom-label {
+    display: none;
+  }
+}
+@media (max-width: 380px) {
+  .graph-tools {
+    gap: 2px;
+  }
+  .graph-tools .tool-cluster .iconbtn {
+    width: 42px;
+  }
+}

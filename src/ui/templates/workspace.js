@@ -204,14 +204,11 @@ export const workspaceTemplate = `
               title="@@ui.showEntireTree@@"
             >
               <i data-icon="maximize"></i></button
-            ><button
-              class="iconbtn"
-              data-action="layout"
-              aria-label="@@ui.arrangeGenerations@@"
-              title="@@ui.arrangeGenerations@@"
             >
-              <i data-icon="layout"></i>
-            </button>
+          </div>
+          <div class="tool-cluster">
+            <button class="iconbtn" data-action="selection-mode" aria-label="@@ui.diagramSelectItems@@" title="@@ui.selectionHint@@" aria-pressed="false"><i data-icon="selectBox"></i></button>
+            <button class="iconbtn" data-action="toggle-grid" aria-label="@@ui.showGrid@@" title="@@ui.showGrid@@" aria-pressed="false"><i data-icon="grid"></i></button>
           </div>
         </div>
         <details class="legend" id="graphLegend">

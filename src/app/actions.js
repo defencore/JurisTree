@@ -1,7 +1,8 @@
+import { clearGraphItems } from "../model/graph-selection.js";
 import { setPlacementLocked } from "../features/placement-locks.js";
 import {
   toggleDiagramTools,
-  toggleDiagramSelecting,
+  changeDiagramSetting,
   beginRoutePoint,
   removeRoutePoint,
   changeRouteStyle,
@@ -22,6 +23,7 @@ import { editFamilyEvent } from "../features/events.js";
 import {
   applyGraphAnalysis,
   clearGraphSelection,
+  toggleSelectionMode,
 } from "../features/graph-analysis.js";
 import {
   editGraphFilters,
@@ -56,7 +58,11 @@ import { fit, focusPerson, zoom } from "../graph/camera.js";
 import { arrangeGraph } from "../graph/layout.js";
 import { translate } from "../i18n/index.js";
 import { localDateString } from "../model/dates.js";
-import { relationShown, resetAnalysis } from "../model/graph-view.js";
+import {
+  graphView,
+  relationShown,
+  resetAnalysis,
+} from "../model/graph-view.js";
 import { redo, undo } from "../services/history.js";
 import { renderGraphControls } from "../ui/graph-controls.js";
 import { render, renderMain } from "../ui/render.js";
@@ -116,7 +122,8 @@ export async function handleAction(action) {
     "lock-placement": () => setPlacementLocked(true),
     "unlock-placement": () => setPlacementLocked(false),
     "diagram-tools": toggleDiagramTools,
-    "diagram-select-items": toggleDiagramSelecting,
+    "toggle-grid": () =>
+      changeDiagramSetting("showGrid", !graphView().showGrid),
     "diagram-add-point": beginRoutePoint,
     "diagram-remove-point": () => removeRoutePoint(),
     "diagram-reset-route": () => changeRouteStyle("auto"),
@@ -181,14 +188,11 @@ export async function handleAction(action) {
     "graph-filters": editGraphFilters,
     "saved-map-views": openSavedMapViews,
     "run-graph-analysis": runGraphAnalysis,
-    "selection-mode": () => {
-      appState.selectionMode = !appState.selectionMode;
-      renderGraphControls();
-    },
+    "selection-mode": toggleSelectionMode,
     "clear-selection": clearGraphSelection,
     "clear-analysis": () => {
       resetAnalysis();
-      appState.multiSelection.clear();
+      clearGraphItems(appState);
       render();
       fit();
     },

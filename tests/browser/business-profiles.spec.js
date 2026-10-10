@@ -201,7 +201,7 @@ test("creates formal reporting lines with correct direction and distinct profess
     1,
   );
   await expect(
-    page.locator(`[data-edge="${r.id}"] .relationship-period text`),
+    page.locator(`[data-route-label="r:${r.id}"] .relationship-period text`),
   ).toContainText("01.01.2024");
   await expect(
     page.locator('[data-edge="sanctions-roe-cross"] [marker-end]'),
@@ -229,10 +229,14 @@ test("new profiles and directional graph labels fit desktop and a narrow phone i
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await expect(
-    page.locator('[data-edge="work-cross-roe"] .relationship-period text'),
+    page.locator(
+      '[data-route-label="r:work-cross-roe"] .relationship-period text',
+    ),
   ).toContainText("From 01.01.2019 — To 31.12.2021");
   await expect(
-    page.locator('[data-edge="sanctions-roe-cross"] .relationship-period text'),
+    page.locator(
+      '[data-route-label="r:sanctions-roe-cross"] .relationship-period text',
+    ),
   ).toContainText("From 01.04.2010 — To 12.10.2022");
   await page.locator('#personList [data-biography="p4"]').click();
   await expect(page.locator(".biography")).toContainText("CA-ON-7718");

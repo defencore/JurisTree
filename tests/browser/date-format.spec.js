@@ -98,7 +98,7 @@ for (const [language, width, fromLabel, toLabel] of [
       ["r11", "08.07.2017", ""],
       ["r16", "01.04.2019", "01.02.2021"],
     ]) {
-      const edge = page.locator(`[data-edge="${id}"]`),
+      const edge = page.locator(`[data-route-label="r:${id}"]`),
         title = edge.locator(".relationship-title text"),
         period = edge.locator(".relationship-period text");
       await expect(title).toHaveCount(1);
@@ -133,7 +133,7 @@ for (const [language, width, fromLabel, toLabel] of [
     expect(relationship.fromDate).toBe("2024-02-29");
     expect(relationship.toDate).toBe("2025-04-30");
     await expect(
-      page.locator('[data-edge="r11"] .relationship-period text'),
+      page.locator('[data-route-label="r:r11"] .relationship-period text'),
     ).toHaveText(`${fromLabel} 29.02.2024 — ${toLabel} 30.04.2025`);
     const exportedPeriod = await page.evaluate(async () => {
       const { fullSVG } = await import(
@@ -145,7 +145,8 @@ for (const [language, width, fromLabel, toLabel] of [
         { svg } = await fullSVG("full");
       return new DOMParser()
         .parseFromString(svg, "image/svg+xml")
-        .querySelector('[data-edge="r11"] .relationship-period').textContent;
+        .querySelector('[data-route-label="r:r11"] .relationship-period')
+        .textContent;
     });
     expect(exportedPeriod).toBe(
       `${fromLabel} 29.02.2024 — ${toLabel} 30.04.2025`,
@@ -185,7 +186,7 @@ test("multiple dated episodes between the same people have separate title and pe
   });
   const overlap = await page.evaluate(() => {
     const blocks = ["r11", "second-episode"].map((id) =>
-      document.querySelector(`[data-edge="${id}"] rect`).getBBox(),
+      document.querySelector(`[data-route-label="r:${id}"] rect`).getBBox(),
     );
     return blocks[0].y + blocks[0].height > blocks[1].y;
   });
@@ -208,7 +209,9 @@ test("relationship titles and dates remain separate throughout the zoom range in
         state.camera.z = z;
         applyCamera();
         for (const id of ["r11", "r16"]) {
-          const edge = document.querySelector('[data-edge="' + id + '"]'),
+          const edge = document.querySelector(
+              '[data-route-label="r:' + id + '"]',
+            ),
             title = edge.querySelector(".relationship-title").getBBox(),
             dates = edge.querySelector(".relationship-period").getBBox();
           if (title.y + title.height > dates.y) failures.push({ id, z });

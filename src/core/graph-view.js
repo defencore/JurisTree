@@ -1,4 +1,5 @@
 import { graphStateInfo, relTypes } from "./config.js";
+import { layoutTypes } from "./layouts.js";
 
 export function defaultGraphView() {
   return {
@@ -51,8 +52,7 @@ export function normalizeGraphView(raw = {}, validIds = null) {
     if (typeof raw[key] === "boolean") out[key] = raw[key];
   if (["straight", "curve"].includes(raw.lineStyle))
     out.lineStyle = raw.lineStyle;
-  if (["generations", "network", "circle"].includes(raw.layout))
-    out.layout = raw.layout;
+  if (Object.hasOwn(layoutTypes, raw.layout)) out.layout = raw.layout;
   if (
     Number.isInteger(raw.gridSize) &&
     raw.gridSize >= 5 &&

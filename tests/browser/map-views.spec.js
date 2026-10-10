@@ -38,8 +38,8 @@ const camera = (page) =>
     const { a, e, f } = el.transform.baseVal.consolidate().matrix;
     return { x: e, y: f, z: a };
   });
-async function expectCamera(page, expected) {
-  const actual = await camera(page);
+async function expectCenter(page, expected) {
+  const actual = await center(page);
   for (const key of ["x", "y", "z"])
     expect(actual[key]).toBeCloseTo(expected[key], 4);
 }
@@ -71,9 +71,22 @@ test("saved arrangement restores manual moves, zoom and filters after automatic 
   await page.locator('#modal button[type="submit"]').click();
   await page.locator('[data-action="zoom-in"]').click();
   const original = await positions(page),
-    originalCamera = await camera(page);
+    originalCenter = await center(page);
   await saveView(page, "Doe branch");
+  if (
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .isVisible()
+  )
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .click();
   await page.locator("#graphLayout").selectOption("circle");
+  await page.locator('.layout-controls [data-action="layout"]').click();
   await expect.poll(() => positions(page)).not.toEqual(original);
   await page.locator('#personList [data-person="p5"]').click();
   await page.locator('#inspector [data-edit-person="p5"]').first().click();
@@ -83,7 +96,7 @@ test("saved arrangement restores manual moves, zoom and filters after automatic 
   await openViews(page);
   await page.locator("[data-restore-view]").click();
   await expect.poll(() => positions(page)).toEqual(original);
-  await expectCamera(page, originalCamera);
+  await expectCenter(page, originalCenter);
   await expect(page.locator("#graphLayout")).toHaveValue("generations");
   await expect(page.locator("#docsToggle")).toHaveAttribute(
     "aria-pressed",
@@ -119,7 +132,7 @@ test("saved arrangement restores manual moves, zoom and filters after automatic 
   await openViews(page);
   await page.locator("[data-restore-view]").click();
   await expect.poll(() => positions(page)).toEqual(original);
-  await expectCamera(page, originalCamera);
+  await expectCenter(page, originalCenter);
 });
 
 test("multiple views can be renamed, replaced and deleted with undo, while duplicate names are rejected", async ({
@@ -127,7 +140,20 @@ test("multiple views can be renamed, replaced and deleted with undo, while dupli
 }) => {
   await saveView(page, "Whole tree");
   const first = await positions(page);
+  if (
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .isVisible()
+  )
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .click();
   await page.locator("#graphLayout").selectOption("circle");
+  await page.locator('.layout-controls [data-action="layout"]').click();
   await expect.poll(() => positions(page)).not.toEqual(first);
   const second = await positions(page);
   await saveView(page, "Circle");

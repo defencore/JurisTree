@@ -137,7 +137,20 @@ test("arranging a family group moves only its members and the whole map uses the
           .filter((p) => p.groupIds.includes("g1"))
           .map((p) => p.id),
       );
+    if (
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .isVisible()
+    )
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .click();
     await page.locator("#graphLayout").selectOption(style);
+    await page.locator('.layout-controls [data-action="layout"]').click();
     await expect
       .poll(async () => (await snapshot(page)).history)
       .toBe(before.history + 1);

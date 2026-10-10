@@ -937,3 +937,88 @@
 .placement-lock-indicator {
   pointer-events: none;
 }
+
+/* Layout scope and method are explicit so choosing a method never moves cards. */
+.layout-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 0 6px;
+  border-top: 1px solid var(--line);
+}
+.layout-controls .layout-control {
+  display: grid;
+  gap: 4px;
+  min-width: 170px;
+  align-items: stretch;
+  font-size: 11px;
+  font-weight: 600;
+}
+.layout-controls select {
+  max-width: 100%;
+  min-height: 34px;
+}
+.layout-scope-hint {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.diagram-grid-settings,
+.diagram-layout-settings {
+  border-top: 1px solid var(--line);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+.diagram-grid-settings summary,
+.diagram-layout-settings summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+.diagram-grid-settings .diagram-tools-row {
+  padding-top: 8px;
+}
+.diagram-tools-row .selection-count {
+  color: var(--muted);
+  font-size: 12px;
+  margin-right: auto;
+}
+.graph-tools {
+  flex-wrap: wrap;
+}
+@media (max-width: 760px) {
+  .layout-controls .layout-control {
+    min-width: 0;
+    flex: 1 1 150px;
+  }
+  .layout-controls .btn {
+    flex: 1 1 100%;
+  }
+  .layout-controls select {
+    width: 100%;
+    min-height: 44px;
+  }
+}
+
+.layout-controls .btn.primary {
+  color: var(--paper);
+  background: var(--blue);
+}
+
+.graph-layout-settings {
+  width: 100%;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+.graph-layout-settings > summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 0;
+}
+.graph-layout-settings > .layout-controls {
+  border-top: 0;
+}

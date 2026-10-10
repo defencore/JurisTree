@@ -23,8 +23,7 @@ export function connectorAttributes(key, a, b, caption) {
   );
 }
 export function connectorLabel(key, box, content, exporting = false) {
-  const selected =
-    !exporting && state.diagramEditing && state.diagramLabelSelection.has(key);
+  const selected = !exporting && state.diagramLabelSelection.has(key);
   return (
     '<g class="connector-label' +
     (selected ? " diagram-label-selected" : "") +
@@ -65,6 +64,7 @@ export function connectorLabel(key, box, content, exporting = false) {
 export function routeHandles() {
   if (
     !state.diagramEditing ||
+    state.selectionMode ||
     !state.diagramConnectionKey ||
     connectorPlacementLocked(state.project, state.diagramConnectionKey) ||
     state.diagramConnectionKey.startsWith("g:")

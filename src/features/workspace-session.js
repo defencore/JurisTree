@@ -42,7 +42,6 @@ export function activateTree(
   }
   resetAnalysis(false);
   appState.diagramEditing = false;
-  appState.diagramSelecting = false;
   appState.diagramNodeSelection.clear();
   appState.diagramConnectionKey = "";
   appState.diagramAddPoint = false;
@@ -51,6 +50,8 @@ export function activateTree(
   appState.multiSelection.clear();
   appState.graphSelectionAnchor = "";
   appState.selectionMode = false;
+  appState.layoutScope = "selected";
+  appState.layoutStyle = "";
   appState.touchMove = false;
   document.body.classList.remove("mobile-tools-open");
   appState.project = model;

@@ -1,4 +1,24 @@
 export default {
+  "ui.layoutHierarchy": "Relationship tree",
+  "ui.layoutSingleCircle": "Single circle",
+  "ui.layoutMultipleCircles": "Circles by connected groups",
+  "ui.layoutIncremental": "Refine current positions",
+  "ui.layoutOrthogonal": "Orthogonal tree",
+  "ui.layoutScope": "Arrange",
+  "ui.layoutSelected": "Selected cards ({count})",
+  "ui.layoutVisible": "Visible diagram",
+  "ui.layoutMethod": "Method",
+  "ui.applyLayout": "Apply layout",
+  "ui.layoutRunning": "Arranging…",
+  "ui.layoutScopeHint":
+    "Cards: {count} · Fixed: {fixed}. Other cards keep their positions.",
+  "ui.layoutAllFixed": "All cards in this scope are locked.",
+  "ui.invalidLayout": "Choose a layout method.",
+  "ui.showGrid": "Show grid",
+  "ui.hideGrid": "Hide grid",
+  "ui.gridSettings": "Grid and snapping",
+  "ui.selectionHint":
+    "Select cards and connections by clicking. Ctrl/⌘ adds to the selection; Shift-drag selects a rectangle.",
   "ui.findPersonByName": "Search surname or name",
   "ui.peopleSortedBySurname": "By surname, A–Z",
   "ui.currentSelection": "Current selection",
@@ -1113,7 +1133,7 @@ export default {
   "ui.father2": "father",
   "ui.partners2": "partners",
   "ui.adoption2": "adoption",
-  "ui.noPeopleToArrange": "No people to arrange.",
+  "ui.noCardsToArrange": "No cards available to arrange.",
   "ui.treeChangedDuringLayoutTryAgain":
     "Tree changed during layout. Try again.",
   "ui.currentMap2": "Current map",
@@ -2447,7 +2467,7 @@ export default {
     "A source supports a recorded fact or relationship. Passport details belong in Identity documents; a linked source can hold its scan. Civil records do not automatically change names or parenthood.",
   "ui.guideMap": "Arrange and explore the map",
   "ui.guideMapOne":
-    "On the map, choose “{generations}” under “{layout}”, then “{fit}”. Reapply the layout after adding a branch; drag individual cards to adjust their placement. Save your manual arrangement under “{savedViews}” with “{saveView}” before trying another layout.",
+    "On the map, open “{layoutSection}”, choose “{generations}” under “{layout}”, press “{applyLayout}”, then “{fit}”. Reapply the layout after adding a branch; drag individual cards to adjust their placement. Save your manual arrangement under “{savedViews}” with “{saveView}” before trying another layout.",
   "ui.guideMapTwo":
     "Select a person to see relatives highlighted around them. Use “{kinship}” to compare two people, “{search}” for paths, and the top search or filters to find recorded details.",
   "ui.guideMapThree":

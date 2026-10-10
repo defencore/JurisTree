@@ -1,3 +1,4 @@
+import { clearGraphItems } from "../model/graph-selection.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { uid } from "../core/utils.js";
@@ -38,6 +39,9 @@ function restore(view) {
   $("#inspector").classList.remove("open");
   resetAnalysis(false);
   state.comparisonPath = null;
+  clearGraphItems(state);
+  state.selectionMode = false;
+  state.layoutStyle = "";
   commit(() => {
     const saved = restoreMapView(state.project, view),
       visible = saved.visibility;
@@ -49,6 +53,11 @@ function restore(view) {
     state.analysisReveal = new Set(visible.revealedRelations);
     state.analysisExpandedGroups = new Set(visible.expandedGroups);
     state.selected = visible.selected;
+    state.diagramConnectionKey =
+      visible.selected?.kind === "relation" ? "r:" + visible.selected.id : "";
+    state.diagramLabelSelection = new Set(
+      state.diagramConnectionKey ? [state.diagramConnectionKey] : [],
+    );
     state.multiSelection = new Set(visible.selection);
     state.graphSelectionAnchor =
       visible.selected?.kind === "person" ? visible.selected.id : "";

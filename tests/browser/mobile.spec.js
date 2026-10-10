@@ -38,7 +38,7 @@ test("native touch opens a relationship once while dragging its label still pans
     render();
     fit();
   });
-  const label = page.locator('.edge[data-edge="r1"] rect'),
+  const label = page.locator('[data-route-label="r:r1"] rect'),
     box = await label.boundingBox(),
     scene = page.locator("#scene"),
     transform = await scene.getAttribute("transform"),

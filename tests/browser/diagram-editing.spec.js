@@ -183,7 +183,15 @@ async function drag(page, locator, dx, dy) {
   });
   await page.mouse.up();
 }
-async function touchDrag(page, session, start, dx, dy, cancel = false) {
+async function touchDrag(
+  page,
+  session,
+  start,
+  dx,
+  dy,
+  cancel = false,
+  beforeEnd = async () => {},
+) {
   await session.send("Input.dispatchTouchEvent", {
     type: "touchStart",
     touchPoints: [start],
@@ -202,6 +210,7 @@ async function touchDrag(page, session, start, dx, dy, cancel = false) {
     });
     await page.evaluate(() => new Promise(requestAnimationFrame));
   }
+  await beforeEnd();
   await session.send("Input.dispatchTouchEvent", {
     type: cancel ? "touchCancel" : "touchEnd",
     touchPoints: [],
@@ -261,8 +270,15 @@ test.describe("desktop diagram editing", () => {
     const cardBefore = await selectedCard.boundingBox();
     await selectedCard.click();
     const cardAfter = await selectedCard.boundingBox();
-    for (const axis of ["x", "y"])
-      expect(cardAfter[axis]).toBeCloseTo(cardBefore[axis], 1);
+    // Border thickness changes on selection; centers reveal actual viewport movement.
+    for (const [axis, size] of [
+      ["x", "width"],
+      ["y", "height"],
+    ])
+      expect(cardAfter[axis] + cardAfter[size] / 2).toBeCloseTo(
+        cardBefore[axis] + cardBefore[size] / 2,
+        1,
+      );
     expect((await stateOf(page)).labels).toEqual([]);
     await expect(page.locator("[data-diagram-style]")).toHaveCount(0);
     await chooseLine(page, "r:r1");
@@ -310,6 +326,7 @@ test.describe("desktop diagram editing", () => {
   }) => {
     await fixture(page);
     await editing(page);
+    await page.locator(".diagram-grid-settings summary").click();
     await page.locator('[data-diagram-setting="snapToGrid"]').check();
     await page.locator('[data-diagram-setting="gridSize"]').fill("40");
     await page.locator('[data-diagram-setting="gridSize"]').press("Tab");
@@ -352,7 +369,7 @@ test.describe("desktop diagram editing", () => {
         captions.project.diagram["r:r3"].label.y,
     );
     expect(shifted.project.people).toEqual(captions.project.people);
-    await page.locator('[data-action="diagram-select-items"]').click();
+    await page.locator('[data-action="selection-mode"]').click();
     for (const id of ["d1", "a1"])
       await page.locator('#graph [data-node="' + id + '"] .card').click();
     const otherCards = await stateOf(page);
@@ -464,10 +481,15 @@ for (const [language, width] of [
             document.querySelector('script[type="module"]').src,
           ).href
         );
-        return (
-          (el.getBoundingClientRect().height * 0.6 - state.camera.y) /
-          state.camera.z
-        );
+        const rect = el.getBoundingClientRect(),
+          overlayTops = [
+            document.querySelector(".graph-tools"),
+            document.querySelector("#graphLegend"),
+          ]
+            .map((element) => element.getBoundingClientRect().top)
+            .filter((top) => top > rect.top && top < rect.bottom),
+          available = Math.min(rect.bottom, ...overlayTops) - rect.top;
+        return (available * 0.6 - state.camera.y) / state.camera.z;
       });
       await addPoint(page, 340, placementY);
       const before = await stateOf(page),
@@ -511,9 +533,9 @@ for (const [language, width] of [
           () => document.documentElement.scrollWidth <= innerWidth + 1,
         ),
       ).toBe(true);
-      await page.locator('[data-action="diagram-select-items"]').tap();
+      await page.locator('[data-action="selection-mode"]').tap();
       await expect(
-        page.locator('[data-action="diagram-select-items"]'),
+        page.locator('[data-action="selection-mode"]'),
       ).toHaveAttribute("aria-pressed", "true");
       for (const id of ["p1", "p2"]) {
         await page.locator('#graph [data-node="' + id + '"] .card').tap();
@@ -591,17 +613,10 @@ for (const [language, width, phone] of [
           y: box.y + box.height / 2,
           id: 0,
         };
-        for (const [type, touchPoints] of [
-          ["touchStart", [start]],
-          ["touchMove", [{ ...start, y: start.y + 24 }]],
-        ])
-          await session.send("Input.dispatchTouchEvent", { type, touchPoints });
-        await expect
-          .poll(async () => (await stateOf(page)).project.diagram)
-          .not.toEqual(before.project.diagram);
-        await session.send("Input.dispatchTouchEvent", {
-          type: "touchCancel",
-          touchPoints: [],
+        await touchDrag(page, session, start, 0, 24, true, async () => {
+          await expect
+            .poll(async () => (await stateOf(page)).project.diagram)
+            .not.toEqual(before.project.diagram);
         });
         await expect
           .poll(async () => (await stateOf(page)).project.diagram)
@@ -612,12 +627,7 @@ for (const [language, width, phone] of [
           y: current.y + current.height / 2,
           id: 0,
         };
-        for (const [type, touchPoints] of [
-          ["touchStart", [start]],
-          ["touchMove", [{ ...start, y: start.y + 24 }]],
-          ["touchEnd", []],
-        ])
-          await session.send("Input.dispatchTouchEvent", { type, touchPoints });
+        await touchDrag(page, session, start, 0, 24);
         await session.detach();
       } else {
         await drag(page, marker, 24, 0);
@@ -667,6 +677,7 @@ for (const [language, width, phone] of [
       await page.keyboard.press("ArrowDown");
       const keyed = await stateOf(page);
       expect(keyed.project.diagram["r:r1"].points[1].y).toBe(points[1].y + 5);
+      await page.locator(".diagram-grid-settings summary").click();
       await page.locator('[data-diagram-setting="snapToGrid"]').check();
       await marker.focus();
       await page.keyboard.press("ArrowDown");

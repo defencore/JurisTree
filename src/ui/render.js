@@ -125,19 +125,15 @@ export function renderMain() {
 }
 
 export function select(kind, id, { openPanel = true } = {}) {
-  const before = appState.diagramEditing
-    ? $("#graph").getBoundingClientRect()
-    : null;
-  if (appState.diagramEditing) {
-    appState.diagramSelecting = false;
-    appState.diagramAddPoint = false;
-    appState.diagramPointIndex = -1;
-    appState.diagramNodeSelection.clear();
-    appState.diagramConnectionKey = kind === "relation" ? "r:" + id : "";
-    appState.diagramLabelSelection = new Set(
-      appState.diagramConnectionKey ? [appState.diagramConnectionKey] : [],
-    );
-  }
+  const before =
+    appState.view === "tree" ? $("#graph").getBoundingClientRect() : null;
+  appState.diagramAddPoint = false;
+  appState.diagramPointIndex = -1;
+  appState.diagramNodeSelection.clear();
+  appState.diagramConnectionKey = kind === "relation" ? "r:" + id : "";
+  appState.diagramLabelSelection = new Set(
+    appState.diagramConnectionKey ? [appState.diagramConnectionKey] : [],
+  );
   let direct = directConnectionScope();
   if (direct && kind === "person" && !direct.people.has(id)) {
     appState.directConnectionRoot = "";

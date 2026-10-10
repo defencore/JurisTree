@@ -181,7 +181,20 @@ test("highlight preserves previous analysis, display filters and collapsed group
     .locator('#graphToolbar [data-action="direct-connections"]')
     .click();
   await page.keyboard.press("Escape");
+  if (
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .isVisible()
+  )
+    await page
+      .locator(
+        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+      )
+      .click();
   await page.locator("#graphLayout").selectOption("circle");
+  await page.locator('.layout-controls [data-action="layout"]').click();
   await expect
     .poll(async () => (await snapshot(page)).history)
     .toBe(before.history + 1);
@@ -212,7 +225,20 @@ test("all automatic layouts move only direct connections and preserve other peop
       hidden = before.project.people.filter(
         (p) => !expected.people.includes(p.id),
       );
+    if (
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .isVisible()
+    )
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .click();
     await page.locator("#graphLayout").selectOption(style);
+    await page.locator('.layout-controls [data-action="layout"]').click();
     await expect
       .poll(async () => (await snapshot(page)).history)
       .toBe(before.history + 1);

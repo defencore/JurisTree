@@ -265,13 +265,39 @@ test.describe("fixed placement on desktop", () => {
   }) => {
     await fixture(page);
     await edit(page);
-    await page.locator('[data-action="diagram-select-items"]').click();
+    await page.locator('[data-action="selection-mode"]').click();
     for (const id of ["p1", "d1", "a1"]) await card(page, id).click();
     await label(page, "r:r1").click();
     await page.locator('#diagramTools [data-action="lock-placement"]').click();
     const fixed = (await snapshot(page)).project;
+    if (
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .isVisible()
+    )
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .click();
+    await page.locator("#graphLayoutScope").selectOption("visible");
     for (const style of ["generations", "circle", "network"]) {
+      if (
+        await page
+          .locator(
+            ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+          )
+          .isVisible()
+      )
+        await page
+          .locator(
+            ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+          )
+          .click();
       await page.locator("#graphLayout").selectOption(style);
+      await page.locator('.layout-controls [data-action="layout"]').click();
       await expect(page.locator("#graphLayout")).toBeEnabled({
         timeout: 30000,
       });
@@ -305,7 +331,20 @@ test.describe("fixed placement on desktop", () => {
       focusDirectConnections();
     });
     const before = (await snapshot(page)).project;
+    if (
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .isVisible()
+    )
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .click();
     await page.locator("#graphLayout").selectOption("generations");
+    await page.locator('.layout-controls [data-action="layout"]').click();
     await expect(page.locator("#graphLayout")).toBeEnabled();
     const after = (await snapshot(page)).project;
     expect(position(after.people[0])).toEqual(position(before.people[0]));
@@ -329,14 +368,40 @@ test.describe("fixed placement on desktop", () => {
     await page.locator('#diagramTools [data-action="diagram-tools"]').click();
     await label(page, "g:g1").click();
     await edit(page);
-    await page.locator('[data-action="diagram-select-items"]').click();
+    await page.locator('[data-action="selection-mode"]').click();
     await card(page, "g1").click();
     await page.locator('#diagramTools [data-action="lock-placement"]').click();
     const fixed = (await snapshot(page)).project;
-    await page.locator('[data-action="diagram-select-items"]').click();
+    await page.locator('[data-action="selection-mode"]').click();
     await drag(page, card(page, "g1"));
     expect((await snapshot(page)).project.people).toEqual(fixed.people);
+    if (
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .isVisible()
+    )
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .click();
+    await page.locator("#graphLayoutScope").selectOption("visible");
+    if (
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .isVisible()
+    )
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .click();
     await page.locator("#graphLayout").selectOption("circle");
+    await page.locator('.layout-controls [data-action="layout"]').click();
     await expect(page.locator("#graphLayout")).toBeEnabled();
     const after = (await snapshot(page)).project;
     for (const person of fixed.people.filter((p) => p.groupIds.includes("g1")))
@@ -366,7 +431,20 @@ test.describe("fixed placement on desktop", () => {
         .getAttribute("transform");
     await drag(page, card(page, "g1"));
     expect((await snapshot(page)).project.people).toEqual(fixed.people);
+    if (
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .isVisible()
+    )
+      await page
+        .locator(
+          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
+        )
+        .click();
     await page.locator("#graphLayout").selectOption("generations");
+    await page.locator('.layout-controls [data-action="layout"]').click();
     await expect(page.locator("#graphLayout")).toBeEnabled();
     expect(position((await snapshot(page)).project.people[0])).toEqual(
       position(fixed.people[0]),

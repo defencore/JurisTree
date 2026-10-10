@@ -284,13 +284,31 @@ To record where someone lived, open the person editor and choose **Residence his
 
 The navy, pale blue and gold palette follows the [Franciscans reference website](https://l2.franciscans.dev/uk). `src/core/theme.js` owns the shared color tokens, applied as CSS custom properties and used directly in person-card SVG exports. Typography retains the existing Tahoma/Verdana/DejaVu Sans stacks. Workspace height is calculated by the shell's flex layout; tablet panels and mobile navigation use the shared header offset to avoid covering search.
 
+## Automatic layout of selected cards
+
+Use Ctrl/Cmd-click or Shift-click to select cards. Clicking a person and then Ctrl/Cmd-clicking another includes both. The **Select items** button beside the zoom controls also lets you select cards and connections by clicking or tapping, including source cards, property cards and collapsed groups. Selection stays intact when you open or close **Placement**. Shift-drag selects cards in a rectangle on desktop.
+
+Open **Map layout** in the map toolbar; on a phone, open **Map options** first. Choose **Selected cards** or **Visible diagram**, select a method and press **Apply layout**. Choosing a method alone does not move anything. The panel shows how many cards are in scope and how many are fixed. When only connections or hidden cards are selected, no cards are arranged until you explicitly choose **Visible diagram**. Expand a collapsed group to arrange individually selected members.
+
+- **Generations** arranges family generations and places source and property cards separately.
+- **Relationship tree** arranges parents above children and supervisors above subordinates. For an undirected component, it uses the focused card as its root when available.
+- **Single circle** puts the cards around one circle.
+- **Circles by connected groups** gives each disconnected component its own circle.
+- **Network** balances connections and spacing.
+- **Refine current positions** starts from current positions and makes smaller adjustments.
+- **Orthogonal tree** uses a tree arrangement and right-angle connections. Existing manual and locked routes are preserved.
+
+Only cards in the chosen scope move. Locked cards and other cards remain fixed; the layout avoids them. A collapsed group moves as a unit and preserves its members' relative positions. In **Direct connections**, expand a group containing unrelated members before arranging it. Undo/redo restores a layout in one step. Save useful arrangements under **Saved views**.
+
+Use the grid button beside the zoom controls to show or hide the grid. **Placement → Grid and snapping** controls snapping and spacing independently. Hiding the grid does not turn snapping off. Grid settings are saved in drafts, archives and named views; image exports omit the grid.
+
 ## Manual routes and alignment
 
 Open **Placement** beside **Layout**. Select a line, choose **Add waypoint**, then click or tap where it should turn. Repeat for additional turns. Drag the circular handles to change the route. Choose **Right angles** for rectangular routes or **Straight segments** for a free polygonal path. **Automatic route** removes manual turns and keeps any moved caption. Select a handle and use **Remove point** or Delete to remove it. Arrow keys move a focused handle or caption; Shift increases the step.
 
 Drag a relationship caption to move its title and dates together. Group names, source-line captions and property share labels can also be moved independently. Hold Ctrl, Cmd or Shift to select multiple cards and captions, or enable **Select items** and click/tap them. This also supports source and property cards. The alignment menu places their edges or centers on the same horizontal or vertical line, distributes three or more items with equal gaps, or snaps the selection to the grid. Unselected items keep their positions.
 
-Enable **Show grid** and **Snap to grid**, then set the spacing in map units. Card, waypoint and caption drags snap to that grid; hold Alt during a mouse drag for precise free movement. On phones, **Select items** allows multiple selections without a keyboard. Use **Move cards** for card dragging; waypoint and caption dragging works directly with one finger while Placement is open. Choose **Done** to resume ordinary map navigation. On a narrow screen, scroll the Placement controls to reach alignment and routing actions.
+Set **Show grid**, **Snap to grid** and spacing independently under **Grid and snapping**. Card, waypoint and caption drags snap to that grid; hold Alt during a mouse drag for precise free movement. On phones, **Select items** allows multiple selections without a keyboard. Use **Move cards** for card dragging; waypoint and caption dragging works directly with one finger while Placement is open. Choose **Done** to resume ordinary map navigation. On a narrow screen, scroll the Placement controls to reach alignment and routing actions.
 
 Routes stay attached to moving cards and are included in the browser draft, ZIP backups and **Saved views**. SVG/PNG exports retain routes and moved captions, including parts outside the viewport, and omit editing handles and the grid. Routes are adjusted manually; moving a card can require moving its waypoints to avoid newly overlapping objects.
 

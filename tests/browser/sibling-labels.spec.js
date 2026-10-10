@@ -70,7 +70,7 @@ for (const [language, brother, sister, neutral] of [
         ["mu", neutral],
       ])
         await expect(
-          page.locator('[data-edge="' + id + '"] .relationship-title'),
+          page.locator('[data-route-label="r:' + id + '"] .relationship-title'),
         ).toHaveText(caption.toLocaleLowerCase());
       await page.evaluate(async () => {
         const { select } = await import(

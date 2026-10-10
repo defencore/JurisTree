@@ -1,3 +1,4 @@
+import { clearGraphItems } from "../model/graph-selection.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { uid } from "../core/utils.js";
@@ -17,7 +18,7 @@ export function createPerson(data, id, links) {
     state.project.people.push({ ...data, id, avatarId: "", ...position });
     state.project.relations.push(...links.map((r) => ({ ...r, id: uid() })));
     resetAnalysis(false);
-    state.multiSelection.clear();
+    clearGraphItems(state);
     state.graphSelectionAnchor = id;
     state.comparisonPath = null;
     if (state.groupFilter && !data.groupIds.includes(state.groupFilter))
