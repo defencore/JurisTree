@@ -101,9 +101,13 @@ test("mobile map gives space to the graph and supports real pan, pinch and tap g
   const sheet = await page.locator("#inspector").boundingBox();
   expect(sheet.height).toBeLessThanOrEqual(844 * 0.61);
   await page.locator('[data-action="close-panel"]').tap();
-  await page.locator('[data-action="mobile-tools"]').tap();
+  await page
+    .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+    .tap();
   await expect(page.locator("#mapSettings")).toBeVisible();
-  await page.locator('[data-action="mobile-tools"]').tap();
+  await page
+    .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+    .tap();
   await page.screenshot({ path: "test-results/mobile-map-touch.png" });
   await page.locator('[data-action="fit"]').tap();
   await page.locator('[data-action="menu"]').tap();

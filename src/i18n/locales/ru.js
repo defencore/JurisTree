@@ -1,4 +1,6 @@
 export default {
+  "ui.minimizeTools": "Свернуть инструменты",
+  "ui.detailsPanel": "Панель сведений",
   "ui.search": "Поиск",
   "ui.imageLibrary": "Библиотека изображений",
   "ui.imageLibraryHint": "Общие оригиналы, описания и отмеченные области",
@@ -326,7 +328,7 @@ export default {
   "ui.valueDetails": "Значение / сведения",
   "ui.invalidProfileNumber": "Введите корректное число в записи профиля.",
   "ui.invalidProfileYear": "Введите год из четырёх цифр в записи профиля.",
-  "ui.mapOptions": "Опции схемы",
+  "ui.mapOptions": "Инструменты схемы",
   "ui.moveCards": "Двигать",
   "ui.focusPerson": "Показать человека",
   "ui.mobileMapHint":

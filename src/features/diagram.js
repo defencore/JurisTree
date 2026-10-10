@@ -1,3 +1,4 @@
+import { closeMapPanels } from "../ui/map-panels.js";
 import { diagramSelectionItems } from "../ui/diagram-selection.js";
 import { connectorPlacementLocked } from "../model/placement-locks.js";
 import { $ } from "../core/dom.js";
@@ -48,7 +49,8 @@ export function toggleDiagramTools() {
   state.diagramAddPoint = false;
   state.diagramPointIndex = -1;
   state.view = "tree";
-  if (state.diagramEditing) document.body.classList.remove("mobile-tools-open");
+  state.diagramPanelOpen = true;
+  if (state.diagramEditing) closeMapPanels();
   render();
   const after = $("#graph").getBoundingClientRect();
   if (before.width && before.height) {

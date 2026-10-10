@@ -19,7 +19,13 @@ export function focusPerson(
   graph.scrollIntoView({ block: "nearest", inline: "nearest" });
   const rect = graph.getBoundingClientRect();
   if (!rect.width || !rect.height) return;
-  const overlays = [$(".graph-tools"), $(".legend"), $("#inspector")]
+  const overlays = [
+    $(".graph-tools"),
+    $(".legend"),
+    $("#inspector"),
+    $("#diagramTools"),
+    $(".graph-mobile-actions"),
+  ]
     .filter(Boolean)
     .map((el) => el.getBoundingClientRect())
     .filter((box) => box.width && box.height)
@@ -105,7 +111,15 @@ export function fit(ns = filteredGraphNodes()) {
       0,
       ...overlays.map((box) => rect.bottom - box.top + 12),
     ),
-    height = Math.max(40, rect.height - bottomSpace),
+    palette = $("#diagramTools"),
+    paletteBox = palette?.matches(":popover-open")
+      ? palette.getBoundingClientRect()
+      : null,
+    topSpace =
+      paletteBox && paletteBox.left < rect.right && paletteBox.right > rect.left
+        ? Math.max(0, paletteBox.bottom - rect.top + 12)
+        : 0,
+    height = Math.max(40, rect.height - bottomSpace - topSpace),
     b = bounds(ns);
   appState.camera.z = Math.min(
     1.1,
@@ -117,7 +131,7 @@ export function fit(ns = filteredGraphNodes()) {
   appState.camera.x =
     (rect.width - b.w * appState.camera.z) / 2 - b.x * appState.camera.z;
   appState.camera.y =
-    (height - b.h * appState.camera.z) / 2 - b.y * appState.camera.z;
+    topSpace + (height - b.h * appState.camera.z) / 2 - b.y * appState.camera.z;
   applyCamera();
 }
 export function zoom(factor, x, y) {

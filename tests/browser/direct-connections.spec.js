@@ -331,7 +331,7 @@ for (const [language, width] of [
       ).toHaveCount(before.project.people.length);
       await expect(page.locator("#inspector")).toHaveClass(/open/);
       await page.locator('#inspector [data-action="close-panel"]').tap();
-      await expect(page.locator("body")).not.toHaveClass(/mobile-tools-open/);
+      await expect(page.locator("#mapSettings")).not.toBeVisible();
       const returnButton = page.locator(
         '#graphContext [data-action="restore-connection-map"]',
       );

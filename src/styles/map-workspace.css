@@ -1,0 +1,329 @@
+/* The map stays in place while secondary controls open in the top layer. */
+.map-popover[popover]:not(:popover-open),
+.diagram-tools[popover]:not(:popover-open) {
+  display: none;
+}
+.map-popover:popover-open,
+.diagram-tools:popover-open {
+  display: block;
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 12px;
+  box-sizing: border-box;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface, #fff);
+  color: var(--ink);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.map-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.map-settings .graph-toolbar {
+  padding: 0 0 10px;
+  background: transparent;
+  border: 0;
+}
+.map-settings .graph-toolbar-group {
+  flex-wrap: wrap;
+}
+.map-settings details > summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-weight: 600;
+}
+.map-settings .map-overview,
+.map-settings .map-inheritance {
+  border-top: 1px solid var(--line);
+}
+.map-settings .status-board {
+  padding: 0 !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.map-settings .status-tile {
+  min-width: 0;
+}
+.map-settings .path-panel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  padding: 4px 0 8px;
+  background: transparent;
+}
+.map-settings .path-panel > .icon {
+  display: none;
+}
+.map-settings .path-panel select {
+  width: 100%;
+  max-width: none;
+}
+.map-settings .path-summary {
+  display: block;
+  grid-column: 1 / -1;
+}
+.map-direction-hint {
+  margin-bottom: 0;
+}
+.map-touch-tools {
+  display: none;
+}
+.favorite-rail > span {
+  margin-bottom: 10px;
+  font-size: 0.8125rem;
+}
+.favorite-rail > div {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.diagram-tools .diagram-tools-row {
+  flex-wrap: wrap;
+}
+.diagram-tools .diagram-tools-row > b {
+  flex: 1;
+}
+.diagram-tools .layout-controls {
+  flex-wrap: wrap;
+}
+.diagram-tools .layout-controls label {
+  flex: 1 1 150px;
+}
+.diagram-tools .layout-controls select {
+  width: 100%;
+}
+.view-full .map-settings {
+  display: contents;
+}
+.view-full .map-panel-heading,
+.view-full .map-direction-hint,
+.view-full .map-touch-tools {
+  display: none;
+}
+.view-full .map-overview {
+  display: contents;
+}
+.view-full .map-overview > summary {
+  display: none;
+}
+body:not(.view-full) .main {
+  overflow: hidden;
+  container-type: inline-size;
+}
+body:not(.view-full) .viewbar {
+  min-height: 48px;
+  padding: 6px 12px;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+body:not(.view-full) .viewbar h1 {
+  font-size: 1rem;
+  white-space: nowrap;
+}
+body:not(.view-full) #viewSubtitle,
+body:not(.view-full) #viewEyebrow {
+  display: none;
+}
+body:not(.view-full) .view-actions {
+  flex-wrap: nowrap;
+  gap: 5px;
+}
+body:not(.view-full) .view-actions .btn {
+  white-space: nowrap;
+}
+body:not(.view-full) .graph-context {
+  padding: 3px 12px;
+  min-height: 30px;
+  flex-shrink: 0;
+}
+body:not(.view-full) .graph-context > div:first-child {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+body:not(.view-full) .graph-context span {
+  margin: 0;
+}
+body:not(.view-full) .canvas-top {
+  padding: 3px 12px;
+  min-height: 0;
+}
+body:not(.view-full) .canvas-top:not(:has(.map-key:not([hidden]))) {
+  display: none;
+}
+body:not(.view-full) .canvas-wrap {
+  min-height: 0;
+}
+body:not(.view-full) #graph {
+  min-height: 0;
+}
+@container (max-width: 800px) {
+  body:not(.view-full) .view-actions .btn span {
+    display: none;
+  }
+  body:not(.view-full) .view-actions .btn {
+    padding-inline: 8px;
+    min-width: 32px;
+  }
+}
+@container (max-width: 460px) {
+  body:not(.view-full) .viewbar > div:first-child {
+    display: none;
+  }
+  body:not(.view-full) .view-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 2px;
+  }
+  body:not(.view-full) .graph-context > div:first-child > span {
+    display: none;
+  }
+  body:not(.view-full) .graph-context {
+    flex-wrap: wrap;
+  }
+}
+@media screen and (min-width: 761px) {
+  .menu-toggle {
+    display: inline-flex;
+  }
+  .workspace {
+    --sidebar-width: 200px;
+    --inspector-width: 280px;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(
+        --inspector-width
+      );
+  }
+  .view-full .workspace,
+  .workspace:has(.inspector[data-floating]) {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  }
+  .sidebar-collapsed .workspace {
+    --sidebar-width: 56px;
+  }
+  .inspector-collapsed .workspace {
+    --inspector-width: 0px;
+  }
+  .inspector-collapsed .inspector {
+    display: none;
+  }
+  .nav-text small,
+  .mode-hint {
+    display: none;
+  }
+  .sidebar-collapsed .sidebar {
+    padding: 10px 4px;
+  }
+  .sidebar-collapsed .sidebar > :not(.nav),
+  .sidebar-collapsed .nav-label,
+  .sidebar-collapsed .nav-text,
+  .sidebar-collapsed .navbtn .count {
+    display: none;
+  }
+  .sidebar-collapsed .navbtn {
+    justify-content: center;
+    padding: 6px 0;
+  }
+  .sidebar-collapsed .nav-group + .nav-group {
+    margin-top: 8px;
+  }
+}
+@media screen and (min-width: 761px) and (max-width: 1050px) {
+  .workspace,
+  .view-full .workspace,
+  .workspace:has(.inspector[data-floating]) {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  }
+}
+@media (max-width: 760px), (pointer: coarse) {
+  body:not(.view-full) .viewbar {
+    min-height: 56px;
+  }
+  body:not(.view-full) .view-actions .btn,
+  body:not(.view-full) .view-actions .iconbtn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .map-touch-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 10px;
+  }
+  .map-touch-tools p {
+    margin: 0;
+    font-size: 0.75rem;
+  }
+  .map-popover .btn,
+  .map-popover .iconbtn,
+  .diagram-tools .btn,
+  .diagram-tools .iconbtn {
+    min-height: 44px;
+  }
+  .map-popover .iconbtn,
+  .diagram-tools .iconbtn {
+    min-width: 44px;
+  }
+}
+@media screen and (max-width: 760px) {
+  body:not(.view-full) .viewbar {
+    min-height: 56px;
+    padding: 6px 8px;
+  }
+  body:not(.view-full) .view-actions .btn,
+  body:not(.view-full) .view-actions .iconbtn {
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 8px;
+  }
+  .favorite-rail > span {
+    font-size: 0.8125rem;
+  }
+  .map-settings .status-tile > span:last-child {
+    min-width: 0;
+  }
+}
+@media print {
+  [popover] {
+    display: none !important;
+  }
+}
+
+.graph-mobile-actions {
+  display: none;
+}
+@media (max-width: 760px), (pointer: coarse) {
+  .graph-tools .tool-cluster .iconbtn {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+  .legend summary {
+    min-height: 44px;
+  }
+  .graph-mobile-actions {
+    display: flex;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+  .graph-mobile-actions .iconbtn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.map-kinship-action {
+  display: none;
+}
+@media (max-width: 460px) {
+  body:not(.view-full) .view-actions [data-action="compare"] {
+    display: none;
+  }
+  .map-kinship-action {
+    display: inline-flex;
+  }
+}

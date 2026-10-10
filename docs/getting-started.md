@@ -111,9 +111,9 @@ Select **Generations** under **Layout**, then **Show entire tree**. Reapply the 
 
 Before trying another layout, open **Saved views**, enter a name and select **Save current view**. Select that named view later to restore your card positions, zoom and visible connections. Use its edit button to rename or replace it with your current arrangement. Views are included in ZIP backups.
 
-On a phone, pan with one finger and zoom with two. Enable **Move cards** to drag person cards. **Map options** opens layout, display and analysis controls.
+On a phone, pan with one finger and zoom with two. Enable **Move cards** to drag person cards. **Map tools** opens layout, display and analysis controls.
 
-On tablets, **Map options** also keeps these controls together and leaves more space for the tree. Touch the selection-mode button there to select several people without a keyboard.
+On tablets, **Map tools** also keeps these controls together and leaves more space for the tree. Touch the selection-mode button there to select several people without a keyboard.
 
 If a person appears to be missing, check the active group, collapsed groups, search or analysis results, and **Display** settings. These controls hide data from the current view without deleting it.
 

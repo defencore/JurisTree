@@ -1,3 +1,4 @@
+import { openWorkingPeople } from "./helpers/map-options.js";
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 
@@ -77,6 +78,7 @@ test("selection labels the whole family in every language and exports a neutral 
   await page.locator('#personList [data-person="p1"]').click();
   await expect(badge(page, "p3")).toHaveText("Daughter");
   await expect(badge(page, "p5")).toHaveText("Granddaughter");
+  await openWorkingPeople(page);
   await page.locator('#favoriteRail [data-fast-person="p5"]').click();
   await page.locator('[data-action="zoom-out"]').click();
   await page.locator('[data-action="zoom-out"]').click();
@@ -92,6 +94,7 @@ test("selection labels the whole family in every language and exports a neutral 
     keyBox.y + keyBox.height,
   );
   await page.setViewportSize({ width: 1440, height: 1000 });
+  await openWorkingPeople(page);
   await page.locator('#favoriteRail [data-fast-person="p5"]').click();
   await page.locator('[data-action="zoom-out"]').click();
   await page.locator("#graphLegend summary").click();
@@ -122,6 +125,7 @@ test("adding and undoing a relationship refreshes roles without reloading", asyn
   await page.locator('#modal button[type="submit"]').click();
   await expect(page.locator("#modal")).not.toBeVisible();
   await expect(page.locator("#graph .person-card-role")).toHaveCount(0);
+  await openWorkingPeople(page);
   await page.locator('#favoriteRail [data-fast-person="p5"]').click();
   await expect(badge(page, "p10")).toHaveText("Spouse");
   await page.locator('[data-action="undo"]').click();

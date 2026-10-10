@@ -1,3 +1,5 @@
+import { mapActions } from "./map-actions.js";
+import { configureMapPanels } from "./map-panels.js";
 import { workspaceModes } from "../core/workspace-modes.js";
 import { $, $$, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
@@ -78,6 +80,7 @@ export function renderAll() {
 }
 
 export function renderMain() {
+  configureMapPanels(appState.view === "tree");
   $("#workspaceHistory").hidden = ["tree", "property"].includes(appState.view);
   $('[data-history-command="undo"]').disabled = !appState.history.length;
   $('[data-history-command="redo"]').disabled = !appState.future.length;
@@ -96,20 +99,25 @@ export function renderMain() {
     "library",
   ].includes(appState.view);
   $("#otherView").hidden = appState.view === "tree";
-  $("#viewActions").innerHTML = ["tree", "people"].includes(appState.view)
-    ? `<button class="btn" data-action="compare" title="${translate("ui.howAreWeRelated")}">${icon("compare")}<span>${translate("ui.kinship")}</span></button><button class="btn" data-action="add-relation" title="${translate("ui.addRelationship")}">${icon("link")}<span>${translate("ui.relationship")}</span></button><button class="btn primary" data-action="add-person" title="${translate("ui.addPerson")}">${icon("addPerson")}<span>${translate("ui.addPerson")}</span></button>${appState.comparisonPath ? `<button class="iconbtn" data-action="clear-comparison" title="${translate("ui.clearPathHighlight")}" aria-label="${translate("ui.clearPathHighlight")}">${icon("x")}</button>` : ""}`
-    : ["calendar", "events"].includes(appState.view)
-      ? eventRecordActions(
-          appState.view === "calendar"
-            ? appState.calendarDomain
-            : appState.eventDomain,
-          appState.view === "calendar",
-        )
-      : appState.view === "library"
-        ? `<button class="btn primary" data-action="add-document">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`
-        : appState.view === "property"
-          ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
-          : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
+  $("#viewActions").innerHTML =
+    appState.view === "tree"
+      ? mapActions()
+      : appState.view === "people"
+        ? `<button class="btn" data-action="compare" title="${translate("ui.howAreWeRelated")}">${icon("compare")}<span>${translate("ui.kinship")}</span></button><button class="btn" data-action="add-relation" title="${translate("ui.addRelationship")}">${icon("link")}<span>${translate("ui.relationship")}</span></button><button class="btn primary" data-action="add-person" title="${translate("ui.addPerson")}">${icon("addPerson")}<span>${translate("ui.addPerson")}</span></button>${appState.comparisonPath ? `<button class="iconbtn" data-action="clear-comparison" title="${translate("ui.clearPathHighlight")}" aria-label="${translate("ui.clearPathHighlight")}">${icon("x")}</button>` : ""}`
+        : ["calendar", "events"].includes(appState.view)
+          ? eventRecordActions(
+              appState.view === "calendar"
+                ? appState.calendarDomain
+                : appState.eventDomain,
+              appState.view === "calendar",
+            )
+          : appState.view === "library"
+            ? `<button class="btn primary" data-action="add-document">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`
+            : appState.view === "property"
+              ? `<button class="btn primary" data-action="add-property">${icon("plus")}<span>${translate("ui.addProperty")}</span></button>`
+              : `<button class="btn" data-action="reference" title="${translate("ui.addARecordWithoutAFile")}">${icon("reference")}<span>${translate("ui.recordWithoutAFile")}</span></button><button class="btn primary" data-action="add-document" title="${translate("ui.addFile")}">${icon("upload")}<span>${translate("ui.addFile")}</span></button>`;
+  $("#inheritanceSettings").hidden =
+    appState.view !== "tree" || appState.project.purpose !== "inheritance";
   const path = route();
   $("#pathPanel").innerHTML =
     appState.view === "tree" && appState.project.purpose === "inheritance"
@@ -189,6 +197,8 @@ export function select(kind, id, { openPanel = true } = {}) {
     icons();
   }
   renderFavorites();
+  if (openPanel && innerWidth <= 1050)
+    document.body.classList.remove("inspector-collapsed");
   $("#inspector").classList.toggle("open", openPanel);
   if (innerWidth <= 760) $("#sidebar").classList.remove("open");
   if (before?.width && before.height) {

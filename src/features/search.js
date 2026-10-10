@@ -1,3 +1,4 @@
+import { closeMapPanels } from "../ui/map-panels.js";
 import { $ } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { fit } from "../graph/camera.js";
@@ -29,7 +30,10 @@ export async function openSearchResult(kind, id) {
   closeSearch();
 }
 export function bindSearchEvents() {
-  $("#globalSearch").addEventListener("focus", renderSearch);
+  $("#globalSearch").addEventListener("focus", () => {
+    closeMapPanels();
+    renderSearch();
+  });
   document.addEventListener("pointerdown", (event) => {
     if (!event.target.closest(".global-search-bar")) closeSearch();
   });

@@ -1,3 +1,4 @@
+import { closeMapPanels } from "../ui/map-panels.js";
 import { clearGraphItems } from "../model/graph-selection.js";
 import { $ } from "../core/dom.js";
 import { state } from "../core/state.js";
@@ -49,7 +50,7 @@ export function createPerson(data, id, links) {
     if (isMobileLayout()) {
       $("#sidebar").classList.remove("open");
     }
-    document.body.classList.remove("mobile-tools-open");
+    closeMapPanels();
     focusPerson(id);
   }
 }

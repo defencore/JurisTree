@@ -119,21 +119,14 @@ export const workspaceTemplate = `
         <div class="view-actions" id="viewActions"></div>
       </div>
       <section id="personFilterBar" class="person-filter-bar" aria-live="polite" hidden></section>
-      <div class="mobile-map-bar">
-        <button class="btn" data-action="mobile-tools" aria-expanded="false" aria-controls="mapSettings"><i data-icon="sliders"></i><span>@@ui.mapOptions@@</span></button>
-        <button class="iconbtn" data-action="focus-person" aria-label="@@ui.focusPerson@@" title="@@ui.focusPerson@@"><i data-icon="user"></i></button>
-        <button class="btn" data-action="touch-move" aria-pressed="false"><i data-icon="move"></i><span>@@ui.moveCards@@</span></button>
-        <p id="mobileMapHint">@@ui.mobileMapHint@@</p>
-      </div>
-      <div id="favoriteRail" class="favorite-rail" hidden></div>
-      <div class="map-settings" id="mapSettings">
-      <div class="status-board" id="statusBoard"></div>
-      <div id="pathPanel"></div>
-      <section
-        class="graph-toolbar"
-        id="graphToolbar"
-        aria-label="@@ui.analysisTools@@"
-      ></section>
+      <div id="favoriteRail" class="favorite-rail map-popover" popover="auto"></div>
+      <div class="map-settings map-popover" id="mapSettings" popover="auto" aria-label="@@ui.mapOptions@@">
+        <div class="map-panel-heading"><b>@@ui.mapOptions@@</b><button class="iconbtn" popovertarget="mapSettings" popovertargetaction="hide" aria-label="@@ui.close@@"><i data-icon="x"></i></button></div>
+        <section class="graph-toolbar" id="graphToolbar" aria-label="@@ui.analysisTools@@"></section>
+        <details class="map-overview"><summary>@@ui.evidenceAndGaps@@</summary><div class="status-board" id="statusBoard"></div></details>
+        <details class="map-inheritance" id="inheritanceSettings"><summary>@@ui.inheritance@@</summary><div id="pathPanel"></div></details>
+        <div class="map-touch-tools"><p id="mobileMapHint">@@ui.mobileMapHint@@</p></div>
+        <p class="hint map-direction-hint">@@ui.directedRelationshipHint@@</p>
       </div>
       <section
         class="graph-context"
@@ -141,13 +134,11 @@ export const workspaceTemplate = `
         hidden
         aria-label="@@ui.currentAnalysisResult@@"
       ></section>
-      <section class="diagram-tools" id="diagramTools" hidden aria-label="@@ui.diagramEditing@@"></section>
+      <section class="diagram-tools" id="diagramTools" popover="manual" hidden aria-label="@@ui.diagramEditing@@"></section>
       <div class="canvas-wrap" id="canvasWrap">
         <div class="canvas-top">
           <div class="map-key" id="graphRoleContext" hidden></div>
-          <div class="canvas-hint">
-            <i data-icon="route"></i>@@ui.directedRelationshipHint@@
-          </div>
+
         </div>
         <svg
           class="graph"
@@ -165,6 +156,7 @@ export const workspaceTemplate = `
             aria-hidden="true"
           ></rect>
         </svg>
+        <div class="graph-mobile-actions tool-cluster"><button class="iconbtn" data-action="focus-person" aria-label="@@ui.focusPerson@@" title="@@ui.focusPerson@@"><i data-icon="user"></i></button><button class="iconbtn" data-action="touch-move" aria-label="@@ui.moveCards@@" title="@@ui.moveCards@@" aria-pressed="false"><i data-icon="move"></i></button></div>
         <div class="graph-tools">
           <div class="tool-cluster">
             <button

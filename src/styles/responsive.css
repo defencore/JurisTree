@@ -286,14 +286,10 @@
     font-size: 0.6875rem;
     padding: 5px;
   }
-  .canvas-hint,
   .canvas-top .btn {
     font-size: 0.6875rem;
   }
-  .canvas-hint {
-    left: 15px;
-    top: 54px;
-  }
+
   .graph-tools {
     bottom: 19px;
     left: 15px;
@@ -712,10 +708,7 @@
     border-radius: 3px;
     font-size: 0.75rem;
   }
-  .canvas-hint {
-    font-size: 0.75rem;
-    top: 50px;
-  }
+
   .legend {
     bottom: 64px;
     font-size: 0.75rem;
@@ -1067,7 +1060,6 @@
   .graph-context span {
     font-size: 0.8125rem;
   }
-  .canvas-hint,
   .legend {
     font-size: 0.75rem;
   }

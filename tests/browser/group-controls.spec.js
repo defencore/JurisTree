@@ -1,4 +1,4 @@
-import { openMapLayout } from "./helpers/map-options.js";
+import { openMapLayout, openMapOptions } from "./helpers/map-options.js";
 import { test, expect } from "@playwright/test";
 const snapshot = (page) =>
   page.evaluate(async () => {
@@ -17,7 +17,10 @@ async function openGroups(page) {
       .locator('#graphToolbar [data-action="group-visibility"]')
       .isVisible())
   )
-    await page.locator('[data-action="mobile-tools"]').click();
+    await page
+      .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+      .click();
+  await openMapOptions(page);
   await page.locator('#graphToolbar [data-action="group-visibility"]').click();
 }
 let errors;

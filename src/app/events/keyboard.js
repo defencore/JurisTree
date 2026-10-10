@@ -61,6 +61,7 @@ export function bindKeyboardEvents() {
       exportArchive();
     }
     if (e.key === "Escape") {
+      if (document.querySelector('[popover="auto"]:popover-open')) return;
       if (appState.diagramEditing) {
         appState.diagramAddPoint ? beginRoutePoint() : toggleDiagramTools();
         return;

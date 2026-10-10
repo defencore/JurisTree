@@ -120,17 +120,7 @@
     0 0 3px color-mix(in srgb, var(--muted) 44%, transparent)
   );
 }
-.canvas-hint {
-  align-items: center;
-  display: flex;
-  gap: 5px;
-  color: var(--muted);
-  font-size: 0.75rem;
-}
-.canvas-hint .icon {
-  height: 14px;
-  width: 14px;
-}
+
 .graph-tools {
   display: flex;
   position: absolute;

@@ -1,4 +1,6 @@
 export default {
+  "ui.minimizeTools": "Minimize tools",
+  "ui.detailsPanel": "Details panel",
   "ui.search": "Search",
   "ui.imageLibrary": "Image library",
   "ui.imageLibraryHint": "Shared originals, descriptions and annotated regions",

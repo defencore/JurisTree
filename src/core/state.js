@@ -3,6 +3,7 @@ import { emptyPersonFilter } from "./person-filter-fields.js";
 /** Runtime-only state. Persist only project data and referenced attachment blobs. */
 export const state = {
   project: undefined,
+  diagramPanelOpen: true,
   selected: null,
   view: "tree",
   profileFocus: "",

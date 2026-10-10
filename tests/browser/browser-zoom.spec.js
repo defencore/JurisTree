@@ -64,7 +64,9 @@ test("browser zoom and viewport reflow preserve the chosen map scale and center"
     .poll(async () => Math.abs((await camera(page)).center.y - before.center.y))
     .toBeLessThan(0.1);
   for (let toggle = 0; toggle < 2; toggle++) {
-    await page.locator('[data-action="mobile-tools"]').click();
+    await page
+      .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+      .click();
     const current = await camera(page);
     expect(current.z).toBe(before.z);
     expect(current.center.x).toBeCloseTo(before.center.x, 4);
@@ -152,16 +154,25 @@ for (const language of ["en", "uk", "ru"]) {
       expect(dimensions.filters.bottom).toBeLessThanOrEqual(
         dimensions.search.bottom + 1,
       );
-      expect(dimensions.graph.height).toBeGreaterThan(180);
+      expect(dimensions.graph.height).toBeGreaterThan(dimensions.height * 0.65);
       expect(dimensions.graph.bottom).toBeLessThanOrEqual(
         dimensions.height + 1,
       );
       if (zoom === 1.5) {
-        await page.locator('[data-action="mobile-tools"]').click();
+        await page
+          .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+          .click();
         await expect(page.locator("#graphToolbar")).toBeVisible();
         const options = await page.locator("#mapSettings").boundingBox();
-        expect(options.height).toBeLessThanOrEqual(dimensions.height * 0.31);
-        await page.locator('[data-action="mobile-tools"]').click();
+        expect(options.y + options.height).toBeLessThanOrEqual(
+          dimensions.height - 7,
+        );
+        expect((await page.locator("#graph").boundingBox()).height).toBe(
+          dimensions.graph.height,
+        );
+        await page
+          .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+          .click();
       }
     }
     await page.locator('.view-actions [data-action="add-person"]').click();
@@ -175,7 +186,7 @@ test("phone controls retain touch targets after compact desktop reflow", async (
   await page.setViewportSize({ width: 390, height: 844 });
   for (const selector of [
     '.view-actions [data-action="add-person"]',
-    '[data-action="mobile-tools"]',
+    '[popovertarget="mapSettings"]:not([popovertargetaction])',
     '.graph-tools [data-action="zoom-in"]',
   ]) {
     await expect(page.locator(selector)).toBeVisible();

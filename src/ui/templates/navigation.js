@@ -10,7 +10,7 @@ export function workspaceNavigation() {
           .filter((view) => view.group === group)
           .map(
             (view) =>
-              `<button class="navbtn" data-view="${view.key}" title="@@${view.title}@@"><span class="nav-icon"><i data-icon="${view.icon}"></i></span><span class="nav-text"><b>@@${view.title}@@</b><small>@@${view.hint}@@</small></span>${view.count ? `<span class="count ${view.key === "gaps" ? "warning" : ""}" id="${view.count}"></span>` : ""}</button>`,
+              `<button class="navbtn" data-view="${view.key}" aria-label="@@${view.title}@@" title="@@${view.title}@@"><span class="nav-icon"><i data-icon="${view.icon}"></i></span><span class="nav-text"><b>@@${view.title}@@</b><small>@@${view.hint}@@</small></span>${view.count ? `<span class="count ${view.key === "gaps" ? "warning" : ""}" id="${view.count}"></span>` : ""}</button>`,
           )
           .join("")}</div>`,
     )

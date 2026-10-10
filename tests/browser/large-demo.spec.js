@@ -1,3 +1,4 @@
+import { openWorkingPeople, openMapOptions } from "./helpers/map-options.js";
 import { test, expect } from "@playwright/test";
 
 test("large demo fits the map, focuses readable cards and describes distant cousins in every language", async ({
@@ -35,6 +36,7 @@ test("large demo fits the map, focuses readable cards and describes distant cous
     path: "test-results/large-family-overview.png",
     fullPage: true,
   });
+  await openWorkingPeople(page);
   await page.locator('#favoriteRail [data-fast-person="p5"]').click();
   await expect(page.locator("#inspector h2")).toHaveText("Jesse Ward");
   expect(
@@ -113,7 +115,8 @@ test("phone opens natural profiles and a long cousin ancestry path from the larg
   await expect(page.locator(".biography")).toContainText("PA7314062");
   await expect(page.locator(".biography")).not.toContainText("Fictional");
   await page.locator("[data-close]").first().tap();
-  await page.locator('#viewActions [data-action="compare"]').tap();
+  await openMapOptions(page);
+  await page.locator('#graphToolbar [data-action="compare"]').tap();
   await page.locator("#kinFrom").selectOption("p5");
   await page.locator("#kinTo").selectOption("nathan");
   await expect(page.locator("#kinResult h3")).toHaveText("Fifth cousin");

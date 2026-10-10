@@ -20,6 +20,11 @@ export function renderFavorites() {
         .join("")
     : `<p class="hint">${translate("ui.favoritesHint")}</p>`;
   const rail = $("#favoriteRail");
-  rail.hidden = !people.length || appState.view !== "tree";
-  rail.innerHTML = `<span>${icon("star")}${translate("ui.workingPeople")}</span><div>${people.map((p) => `<button type="button" class="btn small ${appState.selected?.id === p.id ? "active" : ""}" data-fast-person="${p.id}">${esc(personDisplayName(p))}</button>`).join("")}</div>`;
+  rail.hidden = appState.view !== "tree";
+  const trigger = $('[popovertarget="favoriteRail"]');
+  trigger?.setAttribute(
+    "title",
+    translate("ui.workingPeople") + ` (${people.length})`,
+  );
+  rail.innerHTML = `<span>${icon("star")}${translate("ui.workingPeople")}</span><div>${people.map((p) => `<button type="button" class="btn small ${appState.selected?.id === p.id ? "active" : ""}" data-fast-person="${p.id}">${esc(personDisplayName(p))}</button>`).join("") || `<p class="hint">${translate("ui.favoritesHint")}</p>`}</div>`;
 }

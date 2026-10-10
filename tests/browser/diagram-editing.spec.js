@@ -1,3 +1,4 @@
+import { openMapOptions } from "./helpers/map-options.js";
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 
@@ -141,7 +142,9 @@ async function editing(page) {
       .locator('#graphToolbar [data-action="diagram-tools"]')
       .isVisible())
   )
-    await page.locator('[data-action="mobile-tools"]').click();
+    await page
+      .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+      .click();
   await page.locator('#graphToolbar [data-action="diagram-tools"]').click();
   await expect(page.locator("#diagramTools")).toBeVisible();
   await page.locator('[data-action="fit"]').click();
@@ -407,11 +410,13 @@ test.describe("desktop diagram editing", () => {
       );
     }
     const original = (await stateOf(page)).project.diagram;
+    await openMapOptions(page);
     await page.locator('#graphToolbar [data-action="saved-map-views"]').click();
     await page.locator('[name="map-view-name"]').fill("Estate connections");
     await page.locator('#modal button[type="submit"]').click();
     await page.locator('[data-action="diagram-reset-route"]').click();
     await page.locator('[data-action="diagram-reset-label"]').click();
+    await openMapOptions(page);
     await page.locator('#graphToolbar [data-action="saved-map-views"]').click();
     await page.locator("[data-restore-view]").click();
     expect((await stateOf(page)).project.diagram).toEqual(original);

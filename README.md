@@ -14,6 +14,8 @@ Use the book button beside the language selector for an in-app walkthrough in EN
 4. Use the map, search, filters, calendar and property history to investigate the recorded information.
 5. Export ZIP for an editable backup. Open an autobiography to print or save as PDF.
 
+The map has one action bar. **Map tools** opens layouts, saved views, filters, evidence counts and inheritance paths without moving the diagram. The star opens **Working people**. Collapse navigation with the menu button; close or reopen the details panel to gain more map space. **Placement** tools can be minimized while editing remains active.
+
 ## Workspace modes
 
 | Mode                 | Focus                                                         |

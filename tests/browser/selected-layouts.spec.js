@@ -1,3 +1,4 @@
+import { openMapLayout, openMapOptions } from "./helpers/map-options.js";
 import { test, expect } from "@playwright/test";
 
 async function snapshot(page) {
@@ -96,7 +97,9 @@ async function fixture(page) {
 }
 async function showTools(page) {
   if (!(await page.locator("#graphToolbar").isVisible()))
-    await page.locator('[data-action="mobile-tools"]').click();
+    await page
+      .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+      .click();
 }
 async function edit(page) {
   await showTools(page);
@@ -104,18 +107,7 @@ async function edit(page) {
   await expect(page.locator("#diagramTools")).toBeVisible();
 }
 async function apply(page, style) {
-  if (
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .isVisible()
-  )
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .click();
+  await openMapLayout(page);
   await page.locator("#graphLayout").selectOption(style);
   const history = (await snapshot(page)).history;
   await page.locator('.layout-controls [data-action="layout"]').click();
@@ -153,18 +145,7 @@ test.describe("selected layout and consistent selection", () => {
     await expect(page.locator("#graphLayoutScope")).toHaveValue("selected");
     expect((await snapshot(page)).people).toEqual(["p0", "p1", "p2"]);
     const before = await snapshot(page);
-    if (
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .isVisible()
-    )
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .click();
+    await openMapLayout(page);
     await page.locator("#graphLayout").selectOption("circle");
     expect((await snapshot(page)).project).toEqual(before.project);
     for (const style of [
@@ -222,6 +203,7 @@ test.describe("selected layout and consistent selection", () => {
     await expect(
       page.locator('.layout-controls [data-action="layout"]'),
     ).toBeDisabled();
+    await openMapOptions(page);
     await page
       .locator('#graphToolbar [data-action="unlock-placement"]')
       .click();
@@ -241,12 +223,14 @@ test.describe("selected layout and consistent selection", () => {
   }) => {
     await page.locator('[data-action="selection-mode"]').click();
     await card(page, "d").click();
+    await openMapOptions(page);
     await page.locator("#docsToggle").click();
     await expect(page.locator("#graphLayoutScope")).toHaveValue("selected");
     await expect(
       page.locator('.layout-controls [data-action="layout"]'),
     ).toBeDisabled();
     expect((await snapshot(page)).nodes).toEqual(["document:d"]);
+    await openMapOptions(page);
     await page.locator("#docsToggle").click();
     const before = await snapshot(page);
     await apply(page, "circle");
@@ -313,18 +297,7 @@ test.describe("selected layout and consistent selection", () => {
     page,
   }) => {
     const before = await snapshot(page);
-    if (
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .isVisible()
-    )
-      await page
-        .locator(
-          ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-        )
-        .click();
+    await openMapLayout(page);
     await page.locator("#graphLayout").selectOption("network");
     await page.locator('.layout-controls [data-action="layout"]').click();
     await page.evaluate(async () => {
@@ -397,7 +370,9 @@ for (const language of ["en", "uk", "ru"])
           before.project.people.slice(3),
         );
         await expect(
-          page.locator('[data-action="mobile-tools"]'),
+          page.locator(
+            '[popovertarget="mapSettings"]:not([popovertargetaction])',
+          ),
         ).toHaveAttribute("aria-expanded", "false");
         await page.locator('[data-action="toggle-grid"]').tap();
         await expect(page.locator(".diagram-grid")).toHaveCount(1);

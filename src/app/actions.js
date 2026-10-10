@@ -1,3 +1,10 @@
+import { closeMapPanels } from "../ui/map-panels.js";
+import {
+  closeInspector,
+  toggleInspector,
+  toggleNavigation,
+} from "../features/workspace-controls.js";
+import { renderDiagramTools } from "../ui/diagram-tools.js";
 import { clearGraphItems } from "../model/graph-selection.js";
 import { setPlacementLocked } from "../features/placement-locks.js";
 import {
@@ -54,8 +61,7 @@ import { editPerson, editProject, editScope } from "../features/profiles.js";
 import { editProperty } from "../features/property.js";
 import { comparePeople, editRelation } from "../features/relationships.js";
 import { openUserGuide, downloadGuideExample } from "../features/user-guide.js";
-import { applyCamera, fit, focusPerson, zoom } from "../graph/camera.js";
-import { resizeCamera } from "../model/camera-viewport.js";
+import { fit, focusPerson, zoom } from "../graph/camera.js";
 import { arrangeGraph } from "../graph/layout.js";
 import { translate } from "../i18n/index.js";
 import { localDateString } from "../model/dates.js";
@@ -75,6 +81,10 @@ export async function newTree() {
   showStartScreen();
 }
 export async function handleAction(action) {
+  if (
+    ["direct-connections", "restore-connection-map", "layout"].includes(action)
+  )
+    closeMapPanels();
   const handlers = {
     "user-guide": openUserGuide,
     "download-guide-example": downloadGuideExample,
@@ -171,20 +181,17 @@ export async function handleAction(action) {
     "focus-person": () => focusPerson(),
     "direct-connections": focusDirectConnections,
     "restore-connection-map": restoreConnectionMap,
-    "mobile-tools": () => {
-      const before = $("#graph").getBoundingClientRect();
-      const open = document.body.classList.toggle("mobile-tools-open");
-      if (open) $("#inspector").classList.remove("open");
-      $('[data-action="mobile-tools"]').setAttribute(
-        "aria-expanded",
-        String(open),
-      );
-      appState.camera = resizeCamera(
-        appState.camera,
-        before,
-        $("#graph").getBoundingClientRect(),
-      );
-      applyCamera();
+    "toggle-inspector": toggleInspector,
+    "diagram-panel": () => {
+      if (!appState.diagramEditing) toggleDiagramTools();
+      else {
+        appState.diagramPanelOpen = !appState.diagramPanelOpen;
+        renderDiagramTools();
+      }
+    },
+    "minimize-diagram": () => {
+      appState.diagramPanelOpen = false;
+      renderDiagramTools();
     },
     "touch-move": () => {
       appState.touchMove = !appState.touchMove;
@@ -229,15 +236,12 @@ export async function handleAction(action) {
     new: newTree,
     project: editProject,
     "add-property": () => editProperty(),
-    menu: () => {
-      $("#inspector").classList.remove("open");
-      $("#sidebar").classList.toggle("open");
-    },
+    menu: toggleNavigation,
     "close-mobile-panels": () => {
       $("#sidebar").classList.remove("open");
       $("#inspector").classList.remove("open");
     },
-    "close-panel": () => $("#inspector").classList.remove("open"),
+    "close-panel": closeInspector,
   };
   if (handlers[action]) await handlers[action]();
 }

@@ -1,3 +1,4 @@
+import { openMapOptions, openMapLayout } from "./helpers/map-options.js";
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 
@@ -16,7 +17,10 @@ async function openViews(page) {
       .locator('#graphToolbar [data-action="saved-map-views"]')
       .isVisible())
   )
-    await page.locator('[data-action="mobile-tools"]').click();
+    await page
+      .locator('[popovertarget="mapSettings"]:not([popovertargetaction])')
+      .click();
+  await openMapOptions(page);
   await page.locator('#graphToolbar [data-action="saved-map-views"]').click();
 }
 async function saveView(page, name) {
@@ -65,6 +69,7 @@ test("saved arrangement restores manual moves, zoom and filters after automatic 
   await page.mouse.move(box.x + 230, box.y + 145, { steps: 5 });
   await page.mouse.up();
   await page.locator('[data-action="zoom-out"]').click();
+  await openMapOptions(page);
   await page.locator('#graphToolbar [data-action="toggle-docs"]').click();
   await page.locator('[data-action="graph-filters"]').click();
   await page.locator('[name="graph-types"][value="acquaintance"]').uncheck();
@@ -73,18 +78,7 @@ test("saved arrangement restores manual moves, zoom and filters after automatic 
   const original = await positions(page),
     originalCenter = await center(page);
   await saveView(page, "Doe branch");
-  if (
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .isVisible()
-  )
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .click();
+  await openMapLayout(page);
   await page.locator("#graphLayout").selectOption("circle");
   await page.locator('.layout-controls [data-action="layout"]').click();
   await expect.poll(() => positions(page)).not.toEqual(original);
@@ -92,6 +86,7 @@ test("saved arrangement restores manual moves, zoom and filters after automatic 
   await page.locator('#inspector [data-edit-person="p5"]').first().click();
   await page.locator('[name="name"]').fill("Jesse Ward Updated");
   await page.locator('#modal button[type="submit"]').click();
+  await openMapOptions(page);
   await page.locator('#graphToolbar [data-action="toggle-docs"]').click();
   await openViews(page);
   await page.locator("[data-restore-view]").click();
@@ -140,18 +135,7 @@ test("multiple views can be renamed, replaced and deleted with undo, while dupli
 }) => {
   await saveView(page, "Whole tree");
   const first = await positions(page);
-  if (
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .isVisible()
-  )
-    await page
-      .locator(
-        ".graph-layout-settings:not([open]) summary, .diagram-layout-settings:not([open]) summary",
-      )
-      .click();
+  await openMapLayout(page);
   await page.locator("#graphLayout").selectOption("circle");
   await page.locator('.layout-controls [data-action="layout"]').click();
   await expect.poll(() => positions(page)).not.toEqual(first);
@@ -238,7 +222,7 @@ for (const language of ["en", "uk", "ru"]) {
     await page.locator("[data-restore-view]").click();
     await expect.poll(() => positions(page)).toEqual(original);
     await expect(page.locator("#inspector")).not.toHaveClass(/open/);
-    await expect(page.locator("body")).not.toHaveClass(/mobile-tools-open/);
+    await expect(page.locator("#mapSettings")).not.toBeVisible();
     const restoredCenter = await center(page);
     for (const key of ["x", "y", "z"])
       expect(restoredCenter[key]).toBeCloseTo(originalCenter[key], 3);

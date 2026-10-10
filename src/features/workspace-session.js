@@ -1,3 +1,4 @@
+import { closeMapPanels } from "../ui/map-panels.js";
 import { $, esc } from "../core/dom.js";
 import { state as appState } from "../core/state.js";
 import { isMobileLayout } from "../core/viewport.js";
@@ -53,7 +54,7 @@ export function activateTree(
   appState.layoutScope = "selected";
   appState.layoutStyle = "";
   appState.touchMove = false;
-  document.body.classList.remove("mobile-tools-open");
+  closeMapPanels();
   appState.project = model;
   for (const [id, b] of files) appState.blobs.set(id, b);
   appState.editorActive = true;

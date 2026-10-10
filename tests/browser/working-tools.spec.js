@@ -1,3 +1,4 @@
+import { openWorkingPeople } from "./helpers/map-options.js";
 import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 
@@ -77,6 +78,7 @@ test("favorites remain accessible across filters, center the card and survive ZI
   await expect(page.locator("#personList .person-row")).toHaveCount(1);
   await page.locator('[data-group-filter="g1"]').click();
   await expect(page.locator('.node[data-node="p8"]')).toHaveCount(0);
+  await openWorkingPeople(page);
   await page.locator('#favoriteRail [data-fast-person="p8"]').click();
   await expect(page.locator("#inspector h2")).toHaveText("Casey Roe (Ward)");
   await expect(page.locator('.node[data-node="p8"]')).toHaveCount(1);
@@ -86,6 +88,7 @@ test("favorites remain accessible across filters, center the card and survive ZI
   await expect(page.locator("#saveState")).toContainText("Draft saved");
   await page.reload();
   await page.locator("#startContinue").click();
+  await openWorkingPeople(page);
   await expect(
     page.locator('#favoriteRail [data-fast-person="p8"]'),
   ).toBeVisible();
@@ -279,6 +282,7 @@ test.describe("native phone working tools", () => {
   test("taps a favorite and drags its profile header with cancellation support", async ({
     page,
   }) => {
+    await openWorkingPeople(page);
     await page.locator('#favoriteRail [data-fast-person="p4"]').tap();
     const inspector = page.locator("#inspector");
     await expect(inspector).not.toHaveClass(/open/);

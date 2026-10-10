@@ -1,45 +1,5 @@
-.map-settings {
-  display: contents;
-}
-.mobile-map-bar,
 .mobile-shade {
   display: none;
-}
-@media (min-width: 761px) and (max-width: 1050px) {
-  .mobile-map-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-  }
-  .mobile-map-bar > button {
-    min-height: 44px;
-  }
-  .mobile-map-bar > .iconbtn {
-    min-width: 44px;
-  }
-  .mobile-map-bar > p,
-  .mobile-map-bar > [data-action="touch-move"] {
-    display: none;
-  }
-  .map-settings {
-    display: none;
-  }
-  .mobile-tools-open .map-settings {
-    display: block;
-    max-height: 35dvh;
-    overflow: auto;
-    flex-shrink: 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .view-full .mobile-map-bar {
-    display: none;
-  }
-  .view-full .map-settings {
-    display: contents;
-  }
 }
 @media (max-width: 760px) {
   .topbar {
@@ -94,60 +54,7 @@
   .view-actions {
     flex-shrink: 0;
   }
-  .mobile-map-bar {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    padding: 6px 12px 8px;
-    background: var(--bg);
-    border-bottom: 1px solid var(--line);
-  }
-  .mobile-map-bar > .btn {
-    flex: 1;
-    min-width: 0;
-    font-size: 0.8125rem;
-    padding: 7px;
-  }
-  .mobile-map-bar > .btn span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .mobile-map-bar > button {
-    min-height: 44px;
-  }
-  .mobile-map-bar > .iconbtn {
-    min-width: 44px;
-  }
-  .mobile-map-bar .active {
-    background: var(--blue-soft);
-    border-color: var(--muted);
-  }
-  .mobile-map-bar p {
-    flex: 0 0 100%;
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.6875rem;
-    line-height: 1.5;
-  }
-  .map-settings {
-    display: none;
-  }
-  .mobile-tools-open .map-settings {
-    display: block;
-    max-height: 35dvh;
-    overflow: auto;
-    border-bottom: 1px solid var(--line);
-    flex-shrink: 0;
-  }
-  .view-full .map-settings {
-    display: contents;
-  }
-  .view-full .mobile-map-bar {
-    display: none;
-  }
-  .canvas-top,
-  .canvas-hint {
+  .canvas-top {
     display: none;
   }
   .legend {
@@ -277,14 +184,8 @@
     flex-shrink: 0;
   }
   .viewbar .eyebrow,
-  .viewbar #viewSubtitle,
-  .mobile-map-bar p {
+  .viewbar #viewSubtitle {
     display: none;
-  }
-  .mobile-map-bar {
-    flex-shrink: 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
   }
 }
 @media (max-width: 420px) {

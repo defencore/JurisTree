@@ -1,4 +1,6 @@
 export default {
+  "ui.minimizeTools": "Згорнути інструменти",
+  "ui.detailsPanel": "Панель відомостей",
   "ui.search": "Пошук",
   "ui.imageLibrary": "Бібліотека зображень",
   "ui.imageLibraryHint": "Спільні оригінали, описи та позначені ділянки",
@@ -326,7 +328,7 @@ export default {
   "ui.valueDetails": "Значення / відомості",
   "ui.invalidProfileNumber": "Введіть коректне число в записі профілю.",
   "ui.invalidProfileYear": "Введіть рік із чотирьох цифр у записі профілю.",
-  "ui.mapOptions": "Опції схеми",
+  "ui.mapOptions": "Інструменти схеми",
   "ui.moveCards": "Рух карток",
   "ui.focusPerson": "Показати особу",
   "ui.mobileMapHint":

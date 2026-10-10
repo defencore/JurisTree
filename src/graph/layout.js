@@ -1,3 +1,4 @@
+import { closeMapPanels } from "../ui/map-panels.js";
 import { $ } from "../core/dom.js";
 import { isMobileLayout } from "../core/viewport.js";
 import { layoutTypes } from "../core/layouts.js";
@@ -85,7 +86,7 @@ export async function arrangeGraph(
     const next = applyLayout(start, input, positions, style, cfg);
     state.layoutStyle = style;
     if (innerWidth < 1440) {
-      if (isMobileLayout()) document.body.classList.remove("mobile-tools-open");
+      if (isMobileLayout()) closeMapPanels();
       $(".diagram-layout-settings")?.removeAttribute("open");
       $(".graph-layout-settings")?.removeAttribute("open");
     }
