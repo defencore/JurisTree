@@ -44,7 +44,7 @@ export function focusPerson(
       topSpace: node.y - Math.min(...headers.map((header) => header.y)),
       sideSpace: 19,
     });
-    if (framed?.z * node.w > 180) camera = framed;
+    if (framed) camera = framed;
   }
   if (!camera) return;
   appState.camera = camera;

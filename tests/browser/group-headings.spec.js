@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 
 for (const [language, width, height] of [
   ["en", 1280, 900],
+  ["en", 1280, 700],
   ["uk", 390, 844],
   ["ru", 320, 740],
 ]) {
@@ -11,7 +12,7 @@ for (const [language, width, height] of [
       hasTouch: width < 760,
       isMobile: width < 760,
     });
-    test(`family headings stay clear of kinship badges and long names at ${width}px in ${language}`, async ({
+    test(`family headings stay clear of kinship badges and long names at ${width}×${height}px in ${language}`, async ({
       page,
     }) => {
       const errors = [];
@@ -82,7 +83,7 @@ for (const [language, width, height] of [
       );
       await expect(heading.locator("title")).toHaveText(name + " · 1");
       await page.screenshot({
-        path: `test-results/group-heading-${language}.png`,
+        path: `test-results/group-heading-${language}-${width}x${height}.png`,
       });
       if (width < 760) await heading.tap();
       else {

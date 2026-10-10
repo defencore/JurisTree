@@ -199,8 +199,12 @@ test.describe("selected layout and consistent selection", () => {
   test("mixed card and connection selection survives opening and closing placement; fixed selections disable layout", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1680, height: 800 });
     await page.locator('[data-action="selection-mode"]').click();
-    for (const id of ["p0", "p1", "d", "a"]) await card(page, id).click();
+    for (const id of ["p0", "p1", "d", "a"]) {
+      await page.locator('[data-action="fit"]').click();
+      await card(page, id).click();
+    }
     await page.locator('#graph [data-route-label="r:r0"]').click();
     const selected = await snapshot(page);
     await edit(page);
