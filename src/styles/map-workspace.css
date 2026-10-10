@@ -327,3 +327,22 @@ body:not(.view-full) #graph {
     display: inline-flex;
   }
 }
+
+@media screen and (min-width: 761px) and (pointer: coarse) {
+  .sidebar {
+    padding: 12px 10px;
+  }
+  .navbtn {
+    min-height: 44px;
+    padding: 6px 7px;
+    gap: 8px;
+  }
+  .nav-icon {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+  .nav-text b {
+    font-size: 0.8125rem;
+  }
+}
