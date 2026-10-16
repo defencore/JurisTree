@@ -25,10 +25,6 @@
   .topbar .iconbtn {
     min-width: 44px;
   }
-  .language-control select {
-    padding-right: 15px;
-    min-width: 55px;
-  }
   .sidebar {
     top: var(--workspace-header-height);
     width: min(320px, calc(100vw - 40px));
@@ -127,6 +123,10 @@
     min-height: 44px;
   }
   .person-select {
+    min-height: 44px;
+  }
+  .start-title-field input {
+    font-size: 1rem;
     min-height: 44px;
   }
   .dialog,

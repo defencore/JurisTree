@@ -21,6 +21,7 @@
 .favorite-person span:last-child {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .favorite-person .avatar {
   flex-shrink: 0;

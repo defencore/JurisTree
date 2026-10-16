@@ -1,20 +1,23 @@
 /* Browser page zoom remains native; compact desktop spacing reserves room for the map. */
 @media screen and (min-width: 761px) and (pointer: fine) {
   :root {
-    --workspace-header-height: 88px;
+    --workspace-header-height: 80px;
+  }
+  body {
+    font-size: 0.875rem;
   }
   .topbar {
-    height: 48px;
-    padding: 0 14px;
-    gap: 14px;
+    height: 44px;
+    padding: 0 12px;
+    gap: 12px;
   }
   .brand {
     min-width: 180px;
     gap: 8px;
   }
   .brandmark {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
   .brand b {
     font-size: 1.125rem;
@@ -30,6 +33,7 @@
     padding-left: 10px;
   }
   .topbar .btn,
+  .start-screen .btn,
   .workspace .btn,
   .global-search-bar .btn {
     min-height: 32px;
@@ -47,6 +51,7 @@
     padding: 0;
   }
   .topbar .btn .icon,
+  .start-screen .btn .icon,
   .workspace .btn .icon,
   .workspace .iconbtn .icon {
     width: 17px;
@@ -58,36 +63,30 @@
     padding-bottom: 5px;
   }
   .global-search-bar {
-    height: 40px;
-    padding: 4px 14px;
+    height: 36px;
+    padding: 3px 12px;
   }
   .global-search-input {
-    height: 32px;
+    height: 30px;
   }
   .global-search-input input {
     padding: 5px 0;
     font-size: 0.875rem;
   }
   .person-filter-toggle {
-    height: 32px;
-  }
-  .workspace {
-    grid-template-columns: 220px minmax(0, 1fr) 300px;
-  }
-  .view-full .workspace,
-  .workspace:has(.inspector[data-floating]) {
-    grid-template-columns: 220px minmax(0, 1fr);
+    height: 30px;
+    min-height: 30px;
   }
   .sidebar {
     padding: 12px 10px;
   }
   .navbtn {
-    min-height: 44px;
-    padding: 6px 7px;
+    min-height: 36px;
+    padding: 4px 7px;
     gap: 8px;
   }
   .nav-group + .nav-group {
-    margin-top: 9px;
+    margin-top: 7px;
   }
   .nav-icon {
     width: 28px;
@@ -104,14 +103,39 @@
   .nav-text b {
     font-size: 0.8125rem;
   }
+  .sidebar .section-label,
+  .sidebar .nav-label {
+    font-size: 0.75rem;
+  }
+  .purpose select,
+  .people-section .search input {
+    font-size: 0.8125rem;
+    min-height: 32px;
+    padding-block: 5px;
+  }
+  .favorites-section {
+    padding: 10px 7px;
+  }
+  .favorite-person {
+    font-size: 0.8125rem;
+  }
+  .person-row-footer .person-biography {
+    width: 28px;
+    height: 28px;
+    min-height: 28px;
+  }
+  .person-row-footer .person-biography .icon {
+    width: 16px;
+    height: 16px;
+  }
   .viewbar {
-    min-height: 64px;
-    padding: 10px 14px;
+    min-height: 48px;
+    padding: 8px 12px;
     gap: 8px;
     flex-shrink: 0;
   }
   .viewbar h1 {
-    font-size: 1.1875rem;
+    font-size: 1.125rem;
   }
   .viewbar #viewSubtitle {
     margin-top: 3px;
@@ -185,7 +209,7 @@
     top: 34px;
   }
   .inspector {
-    padding: 14px;
+    padding: 12px;
   }
   .inspector-header {
     padding-bottom: 8px;
@@ -194,13 +218,20 @@
     padding-bottom: 12px;
   }
   .profile .avatar {
-    width: 48px;
-    height: 48px;
-    font-size: 1rem;
-    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 0.8125rem;
+    border-radius: 10px;
   }
   .profile h2 {
-    font-size: 1.0625rem;
+    font-size: 1rem;
+  }
+  .profile p {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+  .profile-top {
+    gap: 9px;
   }
   .profile-actions {
     padding-top: 8px;
@@ -210,13 +241,124 @@
     margin-top: 6px;
   }
   .kin-group {
-    padding-top: 14px;
+    padding-top: 12px;
   }
-}
-@media screen and (min-width: 761px) and (max-width: 1050px) and (pointer: fine) {
-  .workspace,
-  .view-full .workspace,
-  .workspace:has(.inspector[data-floating]) {
-    grid-template-columns: 200px minmax(0, 1fr);
+  .kin-row {
+    padding: 7px;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .kin-row .kin-person {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 4px 6px;
+  }
+  .kin-row .kin-person > span:last-child {
+    display: contents;
+  }
+  .kin-row .kin-person b {
+    grid-column: 2;
+    white-space: normal;
+    overflow-wrap: break-word;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+  .kin-row .kin-person small {
+    grid-column: 1 / -1;
+    overflow-wrap: normal;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .kin-row .kin-person .avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 0.6875rem;
+    border-radius: 8px;
+  }
+  .field {
+    font-size: 0.8125rem;
+    margin-bottom: 12px;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    font-size: 0.875rem;
+    min-height: 36px;
+    padding: 7px 10px;
+    margin-top: 6px;
+  }
+  .start-topbar {
+    height: 52px;
+    padding-inline: max(20px, calc(50vw - 560px));
+    gap: 12px;
+  }
+  .start-main {
+    max-width: 1120px;
+    padding: 24px 20px;
+  }
+  .start-heading {
+    margin-bottom: 18px;
+  }
+  .start-heading h1 {
+    font-size: 1.5rem;
+    line-height: 1.35;
+  }
+  .start-heading > p:last-child {
+    margin-top: 7px;
+    font-size: 0.875rem;
+  }
+  .start-columns,
+  .start-open-column {
+    gap: 16px;
+  }
+  .start-panel {
+    padding: 16px;
+  }
+  .start-panel-heading {
+    margin-bottom: 14px;
+  }
+  .start-panel h2 {
+    font-size: 1rem;
+  }
+  .start-panel-heading p {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+  .start-title-field {
+    margin-bottom: 12px;
+  }
+  .start-template {
+    min-height: 64px;
+    gap: 8px;
+    padding: 9px;
+  }
+  .start-template b {
+    font-size: 0.8125rem;
+  }
+  .start-template small {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  .start-template-icon {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+  }
+  .start-template-icon .icon {
+    width: 19px;
+    height: 19px;
+  }
+  .start-create-foot {
+    margin-top: 14px;
+    padding-top: 12px;
+  }
+  .start-drop {
+    padding: 16px 12px;
+    gap: 8px;
+  }
+  .start-resume {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    gap: 12px;
   }
 }

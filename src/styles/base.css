@@ -5,6 +5,8 @@
   --ui-font: Tahoma, Verdana, "DejaVu Sans", Arial, sans-serif;
   font-family: var(--ui-font);
   font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   font-synthesis: none;
   line-height: 1.5;
 }

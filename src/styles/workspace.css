@@ -208,18 +208,17 @@
 .person-row {
   background: transparent;
   border: 1px solid transparent;
-  display: flex;
+  display: grid;
   margin-bottom: 3px;
   text-align: left;
   border-bottom: 1px solid var(--blue-soft);
   border-radius: 4px;
   border-color: var(--blue-soft);
-  align-items: flex-start;
-  gap: 8px;
+  gap: 5px;
   height: auto;
   max-width: 100%;
   min-height: 64px;
-  padding: 10px 7px;
+  padding: 8px 7px;
   width: 100%;
 }
 .person-row:hover {
@@ -231,17 +230,13 @@
   background: var(--blue-soft);
   box-shadow: inset 2px 0 var(--muted);
 }
-.person-select > span:nth-child(2) {
-  flex: 1;
-  min-width: 0;
-}
 .person-row b {
   display: block;
-  white-space: nowrap;
+  white-space: normal;
   color: var(--ink);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  line-height: 1.5;
+  line-height: 1.4;
   overflow: visible;
   text-overflow: clip;
 }
@@ -250,7 +245,7 @@
   color: var(--muted);
   font-size: 0.75rem;
   line-height: 1.6;
-  margin-top: 4px;
+  margin-top: 0;
 }
 .avatar {
   border-radius: 12px;
@@ -891,25 +886,37 @@
   margin-bottom: 10px;
 }
 .person-select > .avatar {
-  flex: 0 0 31px;
-  height: 31px;
-  margin-top: 2px;
-  width: 31px;
+  height: 26px;
+  width: 26px;
+  font-size: 0.6875rem;
+  border-radius: 8px;
 }
 .person-select > .person-row-text {
-  flex: 1;
+  display: contents;
+}
+.person-row b {
+  grid-column: 2;
+  overflow-wrap: break-word;
+}
+.person-row small {
+  grid-column: 1 / -1;
+  overflow-wrap: normal;
+  white-space: normal;
+}
+.person-row-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   min-width: 0;
 }
-.person-row b,
-.person-row small {
-  overflow-wrap: anywhere;
-  white-space: normal;
+.person-row-footer > .person-status {
+  flex: 1;
+  margin: 0;
 }
 .person-row .row-state {
   flex: 0 0 auto;
   font-size: 0.75rem;
   min-width: 17px;
-  padding-top: 4px;
   white-space: nowrap;
 }
 .person-row .row-state .icon {
