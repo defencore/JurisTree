@@ -140,6 +140,11 @@ export function bindChangeEvents() {
       commit(() => (appState.project.subjectId = t.value));
     if (t.id === "claimantSelect")
       commit(() => (appState.project.claimantId = t.value));
+    if (t.id === "docCategoryFilter") {
+      appState.docCategoryFilter = t.value;
+      appState.docTypeFilter = "";
+      renderDocuments();
+    }
     if (t.id === "docTypeFilter") {
       appState.docTypeFilter = t.value;
       renderDocuments();

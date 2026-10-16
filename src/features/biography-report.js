@@ -4,6 +4,7 @@ import { translate as t } from "../i18n/index.js";
 import { recordConfigs } from "../core/config.js";
 import { personBiography } from "../model/biography.js";
 import { personImageItems } from "../model/image-regions.js";
+import { recordSources } from "../model/source-record-links.js";
 import { openDialog } from "../ui/dialog.js";
 import { renderBiography } from "../ui/biography.js";
 import {
@@ -69,8 +70,13 @@ export async function prepareBiographyReport(id) {
           });
           const familySources = new Set(
             familyReportSections.flatMap((section) =>
-              (biography.profile[recordConfigs()[section]?.key] || []).map(
-                (record) => record.sourceId,
+              (biography.profile[recordConfigs()[section]?.key] || []).flatMap(
+                (record) =>
+                  recordSources(state.project, {
+                    personId: id,
+                    section,
+                    recordId: record.id,
+                  }).map((source) => source.id),
               ),
             ),
           );

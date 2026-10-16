@@ -150,6 +150,7 @@ export const profilesClicks = [
       const f = b.dataset.overview;
       appState.docFilter = "";
       appState.docTypeFilter = "";
+      appState.docCategoryFilter = "";
       if (f === "gaps") {
         appState.view = "gaps";
       } else {

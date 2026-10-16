@@ -1,3 +1,6 @@
+import { documentDetailsConfig } from "../core/document-details.js";
+import { documentGroups } from "./document-catalog.js";
+import { recordSources } from "../model/source-record-links.js";
 import { personImageItems } from "../model/image-regions.js";
 import { biographyImages } from "./biography-images.js";
 import { imageItemKey } from "./media-image.js";
@@ -46,7 +49,13 @@ function record(sectionKey, item, personId, imageMarkup = "") {
   const values = recordValues(cfg, item);
   const body =
     fields(values) +
-    sourceChips(item.sourceId ? [item.sourceId] : []) +
+    sourceChips(
+      recordSources(appState.project, {
+        personId,
+        section: sectionKey,
+        recordId: item.id,
+      }).map((source) => source.id),
+    ) +
     recordReferenceActions(cfg, item);
   return body
     ? `<article class="biography-record">${body}${imageMarkup}${recordAttachmentsButton(personId, sectionKey, item)}</article>`
@@ -55,7 +64,7 @@ function record(sectionKey, item, personId, imageMarkup = "") {
 
 function source(d) {
   const url = sourceLink(d);
-  return `<article class="biography-record"><h4>${esc(d.title)}</h4>${fields(
+  return `<article class="biography-record"><h5>${esc(d.title)}</h5>${fields(
     [
       [translate("ui.documentType"), types()[d.type]],
       [translate("ui.documentAvailability"), statusTypes()[d.status]],
@@ -94,7 +103,10 @@ function source(d) {
       ],
       [translate("ui.documentText"), d.transcription],
       [translate("ui.notes"), d.notes],
-    ].concat(recordValues(sourceVerificationConfig(), d)),
+    ].concat(
+      recordValues(documentDetailsConfig(), d.details || {}),
+      recordValues(sourceVerificationConfig(), d),
+    ),
   )}${url ? `<a class="biography-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>` : ""}<div class="biography-record-actions"><button type="button" class="btn small" data-document="${d.id}">${icon("eye")}${translate("ui.openSource")}</button>${hasFile(d) ? `<button type="button" class="btn small" data-download-doc="${d.id}">${icon("download")}${translate("ui.downloadFile")}</button>` : ""}</div></article>`;
 }
 
@@ -168,6 +180,34 @@ export function renderBiography({
       : "") + sourceChips(p.bioSourceIds),
     "biography",
   );
+  html += section(
+    translate("ui.familyGroups"),
+    "users",
+    groups
+      .map(
+        (g) =>
+          `<article class="biography-record"><h4>${esc(g.name)}</h4>${g.notes ? `<p class="biography-prose">${esc(g.notes)}</p>` : ""}</article>`,
+      )
+      .join(""),
+    "groups",
+  );
+  html += section(
+    translate("ui.recordedRelationships"),
+    "link",
+    relations
+      .map((r) => {
+        const other = person(r.from === p.id ? r.to : r.from);
+        const sources = documents.filter((d) =>
+          (d.relations || []).includes(r.id),
+        );
+        const otherDates = other
+          ? personLifeDates(other, { includeUnknown: false })
+          : "";
+        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(personDisplayName(other))}</h4>${otherDates ? `<p class="hint">${esc(otherDates)}</p>` : ""}${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
+      })
+      .join(""),
+    "relationships",
+  );
   for (const [key, [label, symbol]] of Object.entries(sectionInfo())) {
     const cfg = recordConfigs()[key];
     if (cfg)
@@ -203,34 +243,6 @@ export function renderBiography({
       )
       .join(""),
     "testimony",
-  );
-  html += section(
-    translate("ui.familyGroups"),
-    "users",
-    groups
-      .map(
-        (g) =>
-          `<article class="biography-record"><h4>${esc(g.name)}</h4>${g.notes ? `<p class="biography-prose">${esc(g.notes)}</p>` : ""}</article>`,
-      )
-      .join(""),
-    "groups",
-  );
-  html += section(
-    translate("ui.recordedRelationships"),
-    "link",
-    relations
-      .map((r) => {
-        const other = person(r.from === p.id ? r.to : r.from);
-        const sources = documents.filter((d) =>
-          (d.relations || []).includes(r.id),
-        );
-        const otherDates = other
-          ? personLifeDates(other, { includeUnknown: false })
-          : "";
-        return `<article class="biography-record"><h4>${esc(roleLabel(r, p.id))} · ${esc(personDisplayName(other))}</h4>${otherDates ? `<p class="hint">${esc(otherDates)}</p>` : ""}${r.disputed ? `<span class="pill red">${translate("ui.disputedRelationship")}</span>` : ""}${fields(recordValues(relationshipConfig(), r))}${r.notes ? `<p class="biography-prose">${esc(r.notes)}</p>` : ""}${sourceChips(sources.map((d) => d.id))}${other ? `<button type="button" class="btn small" data-biography="${other.id}">${icon("book")}${translate("ui.autobiography")}</button>` : ""}</article>`;
-      })
-      .join(""),
-    "relationships",
   );
   html += section(
     translate("ui.propertyAndShares"),
@@ -282,7 +294,7 @@ export function renderBiography({
   html += section(
     translate("ui.documentsAndSources"),
     "files",
-    documents.map(source).join(""),
+    documentGroups(documents, source),
     "documents",
   );
   return html + "</article>";

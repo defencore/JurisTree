@@ -6,34 +6,7 @@ import { orderedProfileSections } from "./profile-groups.js";
 export const GRAPH_FONT = "DejaVu Sans,Tahoma,Verdana,Arial,sans-serif";
 export const CAMERA_MIN_ZOOM = 0.025;
 export const CAMERA_MAX_ZOOM = 2.5;
-export const types = localizedConfig(() => {
-  return {
-    birth: translate("ui.birthCertificate"),
-    marriage: translate("ui.marriageCertificate"),
-    divorce: translate("ui.marriageDissolutionCertificate"),
-    adoption: translate("ui.adoptionRecordDocument"),
-    parentage: translate("ui.parentageRecordDocument"),
-    civil_extract: translate("ui.civilExtract"),
-    death: translate("ui.deathCertificate"),
-    name_change: translate("ui.nameSurnameChange"),
-    will: translate("ui.willAbsenceOfAWill"),
-    probate: translate("ui.probateFileRepresentativeAuthority"),
-    ownership: translate("ui.ownershipBankDocument"),
-    archive: translate("ui.archiveRecord"),
-    ledger: translate("ui.ledgerSource"),
-    register: translate("ui.registerSource"),
-    census: translate("ui.censusResidentRegister"),
-    award: translate("ui.awardSource"),
-    journal_entry: translate("ui.journalEntrySource"),
-    death_notice: translate("ui.deathNoticeSource"),
-    photo: translate("ui.photograph"),
-    letter: translate("ui.letterCorrespondence"),
-    testimony: translate("ui.witnessTestimony"),
-    rumor: translate("ui.rumor"),
-    recording: translate("ui.recording"),
-    other: translate("ui.otherDocument"),
-  };
-});
+export { documentTypes as types } from "./document-catalog.js";
 export const relTypes = localizedConfig(() => {
   return {
     parent: translate("ui.biologicalParenthood"),

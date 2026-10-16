@@ -67,16 +67,17 @@ export function createProjectIndex(project) {
     const targets = document.attachments.flatMap((file) =>
       (file.regions || []).flatMap((region) => region.targets),
     );
-    const imagePeople = targets.flatMap((target) =>
-      targetPeople(project, target),
-    );
+    const linkedPeople = [
+      ...targets.flatMap((target) => targetPeople(project, target)),
+      ...(document.recordLinks || []).map((target) => target.personId),
+    ];
     const propertyIds = new Set([
       ...targets.filter((t) => t.kind === "property").map((t) => t.propertyId),
       ...(document.propertyIds || []),
       ...(propertyBySource.get(document.id) || []),
     ]);
     for (const [key, ids] of [
-      ["peopleDocs", [...(document.people || []), ...imagePeople]],
+      ["peopleDocs", [...(document.people || []), ...linkedPeople]],
       [
         "relationDocs",
         [
@@ -90,7 +91,7 @@ export function createProjectIndex(project) {
     ])
       for (const id of new Set(ids)) append(index[key], id, document);
     const profileIds = new Set([
-      ...imagePeople,
+      ...linkedPeople,
       ...(document.people || []),
       ...(document.subjectIds || []),
       ...(sourcePeople.get(document.id) || []),

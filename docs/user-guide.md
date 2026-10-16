@@ -200,6 +200,24 @@ The following public examples inform field grouping and terminology. They are de
 | [State Migration Service identification forms](https://dmsu.gov.ua/assets/files/doc/urist_1.pdf)                    | Neutral identifying terms, including distinguishing marks, inform concise section and field labels.                                                                       |
 | [Civil status registry extract rules](https://zakon.rada.gov.ua/laws/show/z0691-08)                                 | Names and name changes, birth, marriage and death retain dated civil-status records and linked documentary sources.                                                       |
 
+## Documents and supporting records
+
+Keep each document in **Documents**, with all its pages and files in one source record. The library distinguishes civil certificates, identity papers and permits, residence records, property and registry documents, contracts and notarial instruments, court documents and applications, tax and banking documents, education/employment/service records, and archive materials. **Other document** accommodates additional types.
+
+1. Upload files, paste photographs, or add a record without a digital copy. Select a document type and title.
+2. Expand **Document particulars** when needed: series/number, issuer and country, validity, registry name/entry/date, object identifier, copy certification and location of the original. Dates may be partial where supported. Keep book, volume, page, transcript and acquisition details in the provenance fields.
+3. Select the people the document concerns. Expand the mentioned-people list for other participants. Both lists have surname search and alphabetical ordering.
+4. Expand **Profile records supported by this document** to link the document to specific facts for those people, such as a registered address, bank account, education or a legal proceeding. A document can support several records and several people. Relationships and property have their own optional links.
+5. Save. In a profile or beside an individual record, **Link an existing document** opens a searchable library. Select one or more documents and save; existing primary sources remain intact. To remove an additional record link, edit the document and uncheck that record.
+
+Store the actual address and residence period under **Residence**, an account under the banking section, and dated ownership/use/transfers in property history. Link the supporting extract, agreement or certificate to those entries. A document is evidence for a fact; uploading it does not create the fact automatically. Similarly, recording a copy as certified does not automatically mark its contents as corroborated.
+
+Filter the library by category, type, availability or attached files. Combined search finds document titles, particulars, registry identifiers, filenames, transcriptions and linked people's names. One source can hold an original image, PDF, additional pages and cropped copies. **Crop copy** retains the original. Use image-region annotations for a reusable area that keeps its original context.
+
+Complete biographies put family context before detailed records and organize the document appendix into categories, with dated documents first. Only entered particulars are shown. Choose the family report for a readable selection of life history and photographs, or the complete report when the supporting document appendix is needed. Preview before printing or saving as PDF. ZIP backups retain particulars, links and the files together.
+
+The terminology for Ukrainian records draws on the official [NAIS register catalogue](https://nais.gov.ua/registers), [taxpayer registration guidance](https://www.tax.gov.ua/fizichnim-osobam/otrimannya-kartki/scho-taku-eestratsiyniy-nom/) and [Diia residence extract service](https://diia.gov.ua/services/vityag-z-reyestru-teritorialnoyi-gromadi/). These are naming references; JurisTree does not query those registries.
+
 ## Relationship history and source verification
 
 Choose **Registered marriage** for marriage or a registered civil partnership. Choose **Partnership / dating** for an unregistered union, cohabitation, dating, romantic relationships, an affair / lovers or another partnership. An affair is an explicitly entered subtype; overlapping dates do not classify a relationship automatically. Add the subtype, status, duration pattern, start/end dates, place and registration reference as applicable. Use separate records for separate episodes between the same people. Relationship period fields use `fromDate` and `toDate`; `from` and `to` remain person IDs.

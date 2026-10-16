@@ -29,6 +29,7 @@ export const state = {
   librarySearch: "",
   docFilter: "",
   docTypeFilter: "",
+  docCategoryFilter: "",
   docStatusFilter: "",
   docFileFilter: "",
   docLayout: "list",

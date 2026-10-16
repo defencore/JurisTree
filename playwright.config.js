@@ -8,7 +8,7 @@ export default defineConfig({
     { name: "chromium", use: { browserName: "chromium" } },
     {
       name: "firefox",
-      testMatch: /(browser-zoom|workspace-controls)\.spec\.js/,
+      testMatch: /(browser-zoom|workspace-controls|document-library)\.spec\.js/,
       use: { browserName: "firefox", launchOptions: {} },
     },
   ],

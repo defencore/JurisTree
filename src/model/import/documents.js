@@ -1,3 +1,5 @@
+import { normalizeDocumentDetails } from "../document-details.js";
+import { normalizeDocumentLinks } from "../document-links.js";
 import { normalizeSourceAttachments } from "../source-attachments.js";
 import { normalizeModePurposes } from "../../core/workspace-modes.js";
 import { evidenceTypes, statusTypes, types } from "../../core/config.js";
@@ -39,6 +41,8 @@ export function normalizeImportedDocument(
     x: pos(d.x),
     y: pos(d.y),
     attachments: normalizeSourceAttachments(d),
+    details: normalizeDocumentDetails(d.details),
+    recordLinks: normalizeDocumentLinks(d.recordLinks),
   };
   for (const k of [
     "title",

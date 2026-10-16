@@ -1,3 +1,4 @@
+import { pruneDocumentLinks } from "./document-links.js";
 import { pruneImageTargets } from "./image-regions.js";
 import { importContext, str, pos } from "./import/schema.js";
 import { normalizeImportedPerson } from "./import/people.js";
@@ -100,6 +101,7 @@ export function validateImport(raw) {
   }
   normalizeProfileReferences(p);
   pruneImageTargets(p);
+  pruneDocumentLinks(p);
   const indegrees = new Map(p.people.map((x) => [x.id, 0])),
     children = new Map(p.people.map((x) => [x.id, []]));
   for (const r of p.relations)

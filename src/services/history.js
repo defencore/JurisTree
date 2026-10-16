@@ -1,3 +1,4 @@
+import { pruneDocumentLinks } from "../model/document-links.js";
 import { pruneImageTargets } from "../model/image-regions.js";
 import { emitSignal } from "../core/signals.js";
 import { state as appState } from "../core/state.js";
@@ -21,6 +22,7 @@ export function commit(action) {
   try {
     action();
     pruneImageTargets(appState.project);
+    pruneDocumentLinks(appState.project);
   } catch (error) {
     appState.project = before;
     appState.renderIndex = null;

@@ -1,3 +1,4 @@
+import { recordSources } from "../model/source-record-links.js";
 import { state } from "../core/state.js";
 import { personImageItems } from "../model/image-regions.js";
 import { biographyImages } from "./biography-images.js";
@@ -26,8 +27,13 @@ export function recordDetails(section, r, personId) {
       personImageItems(state.project, personId, { section, recordId: r.id }),
     ) + recordAttachmentsButton(personId, section, r);
   const cfg = recordConfigs()[section];
+  const sources = recordSources(state.project, {
+    personId,
+    section,
+    recordId: r.id,
+  }).map((source) => source.id);
   if (cfg.extended)
-    return `<div class="biography-record">${fields(recordValues(cfg, r))}${r.sourceId ? sourceChips([r.sourceId]) : ""}${recordReferenceActions(cfg, r)}${attachments}</div>`;
+    return `<div class="biography-record">${fields(recordValues(cfg, r))}${sourceChips(sources)}${recordReferenceActions(cfg, r)}${attachments}</div>`;
   const ic =
     section === "pets"
       ? {
@@ -71,7 +77,7 @@ export function recordDetails(section, r, personId) {
     .map((l) => `<small>${section === "contacts" ? l : esc(l)}</small>`)
     .join(
       "",
-    )}${r.notes ? `<p>${esc(r.notes)}</p>` : ""}${r.sourceId ? sourceChips([r.sourceId]) : ""}${attachments}</div></div>`;
+    )}${r.notes ? `<p>${esc(r.notes)}</p>` : ""}${sourceChips(sources)}${attachments}</div></div>`;
 }
 export function renderPersonDetails(p, { complete = false } = {}) {
   const renderSection = ({ key: section, search }) => {

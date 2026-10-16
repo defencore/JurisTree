@@ -1,3 +1,4 @@
+import { documentDetailsConfig } from "../core/document-details.js";
 import { sourcePeopleIds } from "../model/image-regions.js";
 import { displayDate } from "../model/dates.js";
 import { personDisplayName } from "../model/person-display.js";
@@ -32,6 +33,7 @@ export async function viewDocument(id, attachmentId = "") {
     [translate("ui.documentDate"), displayDate(d.date)],
     [translate("ui.accessedRequested"), displayDate(d.accessedAt)],
     [translate("ui.language"), d.language],
+    ...recordValues(documentDetailsConfig(), d.details || {}),
     ...recordValues(sourceVerificationConfig(), d),
   ];
   const records = sourceRecordLinks(appState.project, id);

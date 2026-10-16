@@ -1,3 +1,4 @@
+import { documentSupportsRecord } from "./document-links.js";
 import { propertyPeople } from "./property-records.js";
 import { recordConfigs } from "../core/config.js";
 import { translate, getLocale } from "../i18n/index.js";
@@ -225,8 +226,12 @@ export function personImageItems(project, personId, recordTarget = null) {
         ),
       );
       const direct = recordTarget
-        ? record?.sourceId === source.id
-        : (source.people || []).includes(personId) ||
+        ? record?.sourceId === source.id ||
+          documentSupportsRecord(source, { personId, ...recordTarget })
+        : (source.recordLinks || []).some(
+            (target) => target.personId === personId,
+          ) ||
+          (source.people || []).includes(personId) ||
           (source.subjectIds || []).includes(personId) ||
           sourceIds.has(source.id) ||
           (person.bioSourceIds || []).includes(source.id);
@@ -248,6 +253,8 @@ export function sourcePeopleIds(project, source) {
   return [
     ...new Set([
       ...(source.people || []),
+      ...(source.subjectIds || []),
+      ...(source.recordLinks || []).map((target) => target.personId),
       ...sourceImageTargets(source).flatMap((target) =>
         targetPeople(project, target),
       ),

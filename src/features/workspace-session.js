@@ -67,6 +67,7 @@ export function activateTree(
   appState.comparisonPath = null;
   appState.docFilter = "";
   appState.docTypeFilter = "";
+  appState.docCategoryFilter = "";
   appState.docStatusFilter = "";
   appState.docFileFilter = "";
   appState.docShowAll = false;

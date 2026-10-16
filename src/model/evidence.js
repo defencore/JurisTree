@@ -38,6 +38,8 @@ export function linkedDocs(kind, id) {
           : d.propertyIds || []
       ).includes(id) ||
         sources.has(d.id) ||
+        (kind === "person" &&
+          (d.recordLinks || []).some((target) => target.personId === id)) ||
         sourceImageTargets(d).some((target) =>
           kind === "person"
             ? targetPeople(appState.project, target).includes(id)

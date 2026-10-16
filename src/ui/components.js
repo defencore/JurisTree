@@ -1,3 +1,5 @@
+import { documentCatalog } from "../core/document-catalog.js";
+import { documentReference } from "../model/document-details.js";
 import { displayDate } from "../model/dates.js";
 import { personDisplayName } from "../model/person-display.js";
 import { docStates } from "../core/config.js";
@@ -23,24 +25,7 @@ export function biographyButton(p, compact = false) {
   return `<button type="button" class="${compact ? "iconbtn small person-biography" : "btn biography-profile"}" data-biography="${p.id}" aria-label="${label}" title="${label}">${icon("book")}${compact ? "" : translate("ui.autobiography")}</button>`;
 }
 export function documentIcon(d) {
-  return (
-    {
-      birth: "baby",
-      marriage: "heart",
-      death: "file",
-      name_change: "fingerprint",
-      will: "scan",
-      probate: "landmark",
-      ownership: "home",
-      archive: "archive",
-      census: "users",
-      photo: "photo",
-      letter: "mail",
-      testimony: "users",
-      rumor: "help",
-      recording: "file",
-    }[d.type] || "file"
-  );
+  return documentCatalog()[d.type]?.icon || "file";
 }
 export function personOptions(id, empty = false) {
   return (
@@ -98,6 +83,9 @@ export function statusBadge(d) {
 export function citation(d) {
   return [
     d.title,
+    documentReference(d),
+    d.details?.registryName,
+    d.details?.issuedBy,
     d.source,
     d.repository,
     d.reference,

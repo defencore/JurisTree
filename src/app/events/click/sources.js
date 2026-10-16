@@ -1,3 +1,4 @@
+import { selectLibraryDocument } from "../../../features/document-library.js";
 import { viewBiography } from "../../../features/biography.js";
 import { annotateImage } from "../../../features/image-annotations.js";
 import { selectLibraryImage } from "../../../features/image-library.js";
@@ -21,6 +22,19 @@ import { closeModal } from "../../../ui/dialog.js";
 import { select } from "../../../ui/render.js";
 
 export const sourcesClicks = [
+  {
+    priority: 44,
+    matches: (button) => button.hasAttribute("data-document-library"),
+    run: async (button) => {
+      closeModal();
+      await selectLibraryDocument({
+        personId:
+          button.dataset.attachmentPerson || button.dataset.documentLibrary,
+        section: button.dataset.attachmentSection,
+        recordId: button.dataset.documentRecord,
+      });
+    },
+  },
   {
     priority: 42,
     matches: (b) => b.dataset.annotateImage,

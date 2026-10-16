@@ -1,3 +1,8 @@
+import {
+  documentCategories,
+  documentCategory,
+} from "../core/document-catalog.js";
+import { documentDetailsConfig } from "../core/document-details.js";
 import { mediaTargetLabel } from "./image-regions.js";
 import { profileReferenceLabel } from "./profile-references.js";
 import { relationshipLabel } from "./relationship-labels.js";
@@ -70,6 +75,9 @@ export function buildSearchIndex(project) {
   const describeDocument = (d) =>
     [
       ...flat(d),
+      recordText(documentDetailsConfig(), d.details || {}),
+      labels(documentCategories()[documentCategory(d)]),
+      displayDate(d.date),
       ...d.attachments.flatMap((file) =>
         (file.regions || []).flatMap((region) =>
           region.targets.map((target) => mediaTargetLabel(project, target)),

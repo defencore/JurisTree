@@ -138,6 +138,11 @@ test("a beginner can create a family, group, profile record and linked source us
     .locator('#modal [name="title"]')
     .fill("Robin's birth certificate reference");
   await page
+    .locator("#modal .document-links details")
+    .first()
+    .locator("summary")
+    .click();
+  await page
     .locator(`#modal [name="people"][value="${ids["Robin Doe"]}"]`)
     .check();
   await page.locator('#modal button[type="submit"]').click();

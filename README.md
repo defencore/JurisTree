@@ -35,7 +35,7 @@ Modes suggest visible sections and a starting view. Switching modes preserves al
 
 - Interactive relationship map with family roles, saved arrangements, position locks, manual line routing, layouts, connection analysis and touch navigation.
 - Optional profile sections for identity, civil status, education, employment, residence, travel, health, interests, finances and other records.
-- Sources with multiple files or photos, clipboard pasting, original text, citations, verification and configurable document checklists.
+- Shared document library with categorized certificates, identity papers, contracts, registry extracts, court, tax and bank records. Store files once, keep document particulars and link each source to several people or specific profile records.
 - Image library with descriptions, original inscriptions, movable region annotations and reusable links to people or individual records.
 - Combined search and advanced filters, saved queries and CSV export.
 - Separate family celebrations, life history, legal and financial dates, with month/year calendars.

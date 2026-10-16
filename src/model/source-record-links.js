@@ -1,3 +1,4 @@
+import { documentSupportsRecord } from "./document-links.js";
 import { sourceImageTargets, targetKey } from "./image-regions.js";
 import { recordConfigs } from "../core/config.js";
 
@@ -25,6 +26,12 @@ export function sourceRecordLinks(project, sourceId) {
         .filter(
           (record) =>
             record.sourceId === sourceId ||
+            (source &&
+              documentSupportsRecord(source, {
+                personId: profile.id,
+                section,
+                recordId: record.id,
+              })) ||
             targets.has(
               targetKey({
                 kind: "record",
@@ -44,4 +51,19 @@ export function recordSourceType(section, record) {
   if (section === "death") return "death_notice";
   if (section === "military") return "archive";
   return "other";
+}
+
+/** Include every supporting source once, preserving the primary source first. */
+export function recordSources(project, target) {
+  const primary = profileRecordTarget(project, target)?.record.sourceId;
+  const key = targetKey({ kind: "record", ...target });
+  const sources = project.documents.filter(
+    (source) =>
+      source.id === primary ||
+      documentSupportsRecord(source, target) ||
+      sourceImageTargets(source).some((link) => targetKey(link) === key),
+  );
+  return sources.sort(
+    (a, b) => Number(b.id === primary) - Number(a.id === primary),
+  );
 }
