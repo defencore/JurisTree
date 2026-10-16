@@ -52,6 +52,7 @@ export function documentSupportsRecord(source, target) {
 
 /** Removing a fact removes its links, while keeping the source and its files. */
 export function pruneDocumentLinks(project) {
+  if (!project.documents.some((source) => source.recordLinks?.length)) return;
   const configs = recordConfigs();
   const keys = new Set(
     project.people.flatMap((person) =>

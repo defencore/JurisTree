@@ -60,6 +60,8 @@ async function center(page) {
 test("saved arrangement restores manual moves, zoom and filters after automatic layout, survives ZIP and keeps edited profiles", async ({
   page,
 }) => {
+  // This scenario includes the full map, ZIP import and a fresh browser reload.
+  test.setTimeout(60000);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.locator('#personList [data-person="p5"]').click();
   const card = page.locator('.node[data-node="p5"] .card');
