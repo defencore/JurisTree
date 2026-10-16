@@ -80,7 +80,9 @@ test("person lists give names and dates enough width without splitting words or 
     .filter({ hasText: "Ella Bennett" });
   await expect(ella).toHaveCount(1);
   await ella.scrollIntoViewIfNeeded();
-  expect((await ella.boundingBox()).height).toBeLessThanOrEqual(125);
+  const details = await ella.locator(".person-select").boundingBox(),
+    footer = await ella.locator(".person-row-footer").boundingBox();
+  expect(footer.y).toBeGreaterThanOrEqual(details.y + details.height);
   const problems = await page.locator("#personList").evaluate((list) => {
     const failures = [];
     for (const element of list.querySelectorAll(
