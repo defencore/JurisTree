@@ -32,12 +32,12 @@ for (const language of ["en", "uk", "ru"]) {
     await page.locator("#startScreen [data-language]").selectOption(language);
     expect(
       (await page.locator(".start-topbar").boundingBox()).height,
-    ).toBeLessThanOrEqual(54);
+    ).toBeLessThanOrEqual(68);
     const startLanguage = await languageMetrics(
       page,
       "#startScreen [data-language]",
     );
-    expect(startLanguage.height).toBe(32);
+    expect(startLanguage.height).toBe(36);
     expect(startLanguage.available).toBeGreaterThanOrEqual(
       startLanguage.textWidth,
     );
@@ -52,7 +52,7 @@ for (const language of ["en", "uk", "ru"]) {
     expect(graph.y + graph.height).toBeLessThanOrEqual(955);
     expect(
       (await page.locator(".topbar").boundingBox()).height,
-    ).toBeLessThanOrEqual(44);
+    ).toBeLessThanOrEqual(68);
     const mode = page.locator("#purpose");
     expect((await mode.boundingBox()).height).toBeGreaterThanOrEqual(32);
     expect((await mode.boundingBox()).height).toBeLessThanOrEqual(34);
@@ -174,3 +174,71 @@ test("phone language and text fields remain readable without Safari focus zoom",
     ),
   ).toBeLessThanOrEqual(1);
 });
+
+for (const language of ["en", "uk", "ru"]) {
+  test(`header retains breathing room and tracks text enlargement in ${language}`, async ({
+    page,
+  }) => {
+    await page.goto("./");
+    await page.locator("#startDemo").click();
+    await page.locator(".topbar [data-language]").selectOption(language);
+    for (const width of [1096, 1200, 1358, 1800]) {
+      await page.setViewportSize({ width, height: 954 });
+      for (const fontSize of [16, 24]) {
+        await page.evaluate((size) => {
+          document.documentElement.style.fontSize = `${size}px`;
+        }, fontSize);
+        const header = page.locator("#appShell .topbar");
+        const metrics = await header.evaluate((bar) => {
+          const bounds = bar.getBoundingClientRect(),
+            border = parseFloat(getComputedStyle(bar).borderBottomWidth),
+            children = [...bar.children]
+              .map((child) => child.getBoundingClientRect())
+              .filter((r) => r.width && r.height);
+          return {
+            top: Math.min(...children.map((r) => r.top - bounds.top)),
+            bottom: Math.min(
+              ...children.map((r) => bounds.bottom - border - r.bottom),
+            ),
+            gaps: children.slice(1).map((r, i) => r.left - children[i].right),
+            right: Math.max(...children.map((r) => r.right)),
+            overflow: document.documentElement.scrollWidth - innerWidth,
+          };
+        });
+        expect(metrics.top).toBeGreaterThanOrEqual(9);
+        expect(metrics.bottom).toBeGreaterThanOrEqual(9);
+        expect(Math.min(...metrics.gaps)).toBeGreaterThanOrEqual(15);
+        expect(metrics.right).toBeLessThanOrEqual(width - 15);
+        expect(metrics.overflow).toBeLessThanOrEqual(1);
+        const languageSize = await languageMetrics(
+          page,
+          ".topbar [data-language]",
+        );
+        expect(languageSize.available).toBeGreaterThanOrEqual(
+          languageSize.textWidth,
+        );
+        await expect
+          .poll(() =>
+            page.evaluate(() => {
+              const actual = Math.max(
+                document
+                  .querySelector("#appShell .topbar")
+                  .getBoundingClientRect().bottom,
+                document
+                  .querySelector("#globalSearchBar")
+                  .getBoundingClientRect().bottom,
+              );
+              return Math.abs(
+                parseFloat(
+                  getComputedStyle(document.documentElement).getPropertyValue(
+                    "--workspace-header-height",
+                  ),
+                ) - actual,
+              );
+            }),
+          )
+          .toBeLessThan(1);
+      }
+    }
+  });
+}

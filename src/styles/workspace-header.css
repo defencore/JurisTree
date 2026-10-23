@@ -1,14 +1,93 @@
+/* Header height follows its content, including browser text enlargement. */
+.topbar {
+  height: auto;
+  min-height: 63px;
+  padding-block: 10px;
+}
+.topbar .brand {
+  flex-shrink: 0;
+}
+.topbar .brand b {
+  display: block;
+}
+.topbar .brand small {
+  white-space: nowrap;
+}
+.topbar .top-actions,
+.topbar .header-preferences {
+  flex-shrink: 0;
+  gap: 8px;
+}
+@media screen and (min-width: 761px) and (pointer: fine) {
+  .topbar {
+    min-height: 60px;
+    padding: 10px 16px;
+    gap: 16px;
+  }
+  .topbar .brand {
+    min-width: 0;
+    gap: 10px;
+  }
+  .topbar .brandmark {
+    width: 32px;
+    height: 32px;
+  }
+  .topbar .project-title {
+    padding-left: 16px;
+    gap: 10px;
+  }
+  .topbar .project-title button {
+    padding-block: 6px;
+  }
+  .topbar .btn,
+  .start-topbar .btn {
+    min-height: 36px;
+    padding: 7px 12px;
+    gap: 8px;
+  }
+  .topbar .iconbtn,
+  .start-topbar .iconbtn {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+  }
+  .topbar .language-control select,
+  .start-topbar .language-control select {
+    min-height: 36px;
+    padding-block: 7px;
+  }
+  .topbar .header-preferences {
+    padding-left: 16px;
+  }
+  .global-search-bar {
+    height: auto;
+    min-height: 44px;
+    padding: 4px 16px;
+  }
+  .global-search-input {
+    height: auto;
+    min-height: 36px;
+  }
+}
+@media screen and (max-width: 760px) {
+  .topbar {
+    padding-block: 8px;
+  }
+  .topbar .top-actions,
+  .topbar .header-preferences {
+    gap: 4px;
+  }
+}
+
 .header-search-slot:empty {
   display: none;
 }
 
 /* Keep one readable command row on wide screens instead of stacking toolbars. */
 @media screen and (min-width: 1200px) and (pointer: fine) {
-  .inline-workspace-search {
-    --workspace-header-height: 44px;
-  }
   .inline-workspace-search .topbar {
-    gap: 10px;
+    gap: 16px;
   }
   .inline-workspace-search .topbar .brand {
     min-width: 0;
@@ -19,7 +98,7 @@
   }
   .inline-workspace-search .project-title {
     flex: 0 1 240px;
-    padding-left: 10px;
+    padding-left: 16px;
   }
   .inline-workspace-search .project-title button {
     font-size: 0.8125rem;
@@ -32,22 +111,24 @@
     margin-inline: auto;
   }
   .header-search-slot .global-search-bar {
-    height: 32px;
+    height: auto;
+    min-height: 36px;
     padding: 0;
     border: 0;
     background: transparent;
     gap: 5px;
   }
   .header-search-slot .global-search-input {
-    height: 32px;
+    height: auto;
+    min-height: 36px;
   }
   .header-search-slot .global-search-input input {
     font-size: 0.875rem;
   }
   .header-search-slot .person-filter-toggle {
-    width: 32px;
-    height: 32px;
-    min-height: 32px;
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
     padding: 0;
   }
   .header-search-slot .person-filter-toggle span {
@@ -100,7 +181,7 @@
     display: none;
   }
   .inline-workspace-search .top-actions .btn {
-    width: 32px;
+    width: 36px;
     padding: 0;
   }
 }

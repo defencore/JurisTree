@@ -29,7 +29,7 @@
   white-space: nowrap;
 }
 .language-control select {
-  width: 84px;
+  width: calc(3ch + 63px);
   min-height: 40px;
   padding: 7px 26px 7px 33px;
   color: var(--paper);
@@ -59,7 +59,7 @@
     display: none;
   }
   .language-control select {
-    width: 68px;
+    width: calc(3ch + 37px);
     padding: 8px 26px 8px 9px;
     min-width: 55px;
     min-height: 44px;

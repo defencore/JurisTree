@@ -108,7 +108,7 @@ test("expanding the map keeps its camera and opens details and navigation as ove
   await expect(focus).toHaveAttribute("aria-pressed", "true");
   const expanded = await page.locator("#graph").boundingBox();
   expect(expanded.width).toBe(1800);
-  expect(expanded.height).toBeGreaterThan(900);
+  expect(expanded.height).toBeGreaterThan(1000 * 0.85);
   const current = await snapshot(page);
   expect(current.center[0]).toBeCloseTo(before.center[0], 5);
   expect(current.center[1]).toBeCloseTo(before.center[1], 5);

@@ -1,15 +1,7 @@
 /* Browser page zoom remains native; compact desktop spacing reserves room for the map. */
 @media screen and (min-width: 761px) and (pointer: fine) {
-  :root {
-    --workspace-header-height: 80px;
-  }
   body {
     font-size: 0.875rem;
-  }
-  .topbar {
-    height: 44px;
-    padding: 0 12px;
-    gap: 12px;
   }
   .brand {
     min-width: 180px;
@@ -288,8 +280,9 @@
     margin-top: 6px;
   }
   .start-topbar {
-    height: 52px;
-    padding-inline: max(20px, calc(50vw - 560px));
+    height: auto;
+    min-height: 60px;
+    padding: 10px max(20px, calc(50vw - 560px));
     gap: 12px;
   }
   .start-main {
