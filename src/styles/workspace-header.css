@@ -1,0 +1,106 @@
+.header-search-slot:empty {
+  display: none;
+}
+
+/* Keep one readable command row on wide screens instead of stacking toolbars. */
+@media screen and (min-width: 1200px) and (pointer: fine) {
+  .inline-workspace-search {
+    --workspace-header-height: 44px;
+  }
+  .inline-workspace-search .topbar {
+    gap: 10px;
+  }
+  .inline-workspace-search .topbar .brand {
+    min-width: 0;
+    flex-shrink: 0;
+  }
+  .inline-workspace-search .topbar .brand small {
+    display: none;
+  }
+  .inline-workspace-search .project-title {
+    flex: 0 1 240px;
+    padding-left: 10px;
+  }
+  .inline-workspace-search .project-title button {
+    font-size: 0.8125rem;
+  }
+  .header-search-slot {
+    display: block;
+    flex: 1;
+    min-width: 240px;
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .header-search-slot .global-search-bar {
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    gap: 5px;
+  }
+  .header-search-slot .global-search-input {
+    height: 32px;
+  }
+  .header-search-slot .global-search-input input {
+    font-size: 0.875rem;
+  }
+  .header-search-slot .person-filter-toggle {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    padding: 0;
+  }
+  .header-search-slot .person-filter-toggle span {
+    display: none;
+  }
+  .header-search-slot .person-filter-toggle b:not(:empty) {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0 3px;
+    border-radius: 3px;
+    font-size: 10px;
+  }
+  .header-search-slot .person-filter-toggle {
+    position: relative;
+  }
+  .header-search-slot .global-search-results {
+    position: fixed;
+    top: calc(var(--workspace-header-height) + 4px);
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(720px, calc(100vw - 24px));
+    color: var(--ink);
+  }
+  .inline-workspace-search .save-state {
+    margin: 0;
+  }
+  .inline-workspace-search
+    .save-state:not([data-save-status="unavailable"])
+    span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .inline-workspace-search .top-actions {
+    margin-left: 0;
+  }
+  .inline-workspace-search .topbar .btn {
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+}
+@media screen and (min-width: 1200px) and (max-width: 1450px) and (pointer: fine) {
+  .inline-workspace-search .top-actions .btn span {
+    display: none;
+  }
+  .inline-workspace-search .top-actions .btn {
+    width: 32px;
+    padding: 0;
+  }
+}

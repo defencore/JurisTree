@@ -4,6 +4,13 @@ import { applyCamera } from "../graph/camera.js";
 import { resizeCamera } from "../model/camera-viewport.js";
 import { translate as t } from "../i18n/index.js";
 import { closeMapPanels, positionMapPanel } from "../ui/map-panels.js";
+import { syncMapFocusButton } from "../ui/map-actions.js";
+
+function focusedMap() {
+  return (
+    state.view === "tree" && document.body.classList.contains("map-focused")
+  );
+}
 
 function changeWorkspace(callback) {
   const graph = $("#graph"),
@@ -23,7 +30,7 @@ function changeWorkspace(callback) {
 
 export function toggleNavigation() {
   closeMapPanels();
-  if (innerWidth <= 760) {
+  if (innerWidth <= 760 || focusedMap()) {
     $("#inspector").classList.remove("open");
     $("#sidebar").classList.toggle("open");
   } else {
@@ -39,18 +46,28 @@ export function toggleNavigation() {
 export function closeInspector() {
   changeWorkspace(() => {
     $("#inspector").classList.remove("open");
-    document.body.classList.add("inspector-collapsed");
+    if (!focusedMap()) document.body.classList.add("inspector-collapsed");
   });
 }
 
 export function toggleInspector() {
   closeMapPanels();
-  if (innerWidth <= 1050) {
-    document.body.classList.remove("inspector-collapsed");
+  if (innerWidth <= 1050 || focusedMap()) {
+    if (!focusedMap()) document.body.classList.remove("inspector-collapsed");
     $("#sidebar").classList.remove("open");
     $("#inspector").classList.toggle("open");
   } else
     changeWorkspace(() =>
       document.body.classList.toggle("inspector-collapsed"),
     );
+}
+
+export function toggleMapFocus() {
+  closeMapPanels();
+  changeWorkspace(() => {
+    document.body.classList.toggle("map-focused");
+    $("#sidebar").classList.remove("open");
+    $("#inspector").classList.remove("open");
+  });
+  syncMapFocusButton();
 }

@@ -1,4 +1,6 @@
 export default {
+  "ui.enterMapFocus": "Розгорнути робоче поле схеми",
+  "ui.exitMapFocus": "Повернути панелі робочого простору",
   "ui.sourceGroupCivil": "Цивільний стан і родина",
   "ui.sourceTypeCertificate": "Інше свідоцтво",
   "ui.sourceGroupIdentity": "Посвідчення особи та дозволи",

@@ -1,4 +1,4 @@
-import { $ } from "../core/dom.js";
+import { $, esc } from "../core/dom.js";
 import { state } from "../core/state.js";
 import { translate } from "../i18n/index.js";
 import { icon } from "./icons.js";
@@ -16,7 +16,14 @@ export function renderSaveStatus() {
     unavailable: ["", "ui.saveAZipArchive"],
   };
   const message = messages[state.saveStatus];
-  $("#saveState").innerHTML = message
-    ? (message[0] ? icon(message[0]) : "") + translate(message[1])
+  const element = $("#saveState"),
+    text = message ? translate(message[1]) : "";
+  element.dataset.saveStatus = state.saveStatus;
+  element.setAttribute("aria-label", text);
+  element.title = [text, translate("ui.draftIsSavedOnlyInThisBrowser")]
+    .filter(Boolean)
+    .join(". ");
+  element.innerHTML = message
+    ? (message[0] ? icon(message[0]) : "") + `<span>${esc(text)}</span>`
     : "";
 }

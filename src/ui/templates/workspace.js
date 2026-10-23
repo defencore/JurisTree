@@ -22,6 +22,7 @@ export const workspaceTemplate = `
       <button data-action="project" id="projectTitle">@@ui.myFamily@@</button
       ><span class="demo-tag" id="demoTag">@@ui.demo@@</span>
     </div>
+    <div class="header-search-slot" id="headerSearchSlot"></div>
     <div class="top-actions">
 <button
         class="iconbtn start-home"
@@ -43,9 +44,9 @@ export const workspaceTemplate = `
     </div>
     <div class="header-preferences"><button type="button" class="iconbtn workspace-guide-button" data-action="user-guide" aria-label="@@ui.userGuideTitle@@" title="@@ui.userGuideTitle@@"><i data-icon="book"></i></button>${languageControl}</div>
   </header>
-  <section class="global-search-bar" aria-label="@@ui.globalSearch@@">
+  <section class="global-search-bar" id="globalSearchBar" aria-label="@@ui.globalSearch@@">
     <div class="global-search-input"><i data-icon="search"></i><input id="globalSearch" type="search" autocomplete="off" placeholder="@@ui.globalSearchPlaceholder@@" aria-label="@@ui.globalSearch@@" aria-controls="globalSearchResults" aria-expanded="false"><button type="button" class="iconbtn small" data-action="clear-search" aria-label="@@ui.clearSearch@@"><i data-icon="x"></i></button></div>
-    <button type="button" class="btn person-filter-toggle" data-action="person-filters" aria-haspopup="dialog" aria-pressed="false"><i data-icon="sliders"></i><span>@@ui.personFilters@@</span><b id="personFilterCount"></b></button>
+    <button type="button" class="btn person-filter-toggle" data-action="person-filters" aria-label="@@ui.personFilters@@" title="@@ui.personFilters@@" aria-haspopup="dialog" aria-pressed="false"><i data-icon="sliders"></i><span>@@ui.personFilters@@</span><b id="personFilterCount"></b></button>
     <div id="globalSearchResults" class="global-search-results" role="region" aria-label="@@ui.searchResults@@" hidden></div>
   </section>
   <div class="workspace">
@@ -128,17 +129,14 @@ export const workspaceTemplate = `
         <div class="map-touch-tools"><p id="mobileMapHint">@@ui.mobileMapHint@@</p></div>
         <p class="hint map-direction-hint">@@ui.directedRelationshipHint@@</p>
       </div>
-      <section
-        class="graph-context"
-        id="graphContext"
-        hidden
-        aria-label="@@ui.currentAnalysisResult@@"
-      ></section>
       <section class="diagram-tools" id="diagramTools" popover="manual" hidden aria-label="@@ui.diagramEditing@@"></section>
       <div class="canvas-wrap" id="canvasWrap">
+        <div class="map-context-overlay">
+          <section class="graph-context" id="graphContext" hidden aria-label="@@ui.currentAnalysisResult@@"></section>
         <div class="canvas-top">
           <div class="map-key" id="graphRoleContext" hidden></div>
 
+        </div>
         </div>
         <svg
           class="graph"

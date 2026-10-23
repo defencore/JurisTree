@@ -1,4 +1,6 @@
 export default {
+  "ui.enterMapFocus": "Expand map workspace",
+  "ui.exitMapFocus": "Restore workspace panels",
   "ui.sourceGroupCivil": "Civil status and family",
   "ui.sourceTypeCertificate": "Other certificate",
   "ui.sourceGroupIdentity": "Identity and permits",

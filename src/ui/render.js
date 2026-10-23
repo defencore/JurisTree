@@ -46,6 +46,7 @@ export function render() {
 export function renderAll() {
   renderSaveStatus();
   $("#projectTitle").textContent = appState.project.title;
+  $("#projectTitle").title = appState.project.title;
   $("#demoTag").hidden = !appState.project.demo;
   const modes = workspaceModes();
   $("#purpose").innerHTML = Object.entries(modes)
@@ -200,7 +201,8 @@ export function select(kind, id, { openPanel = true } = {}) {
   if (openPanel && innerWidth <= 1050)
     document.body.classList.remove("inspector-collapsed");
   $("#inspector").classList.toggle("open", openPanel);
-  if (innerWidth <= 760) $("#sidebar").classList.remove("open");
+  if (innerWidth <= 760 || document.body.classList.contains("map-focused"))
+    $("#sidebar").classList.remove("open");
   if (before?.width && before.height) {
     const after = $("#graph").getBoundingClientRect();
     appState.camera.x += before.left - after.left;

@@ -112,15 +112,22 @@ test("desktop, tablet and narrow phone layouts keep navigation, search, graph an
     expect(shell.width).toBe(width);
     expect(shell.height).toBe(900);
     const search = await page.locator(".global-search-bar").boundingBox();
+    const header = await page.locator(".topbar").boundingBox();
     const workspace = await page.locator(".workspace").boundingBox();
-    expect(workspace.y).toBeCloseTo(search.y + search.height, 0);
+    expect(workspace.y).toBeCloseTo(
+      Math.max(header.y + header.height, search.y + search.height),
+      0,
+    );
     expect(workspace.y + workspace.height).toBeCloseTo(900, 0);
     const graph = await page.locator("#graph").boundingBox();
     expect(graph.width).toBeGreaterThan(100);
     expect(graph.height).toBeGreaterThan(150);
     if (width > 760) {
       const heading = await page.locator(".canvas-top").boundingBox();
-      expect(heading.y + heading.height).toBeLessThanOrEqual(graph.y + 1);
+      expect(heading.y).toBeGreaterThanOrEqual(graph.y);
+      expect(heading.y + heading.height).toBeLessThanOrEqual(
+        graph.y + graph.height,
+      );
     }
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > innerWidth,

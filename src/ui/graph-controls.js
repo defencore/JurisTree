@@ -87,7 +87,12 @@ export function renderGraphControls() {
     return;
   }
   context.hidden =
-    !appState.analysisHighlight && !appState.graphFocus && !selectedCount;
+    !appState.analysisHighlight &&
+    !appState.graphFocus &&
+    (!selectedCount ||
+      (!appState.multiSelection.size &&
+        !appState.diagramNodeSelection.size &&
+        !appState.selectionMode));
   const pair = selectedPeople(appState.project.people, appState.multiSelection);
   const pairHint =
     pair.length === 2

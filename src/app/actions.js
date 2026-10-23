@@ -3,6 +3,7 @@ import {
   closeInspector,
   toggleInspector,
   toggleNavigation,
+  toggleMapFocus,
 } from "../features/workspace-controls.js";
 import { renderDiagramTools } from "../ui/diagram-tools.js";
 import { clearGraphItems } from "../model/graph-selection.js";
@@ -182,6 +183,7 @@ export async function handleAction(action) {
     "direct-connections": focusDirectConnections,
     "restore-connection-map": restoreConnectionMap,
     "toggle-inspector": toggleInspector,
+    "toggle-map-focus": toggleMapFocus,
     "diagram-panel": () => {
       if (!appState.diagramEditing) toggleDiagramTools();
       else {

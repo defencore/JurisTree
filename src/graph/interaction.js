@@ -231,8 +231,10 @@ export function bindResizeEvents() {
     ratio: devicePixelRatio,
   });
   let previous = null,
-    previousViewport = viewport();
+    previousViewport = viewport(),
+    resizeFrame = 0;
   function updateViewport() {
+    resizeFrame = 0;
     const { width, height } = graph.getBoundingClientRect(),
       nextViewport = viewport(),
       viewportChanged = Object.keys(nextViewport).some(
@@ -261,7 +263,12 @@ export function bindResizeEvents() {
     }
     previous = next;
   }
-  const observer = new ResizeObserver(updateViewport);
+  // Media-query listeners can move controls after the window resize event.
+  // Measure once on the next frame, after the responsive layout has settled.
+  function scheduleViewportUpdate() {
+    if (!resizeFrame) resizeFrame = requestAnimationFrame(updateViewport);
+  }
+  const observer = new ResizeObserver(scheduleViewportUpdate);
   observer.observe(graph);
-  window.addEventListener("resize", updateViewport);
+  window.addEventListener("resize", scheduleViewportUpdate);
 }

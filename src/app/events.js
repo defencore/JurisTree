@@ -1,4 +1,5 @@
 import { bindMapPanelEvents } from "../ui/map-panels.js";
+import { bindWorkspaceHeader } from "../ui/workspace-header.js";
 import { bindDateInputEvents } from "../ui/date-input.js";
 import { bindSearchEvents } from "../features/search.js";
 import { bindKeyboardEvents } from "./events/keyboard.js";
@@ -11,6 +12,7 @@ import { bindResizeEvents } from "../graph/interaction.js";
 import { bindLauncherEvents } from "../features/launcher.js";
 import { bindClipboardEvents } from "./events/clipboard.js";
 export function bindEvents() {
+  bindWorkspaceHeader();
   bindMapPanelEvents();
   bindDateInputEvents();
   bindClipboardEvents();
