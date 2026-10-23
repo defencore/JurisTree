@@ -148,8 +148,15 @@ body:not(.view-full) .view-actions .btn {
   pointer-events: none;
 }
 .map-context-overlay > * {
-  pointer-events: auto;
+  pointer-events: none;
   max-width: 100%;
+}
+.map-context-overlay :is(button, a, input, select, textarea, summary) {
+  pointer-events: auto;
+}
+body:not(.view-full) .map-context-overlay .canvas-top > *,
+body:not(.view-full) .map-context-overlay .map-key {
+  pointer-events: none;
 }
 body:not(.view-full) .graph-context {
   padding: 5px 8px;

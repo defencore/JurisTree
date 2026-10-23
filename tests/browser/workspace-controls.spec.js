@@ -165,6 +165,14 @@ test("selection details float above the map without consuming another toolbar ro
     page.locator('#graphContext [data-action="link-selected"]'),
   ).toBeVisible();
   expect(await page.locator("#graph").boundingBox()).toEqual(initial);
+  expect(
+    await page.locator("#graphContext b").evaluate((label) => {
+      const rect = label.getBoundingClientRect();
+      return !!document
+        .elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2)
+        ?.closest("#graph");
+    }),
+  ).toBe(true);
   await page.locator('#graphContext [data-action="link-selected"]').click();
   await expect(page.locator('#modal [name="from"]')).toHaveValue("p5");
   await expect(page.locator('#modal [name="to"]')).toHaveValue("p6");
