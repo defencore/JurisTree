@@ -22,6 +22,7 @@ export const state = {
   db: null,
   saveTimer: undefined,
   saveStatus: "",
+  saveRevision: 0,
   saveSerial: Promise.resolve(),
   fileContext: {},
   toastTimer: undefined,

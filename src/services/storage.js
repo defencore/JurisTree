@@ -7,12 +7,15 @@ import { pruneBlobs, usedBlobs } from "./blobs.js";
 export function scheduleSave() {
   if (!appState.editorActive) return;
   clearTimeout(appState.saveTimer);
+  appState.saveRevision++;
   emitSignal("storage:status", "saving");
   appState.saveTimer = setTimeout(() => saveNow(), 400);
 }
 export async function saveNow() {
   if (!appState.editorActive || !appState.project) return;
   clearTimeout(appState.saveTimer);
+  const revision = ++appState.saveRevision;
+  emitSignal("storage:status", "saving");
   pruneBlobs();
   const payload = {
     project: clone(appState.project),
@@ -33,8 +36,10 @@ export async function saveNow() {
     );
   try {
     await appState.saveSerial;
-    emitSignal("storage:status", "saved");
+    if (revision === appState.saveRevision)
+      emitSignal("storage:status", "saved");
   } catch {
+    if (revision !== appState.saveRevision) return;
     emitSignal("storage:status", "unavailable");
     emitSignal(
       "storage:error",
