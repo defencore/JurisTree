@@ -1,3 +1,4 @@
+import { sourceNeedsReview } from "../core/sources.js";
 import { moneyTotals } from "./money-totals.js";
 import { propertyRecordDocuments } from "./property-document-links.js";
 import { partialDate, localDateString } from "./dates.js";
@@ -211,7 +212,10 @@ export function cashFlowAnalysis(
         !when.approximate &&
         when.max <= date &&
         sources.some(
-          (d) => d.status === "available" && d.verification === "corroborated",
+          (d) =>
+            d.status === "available" &&
+            d.verification === "corroborated" &&
+            !sourceNeedsReview(d),
         )
       );
       if (confirmed) totals.push([record.currency, record.amount]);

@@ -122,6 +122,7 @@ test("a bank source links to a payment, appears in the evidence register and sur
   await page.locator('#viewActions [data-action="reference"]').click();
   await page.locator('[name="title"]').fill("Willow Bank payment statement");
   await page.locator('[name="type"]').selectOption("bank_statement");
+  await page.locator('[name="evidence"]').selectOption("official");
   await page.locator('[name="status"]').selectOption("available");
   await (
     await reveal(page, '[name="document-custodian"]')

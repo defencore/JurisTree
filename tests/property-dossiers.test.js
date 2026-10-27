@@ -265,6 +265,12 @@ test("cash-flow totals need corroborated sources, preserve decimals and detect d
   const filtered = cashFlowAnalysis(project, [item], "2026-10-27");
   assert.equal(filtered.rows[0].duplicate, true);
   assert.deepEqual(filtered.totals, { USD: 0.2 });
+  project.documents[0].evidence = "unverified";
+  assert.deepEqual(cashFlowAnalysis(project, [item]).totals, {});
+  project.documents[0].evidence = "official";
+  project.documents[0].type = "rumor";
+  assert.deepEqual(cashFlowAnalysis(project, [item]).totals, {});
+  project.documents[0].type = "bank_statement";
   project.documents[0].verification = "pending";
   assert.deepEqual(cashFlowAnalysis(project, [item]).totals, {});
   assert.ok(propertyRecordError("cashFlows", payment({ toId: "tenant" })));
