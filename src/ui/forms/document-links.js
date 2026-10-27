@@ -1,3 +1,7 @@
+import {
+  renderPropertyDocumentLinks,
+  bindPropertyDocumentLinks,
+} from "./property-document-links.js";
 import { recordConfigs } from "../../core/config.js";
 import { esc } from "../../core/dom.js";
 import { state } from "../../core/state.js";
@@ -11,11 +15,12 @@ import { checks } from "../components.js";
 import { renderPersonChecks, bindPersonPickers } from "../person-picker.js";
 
 export function renderDocumentLinks(source) {
-  return `<section class="form-section document-links"><p class="field-caption">${t("ui.whoTheSourceIsLinkedTo")}</p><p class="hint">${t("ui.documentLibraryHint")}</p><p class="field-caption">${t("ui.whoThisDocumentIsAbout")}</p><p class="hint">${t("ui.selectTheChildForABirthCertificateOr")}</p>${renderPersonChecks("subjectIds", documentSubjects(source), t("ui.whoThisDocumentIsAbout"))}<details class="record-field-group"><summary>${t("ui.allMentionedOrRelatedPeople")}</summary>${renderPersonChecks("people", source.people || [], t("ui.allMentionedOrRelatedPeople"))}</details><details class="record-field-group" ${source.recordLinks?.length ? "open" : ""}><summary>${t("ui.documentProfileLinks")}</summary><p class="hint">${t("ui.documentProfileLinksHint")}</p><input type="search" data-document-record-query placeholder="${t("ui.documentRecordSearch")}" aria-label="${t("ui.documentRecordSearch")}"><div data-document-record-options class="document-record-options"></div></details><details class="record-field-group" ${source.relations?.length || source.propertyIds?.length ? "open" : ""}><summary>${t("ui.familyRelationships3")} · ${t("ui.property")}</summary>${checks(state.project.relations, "relations", source.relations || [], (r) => `${person(r.from)?.name} — ${person(r.to)?.name} (${relationshipLabel(r)})`)}${checks(state.project.property, "propertyIds", source.propertyIds || [], (asset) => asset.title)}</details></section>`;
+  return `<section class="form-section document-links"><p class="field-caption">${t("ui.whoTheSourceIsLinkedTo")}</p><p class="hint">${t("ui.documentLibraryHint")}</p><p class="field-caption">${t("ui.whoThisDocumentIsAbout")}</p><p class="hint">${t("ui.selectTheChildForABirthCertificateOr")}</p>${renderPersonChecks("subjectIds", documentSubjects(source), t("ui.whoThisDocumentIsAbout"))}<details class="record-field-group"><summary>${t("ui.allMentionedOrRelatedPeople")}</summary>${renderPersonChecks("people", source.people || [], t("ui.allMentionedOrRelatedPeople"))}</details><details class="record-field-group" ${source.recordLinks?.length ? "open" : ""}><summary>${t("ui.documentProfileLinks")}</summary><p class="hint">${t("ui.documentProfileLinksHint")}</p><input type="search" data-document-record-query placeholder="${t("ui.documentRecordSearch")}" aria-label="${t("ui.documentRecordSearch")}"><div data-document-record-options class="document-record-options"></div></details><details class="record-field-group" ${source.relations?.length || source.propertyIds?.length ? "open" : ""}><summary>${t("ui.familyRelationships3")} · ${t("ui.property")}</summary>${checks(state.project.relations, "relations", source.relations || [], (r) => `${person(r.from)?.name} — ${person(r.to)?.name} (${relationshipLabel(r)})`)}${checks(state.project.property, "propertyIds", source.propertyIds || [], (asset) => asset.title)}</details>${renderPropertyDocumentLinks(source)}</section>`;
 }
 
 export function bindDocumentLinks(form, source) {
   bindPersonPickers(form);
+  bindPropertyDocumentLinks(form, source);
   const chosen = new Set((source.recordLinks || []).map(documentRecordKey));
   const choices = state.project.people
     .flatMap((profile) =>

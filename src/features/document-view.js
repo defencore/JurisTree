@@ -1,3 +1,4 @@
+import { propertyRecordConfigs } from "../core/property-records.js";
 import { documentDetailsConfig } from "../core/document-details.js";
 import { sourcePeopleIds } from "../model/image-regions.js";
 import { displayDate } from "../model/dates.js";
@@ -37,6 +38,16 @@ export async function viewDocument(id, attachmentId = "") {
     ...recordValues(sourceVerificationConfig(), d),
   ];
   const records = sourceRecordLinks(appState.project, id);
+  const assetLinks = (d.propertyRecordLinks || [])
+    .map((link) => {
+      const item = appState.project.property.find(
+        (a) => a.id === link.propertyId,
+      );
+      return item
+        ? `<button type="button" data-property-history="${item.id}">${esc(item.title)} · ${esc(propertyRecordConfigs()[link.kind].label)}</button>`
+        : "";
+    })
+    .join("");
   await openDialog(
     d.title,
     `<div class="source-view"><div data-source-gallery>${sourceGallery(d, attachmentId)}</div><div class="source-detail"><div class="pills">${statusBadge(d)}<span class="pill ${d.evidence === "official" ? "teal" : d.evidence === "unverified" ? "review" : ""}">${icon(d.evidence === "official" ? "badge" : "help")}${esc(evidenceTypes()[d.evidence])}</span><span class="pill">${icon("paperclip")}${hasFile(d) ? translate("ui.attachedFilesCount", { count: d.attachments.length }) + " · " + bytes(attachmentSize(d)) : translate("ui.noDigitalCopy2")}</span></div><h3>${icon("landmark")}${translate("ui.sourceProvenance")}</h3><dl>${details
@@ -54,7 +65,7 @@ export async function viewDocument(id, attachmentId = "") {
         )
         .join("") ||
       `<span class="hint">${translate("ui.theDocumentSubjectHasNotBeenSpecified")}</span>`
-    }</div>${records.length ? `<h3>${icon("paperclip")}${translate("ui.linkedProfileRecords")}</h3><div class="source-binds">${records.map(({ profile, record, config, section }) => `<button type="button" data-open-profile-section="${section}" data-profile-person="${profile.id}">${esc(personDisplayName(profile))} · ${esc(config.label)}${record.title || record.awardName ? ` · ${esc(record.title || record.awardName)}` : ""}</button>`).join("")}</div>` : ""}<h3>${icon("users")}${translate("ui.allRelatedPeople")}</h3><div class="source-binds">${
+    }</div>${records.length ? `<h3>${icon("paperclip")}${translate("ui.linkedProfileRecords")}</h3><div class="source-binds">${records.map(({ profile, record, config, section }) => `<button type="button" data-open-profile-section="${section}" data-profile-person="${profile.id}">${esc(personDisplayName(profile))} · ${esc(config.label)}${record.title || record.awardName ? ` · ${esc(record.title || record.awardName)}` : ""}</button>`).join("")}</div>` : ""}${assetLinks ? `<h3>${translate("ui.evidencePropertyFacts")}</h3><div class="source-binds">${assetLinks}</div>` : ""}<h3>${icon("users")}${translate("ui.allRelatedPeople")}</h3><div class="source-binds">${
       sourcePeopleIds(appState.project, d)
         .map((pid) => person(pid))
         .filter(Boolean)

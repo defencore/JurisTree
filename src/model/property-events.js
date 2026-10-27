@@ -13,12 +13,13 @@ export function collectPropertyEvents(project, selected) {
         .filter(Boolean);
       const personId = participants.find((id) => selected.has(id));
       if (!personId) return [];
-      const dates =
-        kind === "rights"
-          ? [
-              ["from", "ui.from"],
-              ["to", "ui.to"],
-            ]
+      const dates = ["rights", "encumbrances"].includes(kind)
+        ? [
+            ["from", "ui.from"],
+            ["to", "ui.to"],
+          ]
+        : kind === "cashFlows"
+          ? [["date", "ui.date"]]
           : kind === "transfers"
             ? [
                 ["date", "ui.propertyEffectiveDate"],

@@ -1,3 +1,4 @@
+import { normalizePropertyDocumentLinks } from "../property-document-links.js";
 import { normalizeDocumentDetails } from "../document-details.js";
 import { normalizeDocumentLinks } from "../document-links.js";
 import { normalizeSourceAttachments } from "../source-attachments.js";
@@ -43,6 +44,7 @@ export function normalizeImportedDocument(
     attachments: normalizeSourceAttachments(d),
     details: normalizeDocumentDetails(d.details),
     recordLinks: normalizeDocumentLinks(d.recordLinks),
+    propertyRecordLinks: normalizePropertyDocumentLinks(d.propertyRecordLinks),
   };
   for (const k of [
     "title",

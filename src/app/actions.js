@@ -1,3 +1,4 @@
+import { exportEvidenceRegister } from "../features/evidence-register.js";
 import { closeMapPanels } from "../ui/map-panels.js";
 import {
   closeInspector,
@@ -238,6 +239,7 @@ export async function handleAction(action) {
     new: newTree,
     project: editProject,
     "add-property": () => editProperty(),
+    "export-evidence": exportEvidenceRegister,
     menu: toggleNavigation,
     "close-mobile-panels": () => {
       $("#sidebar").classList.remove("open");

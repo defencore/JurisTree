@@ -15,6 +15,7 @@ import {
   types,
 } from "../core/config.js";
 import { relationshipConfig } from "../core/relationships.js";
+import { propertyDetailsConfig } from "../core/property-details.js";
 import { propertyRecordConfigs } from "../core/property-records.js";
 import { propertyPeople, propertyRecords } from "./property-records.js";
 import { translate } from "../i18n/index.js";
@@ -98,6 +99,7 @@ export function buildSearchIndex(project) {
   const describeProperty = (a) =>
     [
       ...flat(a),
+      recordText(propertyDetailsConfig(), a),
       people.get(a.ownerId)?.name,
       ...a.allocations.map((s) => people.get(s.personId)?.name),
       ...[...propertyPeople(a)].map((id) => people.get(id)?.name),

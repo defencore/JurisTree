@@ -3,6 +3,18 @@ import { translate as t } from "../i18n/index.js";
 
 /** One catalogue defines document types, categories and presentation throughout the app. */
 const definitions = [
+  ["kinship_document", "civil", "ui.evidenceKinshipDocument", "users"],
+  [
+    "inheritance_certificate",
+    "contracts",
+    "ui.evidenceInheritanceCertificate",
+    "scan",
+  ],
+  ["estate_inventory", "contracts", "ui.evidenceEstateInventory", "scan"],
+  ["custody_inventory", "archives", "ui.evidenceCustodyInventory", "archive"],
+  ["medical_record", "health", "ui.evidenceMedicalRecord", "file"],
+  ["witness_list", "legal", "ui.evidenceWitnessList", "users"],
+  ["company_extract", "financial", "ui.evidenceCompanyExtract", "landmark"],
   ["birth", "civil", "ui.birthCertificate", "users"],
   ["marriage", "civil", "ui.marriageCertificate", "users"],
   ["divorce", "civil", "ui.marriageDissolutionCertificate", "users"],
@@ -160,6 +172,7 @@ export const documentCategories = localizedConfig(() =>
       contracts: "ui.sourceGroupContracts",
       legal: "ui.sourceGroupLegal",
       financial: "ui.sourceGroupFinancial",
+      health: "ui.sourceGroupHealth",
       education: "ui.sourceGroupEducation",
       archives: "ui.sourceGroupArchives",
     }).map(([key, label]) => [key, t(label)]),

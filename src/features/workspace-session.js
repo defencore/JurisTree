@@ -87,6 +87,10 @@ export function activateTree(
   appState.calendarType = "";
   appState.calendarDomain = "family";
   appState.eventMode = eventMode;
+  appState.propertySubjectId = "";
+  appState.propertyEstateFilter = "all";
+  appState.propertyPanel = "inventory";
+  appState.propertyEstateOpen = false;
   appState.eventLimit = 80;
   appState.camera = {
     x: 0,

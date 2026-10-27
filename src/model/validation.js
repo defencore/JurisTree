@@ -1,3 +1,4 @@
+import { propertyLineageError } from "./property-details.js";
 import { pruneDocumentLinks } from "./document-links.js";
 import { pruneImageTargets } from "./image-regions.js";
 import { importContext, str, pos } from "./import/schema.js";
@@ -78,6 +79,10 @@ export function validateImport(raw) {
     normalizeImportedProperty(a, peopleIds),
   );
   const assetIds = new Set(p.property.map((a) => a.id));
+  for (const asset of p.property)
+    if (!assetIds.has(asset.predecessorId)) asset.predecessorId = "";
+  const lineageError = propertyLineageError(p.property);
+  if (lineageError) throw Error(lineageError);
   const documentContext = {
     peopleIds,
     relIds,
@@ -92,9 +97,11 @@ export function validateImport(raw) {
       translate("ui.projectAttachmentLimit", { limit: MAX_ATTACHMENT_FILES }),
     );
   const docIds = new Set(p.documents.map((d) => d.id));
-  for (const asset of p.property)
+  for (const asset of p.property) {
+    if (asset.sourceId && !docIds.has(asset.sourceId)) asset.sourceId = "";
     for (const { record } of propertyRecords(asset))
       if (record.sourceId && !docIds.has(record.sourceId)) record.sourceId = "";
+  }
   for (const person of p.people) {
     for (const key of ["bioSourceIds", "healthSourceIds"])
       person[key] = person[key].filter((id) => docIds.has(id));

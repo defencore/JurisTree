@@ -50,7 +50,22 @@ export const documentDetailsConfig = localizedConfig(
             ["originalLocation", "ui.documentOriginalLocation"],
           ],
         ],
+        [
+          "ui.evidenceCustody",
+          [
+            ["custodian", "ui.evidenceCustodian"],
+            ["supportedFact", "ui.evidenceFact", "textarea"],
+            ["acquisitionRoute", "ui.evidenceRoute", "textarea"],
+            ["inventoryNumber", "ui.evidenceInventory"],
+            ["receivedAt", "ui.evidenceReceived", "period"],
+            ["receivedFrom", "ui.evidenceReceivedFrom"],
+            ["returnedAt", "ui.evidenceReturned", "period"],
+          ],
+        ],
       ],
-      [["validFrom", "validUntil"]],
+      [
+        ["validFrom", "validUntil"],
+        ["receivedAt", "returnedAt"],
+      ],
     ).config,
 );

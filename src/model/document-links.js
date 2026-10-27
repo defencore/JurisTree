@@ -1,3 +1,4 @@
+import { prunePropertyDocumentLinks } from "./property-document-links.js";
 import { recordConfigs } from "../core/config.js";
 import { translate } from "../i18n/index.js";
 
@@ -52,6 +53,7 @@ export function documentSupportsRecord(source, target) {
 
 /** Removing a fact removes its links, while keeping the source and its files. */
 export function pruneDocumentLinks(project) {
+  prunePropertyDocumentLinks(project);
   if (!project.documents.some((source) => source.recordLinks?.length)) return;
   const configs = recordConfigs();
   const keys = new Set(

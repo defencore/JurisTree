@@ -74,6 +74,7 @@ export function createProjectIndex(project) {
     const propertyIds = new Set([
       ...targets.filter((t) => t.kind === "property").map((t) => t.propertyId),
       ...(document.propertyIds || []),
+      ...(document.propertyRecordLinks || []).map(link => link.propertyId),
       ...(propertyBySource.get(document.id) || []),
     ]);
     for (const [key, ids] of [

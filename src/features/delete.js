@@ -93,6 +93,7 @@ export async function confirmDelete(kind, id) {
           p[key] = (p[key] || []).filter((x) => x !== id);
       });
     } else {
+      for (const item of appState.project.property) if (item.predecessorId === id) item.predecessorId = "";
       appState.project.property = appState.project.property.filter(
         (a) => a.id !== id,
       );

@@ -1,3 +1,4 @@
+import { propertyRecordDocuments } from "./property-document-links.js";
 import { localDateString, partialDate, utcDay } from "./dates.js";
 import { propertyRecords } from "./property-records.js";
 
@@ -90,23 +91,23 @@ export function analyzeProperty(asset, project, date = localDateString()) {
   if (snapshot.incomplete) add("propertyUncertainOwnership");
   if (snapshot.shareTotal > 100.001) add("propertyOverlappingShares");
   if (snapshot.claims.length) add("propertyOutstandingClaims");
-  const documents = new Map(project.documents.map((d) => [d.id, d]));
   const people = new Map(project.people.map((p) => [p.id, p]));
   for (const { kind, record } of propertyTimeline(asset)) {
     const origin = partialDate(record.date || record.from);
     if (origin && !origin.approximate && origin.min > date) continue;
     if (record.verification === "refuted") continue;
-    const source = documents.get(record.sourceId);
+    const sources = propertyRecordDocuments(project, asset.id, kind, record);
     if (
       record.verification !== "corroborated" ||
       record.status === "disputed" ||
-      (source && source.verification !== "corroborated")
+      sources.some((source) => source.verification !== "corroborated")
     )
       add("propertyRecordNeedsReview", kind, record.id);
     if (
-      !source ||
-      source.status !== "available" ||
-      source.verification === "refuted"
+      !sources.some(
+        (source) =>
+          source.status === "available" && source.verification !== "refuted",
+      )
     )
       add("propertyMissingEvidence", kind, record.id);
     if (kind !== "transfers") continue;

@@ -1,3 +1,6 @@
+import { propertyDossier } from "./property-dossier.js";
+import { propertyRecordDocuments } from "../model/property-document-links.js";
+import { propertyPeriod } from "../model/property-history.js";
 import { personDisplayName } from "../model/person-display.js";
 import { esc } from "../core/dom.js";
 import { propertyRecordConfigs } from "../core/property-records.js";
@@ -33,15 +36,14 @@ export function propertyRecordTitle(
     personDisplayName(person(id)) ||
     external ||
     (includeUnknown ? t("ui.notSpecified") : "");
-  const parties =
-    kind === "transfers"
-      ? [
-          name(record.fromId, record.fromExternal),
-          name(record.toId, record.toExternal),
-        ]
-          .filter(Boolean)
-          .join(" → ")
-      : name(record.personId, record.externalPerson);
+  const parties = ["transfers", "cashFlows"].includes(kind)
+    ? [
+        name(record.fromId, record.fromExternal),
+        name(record.toId, record.toExternal),
+      ]
+        .filter(Boolean)
+        .join(" → ")
+    : name(record.personId, record.externalPerson);
   return [options[record.kind] || cfg.label, parties]
     .filter(Boolean)
     .join(" · ");
@@ -55,12 +57,12 @@ export function propertyRecordCard(
 ) {
   const cfg = propertyRecordConfigs()[kind];
   const status = !editable
-    ? kind === "rights"
+    ? ["rights", "encumbrances"].includes(kind)
       ? [displayDate(record.from), displayDate(record.to)]
           .filter(Boolean)
           .join(" — ")
       : displayDate(record.date)
-    : kind === "rights"
+    : ["rights", "encumbrances"].includes(kind)
       ? period(record)
       : displayDate(record.date) || t("ui.dateUnknown");
   const relatedClaim =
@@ -97,7 +99,7 @@ export function propertyRecordCard(
       : record.grounds
         ? `<p class="property-record-notes">${esc(record.grounds)}</p>`
         : ""
-  }${findings.length ? `<ul class="property-record-findings">${findings.map((issue) => `<li>${esc(t("ui." + issue.code))}</li>`).join("")}</ul>` : ""}${editable ? `<details><summary>${t("ui.propertyRecordDetails")}</summary>${fields(recordValues(cfg, record))}</details>` : fields([...recordValues(cfg, record), ...relatedClaim])}${sourceChips(record.sourceId ? [record.sourceId] : [])}</article>`;
+  }${findings.length ? `<ul class="property-record-findings">${findings.map((issue) => `<li>${esc(t("ui." + issue.code))}</li>`).join("")}</ul>` : ""}${editable ? `<details><summary>${t("ui.propertyRecordDetails")}</summary>${fields(recordValues(cfg, record))}</details>` : fields([...recordValues(cfg, record), ...relatedClaim])}${sourceChips(propertyRecordDocuments(state.project, asset.id, kind, record).map((d) => d.id))}${editable ? `<button type="button" class="btn small ghost" data-asset-source="${asset.id}" data-property-record-kind="${kind}" data-property-record-id="${record.id}">${icon("plus")}${t("ui.addSource")}</button>` : ""}</article>`;
 }
 export function propertySnapshotMarkup(asset, date) {
   const snapshot = propertySnapshot(asset, date);
@@ -105,7 +107,7 @@ export function propertySnapshotMarkup(asset, date) {
     entries
       .map(
         ({ record, period: certainty }) =>
-          `<li><b>${esc(party(record.personId, record.externalPerson))}</b><span>${esc(propertyRecordConfigs().rights.fields.find(([key]) => key === "kind")[3][record.kind])}${record.sharePercent ? ` · ${esc(record.sharePercent)}%` : ""}</span><small>${esc(period(record))}</small>${certainty === "uncertain" ? `<span class="pill review">${t("ui.propertyPeriodUncertain")}</span>` : ""}${record.verification !== "corroborated" ? `<span class="pill review">${t("ui.pendingVerification")}</span>` : ""}</li>`,
+          `<li><b>${esc(party(record.personId, record.externalPerson))}</b><span>${esc(propertyRecordConfigs().rights.fields.find(([key]) => key === "kind")[3][record.kind])}${record.sharePercent ? ` · ${esc(record.sharePercent)}%` : ""}</span><small>${esc(period(record))}</small>${certainty === "uncertain" ? `<span class="pill review">${t("ui.propertyPeriodUncertain")}</span>` : ""}${record.verification && record.verification !== "unspecified" && record.verification !== "corroborated" ? `<span class="pill review">${t("ui.pendingVerification")}</span>` : ""}</li>`,
       )
       .join("");
   return `<div class="property-snapshot"><section><h3>${t("ui.propertyRecordedOwners")}</h3><ul>${rows(snapshot.ownership)}</ul>${snapshot.ownership.length ? "" : `<p class="hint">${t("ui.propertyNoDatedOwner")}</p>`}</section><section><h3>${t("ui.propertyUsers")}</h3><ul>${rows(snapshot.use)}</ul>${snapshot.use.length ? "" : `<p class="hint">${t("ui.propertyNoUseRecords")}</p>`}</section></div>`;
@@ -114,9 +116,16 @@ export function propertyHistoryView(asset, date) {
   const { issues, snapshot } = analyzeProperty(asset, state.project, date);
   const issueCodes = [...new Set(issues.map((i) => i.code))];
   const participants = [...propertyPeople(asset)].map(person).filter(Boolean);
-  return `<button type="button" class="btn small" data-property-back>${icon("chevronLeft")}${t("ui.propertyBack")}</button><div class="property-detail-title"><div><h2>${esc(asset.title)}</h2><p>${esc([asset.identifier, asset.country, asset.location].filter(Boolean).join(" · "))}</p></div><button class="btn" data-edit-property="${asset.id}">${icon("edit")}${t("ui.editProperty")}</button></div><details class="property-analysis-help"><summary>${t("ui.propertyAnalysisHelp")}</summary><p class="hint">${t("ui.propertyAnalysisHint")}</p></details>${propertySnapshotMarkup(asset, date)}<section class="property-review"><h3>${t("ui.propertyReview")} <span class="pill">${issueCodes.length}</span></h3>${issueCodes.length ? `<ul>${issueCodes.map((code) => `<li>${esc(t("ui." + code))}</li>`).join("")}</ul>` : `<p class="hint">${t("ui.propertyNoReviewFindings")}</p>`}</section><div class="property-entry-actions"><button class="btn" data-add-property-record="rights" data-property-id="${asset.id}">${icon("plus")}${t("ui.propertyAddRight")}</button><button class="btn primary" data-add-property-record="transfers" data-property-id="${asset.id}">${icon("plus")}${t("ui.propertyAddTransfer")}</button><button class="btn" data-add-property-record="claims" data-property-id="${asset.id}">${icon("plus")}${t("ui.propertyAddClaim")}</button></div><section class="property-ledger"><h3>${t("ui.propertyChronology")}</h3><p class="hint">${t("ui.propertyChronologyHint")}</p>${
+  return `<button type="button" class="btn small" data-property-back>${icon("chevronLeft")}${t("ui.propertyBack")}</button><div class="property-detail-title"><div><h2>${esc(asset.title)}</h2><p>${esc([asset.identifier, asset.country, asset.location].filter(Boolean).join(" · "))}</p></div><button class="btn" data-edit-property="${asset.id}">${icon("edit")}${t("ui.editProperty")}</button></div>${propertyDossier(asset)}<details class="property-analysis-help"><summary>${t("ui.propertyAnalysisHelp")}</summary><p class="hint">${t("ui.propertyAnalysisHint")}</p></details>${propertySnapshotMarkup(asset, date)}<section class="property-review"><h3>${t("ui.propertyReview")} <span class="pill">${issueCodes.length}</span></h3>${issueCodes.length ? `<ul>${issueCodes.map((code) => `<li>${esc(t("ui." + code))}</li>`).join("")}</ul>` : `<p class="hint">${t("ui.propertyNoReviewFindings")}</p>`}</section><section class="property-encumbrances"><h3>${t("ui.assetEncumbrances")}</h3>${(
+    asset.encumbrances || []
+  )
+    .filter((r) => ["active", "uncertain"].includes(propertyPeriod(r, date)))
+    .map((record) => propertyRecordCard(asset, "encumbrances", record))
+    .join(
+      "",
+    )}</section><div class="property-entry-actions"><button class="btn" data-add-property-record="encumbrances" data-property-id="${asset.id}">${icon("plus")}${t("ui.assetEncumbrance")}</button><button class="btn" data-add-property-record="cashFlows" data-property-id="${asset.id}">${icon("plus")}${t("ui.flowRecord")}</button><button class="btn" data-add-property-record="rights" data-property-id="${asset.id}">${icon("plus")}${t("ui.propertyAddRight")}</button><button class="btn primary" data-add-property-record="transfers" data-property-id="${asset.id}">${icon("plus")}${t("ui.propertyAddTransfer")}</button><button class="btn" data-add-property-record="claims" data-property-id="${asset.id}">${icon("plus")}${t("ui.propertyAddClaim")}</button></div><section class="property-ledger"><h3>${t("ui.propertyChronology")}</h3><p class="hint">${t("ui.propertyChronologyHint")}</p>${
     propertyTimeline(asset)
-      .filter((r) => r.kind !== "claims")
+      .filter((r) => !["claims", "encumbrances"].includes(r.kind))
       .map(({ kind, record }) =>
         propertyRecordCard(asset, kind, record, true, issues),
       )

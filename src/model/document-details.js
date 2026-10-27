@@ -11,7 +11,7 @@ export function normalizeDocumentDetails(value = {}) {
     if (value[key] == null || value[key] === "") continue;
     if (
       typeof value[key] !== "string" ||
-      value[key].length > 1000 ||
+      value[key].length > (type === "textarea" ? 5000 : 1000) ||
       (type === "select" && !Object.hasOwn(options, value[key]))
     )
       throw Error(translate("ui.documentInvalidDetails"));

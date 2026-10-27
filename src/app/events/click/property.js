@@ -1,4 +1,8 @@
+import { state } from "../../../core/state.js";
+import { renderProperty } from "../../../ui/workspaces/property.js";
+import { closeModal } from "../../../ui/dialog.js";
 import { $ } from "../../../core/dom.js";
+import { editDocument } from "../../../features/documents.js";
 import { openFiles } from "../../../features/attachments.js";
 import {
   closePropertyHistory,
@@ -11,6 +15,38 @@ import { allocationRow } from "../../../ui/forms/property.js";
 import { handleAction } from "../../actions.js";
 
 export const propertyClicks = [
+  {
+    priority: 6,
+    matches: (b) => b.dataset.assetSource,
+    run: async (b) => {
+      await editDocument(null, [], {
+        propertyId: b.dataset.assetSource,
+        propertyRecordTarget: b.dataset.propertyRecordId
+          ? {
+              propertyId: b.dataset.assetSource,
+              kind: b.dataset.propertyRecordKind,
+              recordId: b.dataset.propertyRecordId,
+            }
+          : null,
+      });
+    },
+  },
+  {
+    priority: 7,
+    matches: (b) => b.dataset.propertyPanel,
+    run: async (b) => {
+      state.propertyPanel = b.dataset.propertyPanel;
+      renderProperty();
+    },
+  },
+  {
+    priority: 7,
+    matches: (b) => b.dataset.propertyDeathDate,
+    run: async (b) => {
+      state.propertyDate = b.dataset.propertyDeathDate;
+      renderProperty();
+    },
+  },
   {
     priority: 6,
     matches: (b) => b.dataset.profileProperty,
@@ -36,6 +72,7 @@ export const propertyClicks = [
     priority: 9,
     matches: (b) => b.dataset.propertyHistory,
     run: async (b) => {
+      closeModal();
       openPropertyHistory(b.dataset.propertyHistory);
     },
   },

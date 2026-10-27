@@ -39,7 +39,8 @@ Modes suggest visible sections and a starting view. Switching modes preserves al
 - Image library with descriptions, original inscriptions, movable region annotations and reusable links to people or individual records.
 - Combined search and advanced filters, saved queries and CSV export.
 - Separate family celebrations, life history, legal and financial dates, with month/year calendars.
-- Property history with dated rights, transfers and competing claims.
+- Object dossiers with registry/cadastral identifiers, dated rights, transfers, encumbrances, estate inventory categories and linked copies. Economic asset groups prevent unchecked double counting.
+- Separate cash-flow maps and proposed claims; an evidence register records custody, supported facts and obtaining routes, with filtered CSV export.
 - Favorites, undo/redo, draggable dialogs, complete biographies and configurable family/PDF reports.
 
 Civil records distinguish the act, its participants, issued documents and later annotations, following the structure of the [Ukrainian civil registry instruction](https://zakon.rada.gov.ua/laws/show/z0691-08#Text). Records link to people, relationships and sources without automatically changing names or ancestry.
@@ -71,6 +72,7 @@ Enable **GitHub Actions** in the repository's Pages settings and push to `main`.
 Drafts and attachments are stored in this browser's IndexedDB. ZIP exports include the project and attached files; JSON contains data only. PNG/SVG exports are diagram images. There are no accounts, cloud synchronization or registry integrations. Findings describe entered records and evidence, rather than determining legal rights.
 
 - [User guide](docs/user-guide.md): profile fields, civil records, relationships, search, mobile use and backups.
+- [Property and evidence guide](docs/property-evidence.md): object dossiers, divided plots, estate categories, payments and document custody.
 - [Development guide](docs/development.md): architecture, modules, extensions and deployment details.
 - [Third-party notices](THIRD_PARTY_NOTICES.md): licenses for bundled assets.
 

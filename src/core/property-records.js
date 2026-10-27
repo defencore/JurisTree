@@ -1,3 +1,4 @@
+import { additionalPropertyLedgers } from "./property-ledgers.js";
 import { localizedConfig } from "../i18n/localized-config.js";
 import { defineSection } from "./profile-sections/define.js";
 import { attributionGroup } from "./profile-sections/attribution.js";
@@ -18,6 +19,7 @@ const documentGroup = [
 ];
 export const propertyRecordConfigs = localizedConfig(() => {
   return {
+    ...additionalPropertyLedgers(),
     rights: defineSection(
       "rights",
       "ui.propertyRights",
@@ -171,6 +173,11 @@ export const propertyRecordConfigs = localizedConfig(() => {
             ["againstPersonId", "ui.propertyClaimAgainst", "person"],
             ["grounds", "ui.propertyClaimGrounds", "textarea"],
             ["evidenceNeeded", "ui.propertyEvidenceNeeded", "textarea"],
+            ["remedy", "ui.assetClaimRemedy", "textarea"],
+            ["amount", "ui.amount", "number"],
+            ["currency", "ui.currency"],
+            ["risks", "ui.assetClaimRisks", "textarea"],
+            ["limitationNotes", "ui.assetClaimTimeLimits", "textarea"],
           ],
         ],
         [
@@ -188,8 +195,4 @@ export const propertyRecordConfigs = localizedConfig(() => {
       shareBounds,
     ).config,
   };
-});
-
-export const propertyMetadataFields = localizedConfig(() => {
-  return ["identifier", "country", "location"];
 });

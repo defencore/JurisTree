@@ -1,5 +1,5 @@
 import { sourceRecord } from "./records.js";
-import { normalizePropertyRecords } from "../model/property-records.js";
+import { normalizeImportedProperty } from "../model/import/property.js";
 
 /** A disputed chain of title is illustrative evidence, not an inheritance determination. */
 export function populatePropertyHistory(project) {
@@ -325,5 +325,5 @@ export function populatePropertyHistory(project) {
     });
   const peopleIds = new Set(project.people.map((person) => person.id));
   for (const asset of project.property)
-    Object.assign(asset, normalizePropertyRecords(asset, peopleIds));
+    Object.assign(asset, normalizeImportedProperty(asset, peopleIds));
 }

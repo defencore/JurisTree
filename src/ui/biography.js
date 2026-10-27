@@ -35,6 +35,7 @@ import {
   recordValues,
   recordReferenceActions,
 } from "./profile-fields.js";
+import { propertyDetailsConfig } from "../core/property-details.js";
 import { propertyHistoryReport } from "./property-history.js";
 import { recordAttachmentsButton } from "./record-attachments.js";
 import { profileOverviewDetails } from "./profile-overview.js";
@@ -274,7 +275,15 @@ export function renderBiography({
                 .join("\n"),
             ],
             [translate("ui.notes"), a.notes],
-          ])}${sourceChips(documents.filter((d) => (d.propertyIds || []).includes(a.id)).map((d) => d.id))}${propertyHistoryReport(a)}</article>`,
+            ...recordValues(propertyDetailsConfig(), a).filter(
+              ([label]) =>
+                ![
+                  translate("ui.assetIdentifier"),
+                  translate("ui.country"),
+                  translate("ui.registeredAddress"),
+                ].includes(label),
+            ),
+          ])}${sourceChips(documents.filter((d) => d.id === a.sourceId || (d.propertyIds || []).includes(a.id) || d.propertyRecordLinks?.some((link) => link.propertyId === a.id)).map((d) => d.id))}${propertyHistoryReport(a)}</article>`,
       )
       .join(""),
     "property",

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   documentCatalog,
   documentCategories,
+  documentCategory,
   documentTypes,
 } from "../src/core/document-catalog.js";
 import { documentDetailsConfig } from "../src/core/document-details.js";
@@ -114,7 +115,9 @@ test("the document catalogue has distinct property, residence, tax, bank and civ
     setLanguage(language);
     const catalog = documentCatalog(),
       categories = documentCategories();
-    assert.equal(Object.keys(categories).length, 9);
+    assert.equal(Object.keys(categories).length, 10);
+    assert.ok(categories.health);
+    assert.equal(documentCategory({ type: "medical_record" }), "health");
     assert.ok(Object.keys(catalog).length > 55);
     for (const [key, item] of Object.entries(catalog)) {
       assert.ok(categories[item.category]);

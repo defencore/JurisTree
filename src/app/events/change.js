@@ -28,6 +28,14 @@ import { renderEvents } from "../../ui/workspaces/events.js";
 import { renderProperty } from "../../ui/workspaces/property.js";
 
 export function bindChangeEvents() {
+  document.addEventListener(
+    "toggle",
+    (event) => {
+      if (event.target.id === "propertyEstateControls")
+        appState.propertyEstateOpen = event.target.open;
+    },
+    true,
+  );
   document.addEventListener("change", (e) => {
     const t = e.target;
     if (t.hasAttribute("data-diagram-setting")) {
@@ -47,6 +55,12 @@ export function bindChangeEvents() {
     }
     if (t.hasAttribute("data-group-expanded")) {
       setGroupsCollapsed([t.dataset.groupExpanded], !t.checked);
+      return;
+    }
+    if (["propertySubjectId", "propertyEstateFilter"].includes(t.id)) {
+      appState[t.id] = t.value;
+      if (t.id === "propertySubjectId") appState.propertyEstateFilter = "all";
+      renderProperty();
       return;
     }
     if (t.id === "propertyDate") {

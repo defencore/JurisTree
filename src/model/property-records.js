@@ -8,18 +8,19 @@ export function propertyRecordError(kind, record) {
   const error = profileRecordError(cfg, record);
   if (error) return error;
   if (
-    kind === "transfers" &&
+    ["transfers", "cashFlows", "claims"].includes(kind) &&
     ((record.currency && !/^[A-Z]{3}$/.test(record.currency)) ||
       (record.amount !== "" && record.amount != null && !record.currency))
   )
     return t("ui.propertyCurrencyError");
-  const parties =
-    kind === "transfers"
-      ? [
-          ["fromId", "fromExternal"],
-          ["toId", "toExternal"],
-        ]
-      : [["personId", "externalPerson"]];
+  const parties = ["transfers", "cashFlows"].includes(kind)
+    ? [
+        ["fromId", "fromExternal"],
+        ["toId", "toExternal"],
+      ]
+    : [["personId", "externalPerson"]];
+  if (kind === "encumbrances" && !record.personId && !record.externalPerson)
+    parties.length = 0;
   if (parties.some(([id, text]) => !!record[id] === !!record[text]?.trim()))
     return t("ui.propertyChooseOneParty");
   if (
@@ -29,6 +30,19 @@ export function propertyRecordError(kind, record) {
     record.fromId === record.toId
   )
     return t("ui.propertySameTransferParties");
+  if (
+    kind === "cashFlows" &&
+    ((record.fromId && record.fromId === record.toId) ||
+      (record.fromExternal?.trim() &&
+        record.fromExternal.trim().toLowerCase() ===
+          record.toExternal?.trim().toLowerCase()))
+  )
+    return t("ui.flowTransactionConflict");
+  if (
+    kind === "cashFlows" &&
+    (!(Number(record.amount) > 0) || !record.currency)
+  )
+    return t("ui.flowAmountRequired");
   if (
     record.sharePercent !== "" &&
     record.sharePercent != null &&
@@ -89,7 +103,7 @@ export function normalizePropertyRecords(asset, peopleIds) {
 }
 
 export function propertyRecords(asset) {
-  return ["rights", "transfers", "claims"].flatMap((kind) =>
+  return Object.keys(propertyRecordConfigs()).flatMap((kind) =>
     (asset[kind] || []).map((record) => ({ kind, record })),
   );
 }
@@ -98,6 +112,7 @@ export function propertyPeople(asset) {
   return new Set(
     [
       asset.ownerId,
+      asset.initialOwnerId,
       ...(asset.allocations || []).map((r) => r.personId),
       ...propertyRecords(asset).flatMap(({ kind, record }) =>
         configs[kind].fields
@@ -109,14 +124,20 @@ export function propertyPeople(asset) {
 }
 export function propertySources(asset) {
   return new Set(
-    propertyRecords(asset)
-      .map(({ record }) => record.sourceId)
-      .filter(Boolean),
+    [
+      asset.sourceId,
+      ...propertyRecords(asset).map(({ record }) => record.sourceId),
+    ].filter(Boolean),
   );
 }
 
 /** Preserve a deleted party's label in the historical record instead of dropping the event. */
 export function unlinkPropertyReference(asset, type, id, name = "") {
+  if (type === "source" && asset.sourceId === id) asset.sourceId = "";
+  if (type === "person" && asset.initialOwnerId === id) {
+    asset.initialOwnerId = "";
+    asset.initialOwnerExternal = name || t("ui.personDeleted");
+  }
   for (const { kind, record } of propertyRecords(asset))
     for (const [key, , fieldType] of propertyRecordConfigs()[kind].fields) {
       if (fieldType !== type || record[key] !== id) continue;

@@ -26,6 +26,7 @@ export function sourceRecord(record) {
     language: "English",
     transcription: "",
     propertyIds: [],
+    propertyRecordLinks: [],
     subjectIds: [],
     source: "Civil register extract",
     repository: "Brookfield County Archives",

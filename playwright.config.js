@@ -9,12 +9,13 @@ export default defineConfig({
     {
       name: "firefox",
       testMatch:
-        /(browser-zoom|workspace-controls|document-library|interface-scale)\.spec\.js/,
+        /(browser-zoom|workspace-controls|document-library|interface-scale|property-dossiers)\.spec\.js/,
       use: { browserName: "firefox", launchOptions: {} },
     },
     {
       name: "webkit",
-      testMatch: /(browser-zoom|workspace-controls|interface-scale)\.spec\.js/,
+      testMatch:
+        /(browser-zoom|workspace-controls|interface-scale|property-dossiers)\.spec\.js/,
       use: { browserName: "webkit", launchOptions: {} },
     },
   ],

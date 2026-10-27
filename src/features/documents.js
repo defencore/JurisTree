@@ -1,3 +1,4 @@
+import { propertyDocumentLinksFromForm } from "../model/property-document-links.js";
 import { documentDetailsFromForm } from "../model/document-details.js";
 import { documentLinksFromForm } from "../model/document-links.js";
 import { normalizeModePurposes } from "../core/workspace-modes.js";
@@ -30,6 +31,9 @@ export async function editDocument(id = null, files = [], context = {}) {
         people: context.personId ? [context.personId] : [],
         relations: context.relationId ? [context.relationId] : [],
         propertyIds: context.propertyId ? [context.propertyId] : [],
+        propertyRecordLinks: context.propertyRecordTarget
+          ? [context.propertyRecordTarget]
+          : [],
         purposes: [],
         subjectIds: context.personId ? [context.personId] : [],
         source: "",
@@ -85,6 +89,7 @@ export async function editDocument(id = null, files = [], context = {}) {
       validate: (f) => {
         try {
           documentDetailsFromForm(f);
+          propertyDocumentLinksFromForm(f);
           documentLinksFromForm(f);
         } catch (error) {
           return error.message;
@@ -115,6 +120,7 @@ export async function editDocument(id = null, files = [], context = {}) {
     attachments: attachments.entries,
     details: documentDetailsFromForm(f),
     recordLinks: documentLinksFromForm(f),
+    propertyRecordLinks: propertyDocumentLinksFromForm(f),
     type: f.get("type"),
     status: f.get("status"),
     evidence: f.get("evidence"),

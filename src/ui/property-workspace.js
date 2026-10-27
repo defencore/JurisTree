@@ -1,3 +1,12 @@
+import { estateCategoryLabels } from "../core/property-details.js";
+import {
+  propertyInventoryOverview,
+  propertyAssetMap,
+  propertyCashFlows,
+  propertyClaimsOverview,
+} from "./property-analysis.js";
+import { estateCategory } from "../model/property-analysis.js";
+import { dateExact } from "../model/dates.js";
 import { dateInput } from "./date-input.js";
 import { personDisplayName } from "../model/person-display.js";
 import { esc } from "../core/dom.js";
@@ -7,7 +16,7 @@ import { linkedDocs } from "../model/evidence.js";
 import { person } from "../model/lookup.js";
 import { analyzeProperty } from "../model/property-history.js";
 import { propertyPeople } from "../model/property-records.js";
-import { typeOptions } from "./components.js";
+import { typeOptions, personOptions } from "./components.js";
 import { icon } from "./icons.js";
 import {
   propertyHistoryView,
@@ -34,13 +43,20 @@ export function propertySearchText(asset) {
 }
 function propertyCard(asset, date) {
   const analysis = analyzeProperty(asset, state.project, date);
-  return `<article class="asset-card"><div class="asset-head"><span class="avatar">${icon("home")}</span><div><h3>${esc(asset.title)}</h3><p>${esc([asset.identifier, asset.country, asset.location].filter(Boolean).join(" · "))}</p><p>${asset.value !== "" && asset.value != null ? `${new Intl.NumberFormat(getLocale()).format(asset.value)} ${esc(asset.currency)}` : t("ui.noValuation")}</p></div><button class="btn small" data-edit-property="${asset.id}" aria-label="${esc(t("ui.editProperty") + " " + asset.title)}">${icon("edit")}</button></div>${(asset.rights || []).length ? propertySnapshotMarkup(asset, date) : `<p class="hint">${t("ui.propertyNoHistory")}${asset.ownerId ? ` · ${t("ui.propertyReferenceOwner")}: ${esc(person(asset.ownerId)?.name)}` : ""}</p>`}<div class="pills"><span class="pill">${t("ui.propertyRights")}: ${(asset.rights || []).length}</span><span class="pill">${t("ui.propertyTransfers")}: ${(asset.transfers || []).length}</span><span class="pill ${analysis.snapshot.claims.length ? "review" : ""}">${t("ui.propertyOpenClaims")}: ${analysis.snapshot.claims.length}</span></div><div class="property-card-actions"><button class="btn primary" data-property-history="${asset.id}">${icon("history")}${t("ui.propertyHistoryAnalysis")}</button><button class="btn small ghost" data-asset-doc="${asset.id}">${icon("file")}${t("ui.ownershipDocument")}${linkedDocs("property", asset.id).length})</button></div>${asset.allocations?.length ? allocationSummary(asset) : ""}${asset.notes ? `<p class="hint">${esc(asset.notes)}</p>` : ""}</article>`;
+  return `<article class="asset-card"><div class="asset-head"><span class="avatar">${icon("home")}</span><div><h3>${esc(asset.title)}</h3><p>${esc([asset.identifier, asset.cadastralNumber, asset.registrationNumber, asset.country, asset.location].filter(Boolean).join(" · "))}</p><p>${asset.value !== "" && asset.value != null ? `${new Intl.NumberFormat(getLocale()).format(asset.value)} ${esc(asset.currency)}` : t("ui.noValuation")}</p></div><button class="btn small" data-edit-property="${asset.id}" aria-label="${esc(t("ui.editProperty") + " " + asset.title)}">${icon("edit")}</button></div>${(asset.rights || []).length ? propertySnapshotMarkup(asset, date) : `<p class="hint">${t("ui.propertyNoHistory")}${asset.ownerId ? ` · ${t("ui.propertyReferenceOwner")}: ${esc(person(asset.ownerId)?.name)}` : ""}</p>`}<div class="pills"><span class="pill">${t("ui.propertyRights")}: ${(asset.rights || []).length}</span><span class="pill">${t("ui.propertyTransfers")}: ${(asset.transfers || []).length}</span><span class="pill ${analysis.snapshot.claims.length ? "review" : ""}">${t("ui.propertyOpenClaims")}: ${analysis.snapshot.claims.length}</span></div>${state.propertySubjectId ? `<p class="pill">${t(estateCategoryLabels[estateCategory(asset, state.project, state.propertySubjectId)])}</p>` : ""}<div class="property-card-actions"><button class="btn primary" data-property-history="${asset.id}">${icon("history")}${t("ui.propertyHistoryAnalysis")}</button><button class="btn small ghost" data-asset-doc="${asset.id}">${icon("file")}${t("ui.ownershipDocument")}${linkedDocs("property", asset.id).length})</button></div>${asset.allocations?.length ? allocationSummary(asset) : ""}${asset.notes ? `<p class="hint">${esc(asset.notes)}</p>` : ""}</article>`;
 }
 
 export function propertyWorkspace() {
   const date = state.propertyDate,
     focus = state.project.property.find((a) => a.id === state.propertyFocus);
+  const subject = state.project.people.find(
+    (p) => p.id === state.propertySubjectId,
+  );
+  const estateControls = `<label class="field">${t("ui.assetEstatePerson")}<select id="propertySubjectId">${personOptions(state.propertySubjectId, true)}</select></label><label class="field">${t("ui.assetEstateFilter")}<select id="propertyEstateFilter" ${subject ? "" : "disabled"}>${typeOptions(Object.fromEntries(["all", "atDeath", "disposed", "corporate", "uncertain"].map((key) => [key, t(estateCategoryLabels[key])])), state.propertyEstateFilter)}</select></label>${subject && dateExact(subject.death) ? `<button class="btn small" data-property-death-date="${esc(subject.death)}">${t("ui.assetAtDeathButton")}</button>` : ""}`;
   const toolbar = `<div class="property-controls ${focus ? "focused" : ""}"><label class="field">${t("ui.propertyAsOf")}${dateInput("", date, { id: "propertyDate" })}</label>${focus ? "" : `<div class="search">${icon("search")}<input id="propertySearch" value="${esc(state.propertySearch)}" placeholder="${t("ui.propertySearchHint")}" aria-label="${t("ui.propertySearchHint")}"></div><label class="field">${t("ui.filter")}<select id="propertyReviewFilter">${typeOptions({ all: t("ui.propertyAll"), claims: t("ui.propertyWithClaims"), review: t("ui.propertyNeedsReview") }, state.propertyReviewFilter)}</select></label>`}<div class="property-history-actions"><button class="iconbtn" data-property-command="undo" aria-label="${t("ui.undo")}" title="${t("ui.undoCtrlZ")}" ${state.history.length ? "" : "disabled"}>${icon("undo")}</button><button class="iconbtn" data-property-command="redo" aria-label="${t("ui.redo")}" title="${t("ui.redoCtrlShiftZ")}" ${state.future.length ? "" : "disabled"}>${icon("redo")}</button></div></div>`;
+  const estatePanel = !focus
+    ? `<details class="property-estate-controls" id="propertyEstateControls" ${state.propertyEstateOpen ? "open" : ""}><summary>${t("ui.assetEstateAnalysis")}${subject ? " · " + esc(personDisplayName(subject)) : ""}</summary><div class="property-controls">${estateControls}</div><p class="hint">${t("ui.assetEstateHint")}</p></details>`
+    : "";
   if (focus)
     return (
       toolbar + propertyHistoryView(focus, date) + allocationSummary(focus)
@@ -53,6 +69,14 @@ export function propertyWorkspace() {
   const items = state.project.property.filter((a) => {
     if (!query.every((word) => propertySearchText(a).includes(word)))
       return false;
+    if (
+      state.propertySubjectId &&
+      (!propertyPeople(a).has(state.propertySubjectId) ||
+        (state.propertyEstateFilter !== "all" &&
+          estateCategory(a, state.project, state.propertySubjectId) !==
+            state.propertyEstateFilter))
+    )
+      return false;
     const { snapshot, issues } = analyzeProperty(a, state.project, date);
     return state.propertyReviewFilter === "claims"
       ? snapshot.claims.length
@@ -60,5 +84,14 @@ export function propertyWorkspace() {
         ? issues.length
         : true;
   });
-  return `<div class="intro-line"><div><h2>${t("ui.propertyHistoryAnalysis")}</h2><p>${t("ui.propertyWorkspaceHint")}</p></div></div>${toolbar}${items.map((asset) => propertyCard(asset, date)).join("") || `<div class="empty">${icon("home")}<h2>${t(state.project.property.length ? "ui.propertyNoMatches" : "ui.addFamilyProperty")}</h2><button class="btn primary" data-action="add-property">${t("ui.addProperty")}</button></div>`}`;
+  const tabs = `<div class="property-tabs" role="group" aria-label="${t("ui.property")}">${["inventory", "map", "flows", "claims"].map((key) => `<button class="btn ${state.propertyPanel === key ? "primary" : ""}" data-property-panel="${key}" aria-pressed="${state.propertyPanel === key}">${t({ inventory: "ui.assetDossier", map: "ui.assetMap", flows: "ui.flowMap", claims: "ui.propertyClaims" }[key])}</button>`).join("")}</div>`;
+  const content =
+    state.propertyPanel === "map"
+      ? propertyAssetMap(items)
+      : state.propertyPanel === "flows"
+        ? propertyCashFlows(items, date)
+        : state.propertyPanel === "claims"
+          ? propertyClaimsOverview(items)
+          : items.map((asset) => propertyCard(asset, date)).join("");
+  return `<div class="intro-line"><div><h2>${t("ui.propertyHistoryAnalysis")}</h2><p>${t("ui.propertyWorkspaceHint")}</p></div></div>${toolbar}${estatePanel}${tabs}${propertyInventoryOverview()}${content || `<div class="empty">${icon("home")}<h2>${t(state.project.property.length ? "ui.propertyNoMatches" : "ui.addFamilyProperty")}</h2><button class="btn primary" data-action="add-property">${t("ui.addProperty")}</button></div>`}`;
 }

@@ -242,3 +242,104 @@
     display: none;
   }
 }
+
+.property-tabs,
+.asset-chain-cards,
+.flow-parties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.property-tabs {
+  margin-block: 16px;
+}
+.property-dossier,
+.property-inventory-summary,
+.asset-chain,
+.flow-card,
+.property-encumbrances {
+  margin-block: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.property-dossier > summary,
+.property-inventory-summary > summary {
+  cursor: pointer;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.asset-chain-cards {
+  align-items: stretch;
+}
+.asset-chain-cards > section {
+  flex: 1 1 260px;
+  min-width: 0;
+  border-left: 3px solid var(--gold);
+  background: var(--bg);
+  padding: 12px;
+}
+.asset-transfer-chain {
+  padding-left: 20px;
+}
+.asset-transfer-chain li {
+  margin-block: 12px;
+}
+.asset-transfer-chain li > span {
+  display: block;
+  color: var(--muted);
+}
+.flow-card p {
+  margin-block: 10px;
+}
+.flow-parties > b {
+  flex: 1;
+  min-width: 0;
+}
+.evidence-register {
+  margin-block: 16px;
+}
+.evidence-register td {
+  white-space: pre-wrap;
+  min-width: 130px;
+  vertical-align: top;
+}
+.evidence-register .doc-table-wrap {
+  margin-top: 12px;
+}
+@media (max-width: 760px) {
+  .property-tabs .btn {
+    flex: 1 1 130px;
+  }
+  .property-controls > .field {
+    flex: 1 1 170px;
+  }
+  .property-dossier,
+  .asset-chain,
+  .flow-card {
+    padding: 12px;
+  }
+}
+.property-estate-controls {
+  margin-block: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  padding: 12px;
+}
+.property-estate-controls > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.property-estate-controls .property-controls {
+  margin-block: 12px;
+}
+.layout-switch [data-doc-layout="evidence"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}

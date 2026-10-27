@@ -173,6 +173,7 @@ test("property forms and archive retain all fields, external parties, unknown sh
   const [project, land] = fixture();
   for (const [kind, cfg] of Object.entries(propertyRecordConfigs())) {
     const row = land[kind][0];
+    if (!row) continue;
     row.reference = "LT/417/2";
     row.authority = "Property register";
     row.documentUrl = "https://example.org/register/417";

@@ -1,4 +1,4 @@
-import { propertyMetadataFields } from "../../core/property-records.js";
+import { normalizePropertyDetails } from "../property-details.js";
 import { translate } from "../../i18n/index.js";
 import { normalizePropertyRecords } from "../property-records.js";
 import { str, pos } from "./schema.js";
@@ -36,9 +36,8 @@ export function normalizeImportedProperty(a, peopleIds) {
     title: str(a.title, 250) || translate("ui.property"),
     ownerId: peopleIds.has(a.ownerId) ? a.ownerId : "",
     currency,
-    ...Object.fromEntries(
-      propertyMetadataFields().map((key) => [key, str(a[key], 1500)]),
-    ),
+    ...normalizePropertyDetails(a, peopleIds),
+    predecessorId: str(a.predecessorId, 100),
     ...normalizePropertyRecords(a, peopleIds),
     value,
     notes: str(a.notes),

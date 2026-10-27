@@ -1,5 +1,5 @@
 import { documentSupportsRecord } from "./document-links.js";
-import { propertyPeople } from "./property-records.js";
+import { propertyPeople, propertySources } from "./property-records.js";
 import { recordConfigs } from "../core/config.js";
 import { translate, getLocale } from "../i18n/index.js";
 import { personDisplayName } from "./person-display.js";
@@ -254,7 +254,19 @@ export function sourcePeopleIds(project, source) {
     ...new Set([
       ...(source.people || []),
       ...(source.subjectIds || []),
+      ...project.property
+        .filter((asset) => propertySources(asset).has(source.id))
+        .flatMap((asset) => [...propertyPeople(asset)]),
       ...(source.recordLinks || []).map((target) => target.personId),
+      ...[
+        ...new Set([
+          ...(source.propertyIds || []),
+          ...(source.propertyRecordLinks || []).map((link) => link.propertyId),
+        ]),
+      ].flatMap((id) => {
+        const asset = project.property.find((a) => a.id === id);
+        return asset ? [...propertyPeople(asset)] : [];
+      }),
       ...sourceImageTargets(source).flatMap((target) =>
         targetPeople(project, target),
       ),
