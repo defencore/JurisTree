@@ -14,29 +14,31 @@ export function bindPropertyDocumentLinks(form, source) {
   const chosen = new Set(
     (source.propertyRecordLinks || []).map(propertyDocumentKey),
   );
-  const choices = state.project.property
-    .flatMap((asset) =>
-      Object.entries(propertyRecordConfigs()).flatMap(([kind, config]) =>
-        (asset[kind] || []).map((record) => ({
-          propertyId: asset.id,
-          key: propertyDocumentKey({
+  const choices = (assetIds) =>
+    state.project.property
+      .filter((asset) => assetIds.has(asset.id))
+      .flatMap((asset) =>
+        Object.entries(propertyRecordConfigs()).flatMap(([kind, config]) =>
+          (asset[kind] || []).map((record) => ({
             propertyId: asset.id,
-            kind,
-            recordId: record.id,
-          }),
-          label: [
-            asset.title,
-            config.label,
-            displayDate(record.date || record.from),
-            record.reference,
-            record.grounds,
-          ]
-            .filter(Boolean)
-            .join(" · "),
-        })),
-      ),
-    )
-    .sort((a, b) => a.label.localeCompare(b.label, getLocale()));
+            key: propertyDocumentKey({
+              propertyId: asset.id,
+              kind,
+              recordId: record.id,
+            }),
+            label: [
+              asset.title,
+              config.label,
+              displayDate(record.date || record.from),
+              record.reference,
+              record.grounds,
+            ]
+              .filter(Boolean)
+              .join(" · "),
+          })),
+        ),
+      )
+      .sort((a, b) => a.label.localeCompare(b.label, getLocale()));
   const filter = () => {
     const text = query.value.trim().toLowerCase();
     for (const label of root.querySelectorAll("label"))
@@ -44,12 +46,11 @@ export function bindPropertyDocumentLinks(form, source) {
   };
   function render() {
     const assets = new Set(
-      [...form.querySelectorAll('[name="propertyIds"]:checked')].map(
-        (input) => input.value,
-      ),
+      [...form.querySelectorAll('[name="propertyIds"]:checked')]
+        .map((input) => input.value)
+        .concat([...chosen].map((key) => key.split(":")[0])),
     );
-    root.innerHTML = `<div class="check-grid">${choices
-      .filter((c) => assets.has(c.propertyId) || chosen.has(c.key))
+    root.innerHTML = `<div class="check-grid">${choices(assets)
       .map(
         (c) =>
           `<label><input type="checkbox" name="propertyRecordLinks" value="${esc(c.key)}" ${chosen.has(c.key) ? "checked" : ""}>${esc(c.label)}</label>`,
