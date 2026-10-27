@@ -5,7 +5,10 @@ import {
   propertyCashFlows,
   propertyClaimsOverview,
 } from "./property-analysis.js";
-import { estateCategory } from "../model/property-analysis.js";
+import {
+  estateCategory,
+  economicAssetGroups,
+} from "../model/property-analysis.js";
 import { dateExact } from "../model/dates.js";
 import { dateInput } from "./date-input.js";
 import { personDisplayName } from "../model/person-display.js";
@@ -66,6 +69,11 @@ export function propertyWorkspace() {
     .toLocaleLowerCase(getLocale())
     .split(/\s+/)
     .filter(Boolean);
+  const identityReview = new Set(
+    economicAssetGroups(state.project)
+      .filter((group) => group.issues.length)
+      .flatMap((group) => group.assets.map((asset) => asset.id)),
+  );
   const items = state.project.property.filter((a) => {
     if (!query.every((word) => propertySearchText(a).includes(word)))
       return false;
@@ -81,7 +89,7 @@ export function propertyWorkspace() {
     return state.propertyReviewFilter === "claims"
       ? snapshot.claims.length
       : state.propertyReviewFilter === "review"
-        ? issues.length
+        ? issues.length || identityReview.has(a.id)
         : true;
   });
   const tabs = `<div class="property-tabs" role="group" aria-label="${t("ui.property")}">${["inventory", "map", "flows", "claims"].map((key) => `<button class="btn ${state.propertyPanel === key ? "primary" : ""}" data-property-panel="${key}" aria-pressed="${state.propertyPanel === key}">${t({ inventory: "ui.assetDossier", map: "ui.assetMap", flows: "ui.flowMap", claims: "ui.propertyClaims" }[key])}</button>`).join("")}</div>`;

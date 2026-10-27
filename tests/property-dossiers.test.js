@@ -19,6 +19,7 @@ import {
 import { normalizeDocumentDetails } from "../src/model/document-details.js";
 import { createProjectIndex } from "../src/model/project-index.js";
 import { sourcePeopleIds } from "../src/model/image-regions.js";
+import { propertyWorkspace } from "../src/ui/property-workspace.js";
 import { state } from "../src/core/state.js";
 
 const asset = (id, changes = {}) => ({
@@ -333,5 +334,41 @@ test("the evidence register filters custody facts, validates custody dates and n
         },
       ],
     }),
+  );
+});
+
+test("property review includes identity conflicts even when each individual ownership ledger is complete", () => {
+  const project = fixture();
+  project.property = ["first", "second"].map((id) =>
+    asset(id, {
+      cadastralNumber: "12:34",
+      rights: [
+        right({
+          to: "",
+          status: "current",
+          verification: "corroborated",
+          sourceId: "bank",
+        }),
+      ],
+    }),
+  );
+  Object.assign(state, {
+    project,
+    renderIndex: null,
+    propertyDate: "2026-10-27",
+    propertyFocus: "",
+    propertySearch: "",
+    propertySubjectId: "",
+    propertyReviewFilter: "review",
+    propertyPanel: "inventory",
+  });
+  assert.equal(
+    (propertyWorkspace().match(/class="asset-card"/g) || []).length,
+    2,
+  );
+  project.property[1].cadastralNumber = "12:35";
+  assert.equal(
+    (propertyWorkspace().match(/class="asset-card"/g) || []).length,
+    0,
   );
 });
